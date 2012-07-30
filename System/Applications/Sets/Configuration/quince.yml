@@ -1,0 +1,21 @@
+module:
+  class: Sets
+  shortname: sets
+  identifier: com.smartest.DataManager.Sets
+  longname: Sets
+  default_action: startPage
+  routes:
+    home:
+      action: startPage
+      url: /smartest/sets
+    model_sets:
+      action: getItemClassSets
+      url: /smartest/models/:class_id/sets
+  meta:
+    system: true
+    author: Marcus Gilroy-Ware
+  namespaces:
+    ajax:
+      class: SetsAjax
+      meta:
+        template: _blank.tpl

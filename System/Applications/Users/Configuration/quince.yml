@@ -1,0 +1,29 @@
+module:
+  class: Users
+  shortname: users
+  identifier: com.smartest.Users
+  longname: "User accounts & roles"
+  default_action: startPage
+  aliases:
+    - {url: /smartest/account, action: editMyProfile}
+  meta:
+    system: true
+  routes:
+    home:
+      action: startPage
+      url: /smartest/users
+    add_user:
+      action: addUser
+      url: /smartest/users/add
+    roles:
+      action: listRoles
+      url: /smartest/user_roles
+    add_role:
+      action: addRole
+      url: /smartest/user_roles/add
+    edit_profile:
+      action: editMyProfile
+      url: /smartest/profile
+    edit_my_password:
+      action: setMyPassword
+      url: /smartest/account/password

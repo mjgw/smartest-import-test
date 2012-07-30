@@ -1,0 +1,98 @@
+body {
+  border: none;
+}
+
+body	{
+  background-color: #565656;
+  color: #000;
+  margin: 0;
+  padding: 0;
+  background:url(/Resources/System/Images/login_form_bg_hgrad.png);
+}
+
+a img{
+    border:0px;
+}
+
+body, td {
+  font: 13px "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
+}
+
+textarea, input.textInput, select {
+  /* background: #f4f4f4; */
+  border: 1px solid #b2b2b2;
+  color: #000;
+  font:  13px Verdana, Arial, Helvetica, sans-serif;
+  margin: 1px;
+  padding: 3px;
+}
+
+.submit, .editform th, #postcustomsubmit {
+  text-align: right;
+}
+
+#logo{
+  cursor:pointer;
+}
+
+#login {
+    /* background: #eee; */
+    margin: 5em auto 12px auto;
+    width: 325px;
+    border-radius:10px;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    box-shadow:0 10px 15px #222;
+    -moz-box-shadow:0 10px 15px #222;
+    background:url(../Images/login_form_bg.png);
+    
+}
+
+#login-inner{
+  margin:0 1.7em 0 1.7em;
+  padding:16px 0 16px 0;
+}
+
+#login h1 {
+  margin-top: 0;
+}
+
+#login h1 a {
+  display: block;
+  text-indent: -1000px;
+  height: 20px;
+  border-bottom: none;
+}
+
+#login input {
+  padding: 3px;
+}
+
+#login p{
+    color:#fff;
+    text-shadow: 1px 2px 2px #000;
+    margin-bottom:4px;
+}
+
+input[type="text"], input[type="password"]{
+  border-radius:4px;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+}
+
+#username, #password {
+  font-size: 1.4em;
+  width: 80%;
+}
+
+#submit {
+  font-size: 1.4em;
+}
+
+#footer{
+  padding-top:5px;
+  text-align:center;
+  font-size:.7em;
+  color:#aaa;
+  text-shadow: 1px 2px 2px #000;
+}

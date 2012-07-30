@@ -1,0 +1,1 @@
+<?sm:cms_page page=$_page:?>

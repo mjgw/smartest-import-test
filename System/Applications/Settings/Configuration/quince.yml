@@ -1,0 +1,8 @@
+module:
+  class: Settings
+  shortname: settings
+  identifier: com.smartest.Settings
+  longname: Settings
+  default_action: startPage
+  meta:
+    system: true

@@ -1,0 +1,19 @@
+module:
+  class: HelpViewer
+  shortname: help
+  identifier: com.smartest.HelpViewer
+  longname: Help Viewer
+  default_action: startPage
+  meta:
+    system: true
+  routes:
+    home:
+      action: startPage
+      url: /smartest/help
+    ajax_view:
+      action: getAjaxContent
+      url: /smartest/help/ajax/view/:help_code
+  namespaces:
+    ajax:
+      meta:
+        template: _blank.tpl

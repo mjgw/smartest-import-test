@@ -1,0 +1,1 @@
+<input type="text" name="{$_input_data.name}" value="{$value}" style="width:250px" />

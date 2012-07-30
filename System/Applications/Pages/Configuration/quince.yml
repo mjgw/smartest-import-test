@@ -1,0 +1,39 @@
+module:
+  class: Pages
+  shortname: websitemanager
+  identifier: com.smartest.Pages
+  longname: Page Manager
+  default_action: sitePages
+#  aliases:
+#    - {url: /smartest/page/:page_id, action: editPage}
+  routes:
+    pages:
+      action: sitePages
+      url: /smartest/pages
+    preview:
+      action: preview
+      url: /smartest/page/:page_id/preview
+    basic_info:
+      action: editPage
+      url: /smartest/page/:page_id/basic
+    assets_tree:
+      action: pageAssets
+      url: /smartest/page/:page_id/tree
+    new_page:
+      action: addPage
+      url: /smartest/page/new
+    page_groups:
+      action: pageGroups
+      url: /smartest/pagegroups
+    new_pagegroup:
+      action: addPageGroup
+      url: /smartest/pagegroup/new
+  meta:
+    system: true
+    author: Marcus Gilroy-Ware
+  namespaces:
+    ajax:
+      class: PagesAjax
+      meta:
+        template: _blank.tpl
+        presentation_subfolder: Ajax/

@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+
+<relationshiptypes>
+  
+  <type id="SM_MTMLOOKUP_RELATED_PAGES" return="class:SmartestPage" method="SM_MTMLOOKUPMETHOD_NETWORK">
+    <label>Links one page to others as related pages.</label>
+    <network table="Pages" foreignkey="page_id" class="SmartestPage" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_RELATED_ITEMS" return="class:SmartestItem" method="SM_MTMLOOKUPMETHOD_NETWORK">
+    <label>Links one item to others of the same model.</label>
+    <network table="Items" foreignkey="item_id" class="SmartestItem" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_RELATED_ITEMS_OTHER" return="class:SmartestItem" method="SM_MTMLOOKUPMETHOD_NETWORK">
+    <label>Links one item to others of a different model.</label>
+    <network table="Items" foreignkey="item_id" class="SmartestItem" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_PAGES_ITEMS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Links static pages to items as related content.</label>
+    <entity table="Items" class="SmartestItem" foreignkey="item_id" index="1" required="true" />
+    <entity table="Pages" class="SmartestPage" foreignkey="page_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_PAGE_AUTHORS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Links static pages to users in an authorship relationship.</label>
+    <entity table="Users" class="SmartestUser" foreignkey="user_id" index="1" required="true" />
+    <entity table="Pages" class="SmartestPage" foreignkey="page_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_ITEM_AUTHORS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Links static pages to users in an authorship relationship.</label>
+    <entity table="Users" class="SmartestUser" foreignkey="user_id" index="1" required="true" />
+    <entity table="Items" class="SmartestItem" foreignkey="item_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_ROLE_TOKENS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Links roles to the tokens they "contain".</label>
+    <entity table="Roles" class="SmartestRole" foreignkey="role_id" index="1" required="true" />
+    <entity table="UserTokens" class="SmartestUserToken" foreignkey="token_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_ASSET_GROUP_MEMBERSHIP" return="class:SmartestAssetGroupMembership" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps files in the repository into groups.</label>
+    <entity table="Assets" class="SmartestAsset" foreignkey="asset_id" index="1" required="true" />
+    <entity table="Sets" class="SmartestAssetGroup" foreignkey="set_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_TEMPLATE_GROUP_MEMBERSHIP" return="class:SmartestTemplateGroupMembership" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps templates into groups.</label>
+    <entity table="Assets" class="SmartestTemplateAsset" foreignkey="asset_id" index="1" required="true" />
+    <entity table="Sets" class="SmartestTemplateGroup" foreignkey="set_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_PAGE_GROUP_MEMBERSHIP" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps pages into groups.</label>
+    <entity table="Pages" class="SmartestPage" foreignkey="page_id" index="1" required="true" />
+    <entity table="Sets" class="SmartestPageGroup" foreignkey="set_id" index="2" required="true" />
+  </type>
+  
+  <!--<type id="SM_MTMLOOKUP_USER_GROUP_MEMBERSHIP" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps system users into groups.</label>
+    <entity table="Users" class="SmartestUser" foreignkey="page_id" index="1" required="true" />
+    <entity table="Sets" class="SmartestUserGroup" foreignkey="set_id" index="2" required="true" />
+  </type>-->
+  
+  <type id="SM_MTMLOOKUP_TEXTFRAGMENT_ATTACHMENTS" return="class:SmartestTextFragmentAttachment" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps files to textfragments where they are referenced.</label>
+    <entity table="TextFragments" class="SmartestTextFragment" foreignkey="textfragment_id" index="1" required="true" />
+    <entity table="Assets" class="SmartestRenderableAsset" foreignkey="asset_id" index="2" required="true" />
+    <instances>true</instances>
+  </type>
+  
+  <type id="SM_MTMLOOKUP_PAGE_SET_APPS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps data sets to pages where they appear.</label>
+    <entity table="Pages" class="SmartestPage" foreignkey="page_id" index="1" required="true" />
+    <entity table="Sets" class="SmartestCmsItemSet" foreignkey="set_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_PAGE_ITEM_APPS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps items to pages where they appear.</label>
+    <entity table="Pages" class="SmartestPage" foreignkey="page_id" index="1" required="true" />
+    <entity table="Items" class="SmartestItem" foreignkey="item_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_PARENT_METAPAGE_RPID" return="class:SmartestParentMetaPagePropertyReference" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps meta-pages that are the children of other meta-pages to a specific property of the principal item that governs which item populates the parent meta-page.</label>
+    <entity table="Pages" class="SmartestPage" foreignkey="page_id" index="1" required="true" />
+    <entity table="ItemProperties" class="SmartestItemProperty" foreignkey="itemproperty_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_RECENTLY_EDITED_ITEMS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Recently edited items.</label>
+    <entity table="Items" class="SmartestItem" foreignkey="item_id" index="1" required="true" />
+    <entity table="Users" class="SmartestUser" foreignkey="user_id" index="2" required="true" />
+    <entity table="Sites" class="SmartestSite" foreignkey="site_id" index="3" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_RECENTLY_EDITED_ASSETS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Recently edited files.</label>
+    <entity table="Assets" class="SmartestAsset" foreignkey="asset_id" index="1" required="true" />
+    <entity table="Users" class="SmartestUser" foreignkey="user_id" index="2" required="true" />
+    <entity table="Sites" class="SmartestSite" foreignkey="site_id" index="3" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_RECENTLY_EDITED_PAGES" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Recently edited pages.</label>
+    <entity table="Pages" class="SmartestPage" foreignkey="page_id" index="1" required="true" />
+    <entity table="Users" class="SmartestUser" foreignkey="user_id" index="2" required="true" />
+    <entity table="Sites" class="SmartestSite" foreignkey="site_id" index="3" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_RECENTLY_EDITED_TEMPLATES" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Recently edited templates.</label>
+    <entity table="Assets" class="SmartestTemplateAsset" foreignkey="asset_id" index="1" required="true" />
+    <entity table="Users" class="SmartestUser" foreignkey="user_id" index="2" required="true" />
+    <entity table="Sites" class="SmartestSite" foreignkey="site_id" index="3" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_USER_INITIAL_ROLE" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps users to the roles they were created with.</label>
+    <entity table="Users" class="SmartestSystemUser" foreignkey="user_id" index="1" required="true" />
+    <entity table="Roles" class="SmartestRole" foreignkey="role_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_ITEM_SELECTION_PROPERTY" return="class:SmartestItemPropertyValueItemConnection" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Many-to-many cms item properties</label>
+    <entity table="Items" class="SmartestItem" foreignkey="item_id" index="1" required="true" defaultsort="item_slug" />
+    <entity table="ItemPropertyValues" class="SmartestItemPropertyValue" foreignkey="itempropertyvalue_id" index="2" required="true" />
+    <phased>true</phased>
+  </type>
+  
+  <type id="SM_MTMLOOKUP_ASSET_SELECTION_PROPERTY" return="class:SmartestManyToManyLookup" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Many-to-many item-asset properties</label>
+    <entity table="Assets" class="SmartestRenderableAsset" foreignkey="asset_id" index="1" required="true" defaultsort="asset_label" />
+    <entity table="ItemPropertyValues" class="SmartestItemPropertyValue" foreignkey="itempropertyvalue_id" index="2" required="true" />
+    <phased>true</phased>
+  </type>
+  
+  <type id="SM_MTMLOOKUP_ASSET_GALLERY_MEMBERSHIP" return="class:SmartestAssetGroupMembership" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Organise files in the repository into galleries.</label>
+    <entity table="Assets" class="SmartestAsset" foreignkey="asset_id" index="1" required="true" />
+    <entity table="Sets" class="SmartestAssetGroup" foreignkey="set_id" index="2" required="true" />
+  </type>
+  
+</relationshiptypes>

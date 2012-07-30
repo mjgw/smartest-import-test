@@ -1,0 +1,43 @@
+module:
+  class: Assets
+  shortname: assets
+  identifier: com.smartest.FileManager
+  longname: Files repository 
+  default_action: getAssetTypes
+  aliases:
+    - {url: /smartest/assets, action: startPage}
+    - {url: /smartest/assets/groups, action: assetGroups}
+  routes:
+    home:
+      action: startPage
+      url: /smartest/files
+    types:
+      action: getAssetTypes
+      url: /smartest/files/types
+    groups:
+      action: assetGroups
+      url: /smartest/files/groups
+    new_file:
+      action: addAsset
+      url: /smartest/file/new
+    save_new_file:
+      action: saveNewAsset
+      url: /smartest/file/new/save
+    edit_file:
+      action: editAsset
+      url: /smartest/file/:asset_id/edit
+    file_info:
+      action: assetInfo
+      url: /smartest/file/:asset_id
+    ajax_full_text_search:
+      action: fullTextSearchResults
+      url: /smartest/assets/:asset_type/full_text_search
+  meta:
+    system: true
+    author: Marcus Gilroy-Ware
+  namespaces:
+    ajax:
+      class: AssetsAjax
+      meta:
+        template: _blank.tpl # Can also be 'none'
+        presentation_subfolder: Ajax/

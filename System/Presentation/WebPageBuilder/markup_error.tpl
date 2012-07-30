@@ -1,0 +1,1 @@
+<br /><span class="smartest-preview-warning"><strong>WARNING</strong>: <?sm:$_error_text:?></span>

@@ -1,0 +1,388 @@
+<?xml version="1.0" ?>
+<datatypes>
+    
+    <type id="SM_DATATYPE_SL_TEXT" valuetype="string">
+        <label>Short text field</label>
+        <description>A short, single line of text such as first or last name. Maximum 255 characters.</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestString</class>
+        <long>true</long>
+        <sortable>true</sortable>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/sl_text.tpl" />
+        <parameters>
+          <param name="autocomplete" label="Auto-complete" type="SM_DATATYPE_BOOLEAN" default="true" usage="field,itemproperty" />
+          <param name="require_unique" label="Require unique values" type="SM_DATATYPE_BOOLEAN" default="false" usage="itemproperty" />
+        </parameters>
+    </type>
+    
+    <type id="SM_DATATYPE_ASSET" valuetype="foreignkey">
+        
+        <label>File from the repository (formatted text, image, PDF, etc,)</label>
+        <description>A single file that has been imported into the files repository.</description>
+        <usage>itemproperty</usage>
+        <long>false</long>
+        
+        <filter>
+          <typesource type="smartest:assettypes" label="File Type" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.assettypes.tpl" />
+          <entitysource type="db" table="Assets" matchfield="asset_type" sortfield="asset_stringid" sitefield="asset_site_id" sharedfield="asset_shared" class="SmartestAsset" label="File" />
+          <optionsettype id="SM_PROPERTY_FILTERTYPE_ASSETGROUP" class="SmartestAssetGroup" table="Sets" sitefield="set_site_id">
+            <condition field="set_type" value="SM_SET_ASSETGROUP" operator="EQUAL" />
+          </optionsettype>
+          <!--Conditions only apply to filtering when no group is in use-->
+          <condition field="asset_deleted" value="1" operator="NOT_EQUAL" />
+          <condition field="asset_is_archived" value="1" operator="NOT_EQUAL" />
+        </filter>
+        
+        <menu value="id" display="url" />
+        
+        <render template="System/Presentation/WebPageBuilder/property.asset.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/asset.tpl" />
+        
+        
+        <class>SmartestRenderableAsset</class>
+        
+    </type>
+    
+    <type id="SM_DATATYPE_CMS_ITEM" valuetype="foreignkey">
+        
+        <label>Item</label>
+        <description>A single item from a selected model.</description>
+        <usage>itemproperty</usage>
+        <long>false</long>
+        
+        <filter>
+          <typesource type="db" table="ItemClasses" matchfield="id" label="Model" class="SmartestModel" sortfield="itemclass_plural_name" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.models.tpl" />
+          <entitysource type="db" table="Items" matchfield="item_itemclass_id" sitefield="item_site_id" sharedfield="item_shared" class="SmartestItem" sortfield="item_name" />
+          <optionsettype id="SM_PROPERTY_FILTERTYPE_DATASET" class="SmartestCmsItemSet" table="Sets" sitefield="set_site_id" />
+          <!--Conditions only apply to filtering when no group is in use-->
+          <condition field="item_is_archived" value="1" operator="NOT_EQUAL" />
+          <condition field="item_deleted" value="1" operator="NOT_EQUAL" />
+        </filter>
+        
+        <render template="System/Presentation/WebPageBuilder/property.cms_item.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/cms_item.tpl" />
+        
+        <menu value="id" display="name" />
+        
+        <class>SmartestCmsItem</class>
+        
+    </type>
+    
+    <type id="SM_DATATYPE_NUMERIC" valuetype="string">
+        <label>Number</label>
+        <description>A numeric value in standard notation such as an integer or decimal. Scientific notation and fractions are not supported.</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestNumeric</class>
+        <sortable>true</sortable>
+        <quantity>true</quantity>
+        <long>false</long>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/numeric.tpl" />
+        <parameters>
+          <param name="num_decimal_places" label="Number of decimal places" type="SM_DATATYPE_NUMERIC" default="true" usage="field,itemproperty" />
+          <param name="require_unique" label="Require unige values" type="SM_DATATYPE_BOOLEAN" default="false" usage="itemproperty" />
+        </parameters>
+    </type>
+    
+    <type id="SM_DATATYPE_URL" valuetype="string">
+        <label>External URL</label>
+        <description>A web address (starting with http://).</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestExternalUrl</class>
+        <long>false</long>
+        <render template="System/Presentation/WebPageBuilder/property.url.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/url.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_ML_TEXT" valuetype="string">
+        <label>Multi-line plain text</label>
+        <description>Longer piece of text (255 chars or more) in which no formatting is needed.</description>
+        <usage>itemproperty</usage>
+        <class>SmartestString</class>
+        <long>true</long>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/ml_text.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_BOOLEAN" valuetype="string">
+        <label>Boolean</label>
+        <description>A simple true/false value.</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestBoolean</class>
+        <long>false</long>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/boolean_radio.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_RGB_COLOR" valuetype="string">
+        <label>Color</label>
+        <description>A 24-bit RGB color</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestRgbColor</class>
+        <long>false</long>
+        <render template="System/Presentation/WebPageBuilder/property.rgb_color.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/default.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_TIMESTAMP" valuetype="string">
+        <label>Timestamp</label>
+        <description>An exact point in time - year, month, day, hour, minute, and second.</description>
+        <usage>field,itemproperty,feed</usage>
+        <class>SmartestDateTime</class>
+        <sortable>true</sortable>
+        <quantity>true</quantity>
+        <long>false</long>
+        <render template="System/Presentation/WebPageBuilder/property.timestamp.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/timestamp.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_DATE" valuetype="string">
+        
+        <label>Day</label>
+        <description>A date that specifies year, month, and day of the month, but not the time of day.</description>
+        <usage>field,itemproperty,feed</usage>
+        <class>SmartestDateTime</class>
+        <sortable>true</sortable>
+        <quantity>true</quantity>
+        <long>false</long>
+        <render template="System/Presentation/WebPageBuilder/property.date.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/date.tpl" />
+        
+    </type>
+    
+    <type id="SM_DATATYPE_CALENDAR_EVENT" valuetype="string">
+        
+        <label>Calendar event</label>
+        <description>An event that has a start and end time, or runs all day.</description>
+        <usage>itemproperty</usage>
+        <class>SmartestCalendarEvent</class>
+        <long>false</long>
+        <render template="System/Presentation/WebPageBuilder/property.calendar_event.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/calendar_event.tpl" />
+        
+    </type>
+    
+    <type id="SM_DATATYPE_TWITTER_ACCT" valuetype="string">
+        <label>Twitter account</label>
+        <description>A user account on the social networking service Twitter</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestTwitterAccountName</class>
+        <long>true</long>
+        <sortable>true</sortable>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/twitter_acct.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_DROPDOWN_MENU" valuetype="foreignkey">
+        
+        <label>Dropdown Menu</label>
+        <description>A value from one of the dropdown menus defined in the dropdown menu editor.</description>
+        <usage>field,itemproperty</usage>
+        <long>false</long>
+        <sortable>true</sortable>
+        
+        <filter>
+          <typesource type="db" table="DropDowns" matchfield="id" label="Dropdown Menu" class="SmartestDropdown" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.dropdownmenus.tpl" />
+          <entitysource type="db" table="DropDownValues" matchfield="dropdownvalue_dropdown_id" class="SmartestDropdownOption" />
+        </filter>
+        
+        <render template="System/Presentation/WebPageBuilder/property.dropdownvalue.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/dropdown_menu.tpl" />
+        <menu value="value" display="label" />
+        
+        <class>SmartestDropdownOption</class>
+        
+    </type>
+    
+    <type id="SM_DATATYPE_TEMPLATE" valuetype="foreignkey">
+        
+        <label>Template</label>
+        <description>A single-item template.</description>
+        <usage>itemproperty</usage>
+        <long>false</long>
+        
+        <filter>
+          <entitysource type="db" table="Assets" matchfield="asset_type" sortfield="asset_stringid" sitefield="asset_site_id" sharedfield="asset_shared" class="SmartestTemplateAsset" label="Template" />
+          <!--<typesource type="smartest:templatetypes" label="Tem Type" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.assettypes.tpl" />
+          <entitysource type="db" table="Assets" matchfield="asset_type" sortfield="asset_stringid" sitefield="asset_site_id" sharedfield="asset_shared" class="SmartestAsset" label="File" />
+          <optionsettype id="SM_PROPERTY_FILTERTYPE_ASSETGROUP" class="SmartestAssetGroup" table="Sets" sitefield="set_site_id">
+            <condition field="set_type" value="SM_SET_ASSETGROUP" operator="EQUAL" />
+          </optionsettype>
+          Conditions only apply to filtering when no group is in use-->
+          <condition field="asset_deleted" value="1" operator="NOT_EQUAL" />
+          <condition field="asset_is_archived" value="1" operator="NOT_EQUAL" />
+          <condition field="asset_type" value="SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE" operator="EQUAL" />
+        </filter>
+        
+        <menu value="id" display="url" />
+        
+        <render template="System/Presentation/WebPageBuilder/property.asset.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/asset.tpl" />
+        
+        
+        <class>SmartestRenderableSingleItemTemplateAsset</class>
+        
+    </type>
+    
+    <type id="SM_DATATYPE_PIXEL_COORDINATES" valuetype="string">
+        <label>Screen position (X,Y pixel coordinates)</label>
+        <description>Pair of integers that can be used to position something on a page or graphic</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestScreenPosition</class>
+        <long>true</long>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/pixel_coordinates.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_ISBN" valuetype="string">
+        <label>ISBN code for books</label>
+        <description>ISBN is a standardised number for identifying published books.</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestString</class>
+        <long>true</long>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/sl_text.tpl" />
+    </type>
+    
+    <!--<type id="SM_DATATYPE_ASSET_DOWNLOAD" valuetype="foreignkey">
+        
+        <label>File Download</label>
+        <description>Creates a link that will cause the selected file to be downloaded.</description>
+        <usage>itemproperty</usage>
+        <long>false</long>
+        
+        <filter>
+          <typesource type="smartest:assettypes" label="File Type" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.assettypes.tpl" />
+          <entitysource type="db" table="Assets" matchfield="asset_type" sortfield="asset_stringid" sitefield="asset_site_id" sharedfield="asset_shared" class="SmartestAsset" label="File" />
+          <optionsettype id="SM_PROPERTY_FILTERTYPE_ASSETGROUP" class="SmartestAssetGroup" table="Sets" sitefield="set_site_id">
+            <condition field="set_type" value="SM_SET_ASSETGROUP" operator="EQUAL" />
+          </optionsettype>
+          Conditions only apply to filtering when no group is in use
+          <condition field="asset_deleted" value="1" operator="NOT_EQUAL" />
+          <condition field="asset_is_archived" value="1" operator="NOT_EQUAL" />
+        </filter>
+        
+        <menu value="id" display="url" />
+        
+        <render template="System/Presentation/WebPageBuilder/property.download.tpl" />
+        
+        <class>SmartestAsset</class>
+        
+    </type>-->
+    
+    <type id="SM_DATATYPE_ASSET_GROUP" valuetype="foreignkey">
+        
+        <label>File group</label>
+        <description>One of the file groups from the files repository.</description>
+        <usage>itemproperty</usage>
+        <long>false</long>
+        
+        <filter>
+          <typesource type="smartest:assettypes" label="File Type" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.assettypes.tpl" />
+          <entitysource type="db" table="Sets" sortfield="set_name" sitefield="set_site_id" sharedfield="set_shared" class="SmartestAssetGroup" label="Group" />
+          <condition field="set_type" value="SM_SET_ASSETGROUP" operator="EQUAL" />
+        </filter>
+        
+        <menu value="id" display="url" />
+        
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/asset_group.tpl" />
+        
+        <class>SmartestAssetGroup</class>
+        
+    </type>
+    
+    <type id="SM_DATATYPE_CMS_ITEM_SET" valuetype="foreignkey">
+        
+        <label>Data set</label>
+        <description>A predefined group of items belonging to the same model, created in the Sets application in the data manager.</description>
+        <usage>itemproperty</usage>
+        <entitytype>Sets:id,label</entitytype>
+        <long>false</long>
+        
+        <filter>
+          <typesource type="db" table="ItemClasses" matchfield="id" label="Model" class="SmartestModel" sortfield="itemclass_plural_name" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.models.tpl" />
+          <entitysource type="db" table="Sets" sitefield="set_site_id" sharedfield="set_shared" class="SmartestCmsItemSet" filterfield="set_itemclass_id" />
+          <condition field="set_type" value="SM_SET_ASSETGROUP" operator="NOT_EQUAL" />
+        </filter>
+        
+        <render template="System/Presentation/WebPageBuilder/property.cms_item_set.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/property.default.tpl" />
+        
+        <menu value="id" display="name" />
+        
+        <class>SmartestCmsItemSet</class>
+        
+    </type>
+    
+    <type id="SM_DATATYPE_CMS_ITEM_SELECTION" valuetype="manytomany">
+        
+        <label>Selection of items</label>
+        <description>Choose among items from a selected model.</description>
+        <usage>itemproperty</usage>
+        <long>false</long>
+        <manytomany relationshipcode="SM_MTMLOOKUP_ITEM_SELECTION_PROPERTY" ipventityindex="2" mappedentityindex="1" />
+        
+        <filter>
+          <typesource type="db" table="ItemClasses" matchfield="id" label="Model" class="SmartestModel" sortfield="itemclass_plural_name" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.models.tpl" />
+          <entitysource type="db" table="Items" matchfield="item_itemclass_id" sitefield="item_site_id" sharedfield="item_shared" class="SmartestItem" sortfield="item_name" />
+          <optionsettype id="SM_PROPERTY_FILTERTYPE_DATASET" class="SmartestCmsItemSet" table="Sets" sitefield="set_site_id" />
+          <!--Conditions only apply to filtering when no group is in use-->
+          <condition field="item_is_archived" value="1" operator="NOT_EQUAL" />
+          <condition field="item_deleted" value="1" operator="NOT_EQUAL" />
+        </filter>
+        
+        <render template="System/Presentation/WebPageBuilder/property.cms_item.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/property.default.tpl" />
+        
+        <menu value="id" display="name" />
+        
+        <class>SmartestCmsItemsCollection</class>
+        
+    </type>
+    
+    <type id="SM_DATATYPE_AUTO_ITEM_FK" valuetype="auto">
+      
+      <label>Auto-query</label>
+      <description>Automatic query based on foreign keys.</description>
+      <usage>itemproperty</usage>
+      <long>false</long>
+      
+      <filter>
+        <typesource template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.referring_properties.tpl" />
+      </filter>
+      
+      <class>SmartestCmsItemsCollection</class>
+      
+    </type>
+    
+    <type id="SM_DATATYPE_ASSET_SELECTION" valuetype="manytomany">
+        
+        <label>Selection of files</label>
+        <description>Choice of one or more files.</description>
+        <usage>itemproperty</usage>
+        <long>false</long>
+        <manytomany relationshipcode="SM_MTMLOOKUP_ASSET_SELECTION_PROPERTY" ipventityindex="2" mappedentityindex="1" />
+        
+        <filter>
+          <typesource type="smartest:assettypes" label="File Type" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.assettypes.tpl" />
+          <entitysource type="db" table="Assets" matchfield="asset_type" sortfield="asset_stringid" sitefield="asset_site_id" sharedfield="asset_shared" class="SmartestAsset" label="File" />
+          <optionsettype id="SM_PROPERTY_FILTERTYPE_ASSETGROUP" class="SmartestAssetGroup" table="Sets" sitefield="set_site_id">
+            <condition field="set_type" value="SM_SET_ASSETGROUP" operator="EQUAL" />
+          </optionsettype>
+          <!--Conditions only apply to filtering when no group is in use-->
+          <condition field="asset_deleted" value="1" operator="NOT_EQUAL" />
+          <condition field="asset_is_archived" value="1" operator="NOT_EQUAL" />
+        </filter>
+        
+        <render template="System/Presentation/WebPageBuilder/property.cms_item.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/property.default.tpl" />
+        
+        <menu value="id" display="name" />
+        
+        <class>SmartestAssetsCollection</class>
+        
+    </type>
+    
+</datatypes>

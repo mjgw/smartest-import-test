@@ -1,0 +1,1 @@
+<textarea name="{$name}" rows="3" cols="20" style="width:350px;height:80px">{$value}</textarea>
