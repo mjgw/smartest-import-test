@@ -92,6 +92,29 @@
       
     </type>
     
+    <type id="SM_DATATYPE_USER" valuetype="foreignkey">
+      
+      <label>User</label>
+      <description>A Smartest user account</description>
+      <usage>itemproperty</usage>
+      <long>false</long>
+      
+      <filter>
+        <entitysource type="db" table="Users" sortfield="user_lastname" class="SmartestUser" label="User" />
+        <!--<optionsettype id="SM_PROPERTY_FILTERTYPE_PAGEGROUP" class="SmartestPageGroup" table="Sets" sitefield="set_site_id" />-->
+        <condition field="user_type" value="SM_USERTYPE_OAUTH_CLIENT_INTERNAL" operator="NOT_EQUAL" />
+        <condition field="username" value="smartest" operator="NOT_EQUAL" />
+      </filter>
+      
+      <render template="System/Presentation/WebPageBuilder/property.user.tpl" />
+      <input template="System/Presentation/InterfaceBuilder/Inputs/user.tpl" />
+      
+      <menu value="id" display="username" />
+      
+      <class>SmartestUser</class>
+      
+    </type>
+    
     <type id="SM_DATATYPE_NUMERIC" valuetype="string">
         <label>Number</label>
         <description>A numeric value in standard notation such as an integer or decimal. Scientific notation and fractions are not supported.</description>
@@ -146,6 +169,17 @@
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.rgb_color.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/default.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_EMAIL_ADDRESS" valuetype="string">
+        <label>Email address</label>
+        <description>An email address.</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestEmailAddress</class>
+        <long>false</long>
+        <sortable>false</sortable>
+        <render template="System/Presentation/WebPageBuilder/property.email.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/email.tpl" />
     </type>
     
     <type id="SM_DATATYPE_TIMESTAMP" valuetype="string">

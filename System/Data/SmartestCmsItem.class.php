@@ -107,6 +107,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 		// $this->generatePropertiesLookup();
 		$this->_request = SmartestPersistentObject::get('controller')->getCurrentRequest();
 		
+		if(get_class($this) == 'SmartestCmsItem'){
+		    throw new SmartestException('here');
+		}
+		
 	}
 	
 	private function generateModel(){
@@ -168,6 +172,14 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
     public function hydrateFromFormData($v){
         $r = $this->find((int) $v);
         return $r;
+    }
+    
+    // Convenience function to provide controller instance internally
+    
+    protected function getController(){
+        
+        return SmartestPersistentObject::get('controller');
+        
     }
     
     public function disableTemplateProperty($property_id){
@@ -760,6 +772,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    
 	}
 	
+	public function getModelId(){
+	    return $this->_item->getItemclassId();
+	}
+	
 	public function getDescriptionField(){
 	    
 	    // default_description_property_id
@@ -1025,6 +1041,8 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    
 	    if(array_key_exists($key, $this->_properties)){
 	        
+	        // echo "test";
+	        
 	        try{
 	            
 	            if(!$this->_properties[$key]->getData()->hasItem()){
@@ -1041,15 +1059,25 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
                 }else{
                     $raw_value = $this->_properties[$key]->getData()->getContent();
                 }
+                
+                // echo get_class($raw_value);
             
             }catch(SmartestException $e){
                 echo $e->getMessage();
             }
             
+            // echo "test";
+            
             if(is_object($raw_value)){
                 $r = $raw_value;
-            }else if($value_ob = SmartestDataUtility::objectize($raw_value, $this->_properties[$key]->getDatatype())){
+                // echo get_class($raw_value);
+                // echo "Object";
+            }else if($value_ob = SmartestDataUtility::objectize($raw_value, $this->_properties[$key]->getDatatype(), $this->_properties[$key]->getForeignKeyFilter())){
                 $r = $value_obj;
+                // echo get_class($value_obj);
+                // echo "Not Object";
+            }else if(is_null($raw_value) && $c = SmartestDataUtility::getClassForDataType($this->_properties[$key]->getDatatype(), $this->_properties[$key]->getForeignKeyFilter())){
+                $r = new $c;
             }
             
             return $r;
@@ -1104,7 +1132,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    }
 	}
 	
-	public function setPropertyValueByNumericKey($key, $value){
+	public function setPropertyValueByNumericKey($key, $raw_value){
 	    
 	    if(array_key_exists($key, $this->_properties)){
 	        
@@ -1116,9 +1144,15 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            $this->_properties[$key]->getData()->setItemId($this->getId());
 	        }
 	        
-	        // var_dump(get_class($this->_properties[$key]->getData()));
+	        // var_dump($raw_value);
 	        
-	        return $this->_properties[$key]->getData()->setContent($value);
+	        // var_dump(get_class($this->_properties[$key]->getData()));
+	        // echo $key;
+	        
+	        $this->_properties[$key]->getData()->setContent($raw_value);
+	        // print_r($this->_properties[$key]->getData()->getDraftContent());
+	        
+	        // return $this->_properties[$key]->getData()->setContent($raw_value);
 	        
 	        // echo $this->_properties[$key]->getDatatype();
 	        
@@ -1239,6 +1273,13 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
             return true;
         }
         
+	}
+	
+	public function saveAndPublish(){
+	    
+	    $this->save();
+	    $this->publish();
+	    
 	}
 	
 	public function getSaveErrors(){

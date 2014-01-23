@@ -853,7 +853,6 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 break;
             
             case "gallery":
-            // zxczcxzc
             $g = new SmartestAssetGroup;
             if($g->findBy('name', $name, $this->page->getSiteId())){
                 
@@ -877,6 +876,12 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             
             $g = new SmartestPageGroup;
             if($g->findBy('name', $name, $this->page->getSiteId())){
+                if(isset($params['assignhighlight'])){
+                    $highlighted_page = $g->determineHighlightedMemberOnPage($this->page, $this->getDraftMode());
+                    if($highlighted_page){
+                        $this->assign($params['assignhighlight'], $highlighted_page);
+                    }
+                }
                 return $g->getMembers($this->getDraftMode());
             }else{
                 // no file group with that name

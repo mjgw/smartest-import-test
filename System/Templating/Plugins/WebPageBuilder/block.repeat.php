@@ -10,12 +10,20 @@ function smarty_block_repeat($params, $content, &$smartest_engine, &$repeat){
 	
 	$dah = new SmartestDataAppearanceHelper;
 	
-	if($params['from'] == '_authors'){
-        $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "author";
-    }else if($params['from'] instanceof SmartestPageGroup || substr($params['from'], 0, 6) == 'pagegr' || substr($params['from'], 0, 6) == 'page_g'){
-        $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_page";
+	if(is_string($params['from'])){
+	    if($params['from'] == '_authors'){
+            $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "author";
+        }else if($params['from'] instanceof SmartestPageGroup || substr($params['from'], 0, 6) == 'pagegr' || substr($params['from'], 0, 6) == 'page_g'){
+            $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_page";
+        }else{
+	        $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_item";
+        }
     }else{
-	    $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_item";
+        if($params['from'] instanceof SmartestPageGroup){
+            $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_page";
+        }else{
+	        $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_item";
+        }
     }
 	
 	$limit = (isset($params['limit']) && is_numeric($params['limit'])) ? $params['limit'] : 0;

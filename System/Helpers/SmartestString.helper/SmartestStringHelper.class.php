@@ -757,7 +757,7 @@ class SmartestStringHelper extends SmartestHelper{
     
     public static function toParagraphs($string, $classes=''){
         
-        $parts = preg_split('/[\r\n\t]+/', $string);
+        $parts = self::splitByDoubleLineBreaks($string);
         
         if(strlen($classes)){
             $open_tag = '<p class="'.$classes.'">';
@@ -766,6 +766,12 @@ class SmartestStringHelper extends SmartestHelper{
         }
         
         return $open_tag.implode("</p>\r\n".$open_tag, $parts).'</p>';
+    }
+    
+    public static function splitByDoubleLineBreaks($string){
+        
+        return preg_split('/[\r\n\t]{2,}/', $string);
+        
     }
     
     public static function toRegularExpression($string, $add_slashes=false){

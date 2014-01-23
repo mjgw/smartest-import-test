@@ -57,6 +57,11 @@ class SmartestBaseApplication extends QuinceBase{
 	
 	public function __pre(){
 	    
+	    if(in_array($this->getRequest()->getAction(), array('__moduleConstruct', '__pre', '__post', 'lookupSiteDomain', '__moduleDestruct', '__smartestApplicationInit', '__destruct', '__construct', '__call', 'formForward'))){
+	        echo "not allowed";
+	        exit;
+	    }
+	    
 	    $this->_callOptionalConstructors();
 	    $this->_loadApplicationSpecificTemplatePlugins();
 	    
@@ -130,6 +135,14 @@ class SmartestBaseApplication extends QuinceBase{
 	    $rp = new SmartestParameterHolder('Final request parameters');
 	    $rp->loadArray($this->getRequest()->getRequestParameters());
 	    $this->getPresentationLayer()->assign('request_parameters', $rp);
+	    $this->send($this->userIsLoggedIn(), 'user_logged_in');
+	    $this->send($this->userIsLoggedInToCms(), 'system_user_logged_in');
+	    
+	}
+	
+	public function __call($method, $arguments){
+	    
+	    throw new SmartestException('The action or method \''.$method.'\' does not exist.');
 	    
 	}
 	
@@ -155,11 +168,32 @@ class SmartestBaseApplication extends QuinceBase{
 	    
 	}
 	
+	/* protected function setDefaultPage($page_name){
+	    
+	    $p = new SmartestPage;
+	    
+	    if($p->findBy('name', $page_name)){
+	        $GLOBALS['user_action_page'] = $p;
+	        $GLOBALS['user_action_has_page'] = true;
+	        
+	        $this->getPresentationLayer()->assignPage($p);
+	        
+	    }else{
+	        // echo "Page not found";
+	    }
+	    
+	} */
+	
 	private function _callOptionalConstructors(){
 	    
 	    // Called by all system applications
 	    if($this->isSystemApplication() && method_exists($this, "__systemModulePreConstruct")){
 		    $this->__systemModulePreConstruct();
+	    }
+	    
+	    // Called by all system applications
+	    if($this->isUserApplication() && method_exists($this, "__userModulePreConstruct")){
+		    $this->__userModulePreConstruct();
 	    }
 	    
 	    // Called by the individual applications
@@ -267,6 +301,12 @@ class SmartestBaseApplication extends QuinceBase{
 	    
 	}
 	
+	final public function isUserApplication(){
+	    
+	    return !($this instanceof SmartestSystemApplication);
+	    
+	}
+	
 	final public function isWebsitePage(){
 	    
 	    $sd = SmartestYamlHelper::fastLoad(SM_ROOT_DIR."System/Core/Info/system.yml");
@@ -311,6 +351,16 @@ class SmartestBaseApplication extends QuinceBase{
 	    
 	}
 	
+	protected function userIsLoggedIn(){
+	    $helper = new SmartestAuthenticationHelper;
+	    return $helper->getUserIsLoggedIn();
+	}
+	
+	protected function userIsLoggedInToCms(){
+	    $helper = new SmartestAuthenticationHelper;
+	    return $helper->getSystemUserIsLoggedIn();
+	}
+	
 	/* 
 	protected function requireAuthenticatedUser($authservicename){
 		if(!$this->_auth->getUserIsLoggedIn()){
@@ -347,6 +397,10 @@ class SmartestBaseApplication extends QuinceBase{
 	    return SmartestPersistentObject::get('presentationLayer');
 	}
 	
+	protected function getPresentationLayerVariable($variable_name){
+	    return SmartestPersistentObject::get('presentationLayer')->getVariable($variable_name);
+	}
+	
 	protected function getUserAgent(){
 	    return SmartestPersistentObject::get('userAgent');
 	}
@@ -365,6 +419,10 @@ class SmartestBaseApplication extends QuinceBase{
     		$this->_resultIndex++;
     	}
     }
+    
+    final protected function sent($varname){
+	    return $this->getPresentationLayer()->hasTemplateVariable($varname);
+	}
     
     ///// Preferences/Settings Access //////
     

@@ -1,6 +1,6 @@
 <?php
 
-class SmartestUser extends SmartestBaseUser{
+class SmartestUser extends SmartestBaseUser implements SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue{
 	
 	protected $_tokens = array();
 	protected $_site_ids = array();
@@ -498,6 +498,48 @@ class SmartestUser extends SmartestBaseUser{
             parent::delete();
         
         }
+        
+    }
+    
+    public function getStorableFormat(){
+        return $this->getId();
+    }
+    
+    public function hydrateFromStorableFormat($v){
+        return $this->find($v);
+    }
+    
+    public function hydrateFromFormData($v){
+        return $this->find($v);
+    }
+    
+    public function renderInput($params){}
+    
+    public function setValue($v){
+        if(is_numeric($v)){
+            return $this->find($v);
+        }else if(SmartestStringHelper::isValidUsername($v)){
+            return $this->findBy('username', $v);
+        }else{
+            return false;
+        }
+    }
+    
+    public function getValue(){
+        return $this->getId();
+    }
+    
+    // Note - __toString() is above
+    
+    public function isPresent(){
+        return $this->_came_from_database || count($this->_modified_properties);
+    }
+    
+    //////////////////////// NEW USER PROFILE STUFF/////////////////////////
+    
+    public function getProfile($service_name='_default'){
+        
+        
         
     }
 	

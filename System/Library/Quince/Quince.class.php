@@ -466,12 +466,18 @@ class QuinceBase{
                 $destination = $r->fetchRouteUrl($to, $matches);
             }
             
+            // print_r($matches);
+            
 		}else if(preg_match('/^@(\w+)(\?(.*))?$/', $to, $matches)){
+		    
+		    // print_r($matches);
+		    
             $r = new QuinceRouter;
             $r->setRequest($this->_request);
             if($r->routeExists($this->_request->getModule().':'.$matches[1])){
                 $destination = $r->fetchRouteUrl('@'.$this->_request->getModule().':'.$matches[1].$matches[2]);
             }
+            
 		}else{
 		    $destination = $to;
 		}
@@ -688,6 +694,10 @@ class QuinceRouter{
                         throw new QuinceException('Route @'.$route['module'].':'.$route['name'].' requires a missing \''.$rp.'\' parameter.');
                     }
                 }
+                
+                if(count($params)){
+                    $url .= '?'.$this->toUrlParameterString($params);
+                }
             
                 return str_replace('+_NSS+', ':', $url);
             
@@ -713,6 +723,25 @@ class QuinceRouter{
             
         }
     }
+    
+    public function toUrlParameterString($array){
+	    if(!is_array($array)){
+	        return '';
+	    }else{
+	        
+	        $i = 0;
+	        
+	        foreach($array as $key=>$value){
+	            
+	            if($i > 0) $string .= '&';
+	            $string .= $key.'='.urlencode($value);
+                $i++;
+                
+	        }
+	        
+	        return $string;
+	    }
+	}
     
 }
 

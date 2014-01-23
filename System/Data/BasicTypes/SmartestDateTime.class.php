@@ -141,6 +141,10 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     
     public function hydrateFromFormData($v){
         
+        if(!is_array($v)){
+            return $this->setValue($v);
+        }
+        
         if(isset($v['h'])){
             $hour = $v['h'];
         }else{

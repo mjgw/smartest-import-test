@@ -107,7 +107,8 @@ class SmartestResponse{
         	'System/Data/ExtendedTypes/SmartestCmsItemsCollection.class.php',
         	'System/Data/ExtendedTypes/SmartestAssetsCollection.class.php',
         	'System/Data/ExtendedTypes/SmartestTwitterAccountName.class.php',
-        	'System/Data/ExtendedTypes/SmartestExternalFeed.class.php'
+        	'System/Data/ExtendedTypes/SmartestExternalFeed.class.php',
+        	'System/Data/ExtendedTypes/SmartestEmailAddress.class.php'
 
         );
         
@@ -143,6 +144,7 @@ class SmartestResponse{
         	'System/Base/SmartestBaseProcess.class.php',
         	'System/Base/SmartestBaseApplication.class.php',
         	'System/Base/SmartestSystemApplication.class.php',
+        	'System/Base/SmartestUserApplication.class.php',
         	'System/Data/SmartestParameterHolderValuePresenceChecker.class.php',
         	'System/Data/SmartestDataObjectHelper.class.php',
         	'System/Data/SmartestRandomNumberGenerator.class.php',
@@ -152,6 +154,7 @@ class SmartestResponse{
         	'System/Templating/SmartestBasicRenderer.class.php',
         	'System/Templating/SmartestSingleItemTemplateRenderer.class.php',
         	'System/Templating/SmartestWebPageBuilder.class.php',
+        	'System/Templating/SmartestUserAppBuilder.class.php',
         	'System/Response/SmartestFilterChain.class.php',
         	'System/Response/SmartestFilter.class.php'
 
@@ -341,10 +344,7 @@ class SmartestResponse{
 	    
 	    try{
 	        $this->_controller->prepare();
-	        // echo "test";
-	        
 	    }catch(QuinceException $e){
-	        // print_r($this->_controller->getCurrentRequest());
 	        $this->_error_stack->recordError(new SmartestException('Quince error: '.$e->getMessage()), false);
 	    }
 	    
@@ -358,6 +358,12 @@ class SmartestResponse{
         }catch(SmartestAuthenticationException $e){
             $e->lockOut();
             exit;
+        }
+        
+        if($this->isSystemClass() && !$this->isPublicMethod() && !$this->_authentication->getSystemUserIsLoggedIn()){
+            // Non-system user trying to access Smartest
+            $e = new SmartestAuthenticationException;
+            $e->lockOut('unauthorized');
         }
 	    
 	    $rp = new SmartestParameterHolder("Smartest Controller Information");
@@ -421,7 +427,13 @@ class SmartestResponse{
 	    if($this->isSystemClass()){
 		    $templateLayerContext = 'InterfaceBuilder';
 		}else{
-		    $templateLayerContext = 'UserAppBuilder';
+		    if(isset($GLOBALS['user_action_has_page']) && $GLOBALS['user_action_has_page'] == true){
+		        // echo "web page";
+		        $templateLayerContext = 'WebPageBuilder';
+	        }else{
+	            // echo "not a web page";
+	            $templateLayerContext = 'UserAppBuilder';
+	        }
 		}
 		
 		$smarty_manager = new SmartyManager($templateLayerContext);
@@ -439,6 +451,14 @@ class SmartestResponse{
 		
 		$cth = 'Content-Type: '.$this->_controller->getCurrentRequest()->getContentType().'; charset='.$this->_controller->getCurrentRequest()->getCharSet();
 	    header($cth);
+	    
+	    if(is_dir($this->_controller->getCurrentRequest()->getMeta('_module_dir').'Library/')){
+	        $existing_include_path = get_include_path();
+	        $ip_array = explode(constant('PATH_SEPARATOR'), $existing_include_path);
+	        $ip_array[] = $this->_controller->getCurrentRequest()->getMeta('_module_dir').'Library/';
+	        $new_include_path = implode(constant('PATH_SEPARATOR'), $ip_array);
+            set_include_path($new_include_path);
+	    }
 	    
 	    SmartestHelper::loadApplicationHelpers();
 		

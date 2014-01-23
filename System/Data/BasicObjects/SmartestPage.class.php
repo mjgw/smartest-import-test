@@ -999,6 +999,10 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    
 	}
 	
+	public function isSection(){
+	    return (bool) $this->getIsSection();
+	}
+	
 	public function getPageFields(){
 	    
 	    $sql = "SELECT * FROM `PageProperties` WHERE pageproperty_site_id='".$this->_properties['site_id']."'";
@@ -1239,6 +1243,10 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	
 	public function isApproved(){
 	    return (bool) $this->_properties['changes_approved'];
+	}
+	
+	public function isPublished(){
+	    return SmartestStringHelper::toRealBool($this->_properties['is_published']);
 	}
 	
 	public function isEditableByUserId($user_id){
@@ -2129,6 +2137,44 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		
 		krsort($breadcrumbs);
 		$result = array_values($breadcrumbs);
+		
+		return $result;
+		
+	}
+	
+	public function getPageSections(){
+		
+		$helper = new SmartestPageManagementHelper;
+		$type_index = $helper->getPageTypesIndex($this->getParentSite()->getId());
+		
+		$home_page = $this->getParentSite()->getHomePage($this->getDraftMode());
+		$sections = array();
+		
+		$limit = 100;
+		
+		$page = &$this;
+		
+		$section_index = 0;
+		
+		while($home_page->getId() != $page->getId() && $limit > 0){
+		    
+		    if($page->isSection() && ($page->isPublished() || $this->getDraftMode())){
+    		    $page->setDraftMode($this->getDraftMode());
+    		    $sections[] = $page;
+    			$section_index++;
+		    }
+		    
+		    $page = $page->getParentPage();
+		    $limit--;
+			
+		}
+		
+		$this->_level = $section_index;
+		
+		$sections[] = $home_page;
+		
+		ksort($sections);
+		$result = array_values($sections);
 		
 		return $result;
 		

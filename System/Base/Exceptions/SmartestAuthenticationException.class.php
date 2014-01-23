@@ -8,7 +8,7 @@ class SmartestAuthenticationException extends SmartestException{
         $this->_controller = SmartestPersistentObject::get('controller');
     }
     
-    public function lockOut(){
+    public function lockOut($hash='session'){
         
         $this->setReturnCookie();
         $this->setPostVarsCookie();
@@ -19,17 +19,25 @@ class SmartestAuthenticationException extends SmartestException{
         if($c->getCurrentRequest()->getNamespace() == 'ajax' || $c->getCurrentRequest()->getNamespace() == 'modal'){
             
             header('HTTP/1.1 401 Unauthorized');
+            // This is so that if a modal is summoned when the system has timed out, the modal will redirect the user to the login screen
             if($c->getCurrentRequest()->getNamespace() == 'modal'){
-                echo '<script type="text/javascript">window.location="'.$this->_controller->getCurrentRequest()->getDomain().'smartest/login#session";</script>';
+                echo '<script type="text/javascript">window.location="'.$this->_controller->getCurrentRequest()->getDomain().'smartest/login#'.$hash.'";</script>';
             }
             exit;
             
         }else{
-        
+            
+            $helper = new SmartestAuthenticationHelper;
+    	    // return $helper->getUserIsLoggedIn();
+            
             if($this->_controller->getCurrentRequest()->getRequestString() == 'smartest'){
-    		    $e->setRedirectUrl($this->_controller->getCurrentRequest()->getDomain().'smartest/login');
+                if($helper->getUserIsLoggedIn()){
+    		        $e->setRedirectUrl($this->_controller->getCurrentRequest()->getDomain().'smartest/login#unauthorized');
+		        }else{
+		            $e->setRedirectUrl($this->_controller->getCurrentRequest()->getDomain().'smartest/login');
+		        }
     	    }else{
-    	        $e->setRedirectUrl($this->_controller->getCurrentRequest()->getDomain().'smartest/login#session');
+    	        $e->setRedirectUrl($this->_controller->getCurrentRequest()->getDomain().'smartest/login#'.$hash);
     	    }
 	    
     		$e->redirect(array(401, 303), true);

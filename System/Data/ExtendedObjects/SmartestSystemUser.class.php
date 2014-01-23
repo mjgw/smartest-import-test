@@ -1,6 +1,6 @@
 <?php
 
-class SmartestSystemUser extends SmartestUser{
+class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
     
     protected $_tokens;
     protected $_token_codes;

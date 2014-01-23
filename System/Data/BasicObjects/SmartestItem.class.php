@@ -383,6 +383,23 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    
 	}
 	
+	public function hasTag($tag_identifier){
+	    
+	    if(is_numeric($tag_identifier)){
+	        $sql = "SELECT * FROM TagsObjectsLookup WHERE taglookup_type='SM_ITEM_TAG_LINK' AND taglookup_object_id='".$this->_properties['id']."' AND taglookup_tag_id='".$tag->getId()."'";
+	    }else{
+	        $tag_name = SmartestStringHelper::toSlug($tag_identifier);
+	        $sql = "SELECT * FROM TagsObjectsLookup, Tags WHERE taglookup_type='SM_ITEM_TAG_LINK' AND taglookup_object_id='".$this->_properties['id']."' AND TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND Tags.tag_name='".$tag_name."'";
+	    }
+	    
+	    return (bool) count($this->database->queryToArray($sql));
+	    
+	}
+	
+	public function createOrConnectTag(){
+	    
+	}
+	
 	// Related items and pages
 	
 	public function getRelatedItems($draft_mode=false){

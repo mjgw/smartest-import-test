@@ -38,6 +38,19 @@ class SmartestUploadHelper extends SmartestHelper{
 	    return (isset($_FILES[$name]) && $_FILES[$name]['name']);
 	}
 	
+	public static function uploadHasSuffix($name, $suffix){
+	    // return (isset($_FILES[$name]) && $_FILES[$name]['name']);
+	    if(self::uploadExists($name)){
+	        if(is_array($suffix)){
+	            return in_array(SmartestStringHelper::getDotSuffix($_FILES[$name]['name']), $suffix);
+	        }else{
+	            return SmartestStringHelper::getDotSuffix($_FILES[$name]['name']) == $suffix;
+            }
+        }else{
+            return false;
+        }
+	}
+	
 	public function save(){
 	    
 	    if($_FILES[$this->_upload_name]['error'] == 0){

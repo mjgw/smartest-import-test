@@ -19,6 +19,19 @@ function smarty_function_link($params, &$smartest_engine){
 		    $link->setHostPage($GLOBALS['CURRENT_PAGE']);
 		}
 		
+		if(isset($params['highlightpage']) && isset($params['highlightclass'])){
+		    /* $hlpagevarname = SmartestStringHelper::toVarName($params['highlightpage']);
+		    echo $hlpagevarname;
+		    echo $smartest_engine->_tpl_vars[$hlpagevarname]; */
+		    if(is_object($link->getDestination()) && is_object($params['highlightpage']) && strlen($params['highlightclass'])){
+		        // echo $link->getDestination();
+		        if($link->getDestination()->getId() == $params['highlightpage']->getId()){
+		            // echo "current";
+		            $link->addClass($params['highlightclass']);
+		        }
+		    }
+	    }
+		
 		if($link->hasError()){
 		    return $smartest_engine->raiseError($link->getErrorMessage());
 		}

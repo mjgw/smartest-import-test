@@ -209,6 +209,14 @@ class SmartestCmsLink extends SmartestHelper{
         return $this->_markup_attributes->getParameter($attribute_name);
     }
     
+    public function setMarkupAttribute($attribute_name, $attribute_value){
+        return $this->_markup_attributes->setParameter($attribute_name, $attribute_value);
+    }
+    
+    public function clearMarkupAttribute($attribute_name){
+        return $this->_markup_attributes->clearParameter($attribute_name);
+    }
+    
     public function getDestinationProperties(){
         return $this->_destination_properties;
     }
@@ -314,6 +322,44 @@ class SmartestCmsLink extends SmartestHelper{
         
         if($s->find($this->getSiteId())){
             return $s;
+        }
+        
+    }
+    
+    public function addClass($class_name){
+        
+        $classes = explode(' ', $this->getMarkupAttribute('class'));
+        
+        if(in_array($class_name, $classes)){
+            // class was already applied
+            return false;
+        }else{
+            // class was added
+            $classes[] = $class_name;
+            $this->setMarkupAttribute('class', trim(implode(' ', $classes)));
+            return true;
+        }
+        
+    }
+    
+    public function removeClass($class_name){
+        
+        $classes = explode(' ', $this->getMarkupAttribute('class'));
+        
+        if(in_array($class_name, $classes)){
+            
+            $key = array_search($class_name, $classes);
+            unset($classes[$key]);
+            if(count($classes)){
+                $this->setMarkupAttribute('class', trim(implode(' ', $classes)));
+                return true;
+            }else{
+                $this->clearMarkupAttribute('class');
+            }
+            
+        }else{
+            // class not applied
+            return false;
         }
         
     }

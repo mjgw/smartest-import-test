@@ -94,7 +94,7 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
     }
     
     public function toParagraphsArray(){
-        return SmartestStringHelper::toParagraphsArray($this->_string);
+        return SmartestStringHelper::splitByDoubleLineBreaks($this->_string);
     }
     
     public function offsetExists($offset){
@@ -117,7 +117,9 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             case "length":
             return strlen($this->_string);
             case "paragraphs":
-            return $this->toParagraphsArray();
+            return SmartestStringHelper::toParagraphs($this->_string);
+            case "convert_line_breaks":
+            return $this->toParagraphs();
             case "encoded":
             return $this->toHexEncoded();
             case "urlencoded":
@@ -143,6 +145,8 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             return SmartestStringHelper::toTitleCase($this->_string);
             case "titlecase_strict":
             return SmartestStringHelper::toTitleCase($this->_string, true);
+            case "_php_class":
+            return __CLASS__;
             default:
             return $this->_string;
         }
