@@ -1292,8 +1292,12 @@ class SmartestModel extends SmartestBaseModel{
 		    $constants .= $new_constant;
 		
 		}
-	    
-	    $file = file_get_contents(SM_ROOT_DIR.'System/Data/ObjectModelTemplates/autoobject_template.txt');
+		
+	    if($this->getType() == 'SM_ITEMCLASS_MODEL'){
+	        $file = file_get_contents(SM_ROOT_DIR.'System/Data/ObjectModelTemplates/autoobject_template.txt');
+	    }else if($this->getType() == 'SM_ITEMCLASS_USER_PROFILE_SERVICE'){
+	        $file = file_get_contents(SM_ROOT_DIR.'System/Data/ObjectModelTemplates/autouserprofile_template.txt');
+	    }
 		
 		$functions = $this->buildAutoClassFunctionCode();
 		$varnames_lookup = $this->buildAutoClassVarnameLookupCode();

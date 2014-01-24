@@ -116,8 +116,8 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	
 	public function getClass(){
 	    
-	    var_dump($this->getId());
-	    echo $this->getForeignKeyFilter();
+	    /* var_dump($this->getId());
+	    echo $this->getForeignKeyFilter(); */
 	    return SmartestDataUtility::getClassForDataType($this->getDatatype(), $this->getForeignKeyFilter());
 	    
 	}
