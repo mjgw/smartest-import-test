@@ -10,10 +10,6 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	
 	protected function __objectConstruct(){
 	    
-		/* $this->_table_prefix = 'user_';
-		$this->_table_name = 'Users';
-		$this->_no_prefix = array('username'=>1, 'password'=>1); */
-		
 		if(method_exists($this, '__myConstructor')){
 		    $args = func_get_args();
 		    $this->__myConstructor($args);
@@ -209,6 +205,9 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	        case "website_url":
 	        $url = new SmartestExternalUrl($this->_properties['website']);
 	        return $url;
+	        
+	        case "email":
+	        return new SmartestEmailAddress($this->_properties['email']);
 	        
 	    }
 	    
@@ -534,6 +533,112 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
     public function isPresent(){
         return $this->_came_from_database || count($this->_modified_properties);
     }
+    
+    ////////////////////////////////// Todo list stuff ///////////////////////////////////////
+	
+	public function assignTodo($type_code, $entity_id, $assigner_id=0, $input_message='', $send_email=false){
+	    
+	    /* $type = SmartestTodoListHelper::getType($type_code);
+	    
+	    if(isset($message{1})){
+	        $input_message = SmartestStringHelper::sanitize($message);
+	    }else{
+	        $input_message = $type->getDescription();
+	    } */
+	    
+	    $task = new SmartestTodoItem;
+	    $task->setReceivingUserId((int) $this->_properties['id']);
+	    $task->setAssigningUserId((int) $assigner_id);
+	    $task->setForeignObjectId((int) $entity_id);
+	    $task->setTimeAssigned(time());
+	    $task->setDescription(strip_tags(SmartestStringHelper::sanitize($input_message)));
+	    $task->setType($type_code);
+	    $task->save();
+	    
+	    /* if($send_email){
+	        // code goes in here to send notification email to user
+	    } */
+	    
+	}
+	
+	public function hasTodo($type, $entity_id){
+	    $id = (int) $entity_id;
+	    $type = SmartestStringHelper::sanitize($type);
+	    $sql = "SELECT todoitem_id FROM TodoItems WHERE todoitem_receiving_user_id='".$this->_properties['id']."' AND todoitem_foreign_object_id='".$id."' AND todoitem_type='".$type."' AND todoitem_is_complete !=1";
+	    return (bool) count($this->database->queryToArray($sql));
+	    
+	}
+	
+	public function getTodo($type, $entity_id){
+	    
+	    $id = (int) $entity_id;
+	    $type = SmartestStringHelper::sanitize($type);
+	    $sql = "SELECT * FROM TodoItems WHERE todoitem_receiving_user_id='".$this->_properties['id']."' AND todoitem_foreign_object_id='".$id."' AND todoitem_type='".$type."' AND todoitem_is_complete !=1";
+	    $result = $this->database->queryToArray($sql);
+	    
+	    if(isset($result[0])){
+	        $todo = new SmartestTodoItem;
+	        $todo->hydrate($result[0]);
+	        return $todo;
+        }else{
+            return false;
+        }
+	    
+	}
+	
+	public function getNumTodoItems($get_assigned=false){
+	    
+	    if($get_assigned){
+	        $sql = "SELECT todoitem_id FROM TodoItems WHERE todoitem_assigning_user_id='".$this->_properties['id']."' AND todoitem_is_complete !=1";
+	    }else{
+	        $sql = "SELECT todoitem_id FROM TodoItems WHERE todoitem_receiving_user_id='".$this->_properties['id']."' AND todoitem_is_complete !=1";
+        }
+	    
+	    return count($this->database->queryToArray($sql));
+	    
+	}
+	
+	public function getTodoItems($get_assigned=false){
+	    
+	    if($get_assigned){
+	        $sql = "SELECT * FROM Users, TodoItems WHERE todoitem_assigning_user_id='".$this->_properties['id']."' AND todoitem_is_complete !=1 AND TodoItems.todoitem_receiving_user_id=Users.user_id ORDER BY todoitem_time_assigned DESC";
+	    }else{
+	        $sql = "SELECT * FROM Users, TodoItems WHERE todoitem_receiving_user_id='".$this->_properties['id']."' AND todoitem_is_complete !=1 AND TodoItems.todoitem_assigning_user_id=Users.user_id ORDER BY todoitem_time_assigned DESC";
+        }
+	    
+	    $result = $this->database->queryToArray($sql);
+	    $tasks = array();
+	    
+	    if(count($result)){
+	        foreach($result as $t){
+	            $task = new SmartestTodoItem;
+	            $task->hydrate($t);
+	            $tasks[] = $task;
+	        }
+	    }
+	    
+	    return $tasks;
+	    
+	}
+	
+	public function getTodoItemsAsArrays($get_assigned=false, $get_foreign_object_info=false){
+	    
+	    $tasks = $this->getTodoItems($get_assigned);
+	    $arrays = array();
+	    
+	    foreach($tasks as $t){
+	        $arrays[] = $t->__toArray($get_foreign_object_info);
+	    }
+	    
+	    return $arrays;
+	    
+	}
+    
+    public function clearCompletedTodos(){
+	    
+	    $sql = "DELETE FROM TodoItems WHERE todoitem_is_complete=1 AND todoitem_receiving_user_id=".$this->getId()."";
+	    
+	}
     
     //////////////////////// NEW USER PROFILE STUFF/////////////////////////
     

@@ -5,6 +5,7 @@ class SmartestSite extends SmartestBaseSite{
     protected $_home_page = null;
     protected $_containers = array();
     protected $_placeholders = array();
+    protected $_field_names = array();
     protected $_sets = array();
     protected $_models = array();
     protected $displayPages = array();
@@ -324,6 +325,34 @@ class SmartestSite extends SmartestBaseSite{
 	    return $placeholders;
 	    
 	}
+	
+	public function getFieldNames(){
+	    
+	    // $names = array();
+	    
+	    if(!count($this->_field_names)){
+	    
+    	    $sql = "SELECT pageproperty_name FROM PageProperties WHERE pageproperty_site_id='".$this->getId()."'";
+    	    $result = $this->database->queryToArray($sql);
+    	    $names = array();
+	    
+    	    foreach($result as $r){
+    	        $names[] = $r['pageproperty_name'];
+    	    }
+	    
+    	    $this->_field_names = $names;
+	    
+        }
+	    
+	    return $this->_field_names;
+	    
+	}
+	
+	public function fieldExists($field_name){
+        
+        return in_array(SmartestStringHelper::toVarName($field_name), $this->getFieldNames());
+        
+    }
 	
 	public function getFullDirectoryPath(){
 	    return SM_ROOT_DIR.'Sites/'.$this->getDirectoryName().'/';

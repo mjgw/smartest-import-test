@@ -28,10 +28,10 @@ class SmartestUserApplication extends SmartestBaseApplication{
 	    }
 	}
 	
-	protected function requireAuthenticatedSystemUser(){
+	protected function requireAuthenticatedSystemUser($login_route=null){
 	    if(!$this->userIsLoggedInToCms()){
 	        $e = new SmartestAuthenticationException;
-	        $e->lockOut();
+	        $e->lockOut('session', $login_route);
             exit;
 	    }
 	}
@@ -95,12 +95,34 @@ class SmartestUserApplication extends SmartestBaseApplication{
 	    
 	}
 	
+	protected function processSystemAuthenticationRequest($handle, $password, $return_redirect=null){
+	    
+	    $use_email = SmartestStringHelper::isEmailAddress($handle);
+	    
+	    $helper = new SmartestAuthenticationHelper;
+	    
+	    if($user = $helper->newLogin($handle, $password, 'SMARTEST', $use_email)){
+	        SmartestSession::set('user', $user);
+	        if($return_redirect){
+	            $this->redirect($return_redirect);
+	        }else{
+	            return $user;
+	        }
+	    }else{
+	        return false;
+	    }
+	    
+	}
+	
 	protected function endSession($redirect_after=null){
+	    
 	    $helper = new SmartestAuthenticationHelper;
 	    $helper->logout();
+	    
 	    if(strlen($redirect_after)){
 	        $this->redirect($redirect_after);
 	    }
+	    
 	}
 	
 	protected function setDefaultBackgroundPage($page_name){

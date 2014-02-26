@@ -478,6 +478,8 @@ class QuinceBase{
                 $destination = $r->fetchRouteUrl('@'.$this->_request->getModule().':'.$matches[1].$matches[2]);
             }
             
+            // print_r($matches);
+            
 		}else{
 		    $destination = $to;
 		}
@@ -801,6 +803,7 @@ class QuinceRedirectException extends QuinceException{
 	public function redirect($sc=303, $exit=true){
 	    
 	    header("HTTP/1.1 ".$sc." ".$this->_status_codes[$sc]);
+	    var_dump($this->getRedirectUrl());
         header("Location: ".$this->getRedirectUrl());
         
         if($exit){

@@ -270,6 +270,11 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	
 	// Tags
 	
+	public function removeTags($tag_ids){
+	    $sql = "DELETE FROM TagsObjectsLookup WHERE taglookup_object_id='".$this->_properties['id']."' AND taglookup_type='SM_ITEM_TAG_LINK' AND taglookup_tag_id IN ('".implode("','", $tag_ids)."')";
+	    $this->database->rawQuery($sql);
+	}
+	
 	public function clearTags(){
 	    $sql = "DELETE FROM TagsObjectsLookup WHERE taglookup_object_id='".$this->_properties['id']."' AND taglookup_type='SM_ITEM_TAG_LINK'";
 	    $this->database->rawQuery($sql);
@@ -311,6 +316,19 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    
 	}
 	
+	public function getTagsAsCommaSeparatedString(){
+	    
+	    $tags = $this->getTags();
+	    $labels_array = array();
+	    
+	    foreach($tags as $t){
+	        $labels_array[] = $t->getLabel();
+	    }
+	    
+	    return implode(', ', $labels_array);
+	    
+	}
+	
 	public function getTagsAsArrays(){
 	    
 	    $arrays = array();
@@ -324,12 +342,12 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    
 	}
 	
-	public function tag($tag_identifier){
+	public function tag($tag_identifier, $check_tag_existence=true){
 	    
 	    if(is_numeric($tag_identifier)){
 	        
 	        $tag = new SmartestTag;
-	        
+        
 	        if(!$tag->find($tag_identifier)){
 	            // kill it off if they are supplying a numeric ID which doesn't match a tag
 	            return false;
@@ -338,7 +356,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    }else{
 	        
 	        $tag_name = SmartestStringHelper::toSlug($tag_identifier);
-	        
+        
 	        $tag = new SmartestTag;
 
     	    if(!$tag->findBy('name', $tag_name)){
@@ -347,9 +365,16 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
     	        $tag->setName($tag_name);
     	        $tag->save();
     	    }
+    	    
 	    }
 	    
-	    $sql = "INSERT INTO TagsObjectsLookup (taglookup_tag_id, taglookup_object_id, taglookup_type) VALUES ('".$tag->getId()."', '".$this->_properties['id']."', 'SM_ITEM_TAG_LINK')";
+	    return $this->addTagWithId($tag->getId());
+	    
+	}
+	
+	public function addTagWithId($tag_id){
+	    
+	    $sql = "INSERT INTO TagsObjectsLookup (taglookup_tag_id, taglookup_object_id, taglookup_type) VALUES ('".$tag_id."', '".$this->_properties['id']."', 'SM_ITEM_TAG_LINK')";
 	    $this->database->rawQuery($sql);
 	    return true;
 	    
@@ -396,7 +421,91 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    
 	}
 	
-	public function createOrConnectTag(){
+	public function createOrConnectTag($tag_label){
+	    $this->createOrConnectTags(array($tag_label));
+	}
+	
+	public function createOrConnectTags($new_tag_strings_array){
+	    
+	    if(!is_array($new_tag_strings_array) || !count($new_tag_strings_array)){
+	        return false;
+	    }
+	    
+	    // 1. Find out which tags already exist
+	    
+	    // create array with slugs as keys, raw values as values
+	    $useful_array = array();
+	    
+	    foreach($new_tag_strings_array as $string){
+	        $useful_array[SmartestStringHelper::toSlug($string)] = $string;
+	    }
+	    
+	    
+	    $new_tag_slugs = array();
+	    
+	    foreach($new_tag_strings_array as $nts){
+	        $new_tag_slugs[] = SmartestStringHelper::toSlug($nts);
+	    }
+	    
+	    $sql = "SELECT * FROM Tags WHERE tag_type='SM_TAGTYPE_TAG' AND tag_name IN ('".implode("','", $new_tag_slugs)."')";
+	    $result = $this->database->queryToArray($sql);
+	    $existing_tags = array();
+	    
+	    foreach($result as $row){
+	        $t = new SmartestTag;
+	        $t->hydrate($row);
+	        $existing_tags[$row['tag_name']] = $t;
+	    }
+	    
+	    
+	    // 2. Cycle through requested tags, attaching those which already exist and creating and attaching those that don't
+	    foreach($useful_array as $requested_tag_slug => $requested_tag_label){
+	        if(isset($existing_tags[$requested_tag_slug])){
+	            // The tag exists
+	            $this->addTagWithId($existing_tags[$requested_tag_slug]->getId());
+	        }else{
+	            // The tag does not exist, so make it
+	            $new_tag = new SmartestTag;
+	            $new_tag->setLabel($requested_tag_label);
+	            $new_tag->setName($requested_tag_slug);
+	            $new_tag->save();
+	            $this->addTagWithId($new_tag->getId());
+	        }
+	    }
+	    
+	    
+	}
+	
+	public function updateTagsFromStringsArray($strings_array){
+	    
+	    $starting_tags = $this->getTags();
+	    
+	    if(count($strings_array)){
+	        
+	        $new_tag_slugs = array();
+	        
+	        foreach($strings_array as $s){
+	            $new_tag_slugs[] = SmartestStringHelper::toSlug($s);
+	        }
+	        
+	        // if the item already has tags, first remove any tags that are no longer in the array
+	        if(count($starting_tags)){
+	            $remove_tag_ids = array();
+	            foreach($starting_tags as $st){
+	                if(!in_array($st->getName(), $new_tag_slugs)){
+	                    $remove_tag_ids[] = $st->getId();
+	                }
+	            }
+	            $this->removeTags($remove_tag_ids);
+	        }else{
+	            // The item does not have any tags attached
+	        }
+	        
+	        $this->createOrConnectTags($strings_array);
+	        
+	    }else{
+	        $this->clearTags();
+	    }
 	    
 	}
 	

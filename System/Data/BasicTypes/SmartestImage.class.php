@@ -731,6 +731,9 @@ class SmartestImage extends SmartestFile{
 	        case "web_path":
 	        return $this->getWebPath();
 	        
+	        case "og_meta":
+	        return '';
+	        
 	        case "_ui_preview":
 	        $prev = $this->getSquarePreviewForUI();
 	        if($this->_resource){
@@ -761,7 +764,7 @@ class SmartestImage extends SmartestFile{
 	    
 	}
 	
-	public function render(){
+	public function render($og_meta=false){
 	    
 	    $sm = new SmartyManager('BasicRenderer');
         $r = $sm->initialize($this->getShortHash());

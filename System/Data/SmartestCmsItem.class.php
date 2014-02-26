@@ -90,6 +90,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	
 	const NAME = '_SMARTEST_ITEM_NAME';
 	const ID = '_SMARTEST_ITEM_ID';
+	const WEB_ID = '_SMARTEST_ITEM_WEBID';
+	const WEBID = '_SMARTEST_ITEM_WEBID';
+	const LONG_ID = '_SMARTEST_ITEM_WEBID';
 	const NUM_COMMENTS = '_SMARTEST_ITEM_NUM_COMMENTS';
 	const NUM_HITS = '_SMARTEST_ITEM_NUM_HITS';
 	const AVERAGE_RATING = '_SMARTEST_ITEM_AVG_RATING';
@@ -107,9 +110,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 		// $this->generatePropertiesLookup();
 		$this->_request = SmartestPersistentObject::get('controller')->getCurrentRequest();
 		
-		if(get_class($this) == 'SmartestCmsItem'){
+		/* if(get_class($this) == 'SmartestCmsItem'){
 		    throw new SmartestException('here');
-		}
+		} */
 		
 	}
 	
@@ -260,6 +263,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            case 'url':
 	            case 'permalink':
 	            return $this->getUrl();
+	            
+	            case 'tags_cs_string':
+	            return $this->_item->getTagsAsCommaSeparatedString();
 	            
 	            case 'absolute_uri':
 	            case 'absolute_url':
@@ -1010,15 +1016,19 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	}
 	
 	public function getTags(){
-	    
 	    return $this->_item->getTags();
-	    
 	}
 	
 	public function getTagsAsArrays(){
-	    
 	    return $this->_item->getTagsAsArrays();
-	    
+	}
+	
+	public function updateTagsFromStringsArray($strings_array){
+	    $this->_item->updateTagsFromStringsArray($strings_array);
+	}
+	
+	public function getTagsAsCommaSeparatedString(){
+	    return $this->_item->getTagsAsCommaSeparatedString();
 	}
 	
 	public function getAuthors(){

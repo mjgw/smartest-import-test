@@ -58,6 +58,10 @@ class SmartestEmailAddress extends SmartestString{
             case 'extended_version':
             return $this->getExtendedVersion();
             
+            case 'mailto':
+            $l = SmartestCmsLinkHelper::createLink('mailto:'.$this->_string, array('with'=>$this->_string));
+            return $l->render();
+            
         }
         
         return parent::offsetGet($offset);

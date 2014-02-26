@@ -79,6 +79,55 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
         }
     }
     
+    public function getNowDeltaRaw(){
+        
+        return time()-$this->_value;
+        
+    }
+    
+    public function getNowDeltaFormatted(){
+        
+        // get delta between $time and $currentTime
+        $delta = abs(time() - $this->_value);
+        
+        if($delta > 0){
+
+            // if delta is more than 7 days print the date
+            if ($delta > 60 * 60 * 24 *7 ) {
+                // return $timeToCompare;
+                $weeks = floor($delta / (60*60*24*7));
+                return $weeks . " weeks";
+            }   
+
+            // if delta is more than 24 hours print in days
+            else if ($delta > 60 * 60 *24) {
+                $days = ceil($delta / (60*60*24));
+                return $days . " days";
+            }
+
+            // if delta is more than 60 minutes, print in hours
+            else if ($delta > 60 * 60){
+                $hours = ceil($delta / (60*60));
+                return $hours . " hours";
+            }
+
+            // if delta is more than 60 seconds print in minutes
+            else if ($delta > 60) {
+                $minutes = ceil($delta / 60);
+                return $minutes . " minutes";
+            }
+            
+            else if ($delta > 40) {
+                return "one minute";
+            }
+
+            // actually for now: if it is less or equal to 60 seconds, just say it is a minute
+            return $delta . " seconds";
+        
+        }
+        
+    }
+    
     /*
     
     $hours = floor($total_time/3600);
@@ -244,6 +293,12 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
 	        
 	        case 'in_future':
 	        return new SmartestBoolean(time() < $this->_value);
+	        
+	        case 'now_delta_raw':
+	        return $this->getNowDeltaRaw();
+	        
+	        case 'now_delta_formatted':
+	        return $this->getNowDeltaFormatted();
 	        
 	        default:
 	        return date($offset, $this->_value);

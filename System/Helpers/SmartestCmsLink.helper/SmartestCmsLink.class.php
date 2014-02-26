@@ -94,12 +94,14 @@ class SmartestCmsLink extends SmartestHelper{
                 
                     case "page":
                     $this->setType(SM_LINK_TYPE_PAGE);
+                    $this->addClass('sm-link-internal');
                     break;
                 
                     case "metapage":
                     case "item":
                     $this->setType(SM_LINK_TYPE_METAPAGE);
                     $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
+                    $this->addClass('sm-link-internal');
                     break;
                 
                     case "image":
@@ -110,6 +112,7 @@ class SmartestCmsLink extends SmartestHelper{
                     case "download":
                     case "dl":
                     $this->setType(SM_LINK_TYPE_DOWNLOAD);
+                    $this->addClass('sm-link-download');
                     break;
                 
                     case "tag":
@@ -124,6 +127,7 @@ class SmartestCmsLink extends SmartestHelper{
                     
                     case "mailto":
                     $this->setType(SM_LINK_TYPE_MAILTO);
+                    $this->addClass('sm-link-mailto');
                     break;
                     
                 }
@@ -136,6 +140,7 @@ class SmartestCmsLink extends SmartestHelper{
 
                 $this->setType(SM_LINK_TYPE_METAPAGE);
                 $this->setNamespace($ns);
+                $this->addClass('sm-link-internal');
                 $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_USER);
             
                 return true;
@@ -144,6 +149,7 @@ class SmartestCmsLink extends SmartestHelper{
             
                 if(substr($this->_destination_properties->getParameter('destination'), 0, 4) == 'http'){
                     $this->setType(SM_LINK_TYPE_EXTERNAL);
+                    $this->addClass('sm-link-external');
                     $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_URL);
                     return true;
                 }
@@ -267,6 +273,7 @@ class SmartestCmsLink extends SmartestHelper{
             
             $d = $item->getMetaPage();
             $d->setPrincipalItem($item);
+            $this->addClass('sm-link-internal');
         
             $this->_destination = $d;
         
@@ -281,6 +288,7 @@ class SmartestCmsLink extends SmartestHelper{
         $this->setType(SM_LINK_TYPE_PAGE);
         $this->setNamespace('page');
         $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
+        $this->addClass('sm-link-internal');
         
         $this->_destination = $page;
         
@@ -291,6 +299,7 @@ class SmartestCmsLink extends SmartestHelper{
         $this->setType(SM_LINK_TYPE_TAG);
         $this->setNamespace('tag');
         $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
+        $this->addClass('sm-link-internal');
         
         $this->_destination = $tag;
         
@@ -301,6 +310,7 @@ class SmartestCmsLink extends SmartestHelper{
         $this->setType(SM_LINK_TYPE_AUTHOR);
         $this->setNamespace('author');
         $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
+        $this->addClass('sm-link-internal');
         
         $this->_destination = $user;
         

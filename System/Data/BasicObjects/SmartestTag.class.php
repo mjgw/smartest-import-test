@@ -19,12 +19,12 @@ class SmartestTag extends SmartestBaseTag{
     
     protected $_is_attached = false; // Used when building the tags screen
     
-    protected function __objectConstruct(){
+    /* protected function __objectConstruct(){
         
         $this->_table_prefix = 'tag_';
 		$this->_table_name = 'Tags';
         
-    }
+    } */
     
     public function getPages($site_id='', $d='USE_DEFAULT'){
         
