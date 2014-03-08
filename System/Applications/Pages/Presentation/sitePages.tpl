@@ -63,7 +63,7 @@ function viewPage(){
       {/if}
       
       <a id="item_{$page.info.webid}" class="option" href="#" onclick="setSelectedItem('{$page.info.webid}', '{$page.info.title|escape:quotes}', '{if $page.info.type == 'ITEMCLASS'}meta-page{else}static-page{/if}');return false;" ondblclick="window.location='{$domain}{$section}/openPage?page_id={$page.info.webid}&amp;site_id={$content.data[0].info.site_id}'">		 
-        {if $page.info.type == 'ITEMCLASS'}<img border="0" src="{$domain}Resources/Icons/page_gear.png" />{else}<img border="0" src="{$domain}Resources/Icons/page.png" />{/if}
+        {if $page.info.type == 'ITEMCLASS'}<img border="0" src="{$domain}Resources/Icons/page_gear.png" />{elseif $page.info.is_section == '1'}<img border="0" src="{$domain}Resources/Icons/page_red.png" />{else}<img border="0" src="{$domain}Resources/Icons/page.png" />{/if}
         <span>{$page.info.title}</span>
         <span style="color:#aaa">{if $page.info.is_published == "TRUE"}(published){else}(not published){/if}</span>
       </a>

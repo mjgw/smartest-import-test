@@ -74,6 +74,7 @@ function viewLivePage(parameters){
   {else}
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefineContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear container definition</a></li>
   {/if}
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this container</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="list-specific-actions" style="display:none">

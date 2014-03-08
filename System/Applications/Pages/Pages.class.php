@@ -658,6 +658,67 @@ class Pages extends SmartestSystemApplication{
 	    
 	}
 	
+	public function editContainer(){
+	    
+	    $container = new SmartestContainer;
+	    
+	    if($this->requestParameterIsSet('assetclass_id')){
+	        $found = $container->findBy('name', $this->getRequestParameter('assetclass_id'));
+	    }else{
+	        $container_id = (int) $this->getRequestParameter('container_id');
+	        $found = $container->find($container_id);
+	    }
+	    
+	    if($found){
+	        
+	        $this->send($container, 'container');
+	        $tlh = new SmartestTemplatesLibraryHelper;
+    		// $groups = $tlh->getTemplateGroups('SM_ASSETTYPE_CONTAINER_TEMPLATE', $this->getSite()->getId());
+	        $this->send($tlh->getTemplateGroups('SM_ASSETTYPE_CONTAINER_TEMPLATE', $this->getSite()->getId()), 'possible_groups');
+	        // $definitions = $placeholder->getDefinitions(true, $this->getSite()->getId());
+	        // $this->send((count($definitions) == 0), 'allow_type_change');
+	        
+	    }else{
+	        
+	        $this->addUserMessageToNextRequest("The container ID wasn't recognized.", SmartestUserMessage::ERROR);
+	        $this->formForward();
+	        
+	    }
+	    
+	}
+	
+	public function updateContainer(){
+	    
+	    $container_id = (int) $this->getRequestParameter('container_id');
+	    $container = new SmartestContainer;
+	    
+	    if($container->find($container_id)){
+	        
+	        $container->setLabel($this->getRequestParameter('container_label'));
+	        
+	        if($this->getRequestParameter('container_filter')){
+	            if($this->getRequestParameter('container_filter') == 'NONE'){
+	                $container->setFilterType('SM_ASSETCLASS_FILTERTYPE_NONE');
+	                $container->setFilterValue('');
+	            }else{
+	                $container->setFilterType('SM_ASSETCLASS_FILTERTYPE_TEMPLATEGROUP');
+	                $container->setFilterValue($this->getRequestParameter('container_filter'));
+	            }
+	        }
+	        
+	        $container->save();
+	        $this->addUserMessageToNextRequest("The container was updated.", SmartestUserMessage::SUCCESS);
+	        
+	    }else{
+	        
+	        $this->addUserMessageToNextRequest("The container ID wasn't recognized.", SmartestUserMessage::ERROR);
+	        
+	    }
+	    
+	    $this->formForward();
+	    
+	}
+	
 	public function placeholderDefinitions($get){
 	    
 	    $placeholder_id = (int) $this->getRequestParameter('placeholder_id');
@@ -704,7 +765,6 @@ class Pages extends SmartestSystemApplication{
 	    }else{
 	        
 	        $this->addUserMessageToNextRequest("The placeholder ID wasn't recognized.", SmartestUserMessage::ERROR);
-	        
 	        
 	    }
 	    
