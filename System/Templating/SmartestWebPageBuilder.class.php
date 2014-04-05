@@ -645,9 +645,11 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             $fields = $this->_tpl_vars['this']->getFieldDefinitions();
             $value = $fields[$field_name];
         
-            var_dump($this->getDraftMode());
+            $show_edit_link = !(isset($params['showcontrol']) && SmartestStringHelper::isFalse($params['showcontrol']));
             
-            if($this->getDraftMode()){
+            // var_dump($show_edit_link);
+            
+            if($this->getDraftMode() && $show_edit_link){
 			    $edit_link = $this->renderEditFieldButton($field_name, $params);
 		    }else{
 			    $edit_link = '';

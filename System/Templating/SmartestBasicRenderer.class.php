@@ -5,6 +5,7 @@ class SmartestBasicRenderer extends SmartestEngine{
     protected $_asset; // used when rendering an Asset
     protected $_image; // used when rendering a plain old image
     protected $draft_mode = false;
+    protected $_other_pages;
     
     public function __construct($pid){
         
@@ -16,6 +17,8 @@ class SmartestBasicRenderer extends SmartestEngine{
 		$this->right_delimiter = ':?'.'>';
 		$this->caching = false;
 		$this->_tpl_vars['sm_draft_mode'] = false;
+		
+		$this->_other_pages = new SmartestParameterHolder('Pages besides the main page');
         
     }
     
@@ -307,6 +310,18 @@ class SmartestBasicRenderer extends SmartestEngine{
 	    $target = $this->getDraftMode() ? ' target="_blank"' : '';
 	    return "<a href=\"http://sma.rte.st/\" title=\"This website is powered by Smartest\"".$target."><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/smartest_credit_button.png\" alt=\"Powered by Smartest - Content Management System to the Stars\" style=\"border:0px\" /></a>";
 	    
+	}
+	
+	public function hasOtherPage($page_name){
+	    return $this->_other_pages->hasParameter($page_name);
+	}
+	
+	public function getOtherPage($page_name){
+	    return $this->_other_pages->getParameter($page_name);
+	}
+	
+	public function addOtherPage($page_name, SmartestPage $page){
+	    $this->_other_pages->setParameter($page_name, $page);
 	}
     
 }

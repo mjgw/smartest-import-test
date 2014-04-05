@@ -875,6 +875,12 @@ class SmartestCmsLink extends SmartestHelper{
                 $this->_markup_attributes->setParameter('target', '_blank');
             }
             
+            $this->_markup_attributes->setParameter('rel', 'external');
+            
+        }else if($this->getType() == SM_LINK_TYPE_TAG){
+            
+            $this->_markup_attributes->setParameter('rel', 'tag');
+            
         }
         
         $url = $this->getUrl($draft_mode);
