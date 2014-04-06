@@ -717,7 +717,7 @@ class Templates extends SmartestSystemApplication{
 	                $t->setType($post['new_type']);
 	                $t->save();
 	                $this->addUserMessageToNextRequest("The template was successfully converted to type: \"".$types[$post['new_type']]['label']."\"", SmartestUserMessage::SUCCESS);
-	                SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} changed template '{$template->getLabel()}' to type '".$types[$post['new_type']]['label']."'.", SmartestLog::USER_ACTION);
+	                SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} changed template '{$t->getLabel()}' to type '".$types[$post['new_type']]['label']."'.", SmartestLog::USER_ACTION);
                 }else{
                     $this->addUserMessageToNextRequest("The new type was not recognized", SmartestUserMessage::ERROR);
                 }

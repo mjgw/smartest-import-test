@@ -2,44 +2,44 @@
   <div style="float:left;margin-right:10px">
     Time<br />
     <select name="item[{$property.id}][h]" style="width:60px">
-    	<option value="00"{if $value.h == "00"} selected="selected"{/if}>00</option>
-    	<option value="01"{if $value.h == "01"} selected="selected"{/if}>01</option>
-    	<option value="02"{if $value.h == "02"} selected="selected"{/if}>02</option>
-    	<option value="03"{if $value.h == "03"} selected="selected"{/if}>03</option>
-    	<option value="04"{if $value.h == "04"} selected="selected"{/if}>04</option>
-    	<option value="05"{if $value.h == "05"} selected="selected"{/if}>05</option>
-    	<option value="06"{if $value.h == "06"} selected="selected"{/if}>06</option>
-    	<option value="07"{if $value.h == "07"} selected="selected"{/if}>07</option>
-    	<option value="08"{if $value.h == "08"} selected="selected"{/if}>08</option>
-    	<option value="09"{if $value.h == "09"} selected="selected"{/if}>09</option>
-    	<option value="10"{if $value.h == "10"} selected="selected"{/if}>10</option>
-    	<option value="11"{if $value.h == "11"} selected="selected"{/if}>11</option>
-    	<option value="12"{if $value.h == "12"} selected="selected"{/if}>12</option>
-    	<option value="13"{if $value.h == "13"} selected="selected"{/if}>13</option>
-    	<option value="14"{if $value.h == "14"} selected="selected"{/if}>14</option>
-    	<option value="15"{if $value.h == "15"} selected="selected"{/if}>15</option>
-    	<option value="16"{if $value.h == "16"} selected="selected"{/if}>16</option>
-    	<option value="17"{if $value.h == "17"} selected="selected"{/if}>17</option>
-    	<option value="18"{if $value.h == "18"} selected="selected"{/if}>18</option>
-    	<option value="19"{if $value.h == "19"} selected="selected"{/if}>19</option>
-    	<option value="20"{if $value.h == "20"} selected="selected"{/if}>20</option>
-    	<option value="21"{if $value.h == "21"} selected="selected"{/if}>21</option>
-    	<option value="22"{if $value.h == "22"} selected="selected"{/if}>22</option>
-    	<option value="23"{if $value.h == "23"} selected="selected"{/if}>23</option>
+    	<option value="00"{if $value.H == "00"} selected="selected"{/if}>00</option>
+    	<option value="01"{if $value.H == "01"} selected="selected"{/if}>01</option>
+    	<option value="02"{if $value.H == "02"} selected="selected"{/if}>02</option>
+    	<option value="03"{if $value.H == "03"} selected="selected"{/if}>03</option>
+    	<option value="04"{if $value.H == "04"} selected="selected"{/if}>04</option>
+    	<option value="05"{if $value.H == "05"} selected="selected"{/if}>05</option>
+    	<option value="06"{if $value.H == "06"} selected="selected"{/if}>06</option>
+    	<option value="07"{if $value.H == "07"} selected="selected"{/if}>07</option>
+    	<option value="08"{if $value.H == "08"} selected="selected"{/if}>08</option>
+    	<option value="09"{if $value.H == "09"} selected="selected"{/if}>09</option>
+    	<option value="10"{if $value.H == "10"} selected="selected"{/if}>10</option>
+    	<option value="11"{if $value.H == "11"} selected="selected"{/if}>11</option>
+    	<option value="12"{if $value.H == "12"} selected="selected"{/if}>12</option>
+    	<option value="13"{if $value.H == "13"} selected="selected"{/if}>13</option>
+    	<option value="14"{if $value.H == "14"} selected="selected"{/if}>14</option>
+    	<option value="15"{if $value.H == "15"} selected="selected"{/if}>15</option>
+    	<option value="16"{if $value.H == "16"} selected="selected"{/if}>16</option>
+    	<option value="17"{if $value.H == "17"} selected="selected"{/if}>17</option>
+    	<option value="18"{if $value.H == "18"} selected="selected"{/if}>18</option>
+    	<option value="19"{if $value.H == "19"} selected="selected"{/if}>19</option>
+    	<option value="20"{if $value.H == "20"} selected="selected"{/if}>20</option>
+    	<option value="21"{if $value.H == "21"} selected="selected"{/if}>21</option>
+    	<option value="22"{if $value.H == "22"} selected="selected"{/if}>22</option>
+    	<option value="23"{if $value.H == "23"} selected="selected"{/if}>23</option>
     </select>
   </div>
   <div style="float:left;margin-right:10px">
     &nbsp;<br />
     :&nbsp;<input type="text" name="item[{$property.id}][i]" maxlength="2" value="{if $value.i}{$value.i}{else}00{/if}" style="width:45px" id="item-property-{$property.id}-minutes" />
     <script type="text/javascript">
-      $('item-property-{$property.id}-minutes').observe('keyup', {literal}function(){alert(this.id)}{/literal});
+      $('item-property-{$property.id}-minutes').observe('keyup', {literal}function(){}{/literal});
     </script>
   </div>
   <div style="float:left;margin-right:10px">
     &nbsp;<br />
     :&nbsp;<input type="text" name="item[{$property.id}][s]" maxlength="2" value="{if $value.s}{$value.s}{else}00{/if}" style="width:45px" id="item-property-{$property.id}-seconds" />
     <script type="text/javascript">
-      $('item-property-{$property.id}-seconds').observe('keyup', {literal}function(){alert(this.id)}{/literal});
+      $('item-property-{$property.id}-seconds').observe('keyup', {literal}function(){}{/literal});
     </script>
   </div>
 
