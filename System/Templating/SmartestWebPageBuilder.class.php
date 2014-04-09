@@ -181,6 +181,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 
                 $container_def = $this->getPage()->getContainerDefinition($container_name, $this->getDraftMode());
                 
+                $this->_tpl_vars['this'] = new SmartestPageRenderingDataRequestHandler($this->page);
                 $this->_tpl_vars['sm_draft_mode'] = $this->getDraftMode();
                 $this->run($container_def->getTemplateFilePath(), array());
                 
@@ -647,8 +648,6 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         
             $show_edit_link = !(isset($params['showcontrol']) && SmartestStringHelper::isFalse($params['showcontrol']));
             
-            // var_dump($show_edit_link);
-            
             if($this->getDraftMode() && $show_edit_link){
 			    $edit_link = $this->renderEditFieldButton($field_name, $params);
 		    }else{
@@ -1018,6 +1017,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         		    
         		}else if(preg_match('/^all_/', $name)){
         		    $model_varname = substr($name, 4);
+        		    // TODO: if the set name is not found, but begins with 'all_', get all the items of the model whose name follows, if any
         		}else{
         		    $items = array();
         		}

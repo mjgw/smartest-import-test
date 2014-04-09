@@ -2758,6 +2758,65 @@ class Pages extends SmartestSystemApplication{
         
 	}
 	
+	public function definePlaceholderWithNewFile(){
+	    
+	    $placeholder_name = $this->getRequestParameter('assetclass_id');
+	    $page_webid = $this->getRequestParameter('page_id');
+	    
+	    $helper = new SmartestPageManagementHelper;
+		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
+    
+	    if(isset($type_index[$page_webid])){
+	    
+		    if($type_index[$page_webid] == 'ITEMCLASS'){
+		        $page = new SmartestItemPage;
+		    }else{
+		        $page = new SmartestPage;
+		    }
+		    
+		}else{
+		    $page = new SmartestPage; // this is needed to prevent a fatal error when page is looked up via hydrateBy
+		}
+		
+		if($page->hydrateBy('webid', $page_webid)){
+        
+	        $placeholder = new SmartestPlaceholder;
+        
+	        if($placeholder->hydrateBy('name', $placeholder_name)){
+	            
+	            $redirect_url = '/assets/startNewFileCreationForPlaceholderDefinition?placeholder_id='.$placeholder->getId().'&page_id='.$page->getId();
+	            
+	            if($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
+	                $redirect_url .= '&item_id='.$this->getRequestParameter('item_id');
+	            }
+	            
+	            $this->redirect($redirect_url);
+	            
+	        }else{
+	            
+	            // placeholder with that name was not found
+	            
+	            $redirect_url = '/websitemanager/pageAssets?page_id='.$page->getWebid();
+	            
+	            if($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
+	                $redirect_url .= '&item_id='.$this->getRequestParameter('item_id');
+	            }
+	            
+	            $this->addUserMessageToNextRequest('A placeholder with that name was not found', SmartestUserMessage::ERROR);
+	            $this->redirect($redirect_url);
+	            
+	        }
+	    
+	    }else{
+	        // page with that webid was not found
+	        
+	        $this->addUserMessageToNextRequest('A page with that ID was not found', SmartestUserMessage::ERROR);
+	        $this->redirect('/smartest/pages');
+	        
+	    }
+	    
+	}
+	
 	public function updatePlaceholderDefinition($get, $post){
 	    
 	    $placeholder_id = $this->getRequestParameter('placeholder_id');

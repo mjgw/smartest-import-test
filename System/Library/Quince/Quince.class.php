@@ -803,7 +803,7 @@ class QuinceRedirectException extends QuinceException{
 	public function redirect($sc=303, $exit=true){
 	    
 	    header("HTTP/1.1 ".$sc." ".$this->_status_codes[$sc]);
-	    var_dump($this->getRedirectUrl());
+	    // var_dump($this->getRedirectUrl());
         header("Location: ".$this->getRedirectUrl());
         
         if($exit){

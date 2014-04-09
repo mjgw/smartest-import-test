@@ -29,7 +29,7 @@ class Desktop extends SmartestSystemApplication{
             if(count($sites) == 1 && !$this->getUser()->hasToken('create_sites')){
                 
                 $this->getUser()->openSiteById($sites[0]->getId());
-                // This is like a reload, except a new request is not needed.
+                // This is like a redirect, except a new request is not needed.
                 $this->forward('desktop', 'startPage');
                 
             }else{

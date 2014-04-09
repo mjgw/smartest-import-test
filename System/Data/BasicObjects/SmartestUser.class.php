@@ -186,6 +186,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    
 	    switch($offset){
 	        case "password":
+	        case "password_salt":
 	        return null;
 	        
 	        case "full_name":

@@ -335,6 +335,20 @@ class SmartestAssetsLibraryHelper{
         
     }
     
+    public function getTypeCodesHavingStorageLocation($location){
+        
+        $locations = $this->getTypeCodesByStorageLocation();
+        
+        $location = str_replace(SM_ROOT_DIR, '', $location);
+        
+        if(isset($locations[$location])){
+            return $locations[$location];
+        }else{
+            return array();
+        }
+        
+    }
+    
     public function getStorageLocationByTypeCode($type_code){
         
         $asset_types = SmartestDataUtility::getAssetTypes();
@@ -1076,9 +1090,12 @@ class SmartestAssetsLibraryHelper{
 	        if($type['storage']['type'] == "file"){
 	            
 	            $dir = SM_ROOT_DIR.$type['storage']['location'];
+	            
+	            $type_codes = $this->getAssetTypeCodesThatShareSuffixAndLocation($type_code);
+	            
 	            $files = SmartestFileSystemHelper::load($dir);
 	            $regex = $this->getSuffixTestRegex($type_code);
-	            $imported = $this->getImportedFilenamesByType($type_code);
+	            $imported = $this->getImportedFilenamesByType($type_codes);
 	            
 	            $unimported = array();
 	            
@@ -1099,15 +1116,55 @@ class SmartestAssetsLibraryHelper{
 	public function getAssetTypeCodesThatShareSuffix($type_code){
 	    
 	    $types = $this->getTypes();
+	    $sharing_types = array();
 	    
 	    if(isset($types[$type_code])){
 	        
-	        $type = $types[$type_code];
-	        $sharing_types = array();
+	        $principal_type = $types[$type_code];
 	        
-	        foreach($type['suffix'] as $suffix){
-	            $sharing_types = array_merge();
-	        }
+	        if(is_array($principal_type['suffix'])){
+                
+                $principal_type_suffixes = array();
+                
+                foreach($principal_type['suffix'] as $principal_type_suffix){
+                    $principal_type_suffixes[] = $principal_type_suffix['_content'];
+                }
+                
+                foreach($types as $check_type){
+
+	                if(is_array($check_type['suffix'])){
+
+	                    foreach($check_type['suffix'] as $check_type_suffix){
+    	                    
+    	                    if(in_array($check_type_suffix['_content'], $principal_type_suffixes)){
+    	                        $sharing_types[] = $check_type['id'];
+    	                    }
+    	                }
+
+                    }
+
+                }
+                
+                return array_unique($sharing_types);
+                
+            }else{
+                return array();
+            }
+	        
+	    }
+	    
+	}
+	
+	public function getAssetTypeCodesThatShareSuffixAndLocation($type_code){
+	    
+	    $types = $this->getTypes();
+	    
+	    if(isset($types[$type_code])){
+	        
+	        $share_suffix_codes = $this->getAssetTypeCodesThatShareSuffix($type_code);
+	        $share_location_codes = $this->getTypeCodesHavingStorageLocation($types[$type_code]['storage']['location']);
+    	    
+    	     return array_intersect($share_suffix_codes, $share_location_codes);
 	        
 	    }
 	    
@@ -1128,26 +1185,31 @@ class SmartestAssetsLibraryHelper{
 	        $type_codes = array($type_codes);
 	    }
 	    
-	    if(isset($types[$type_code])){
+	    $names = array();
+	    
+	    foreach($type_codes as $type_code){
+	    
+    	    if(isset($types[$type_code])){
 	        
-	        $type = $types[$type_code];
-	        $sql = "SELECT Assets.asset_url FROM Assets WHERE asset_type='".$type_code."'";
-	        $result = $this->database->queryToArray($sql);
-	        $names = array();
+    	        $type = $types[$type_code];
+    	        $sql = "SELECT DISTINCT Assets.asset_url FROM Assets WHERE asset_type='".$type_code."'";
+    	        $result = $this->database->queryToArray($sql);
 	        
-	        if($append_dir && $type['storage']['type'] == 'file'){
-	            foreach($result as $n){
-	                $names[] = SM_ROOT_DIR.$type['storage']['location'].$n['asset_url'];
-	            }
-	        }else{
-	            foreach($result as $n){
-	                $names[] = $n['asset_url'];
-	            }    
-	        }
+	            if($append_dir && $type['storage']['type'] == 'file'){
+    	            foreach($result as $n){
+    	                $names[] = SM_ROOT_DIR.$type['storage']['location'].$n['asset_url'];
+    	            }
+    	        }else{
+    	            foreach($result as $n){
+    	                $names[] = $n['asset_url'];
+    	            }    
+    	        }
 	        
-	        return $names;
-	        
-	    }
+    	    }
+	    
+        }
+        
+        return $names;
 	    
 	}
 	

@@ -241,6 +241,27 @@
         <input template="System/Presentation/InterfaceBuilder/Inputs/url.tpl" />
     </type>
     
+    <type id="SM_DATATYPE_SINGLE_TAG" valuetype="foreignkey">
+        
+        <label>Single tag</label>
+        <description>One of the tags in use within Smartest.</description>
+        <usage>itemproperty</usage>
+        <long>false</long>
+        
+        <filter>
+          <entitysource type="db" table="Tags" class="SmartestTag" sortfield="tag_name" />
+          <condition field="tag_type" value="SM_TAGTYPE_TAG" operator="EQUAL" />
+        </filter>
+        
+        <menu value="id" display="url" />
+        
+        <render template="System/Presentation/WebPageBuilder/property.tag.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/tag.tpl" />
+        
+        <class>SmartestTag</class>
+        
+    </type>
+    
     <type id="SM_DATATYPE_DROPDOWN_MENU" valuetype="foreignkey">
         
         <label>Dropdown Menu</label>

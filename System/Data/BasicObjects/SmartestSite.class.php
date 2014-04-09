@@ -10,6 +10,7 @@ class SmartestSite extends SmartestBaseSite{
     protected $_models = array();
     protected $displayPages = array();
     protected $displayPagesIndex = 0;
+    protected $_last_search_time_taken = 0;
     
     public static $special_page_ids = array();
     
@@ -137,6 +138,7 @@ class SmartestSite extends SmartestBaseSite{
 	    
 	    $search_query_words = preg_split('/[^\w]+/', $query);
 	    $h = new SmartestCmsItemsHelper;
+	    $search_start_time = microtime(true);
 	    
 	    $pages = array();
 	    $pages_sql = "SELECT Pages.* FROM Pages WHERE page_site_id='".$this->getId()."' AND page_deleted != 'TRUE' AND page_id !='".$this->getSearchPageId()."' AND page_id !='".$this->getTagPageId()."' AND page_type='NORMAL' AND page_is_published='TRUE'";
@@ -158,6 +160,15 @@ class SmartestSite extends SmartestBaseSite{
 	        $items_sql .= "(item_search_field LIKE '%".$word."%' OR item_name LIKE '%".$word."%') ";
 	        
         }
+        
+        $du = new SmartestDataUtility;
+        $model_ids = $du->getModelIdsWithMetapageOnSiteId($this->getId());
+        
+        if(count($model_ids)){
+            $items_sql .= ' AND Items.item_itemclass_id IN (\''.implode("','", $model_ids).'\')';
+        }
+        
+        // echo $items_sql;
         
         if(count($search_query_words)){
             
@@ -197,27 +208,43 @@ class SmartestSite extends SmartestBaseSite{
             foreach($items as $i){
 
                 $key = $i->getDate();
+                
+                if($key instanceof SmartestDateTime){
+                    $key = $key->getUnixFormat();
+                }
 
                 if(in_array($key, array_keys($master_array))){
                     while(in_array($key, array_keys($master_array))){
                         $key++;
                     }
                 }
-
+                
                 $master_array[$key] = $i;
 
             }
 
             ksort($master_array);
             
+            $search_end_time = microtime(true);
+            
+            $this->_last_search_time_taken = ($search_end_time - $search_start_time)*1000;
+            
+            // echo count($master_array);
+            
             // print_r($this->database->getDebugInfo());
 
-            return new SmartestArray($master_array);
+            return $master_array;
             
         }else{
             // no search terms were entered so no serch results come back
             return array();
         }
+	    
+	}
+	
+	public function getLastSearchTimeTaken(){
+	    
+	    return $this->_last_search_time_taken;
 	    
 	}
 	
