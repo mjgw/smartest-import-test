@@ -236,9 +236,15 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
         
     }
     
+    public function getWithCustomFormat($format){
+        
+        return date($format, $this->_value);
+        
+    }
+    
     public function offsetExists($offset){
 	    
-	    return in_array($offset, array('g', 'i', 'a', 'm', 's', 'h', 'Y', 'M', 'D', 'unix'));
+	    return in_array($offset, array('g', 'i', 'a', 'm', 's', 'h', 'Y', 'M', 'D', 'H', 'unix'));
 	    
 	}
 	

@@ -19,11 +19,17 @@ class SmartestUserApplication extends SmartestBaseApplication{
     protected function requireAuthenticatedUser($authservicename=null){
 	    if(!$this->userIsLoggedIn()){
 	        if($authdata = $this->getAuthenticationInfo()){
-	            $this->redirect($authdata['login_point'].'?reason=session');
-	            
+	            // $this->redirect($authdata['login_point'].'?reason=session');
 	            // exit;
+	            if(isset($authdata['login_point'])){
+	                $e = new SmartestAuthenticationException;
+        	        $e->lockOut('session', $authdata['login_point']);
+	            }else{
+	                die("Login required. No login point specified in ".'Configuration/auth.yml');
+	            }
 	        }else{
 	            // user is not logged in, but there is no information about where to send them
+	            die("Login required. No login point specified in ".'Configuration/auth.yml');
 	        }
 	    }
 	}
@@ -84,7 +90,11 @@ class SmartestUserApplication extends SmartestBaseApplication{
 	    
 	    if($user = $helper->newLogin($handle, $password, $authservicename, $use_email)){
 	        SmartestSession::set('user', $user);
-	        if($return_redirect){
+	        if($return_redirect == 'COOKIE' && SmartestCookiesHelper::cookieExists('SMARTEST_RET')){
+	            $redirect = SmartestCookiesHelper::getCookie('SMARTEST_RET');
+	            SmartestCookiesHelper::clearCookie('SMARTEST_RET');
+	            $this->redirect($redirect);
+	        }else if($return_redirect && $return_redirect != 'COOKIE'){
 	            $this->redirect($return_redirect);
 	        }else{
 	            return $user;
@@ -103,7 +113,11 @@ class SmartestUserApplication extends SmartestBaseApplication{
 	    
 	    if($user = $helper->newLogin($handle, $password, 'SMARTEST', $use_email)){
 	        SmartestSession::set('user', $user);
-	        if($return_redirect){
+	        if($return_redirect == 'COOKIE' && SmartestCookiesHelper::cookieExists('SMARTEST_RET')){
+	            $redirect = SmartestCookiesHelper::getCookie('SMARTEST_RET');
+	            SmartestCookiesHelper::clearCookie('SMARTEST_RET');
+	            $this->redirect($redirect);
+	        }else if($return_redirect && $return_redirect != 'COOKIE'){
 	            $this->redirect($return_redirect);
 	        }else{
 	            return $user;

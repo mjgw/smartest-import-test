@@ -8,9 +8,9 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
     
     const OMISSION_ERROR = 100;
     
-    public function __construct(){
+    /* public function __construct(){
         parent::__construct();
-    }
+    } */
     
     public function init($item_id, $property_id){
         
@@ -37,7 +37,7 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
         
         if(!$this->_property){
             $property = new SmartestItemProperty;
-            $property->hydrate($this->_properties['property_id']);
+            $property->find($this->_properties['property_id']);
             $this->_property = $property;
         }
         
@@ -134,6 +134,10 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
                         if($obj instanceof SmartestCmsItem){
                             // only bother trying to hydrate the SmartestCmsItem subclass if we have an actual foreign key to use:
                             if(strlen($raw_data) && is_numeric($raw_data)){
+                                if($this->getProperty()->getDatatype() == 'SM_DATATYPE_CMS_ITEM'){
+                                    // echo $raw_data.' ';
+                                    // print_r($this->getOriginalDbRecord());
+                                }
                                 $obj->find($raw_data);
                             }
                         }else{

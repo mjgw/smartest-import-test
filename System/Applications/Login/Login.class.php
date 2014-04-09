@@ -74,7 +74,8 @@ class Login extends SmartestSystemApplication{
     	                
     	                if(strlen($this->getCookie('SMARTEST_RET'))){
     	                    
-    	                    $url = '/'.$this->getCookie('SMARTEST_RET');
+    	                    // $url = '/'.$this->getCookie('SMARTEST_RET');
+    	                    $url = $this->getCookie('SMARTEST_RET');
                             $this->clearCookie('SMARTEST_RET');
     	                    
     	                    // user still has access to last edited site, so return to what they were last doing

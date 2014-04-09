@@ -558,7 +558,7 @@ class SmartestDataObject implements ArrayAccess{
 		}
 	    
 	    $sql = $this->getRetrievalSqlQuery($value, $field, $site_id, $include_trash_items);
-	    
+	    // echo $sql;
 	    $result = $this->database->queryToArray($sql);
 	    $this->_last_query = $sql;
 	    

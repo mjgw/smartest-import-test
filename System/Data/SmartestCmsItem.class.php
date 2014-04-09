@@ -135,6 +135,11 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 		        
 		        $property = new SmartestItemPropertyValueHolder;
 		        $property->hydrate($raw_property);
+		        
+		        if($property->getDatatype() == 'SM_DATATYPE_CMS_ITEM'){
+		            // print_r($property->getOriginalDbRecord());
+		        }
+		        
 		        $this->_properties[$raw_property['itemproperty_id']] = $property;
 		        
 		    }
@@ -542,7 +547,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 		
 		if($this->_item->findBy($field, $id)){
 		    
-		    $this->_runPostSimpleItemFind($id, $draft);
+		    $this->_runPostSimpleItemFind($this->_item->getId(), $draft);
 		    return true;
 		
 	    }else{
@@ -577,6 +582,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        if(!isset($this->_properties[$property['itemproperty_id']]) || !is_object($this->_properties[$property['itemproperty_id']])){
 	            SmartestCache::clear('model_properties_'.$this->_model_id, true);
 	            $this->_properties[$property['itemproperty_id']] = new SmartestItemPropertyValueHolder;
+	            
 	        }
 	        
 		    $this->_properties[$property['itemproperty_id']]->hydrate($property);
@@ -747,7 +753,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    $link = $this->getLinkObject();
 	    
 	    if($link->hasError()){
-	        echo $link->getError();
+	        // echo $link->getError();
 	        return '#';
 	    }else{
 	        return $link->getUrl(false, true);
@@ -1052,7 +1058,6 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    if(array_key_exists($key, $this->_properties)){
 	        
 	        // echo "test";
-	        
 	        try{
 	            
 	            if(!$this->_properties[$key]->getData()->hasItem()){
@@ -1076,8 +1081,36 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
                 echo $e->getMessage();
             }
             
-            // echo "test";
+            $t = $this->_properties[$key]->getTypeInfo();
             
+            if($t['valuetype'] == 'auto'){
+                
+                if($t['id'] == 'SM_DATATYPE_AUTO_ITEM_FK'){
+                
+                    $class = $t['class'];
+                    
+                    $ids = array();
+                
+                    $field = $draft ? 'itempropertyvalue_draft_content' : 'itempropertyvalue_content';
+                
+                    $sql = "SELECT item_id FROM Items, ItemProperties, ItemPropertyValues WHERE item_deleted !=1 AND item_itemclass_id=itemproperty_itemclass_id AND itempropertyvalue_item_id=item_id AND itempropertyvalue_property_id = itemproperty_id AND ".$field."='".$this->getId()."' AND itemproperty_id='".$this->_properties[$key]->getForeignKeyFilter()."'";
+                    $result = $this->database->queryToArray($sql);
+                    
+                    foreach($result as $r){
+                        $ids[] = $r['item_id'];
+                    }
+                    
+                    $obj = new $class;
+                    $obj->hydrateFromStoredIdsArray($ids, $draft);
+                    return $obj;
+                
+                }
+                
+            }
+            
+            // var_dump();
+            // echo "test";
+            // var_dump($raw_value);
             if(is_object($raw_value)){
                 $r = $raw_value;
                 // echo get_class($raw_value);
