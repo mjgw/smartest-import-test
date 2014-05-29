@@ -98,6 +98,8 @@
     <accept>SM_ASSETTYPE_SHOCKWAVE_FLASH</accept>
     <accept>SM_ASSETTYPE_QUICKTIME_MOVIE</accept>
     <accept>SM_ASSETTYPE_VIMEO_CLIP</accept>
+    <accept>SM_ASSETTYPE_YOUTUBE_CLIP</accept>
+    <accept>SM_ASSETTYPE_HTML_FRAGMENT</accept>
     <accept>SM_ASSETTYPE_JPEG_IMAGE</accept>
     <accept>SM_ASSETTYPE_PNG_IMAGE</accept>
     <accept>SM_ASSETTYPE_SVG_IMAGE</accept>

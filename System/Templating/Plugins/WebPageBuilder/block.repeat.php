@@ -40,6 +40,10 @@ function smarty_block_repeat($params, $content, &$smartest_engine, &$repeat){
 		    $items = $items->getValue();
 		}
 		
+		if($items instanceof SmartestCmsItemSet){
+		    $items = $items->getMembers();
+		}
+		
 		$smartest_engine->assign("first", $items[0]);
 		$smartest_engine->assign("last", $items[count($items)-1]);
 		

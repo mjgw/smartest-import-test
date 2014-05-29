@@ -404,8 +404,8 @@
     
     <type id="SM_DATATYPE_CMS_ITEM_SET" valuetype="foreignkey">
         
-        <label>Data set</label>
-        <description>A predefined group of items belonging to the same model, created in the Sets application in the data manager.</description>
+        <label>Set of items</label>
+        <description>A predefined group of items belonging to the same model.</description>
         <usage>itemproperty</usage>
         <entitytype>Sets:id,label</entitytype>
         <long>false</long>

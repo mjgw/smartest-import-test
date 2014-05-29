@@ -266,4 +266,16 @@ class AssetsAjax extends SmartestSystemApplication{
         
     }
     
+    public function updateAssetGroupMembershipCaption(){
+        
+        
+        
+    }
+    
+    public function deleteAssetGroupMembership(){
+        
+        
+        
+    }
+    
 }

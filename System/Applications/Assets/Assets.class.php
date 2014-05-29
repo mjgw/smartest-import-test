@@ -1527,6 +1527,7 @@ class Assets extends SmartestSystemApplication{
 	public function updateAssetGalleryMembership(){
 	    
 	    $membership = new SmartestAssetGalleryMembership;
+	    
 	    if($membership->find($this->getRequestParameter('membership_id'))){
 	        $membership->setCaption($this->getRequestParameter('membership_caption'));
 	        $membership->setThumbnailAssetId($this->getRequestParameter('membership_thumbnail_image_id'));
@@ -1534,7 +1535,28 @@ class Assets extends SmartestSystemApplication{
 	    }else{
 	        $this->addUserMessageToNextRequest('The membership ID was not found');
 	    }
+	    
 	    $this->formForward();
+	}
+	
+	public function arrangeAssetGallery(){
+	    
+	    $group_id = $this->getRequestParameter('group_id');
+	    
+	    if($this->getRequestParameter('from') != 'editItem'){
+	        $this->setFormReturnUri();
+	        $this->setFormReturnDescription('gallery');
+        }
+        
+        $group = new SmartestAssetGroup;
+	    
+	    if($group->find($group_id)){
+	        
+	        $this->send($group->getMemberships(0, $this->getSite()->getId()), 'assets');
+	        $this->send($group, 'group');
+	        
+	    }
+	    
 	}
 	
 	/** End Asset Group Stuff **/

@@ -294,14 +294,51 @@ class Users extends SmartestSystemApplication{
 		
     		if($user->find($this->getRequestParameter('user_id'))){
     		    
-    		    if($this->getRequestParameter('profile_pic_asset_id')){
+    		    if($this->getRequestParameter('profile_pic_asset_id') == 'NEW' && SmartestUploadHelper::uploadExists('new_picture_input')){
+    		        
+    		        $alh = new SmartestAssetsLibraryHelper;
+    	            $upload = new SmartestUploadHelper('new_picture_input');
+                    $upload->setUploadDirectory(SM_ROOT_DIR.'System/Temporary/');
+                    $types = $alh->getPossibleTypesBySuffix($upload->getDotSuffix());
+
+                    if(count($types)){
+                        $t = $types[0]['type']['id'];
+
+                        $ach = new SmartestAssetCreationHelper($t);
+                        $ach->createNewAssetFromFileUpload($upload, "User profile picture for ".$user->getFullName().' - '.date('M d Y'));
+
+                        $file = $ach->finish();
+                        $file->setShared(1);
+                        $file->setIsSystem(1);
+                        $file->setIsHidden(1);
+                        $file->setUserId($user->getId());
+                        $file->save();
+
+                        $user->setProfilePicAssetId($file->getId());
+                        $user->save();
+                        
+                        $uh = new SmartestUsersHelper;
+
+            		    if($g = $uh->getUserProfilePicsGroup()){
+
+                            $g->addAssetById($file->getId());    
+                        
+                        }
+                        
+                        $this->addUserMessageToNextRequest("Your profile picture was successfully uploaded", SmartestUserMessage::SUCCESS);
+                        
+                        $this->formForward();
+                        
+                    }
+    		        
+    		    }else if(is_numeric($this->getRequestParameter('profile_pic_asset_id'))){
     		        $a = new SmartestAsset;
     		        if($a->find($this->getRequestParameter('profile_pic_asset_id'))){
     		            $user->setProfilePicAssetId($this->getRequestParameter('profile_pic_asset_id'));
     		            $user->save();
     		            $this->formForward();
     		        }else{
-    		            
+    		            $this->formForward();
     		        }
 		        }else{
 		            

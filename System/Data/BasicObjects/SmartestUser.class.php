@@ -216,7 +216,24 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    
 	}
 	
-	public function getCreditedItemsOnCurrentSite($model_id=null, $mode=9){
+	public function setDraftMode($mode){
+	    $this->_draft_mode = (bool) $mode;
+	}
+	
+	public function getDraftMode(){
+	    return $this->_draft_mode;
+	}
+	
+	public function getCreditedItemsOnCurrentSite($model_id=null, $mode='DEFAULT_MODE'){
+	    
+	    if($mode == 'DEFAULT_MODE'){
+	        if($this->getDraftMode()){
+	            $mode = 0;
+	        }else{
+	            $mode = 9;
+	        }
+	    }
+	    
 	    if($site_id = $this->getCurrentSiteId()){
             return $this->getCreditedItems($site_id, $model_id, $mode);
         }

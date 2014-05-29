@@ -594,8 +594,34 @@ class SmartestStringHelper extends SmartestHelper{
 	
 	public static function getFirstParagraph($string){
 	    
-	    $paras = self::getParagraphs($string);
-	    return $paras[0];
+	    if(is_object($string)){
+		    $was_object = true;
+		    $string = self::convertObject($string);
+		}else{
+		    $was_object = false;
+		}
+	    
+	    if(strpos(strtolower($string), '</p>') === false && strpos(strtolower($string), '<p') === false){
+	        // there is no html here
+	        $paras = self::splitByDoubleLineBreaks($string);
+	        $was_html = false;
+	        // echo $paras;
+	    }else{
+	        $paras = self::getParagraphs($string);
+	        $was_html = true;
+	    }
+	    
+	    if($was_html){
+	        $first_para = $paras[0];
+	    }else{
+	        $first_para = $paras[0];
+	    }
+	    
+	    if($was_object){
+	        return new SmartestString($first_para);
+        }else{
+            return $first_para;
+        }
 	    
 	}
 	
@@ -614,6 +640,13 @@ class SmartestStringHelper extends SmartestHelper{
 	
 	public static function toSummary($string, $char_length=300){
 	    
+	    if(is_object($string)){
+		    $was_object = true;
+		    $string = self::convertObject($string);
+		}else{
+		    $was_object = false;
+		}
+	    
 	    /* $string = str_replace('<br /><br />', "</p>\n<p>", $string);
 	    
 	    // find the end of first paragraph and cut there
@@ -625,16 +658,41 @@ class SmartestStringHelper extends SmartestHelper{
 	        $first_paragraph = $string;
 	    } */
 	    
+	    // var_dump($string);
+	    
 	    // strip tags
 	    // $final_string = strip_tags($first_paragraph);
-	    $final_string = strip_tags(self::getFirstParagraph($string));
+	    // $final_string = strip_tags(self::getFirstParagraph($string));
+	    $final_string = self::getFirstParagraph($string);
+	    
+	    // var_dump($final_string);
 	    
 	    // if it is longer that $char_length, truncate it and add '...'
-	    if(strlen($final_string) > $char_length){
+	    /* if(strlen($final_string) > $char_length){
 	        $final_string = substr($final_string, 0, ($char_length - 3)).'...';
+	    } */
+	    
+	    // echo $final_string;
+	    
+	    // var_dump(self::getFirstParagraph($final_string));
+	    
+	    $final_string = self::truncate($final_string, $char_length);
+	    
+	    if($was_object){
+	        return new SmartestString(trim($final_string));
+        }else{
+            return trim($final_string);
+        }
+	    
+	}
+	
+	public static function truncate($string, $char_length=300){
+	    
+	    if(strlen($string) > $char_length){
+	        $string = substr($string, 0, ($char_length - 3)).'...';
 	    }
 	    
-	    return trim($final_string);
+	    return $string;
 	    
 	}
 	
@@ -757,6 +815,10 @@ class SmartestStringHelper extends SmartestHelper{
     
     public static function toParagraphs($string, $classes=''){
         
+        if(is_array($classes)){
+            $classes = implode(' ', $classes);
+        }
+        
         $parts = self::splitByDoubleLineBreaks($string);
         
         if(strlen($classes)){
@@ -836,6 +898,10 @@ class SmartestStringHelper extends SmartestHelper{
 	
 	public static function fromCommaSeparatedList($string){
 	    return preg_split('/[\s]*[,][\s]*/', $string);
+	}
+	
+	public static function fromSeparatedStringList($string){
+	    return preg_split('/[\s]*[,;][\s]*/', $string);
 	}
 	
 	public static function spanify($string, $spaces=false){

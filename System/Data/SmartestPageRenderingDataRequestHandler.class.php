@@ -99,7 +99,10 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
             case "author":
             case "user":
             if($this->_page instanceof SmartestUserPage){
-                return $this->_page->getUser();
+                $user = $this->_page->getUser();
+                $user->setDraftMode($this->_page->getDraftMode());
+                return $user;
+                // return $this->_page->getUser();
             }else{
                 return null;
             }

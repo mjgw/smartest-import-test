@@ -360,6 +360,9 @@ class MetaData extends SmartestSystemApplication{
 	        $item = new SmartestItem;
 	        if($item->find($this->getRequestParameter('item_id'))){
 	            $this->send($item, 'item');
+	            if($this->getRequestParameter('page_webid')){
+	                $this->send($this->getRequestParameter('page_webid'), 'page_webid');
+	            }
 	        }
 	    }
 	    
@@ -381,7 +384,7 @@ class MetaData extends SmartestSystemApplication{
 	
 	public function insertTag(){
 	    
-	    $proposed_tags = SmartestStringHelper::fromCommaSeparatedList($this->getRequestParameter('tag_label'));
+	    $proposed_tags = SmartestStringHelper::fromSeparatedStringList($this->getRequestParameter('tag_label'));
 	    
 	    $num_new_tags = 0;
 	    $tag_item = false;
@@ -451,12 +454,18 @@ class MetaData extends SmartestSystemApplication{
         $this->addUserMessageToNextRequest($message, $type);
         
         if($tag_item){
-            $this->redirect('/datamanager/itemTags?item_id='.$item->getId());
+            $url = '/datamanager/itemTags?item_id='.$item->getId();
+            if($this->getRequestParameter('page_webid')){
+                $url .= '&page_id='.$this->getRequestParameter('page_webid');
+            }
+            $this->redirect($url);
         }
+        
         if($tag_page){
             // $page->tag($tag->getId());
             $this->redirect('/websitemanager/pageTags?page_id='.$page->getWebId());
         }
+        
         if($tag_asset){
             // $asset->tag($tag->getId());
             $this->redirect('/assets/assetTags?asset_id='.$asset->getId());

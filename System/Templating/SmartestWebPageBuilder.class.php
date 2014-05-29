@@ -887,7 +887,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         $this->caching = false;
         $this->_repeat_char_length_aggr = 0;
         
-        if(is_array($params['from']) || $params['from'] instanceof SmartestArray){
+        if(is_array($params['from']) || $params['from'] instanceof SmartestArray || $params['from'] instanceof SmartestCmsItemSet){
             return $params['from'];
         }
         
@@ -1004,7 +1004,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                     $limit = null;
                 }
                 
-                if($set->findBy('name', $name, $this->page->getSiteId()) || $this->getDataSetsHolder()->h($name)){
+                if($set->findBy('name', $name, $this->page->getSiteId()) || $this->getDataSetsHolder()->h((string) $name)){
         		    
         		    // echo "site ".$this->page->getSiteId();
         		    $dah = new SmartestDataAppearanceHelper;

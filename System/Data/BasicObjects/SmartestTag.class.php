@@ -183,8 +183,6 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
     
     protected function _getItems($site_id=null, $model_id=null, $metapage_models_only=false){
         
-        var_dump($model_id);
-        
         $sql = "SELECT Items.item_id FROM TagsObjectsLookup, Items WHERE taglookup_tag_id='".$this->getId()."' AND taglookup_object_id=item_id AND taglookup_type='SM_ITEM_TAG_LINK' AND Items.item_deleted='0'";
         
         if($site_id && is_numeric($site_id)){
