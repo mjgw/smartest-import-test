@@ -509,6 +509,13 @@ class SmartestSite extends SmartestBaseSite{
         return $ph->setGlobalPreference('site_user_page_id', $id, null, $this->getId());
     }
     
+    public function getUserPage(){
+        $upid = $this->getUserPageId();
+        $p = new SmartestPage;
+        $p->find($upid);
+        return $p;
+    }
+    
     /** Tag Page **/
     
     public function getTagPageId(){

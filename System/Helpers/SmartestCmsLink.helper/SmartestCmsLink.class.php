@@ -68,6 +68,10 @@ class SmartestCmsLink extends SmartestHelper{
             
             $this->setDestinationFromProvidedTag($this->_destination_properties->getParameter('tag'));
             
+        }else if($this->_destination_properties->getParameter('from_author')){
+          
+            $this->setDestinationFromProvidedAuthor($this->_destination_properties->getParameter('author'));
+        
         }else{
         
             $this->setTypeFromNameSpace($this->_destination_properties->getParameter('namespace'));
@@ -532,7 +536,7 @@ class SmartestCmsLink extends SmartestHelper{
     
     public function shouldOmitAnchorTag($draft_mode=false){
         // return !$this->_preview_mode && ($this->isInternalPage() && $this->shouldGoCold() && is_object($this->_host_page) && $this->_page->getId() == $this->_host_page->getId());
-        if(!$this->_destination_properties->getParameter('from_item') && !$this->_destination_properties->getParameter('from_page') && !$this->_destination_properties->getParameter('from_tag') && (!$this->_destination_properties->getParameter('destination') || $this->_destination_properties->getParameter('destination') == '#')){
+        if(!$this->_destination_properties->getParameter('from_item') && !$this->_destination_properties->getParameter('from_page') && !$this->_destination_properties->getParameter('from_tag') && !$this->_destination_properties->getParameter('from_author') && (!$this->_destination_properties->getParameter('destination') || $this->_destination_properties->getParameter('destination') == '#')){
             return true;
         }else{
             if($this->getHostPage()){
@@ -716,6 +720,10 @@ class SmartestCmsLink extends SmartestHelper{
                         case SM_LINK_TYPE_TAG:
                         return SmartestStringHelper::toXmlEntities($this->_destination->getLabel());
                         break;
+                        
+                        case SM_LINK_TYPE_AUTHOR:
+                        return SmartestStringHelper::toXmlEntities($this->_destination->getFullName());
+                        break;
                 
                         case SM_LINK_TYPE_DOWNLOAD:
                         return $this->_destination->getUrl();
@@ -833,6 +841,24 @@ class SmartestCmsLink extends SmartestHelper{
             }
             
             break;
+            
+            case SM_LINK_TYPE_AUTHOR:
+            
+            if($draft_mode){
+                if($this->_request->getRequestParameter('hide_newwin_link')){
+                    return $this->_request->getDomain().'website/renderEditableDraftPage?page_id='.$this->getSite()->getUserPage()->getWebId().'&amp;hide_newwin_link=true&amp;author_id='.$this->_destination->getId();
+                }else{
+                    return $this->_request->getDomain().'websitemanager/preview?page_id='.$this->getSite()->getUserPage()->getWebId().'&amp;author_id='.$this->_destination->getId();
+                }
+            }else{
+                if($this->_destination){
+                    return $this->_request->getDomain().'author/'.$this->_destination->getUserName();
+                }else{
+                    return '#';
+                }
+            }
+            
+            break;
     
             case SM_LINK_TYPE_DOWNLOAD:
             // return $this->_request->getDomain().'download/'.urlencode($this->_destination->getUrl()).'?key='.$this->_destination->getWebid();
@@ -881,12 +907,16 @@ class SmartestCmsLink extends SmartestHelper{
             
             $this->_markup_attributes->setParameter('rel', 'tag');
             
+        }else if($this->getType() == SM_LINK_TYPE_AUTHOR){
+            
+            $this->_markup_attributes->setParameter('rel', 'author');
+            
         }
         
         $url = $this->getUrl($draft_mode);
         $contents = $this->getContent();
         
-        if($draft_mode && ($this->getType() == SM_LINK_TYPE_PAGE || $this->getType() == SM_LINK_TYPE_METAPAGE || $this->getType() == SM_LINK_TYPE_TAG) && $url != '#'){
+        if($draft_mode && ($this->getType() == SM_LINK_TYPE_PAGE || $this->getType() == SM_LINK_TYPE_METAPAGE || $this->getType() == SM_LINK_TYPE_TAG || $this->getType() == SM_LINK_TYPE_AUTHOR) && $url != '#'){
             $this->_markup_attributes->setParameter('target', '_top');
         }
         
