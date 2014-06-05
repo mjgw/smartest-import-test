@@ -200,7 +200,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	        return $this->getProfilePicAssetId();
 	        
 	        case "bio":
-	        return $this->getBio();
+	        return new SmartestString($this->getBio());
 	        
 	        case "website":
 	        case "website_url":
@@ -209,6 +209,20 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	        
 	        case "email":
 	        return new SmartestEmailAddress($this->_properties['email']);
+	        
+	        case "has_twitter_handle":
+	        case "has_twitter_account":
+	        case "has_twitter_acct":
+	        case "has_twitter_username":
+	        return (bool) strlen($this->getTwitterHandle());
+	        
+	        case "twitter_account_object":
+	        case "twitter_handle_object":
+	        if(strlen($this->getTwitterHandle())){
+	            return new SmartestTwitterAccountName($this->getTwitterHandle());
+            }else{
+                break;
+            }
 	        
 	    }
 	    

@@ -168,8 +168,6 @@ class SmartestSite extends SmartestBaseSite{
             $items_sql .= ' AND Items.item_itemclass_id IN (\''.implode("','", $model_ids).'\')';
         }
         
-        // echo $items_sql;
-        
         if(count($search_query_words)){
             
             $pages_result = $this->database->queryToArray($pages_sql);

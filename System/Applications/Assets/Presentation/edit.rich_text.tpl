@@ -41,7 +41,7 @@ tinymce.init({
     plugins: [
         "advlist autolink lists charmap print preview anchor",
         "searchreplace visualblocks code fullscreen",
-        "media table contextmenu paste link"
+        "media table contextmenu paste link wordcount"
     ],
     paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,p",
     toolbar: "insertfile undo redo | styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code"

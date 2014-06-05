@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 624
+    revision: 626
     minimum_php_version: 5.2
     minimum_database_version: 19
     default_timezone: Europe/London
@@ -101,6 +101,7 @@ system:
       - Configuration/
       - Presentation/Masters/
       - Public/Resources/Stylesheets/
+      - Public/Resources/Images/
   regularizable_types:
     - SM_DATATYPE_DROPDOWN_MENU
     - SM_DATATYPE_DATE

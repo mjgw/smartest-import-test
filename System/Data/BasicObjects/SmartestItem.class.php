@@ -76,6 +76,9 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	        case "url":
 	        return $this->getUrl();
 	        
+	        case "absolute_url":
+	        return $this->getAbsoluteUrl();
+	        
 	        case "link_contents":
 	        
 	        if($this->getMetapageId()){
@@ -124,6 +127,12 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
             
             case "site":
             return $this->getHomeSite();
+            
+            case "has_metapage":
+            return $this->getMetapageId() != null;
+            
+            case "metapage_id":
+            return $this->getMetapageId();
 	        
 	    }
 	    
@@ -133,7 +142,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	
 	public function offsetExists($offset){
 	    
-	    return parent::offsetExists($offset) || in_array($offset, array('created', 'modified', 'last_published', 'title', 'link_contents', 'class', 'model', 'tags', 'authors'));
+	    return parent::offsetExists($offset) || in_array($offset, array('name', 'title', 'created', 'modified', 'last_published', 'title', 'link_contents', 'class', 'model', '_model', 'tags', 'authors', 'url', 'absolute_url', 'has_metapage', 'metapage_id'));
 	    
 	}
 	
@@ -975,7 +984,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    
 	}
 	
-	public function getUrl(){
+	public function getUrl($draft_mode=false, $ignore_status=false){
 	    
 	    if($lc = $this->getCmsLinkContents()){
 	        
@@ -984,12 +993,18 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
     	    if($link->hasError()){
     	        return '#';
     	    }else{
-    	        return $link->getUrl();
+    	        return $link->getUrl($draft_mode, $ignore_status);
             }
     	    
 	    }else{
 	        return null;
 	    }
+	    
+	}
+	
+	public function getAbsoluteUrl(){
+	    
+	    return 'http://'.$this->getSiteWhereObjectCreated()->getDomain().$this->getUrl(false, true);
 	    
 	}
 	

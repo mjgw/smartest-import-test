@@ -887,7 +887,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         $this->caching = false;
         $this->_repeat_char_length_aggr = 0;
         
-        if(is_array($params['from']) || $params['from'] instanceof SmartestArray || $params['from'] instanceof SmartestCmsItemSet){
+        if(is_array($params['from']) || $params['from'] instanceof SmartestArray || $params['from'] instanceof SmartestCmsItemSet || ($params['from'] instanceof SmartestAssetGroup && $params['from']->isGallery())){
             return $params['from'];
         }
         

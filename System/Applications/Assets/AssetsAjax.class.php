@@ -268,13 +268,35 @@ class AssetsAjax extends SmartestSystemApplication{
     
     public function updateAssetGroupMembershipCaption(){
         
+        $membership = new SmartestAssetGalleryMembership;
         
+        if($membership->find($this->getRequestParameter('membership_id'))){
+            
+            $membership->setCaption(strip_tags($this->getRequestParameter('new_caption')));
+            $membership->save();
+            echo strip_tags($this->getRequestParameter('new_caption'));
+            exit;
+            
+        }else{
+            
+            echo "Gallery membership not found";
+            exit;
+            
+        }
         
     }
     
     public function deleteAssetGroupMembership(){
         
+        $membership = new SmartestAssetGalleryMembership;
         
+        if($membership->find($this->getRequestParameter('membership_id'))){
+            
+            $membership->setCaption(strip_tags($this->getRequestParameter('membership_id')));
+            $membership->delete();
+            exit;
+            
+        }
         
     }
     

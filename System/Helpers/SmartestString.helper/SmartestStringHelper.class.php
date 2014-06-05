@@ -667,6 +667,8 @@ class SmartestStringHelper extends SmartestHelper{
 	    
 	    // var_dump($final_string);
 	    
+	    // var_dump($final_string);
+	    
 	    // if it is longer that $char_length, truncate it and add '...'
 	    /* if(strlen($final_string) > $char_length){
 	        $final_string = substr($final_string, 0, ($char_length - 3)).'...';
@@ -693,6 +695,12 @@ class SmartestStringHelper extends SmartestHelper{
 	    }
 	    
 	    return $string;
+	    
+	}
+	
+	public static function containsEscapedEntities($string){
+	    
+	    return preg_match('/&(#\d+|\w+);/i', $string);
 	    
 	}
 	

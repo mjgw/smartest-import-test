@@ -21,6 +21,8 @@ function smarty_block_repeat($params, $content, &$smartest_engine, &$repeat){
     }else{
         if($params['from'] instanceof SmartestPageGroup){
             $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_page";
+        }else if($params['from'] instanceof SmartestAssetGroup){
+            $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_asset";
         }else{
 	        $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_item";
         }
@@ -38,6 +40,10 @@ function smarty_block_repeat($params, $content, &$smartest_engine, &$repeat){
 		
 		if($items instanceof SmartestArray){
 		    $items = $items->getValue();
+		}
+		
+		if($items instanceof SmartestAssetGroup){
+		    $items = $items->getMemberships();
 		}
 		
 		if($items instanceof SmartestCmsItemSet){

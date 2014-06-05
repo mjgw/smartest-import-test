@@ -25,7 +25,7 @@
   {foreach from=$groups key="key" item="group"}
     <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/browseAssetGroup?group_id={$group.id}'">
   			<a class="option" id="item_{$group.id}" onclick="setSelectedItem('{$group.id}', 'fff');" >
-  			  <img border="0" src="{$domain}Resources/Icons/folder.png">
+  			  {if $group.is_gallery}<img src="{$domain}Resources/Icons/folder.png" border="0" class="grid" /><img border="0" src="/Resources/Icons/photos.png" class="list" />{else}<img src="{$domain}Resources/Icons/folder.png" border="0" class="grid" /><img border="0" src="/Resources/Icons/folder.png" class="list" />{/if}
   			  {$group.label}</a></li>
   {/foreach}
   </ul>

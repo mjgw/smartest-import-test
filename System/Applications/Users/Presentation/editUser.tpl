@@ -64,7 +64,7 @@
   
   <div class="edit-form-row">
     <div class="form-section-label">About the user </div>
-    <textarea name="user_bio" style="width:500px;height:60px">Share a little biographical information to fill out your profile. This may be shown publicly.</textarea>
+    <textarea name="user_bio" style="width:500px;height:60px">{$user.bio}</textarea>
   </div>
   
 {if $require_password_changes && $user.id != $_user.id}
