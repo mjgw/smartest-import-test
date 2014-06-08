@@ -180,10 +180,6 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    
 	    $offset = strtolower($offset);
 	    
-	    if(in_array($offset, array_keys($this->getModelPluralNames()))){
-            return $this->getCreditedItemsOnCurrentSite($this->_model_plural_names[$offset]);
-        }
-	    
 	    switch($offset){
 	        case "password":
 	        case "password_salt":
@@ -224,9 +220,14 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
                 break;
             }
 	        
+	        default:
+	        if(in_array($offset, array_keys($this->getModelPluralNames()))){
+                return $this->getCreditedItemsOnCurrentSite($this->_model_plural_names[$offset]);
+            }else{
+                return parent::offsetGet($offset);
+            }
+	        
 	    }
-	    
-	    return parent::offsetGet($offset);
 	    
 	}
 	

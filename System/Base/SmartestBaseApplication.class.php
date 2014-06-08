@@ -287,6 +287,11 @@ class SmartestBaseApplication extends QuinceBase{
 	    return $this->getRequest()->getMeta('_module_dir').'Configuration/strings.yml';
 	}
 	
+	// Convenience function to provide controller instance internally
+	protected function getController(){
+        return SmartestPersistentObject::get('controller');
+    }
+	
 	final public function __destruct(){
 		
 		if(method_exists($this, "__moduleDestruct")){

@@ -183,11 +183,8 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
     }
     
     // Convenience function to provide controller instance internally
-    
     protected function getController(){
-        
         return SmartestPersistentObject::get('controller');
-        
     }
     
     public function disableTemplateProperty($property_id){

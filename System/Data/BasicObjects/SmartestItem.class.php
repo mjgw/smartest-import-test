@@ -434,7 +434,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    $this->createOrConnectTags(array($tag_label));
 	}
 	
-	public function createOrConnectTags($new_tag_strings_array){
+	public function createOrConnectTags($new_tag_strings_array, $title_case=true){
 	    
 	    if(!is_array($new_tag_strings_array) || !count($new_tag_strings_array)){
 	        return false;
@@ -446,14 +446,14 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    $useful_array = array();
 	    
 	    foreach($new_tag_strings_array as $string){
-	        $useful_array[SmartestStringHelper::toSlug($string)] = $string;
+	        $useful_array[SmartestStringHelper::toSlug($string, true)] = $string;
 	    }
 	    
 	    
 	    $new_tag_slugs = array();
 	    
 	    foreach($new_tag_strings_array as $nts){
-	        $new_tag_slugs[] = SmartestStringHelper::toSlug($nts);
+	        $new_tag_slugs[] = SmartestStringHelper::toSlug($nts, true);
 	    }
 	    
 	    $sql = "SELECT * FROM Tags WHERE tag_type='SM_TAGTYPE_TAG' AND tag_name IN ('".implode("','", $new_tag_slugs)."')";
@@ -473,15 +473,26 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	            // The tag exists
 	            $this->addTagWithId($existing_tags[$requested_tag_slug]->getId());
 	        }else{
-	            // The tag does not exist, so make it
-	            $new_tag = new SmartestTag;
-	            $new_tag->setLabel($requested_tag_label);
-	            $new_tag->setName($requested_tag_slug);
-	            $new_tag->save();
-	            $this->addTagWithId($new_tag->getId());
+	            
+	            if(strlen($requested_tag_label) && strlen($requested_tag_slug)){ // Prevent blanks
+	            
+    	            // The tag does not exist, so make it
+    	            $new_tag = new SmartestTag;
+	            
+    	            if($title_case){
+    	                $new_tag->setLabel(SmartestStringHelper::toTitleCase($requested_tag_label));
+                    }else{
+                        $new_tag->setLabel($requested_tag_label);
+                    }
+                
+    	            $new_tag->setName($requested_tag_slug);
+    	            $new_tag->save();
+    	            $this->addTagWithId($new_tag->getId());
+	            
+                }
+	            
 	        }
 	    }
-	    
 	    
 	}
 	
@@ -494,7 +505,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	        $new_tag_slugs = array();
 	        
 	        foreach($strings_array as $s){
-	            $new_tag_slugs[] = SmartestStringHelper::toSlug($s);
+	            $new_tag_slugs[] = SmartestStringHelper::toSlug($s, true);
 	        }
 	        
 	        // if the item already has tags, first remove any tags that are no longer in the array

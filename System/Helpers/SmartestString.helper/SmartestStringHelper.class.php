@@ -705,6 +705,10 @@ class SmartestStringHelper extends SmartestHelper{
 		return preg_match(self::EMAIL_ADDRESS, $string);
 	}
 	
+	public static function isEmail($string){
+	    return self::isEmailAddress($string);
+	}
+	
 	public static function isValidExternalUri($string){
 		return preg_match('/^https?:\/\//i', $string);
 	}

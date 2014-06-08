@@ -384,7 +384,7 @@ class MetaData extends SmartestSystemApplication{
 	
 	public function insertTag(){
 	    
-	    $proposed_tags = SmartestStringHelper::fromSeparatedStringList($this->getRequestParameter('tag_label'));
+	    $proposed_tags = SmartestStringHelper::fromSeparatedStringList($this->getRequestParameter('tag_label')); // Separates by commas or semicolons
 	    
 	    $num_new_tags = 0;
 	    $tag_item = false;
@@ -412,10 +412,10 @@ class MetaData extends SmartestSystemApplication{
 	    
 	    foreach($proposed_tags as $tag_label){
 	        
-	        if(strlen($tag_label)){
+	        $tag_name = SmartestStringHelper::toSlug($tag_label, true);
 	        
-        	    $tag_name = SmartestStringHelper::toSlug($tag_label);
-	    
+	        if(strlen($tag_label) && strlen($tag_name)){
+	        
         	    $tag = new SmartestTag;
         	    $existing_tags = array();
 	    
@@ -424,8 +424,9 @@ class MetaData extends SmartestSystemApplication{
         	        $existing_tags[] = "'".$tag_label."'";
         	    }else{
         	        $tag->setName($tag_name);
-        	        $tag->setLabel($tag_label);
+        	        $tag->setLabel(SmartestStringHelper::toTitleCase($tag_label)); // Capitalises first letter of words for neatness
         	        $tag->save();
+        	        
         	        if($tag_item){
         	            $item->tag($tag->getId());
         	        }
