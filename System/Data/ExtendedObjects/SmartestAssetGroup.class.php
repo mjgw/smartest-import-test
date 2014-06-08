@@ -442,6 +442,22 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
     
     public function offsetGet($offset){
         
+        if(is_numeric($offset)){
+            
+            $offset = (string) $offset;
+            
+            if($this->getIsGallery()){
+                $items = $this->getMemberships();
+            }else{
+                $items = $this->getMembers();
+            }
+            
+            if(isset($items[$offset])){
+                return $items[$offset];
+            }
+            
+        }
+        
         switch($offset){
             
             case "types":

@@ -1,6 +1,6 @@
 <?php
 
-function smarty_function_page_group($params, $smartest_engine){
+function smarty_function_asset_group($params, $smartest_engine){
     
     if(isset($params['name'])){
         
@@ -8,12 +8,12 @@ function smarty_function_page_group($params, $smartest_engine){
         $group_name = SmartestStringHelper::toVarName($params['name']);
         
         $database = SmartestDatabase::getInstance('SMARTEST');
-        $sql = "SELECT * FROM Sets WHERE set_name='".$group_name."' AND (set_site_id='".$site_id."' OR set_shared='1') AND set_type='SM_SET_PAGEGROUP_PERMANENT'";
+        $sql = "SELECT * FROM Sets WHERE set_name='".$group_name."' AND (set_site_id='".$site_id."' OR set_shared='1') AND (set_type='SM_SET_ASSETGALLERY' OR set_type='SM_SET_ASSETGROUP')";
         $result = $database->queryToArray($sql);
         
         if(count($result)){
             
-            $group = new SmartestPageGroup;
+            $group = new SmartestAssetGroup;
             $group->hydrate($result[0]);
             
             if(isset($params['assign'])){

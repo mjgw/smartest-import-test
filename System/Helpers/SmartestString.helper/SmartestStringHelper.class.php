@@ -658,25 +658,15 @@ class SmartestStringHelper extends SmartestHelper{
 	        $first_paragraph = $string;
 	    } */
 	    
-	    // var_dump($string);
-	    
 	    // strip tags
 	    // $final_string = strip_tags($first_paragraph);
 	    // $final_string = strip_tags(self::getFirstParagraph($string));
 	    $final_string = self::getFirstParagraph($string);
 	    
-	    // var_dump($final_string);
-	    
-	    // var_dump($final_string);
-	    
 	    // if it is longer that $char_length, truncate it and add '...'
 	    /* if(strlen($final_string) > $char_length){
 	        $final_string = substr($final_string, 0, ($char_length - 3)).'...';
 	    } */
-	    
-	    // echo $final_string;
-	    
-	    // var_dump(self::getFirstParagraph($final_string));
 	    
 	    $final_string = self::truncate($final_string, $char_length);
 	    
@@ -689,6 +679,13 @@ class SmartestStringHelper extends SmartestHelper{
 	}
 	
 	public static function truncate($string, $char_length=300){
+	    
+	    if(self::containsEscapedEntities($string)){
+	        $had_entities = true;
+	        $string = self::removeHtmlEntities($string);
+	    }else{
+	        $had_entities = false;
+	    }
 	    
 	    if(strlen($string) > $char_length){
 	        $string = substr($string, 0, ($char_length - 3)).'...';
@@ -784,6 +781,10 @@ class SmartestStringHelper extends SmartestHelper{
 	
 	public static function toHtmlEntities($string){
     	return htmlentities($string, ENT_QUOTES, 'UTF-8') ;
+    }
+    
+    public static function removeHtmlEntities($string){
+        return html_entity_decode($string, ENT_COMPAT, 'UTF-8');
     }
     
     public static function toXmlEntities($string){
