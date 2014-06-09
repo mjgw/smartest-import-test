@@ -419,7 +419,7 @@ type:
     input_options:
       - SM_ASSETINPUTTYPE_URL_INPUT
     url_translation:
-      format: "^https?:\/\/(((www\.)?youtube\.com\/watch\?v=)|(youtu\.be\/))([\w]+).*"
+      format: "^https?:\/\/(((www\.)?youtube\.com\/watch\?v=)|(youtu\.be\/))([\w_-]+).*"
       id_position: 5
     storage:
       type: external_translated
