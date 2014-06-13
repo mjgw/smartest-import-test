@@ -118,8 +118,20 @@ class SmartestResponse{
         );
         
         try{
+            
             SmartestInstallationStatusHelper::checkStatus();
+            
+            // If we get this far, Smartest is installed, so test the database connection
+            try{
+    	        SmartestDatabase::testConnection('SMARTEST');
+    	    }catch(SmartestDatabaseException $e){
+                $error_message = $e->getMessage();
+                include SM_ROOT_DIR.'System/Response/ErrorPages/database_error.php';
+                die;
+    	    }
+            
 	    }catch(SmartestNotInstalledException $e){
+	        // If we get here, Smartest isn't installed, so show installer
 	        if(!class_exists('SmartestInstaller')){
 	            require SM_ROOT_DIR.'System/Install/SmartestInstaller.class.php';
             }

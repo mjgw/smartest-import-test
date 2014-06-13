@@ -7,7 +7,9 @@ class SmartestInstallationStatusHelper{
     public static function checkStatus($purge=false){
         
         // Add this in a few installlations time SmartestSystemSettingsHelper::load('successful_install') === true
-        if(SmartestCache::load('installation_status', true) === SM_INSTALLSTATUS_COMPLETE && !$purge && (is_file(SM_ROOT_DIR.'Public/.htaccess') && is_file(SM_ROOT_DIR.'Configuration/controller.xml') && is_file(SM_ROOT_DIR.'Configuration/database.ini'))){
+        // if(SmartestCache::load('installation_status', true) === SM_INSTALLSTATUS_COMPLETE && !$purge && (is_file(SM_ROOT_DIR.'Public/.htaccess') && is_file(SM_ROOT_DIR.'Configuration/database.ini'))){
+        if(!$purge && (is_file(SM_ROOT_DIR.'Public/.htaccess') && is_file(SM_ROOT_DIR.'Configuration/database.ini'))){
+            // echo "installed";
             return SmartestCache::load('installation_status', true);
         }else{
         // if(SmartestCache::load('installation_status', true) !== SM_INSTALLSTATUS_COMPLETE || $purge || (!is_file(SM_ROOT_DIR.'Public/.htaccess') || !is_file(SM_ROOT_DIR.'Configuration/controller.xml') || !is_file(SM_ROOT_DIR.'Configuration/database.ini'))){

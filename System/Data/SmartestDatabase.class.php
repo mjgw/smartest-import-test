@@ -39,6 +39,23 @@ class SmartestDatabase{
         
     }
     
+    public static function testConnection($connection_name){
+        
+        $config = self::readConfiguration($connection_name);
+        $class = $config['class'];
+        
+        if(strlen($class)){
+            
+            try{
+                $object = new $class($config);
+            }catch(SmartestDatabaseException $e){
+                throw $e;
+            }
+            
+        }
+        
+    }
+    
     public static function readConfiguration($connection_name){
         
         $actual_md5 = md5_file(SM_ROOT_DIR."Configuration/database.ini");
