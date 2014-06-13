@@ -175,8 +175,8 @@ class SmartestItemPage extends SmartestPage{
                         $sql .= " AND item_public='TRUE'";
                     }
         
-                    $sql .= " AND item_deleted !='1' LIMIT 1";
-            
+                    $sql .= " AND item_deleted !='1' ORDER BY item_id DESC LIMIT 1";
+                    
                     $result = $this->database->queryToArray($sql);
             
                     if(count($result)){

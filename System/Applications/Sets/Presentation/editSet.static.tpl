@@ -142,7 +142,7 @@ var set_id = {$set.id};
 
 		<select name="available_items[]"  id="available_items" size="2" multiple style="width:270px; height:300px;">
         {foreach from=$non_members key="key" item="item"}
-		<option value="{$item.id}" >{$item.name}</option>
+		<option value="{$item.id}" >{if $item.public == "FALSE"}* {/if}{$item.name}</option>
 		{/foreach}
 		</select>
 		
@@ -156,7 +156,7 @@ var set_id = {$set.id};
         <div style="text-align:left">{$model.plural_name} that <strong>are</strong> in this set</div>
  	<select name="used_items[]"  id='used_items' size="2" multiple style="width:270px; height:300px" >	
 	  {foreach from=$members key="key" item="item"}
-		<option value="{$item.id}" >{$item.name}</option>
+		<option value="{$item.id}" >{if $item.public == "FALSE"}* {/if}{$item.name}</option>
 		{/foreach}
         </select>
 	</td>

@@ -668,7 +668,7 @@ class SmartestStringHelper extends SmartestHelper{
 	        $final_string = substr($final_string, 0, ($char_length - 3)).'...';
 	    } */
 	    
-	    $final_string = self::truncate($final_string, $char_length);
+	    $final_string = self::truncate(strip_tags($final_string), $char_length);
 	    
 	    if($was_object){
 	        return new SmartestString(trim($final_string));
