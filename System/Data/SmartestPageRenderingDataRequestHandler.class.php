@@ -1,10 +1,13 @@
 <?php
 
+// This is the class that is accessed via the $this variable in the template on web pages
+
 class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
 
     protected $_page;
     protected $_all_tags = null;
     protected $_site;
+    protected $_navigation_handler = null;
     protected $_search_info = null;
     
     public function __construct(SmartestPage $page){
@@ -16,7 +19,10 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
     }
     
     public function getNavigationDataRequestHandler(){
-        return new SmartestPageNavigationDataRequestHandler($this->_page);
+        if(!$this->_navigation_handler){
+            $this->_navigation_handler = new SmartestPageNavigationDataRequestHandler($this->_page);
+        }
+        return $this->_navigation_handler;
     }
     
     public function getSite(){
@@ -165,6 +171,9 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
         
             case "has_item":
             return $this->getPrincipalItem() instanceof SmartestCmsItem;
+            
+            case "_php_class":
+            return __CLASS__;
         
         }
         

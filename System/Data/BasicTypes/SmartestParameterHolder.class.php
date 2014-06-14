@@ -84,6 +84,15 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
         }
     }
     
+    public function getParameterOrNull($n){
+        $v = $this->getParameter($n);
+        if(is_object($v) && $v instanceof SmartestBasicType){
+            return $v->isPresent() ? $v : null;
+        }else{
+            return $v;
+        }
+    }
+    
     public function g($n, $d=null){
         return $this->getParameter($n, $d);
     }
@@ -189,7 +198,10 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
             return "<code>".print_r($this->_data, true)."</code>";
         }
         
-        return $this->getParameterOrFalse($offset);
+        if($this->hasParameter($offset)){
+            return $this->getParameter($offset);
+        }
+        // return $this->getParameterOrNull($offset);
     }
     
     public function offsetExists($offset){

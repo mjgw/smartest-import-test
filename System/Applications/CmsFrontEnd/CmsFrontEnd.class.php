@@ -375,8 +375,8 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	private function renderPage($draft_mode=false){
 	    
 	    if($draft_mode || (is_object($this->_site) && (bool) $this->_site->getIsEnabled())){
-	    
-    	    $ph = new SmartestWebPagePreparationHelper($this->_page);
+	        
+	        $ph = new SmartestWebPagePreparationHelper($this->_page);
 	    
     	    $overhead_finish_time = microtime(true);
     	    $overhead_time_taken = number_format(($overhead_finish_time - SmartestPersistentObject::get('timing_data')->getParameter('start_time'))*1000, 2, ".", "");
