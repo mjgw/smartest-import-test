@@ -574,6 +574,10 @@ class Desktop extends SmartestSystemApplication{
         
         // Version control
         $this->send(new SmartestBoolean(is_dir(SM_ROOT_DIR.'.svn/')), 'is_svn_checkout');
+        
+        // Show Facebook Box?
+        $this->send($this->getGlobalPreference('hide_facebook_like_box', 0), 'hide_fb_likes_box');
+        
     }
     
     public function testServerSpeed(){

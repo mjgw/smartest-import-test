@@ -1501,6 +1501,23 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
         }
     }
     
+    public static function all($mode=9, $site_id=null){
+        
+        if(__CLASS__ == 'SmartestCmsItem'){
+        
+            // Error - all() must be called on a specific model
+        
+        }else{
+            
+            $className = __CLASS__;
+            $object = new $className;
+            $model = $object->getModel();
+            return $model->getAllItems($site_id, $mode);
+            
+        }
+        
+    }
+    
     // builds a fully populated object of the correct type from just the primary key or webid
     /* public static function retrieveByName($item_id, $dont_bother_with_class=false){
         

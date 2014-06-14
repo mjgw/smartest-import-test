@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 633
+    revision: 634
     minimum_php_version: 5.2
     minimum_database_version: 19
     default_timezone: Europe/London
@@ -67,7 +67,6 @@ system:
     always:
       - Sites/
       - Library/ObjectModel/
-      - System/Cache/SmartestEngine/
       - System/Cache/Smarty/
       - System/Cache/Pages/
       - System/Cache/Data/

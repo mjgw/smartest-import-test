@@ -296,6 +296,21 @@ class SmartestAssetsLibraryHelper{
 	    }
 	    
 	}
+	
+	/* public function getTypeCodesByPlaceholderType(){
+	    
+	    $ptypes = SmartestDataUtility::getAssetClassTypes();
+	    
+	    if(isset($ptypes[$type])){
+	        $atypes = $ptypes[$type]['accept'];
+	        if(is_array($atypes)){
+	            return $atypes;
+	        }else{
+	            return array();
+	        }
+	    }
+	    
+	} */
     
     public function getUploadLocations(){
         
@@ -808,9 +823,13 @@ class SmartestAssetsLibraryHelper{
 	    
 	}
 	
-	public function getAssetGroups($site_id=''){
+	public function getAssetGroups($site_id='', $groups_only=false){
 	    
-	    $sql = "SELECT * FROM Sets WHERE (set_type='SM_SET_ASSETGROUP' OR set_type='SM_SET_ASSETGALLERY') AND set_is_hidden = '0'";
+	    if($groups_only){
+	        $sql = "SELECT * FROM Sets WHERE set_type='SM_SET_ASSETGROUP' AND set_is_hidden = '0'";
+        }else{
+            $sql = "SELECT * FROM Sets WHERE (set_type='SM_SET_ASSETGROUP' OR set_type='SM_SET_ASSETGALLERY') AND set_is_hidden = '0'";
+        }   
 	    
 	    if(is_numeric($site_id)){
 	        $sql .= " AND (set_site_id='".$site_id."' OR set_shared=1)";
@@ -909,9 +928,59 @@ class SmartestAssetsLibraryHelper{
 	        $types = array($types);
 	    }
 	    
+	    // print_r($types);
+	    
 	    if(count($types)){
 	        
 	        $sql = "SELECT * FROM Sets WHERE set_type='SM_SET_ASSETGROUP' AND set_is_hidden=0";
+	        
+	        if(is_numeric($site_id)){
+    	        $sql .= " AND (set_site_id='".$site_id."' OR set_shared='1')";
+    	    }
+    	    
+    	    if(count($types) > 1){
+	            
+	            // more than one type is being supplied
+	            // find only groups that accept ALL of the given types
+	            $ok_assetclass_types = $this->getAssetClassCodesThatAcceptType($types);
+	            $ok_types = array_merge($ok_assetclass_types, $types);
+	            $sql .=  " AND (set_filter_type='SM_SET_FILTERTYPE_NONE' OR set_filter_value IN ('".implode($ok_types, "', '")."'))";
+	            
+	        }else{
+	            
+	            // just one type
+	            $ok_assetclass_types = $this->getAssetClassCodesThatAcceptType($types);
+	            $sql .=  " AND (set_filter_type='SM_SET_FILTERTYPE_NONE' OR (set_filter_type='SM_SET_FILTERTYPE_ASSETTYPE' AND set_filter_value='".$types[0]."') OR set_filter_value IN ('".implode($ok_assetclass_types, "', '")."'))";
+	            
+	        }
+	        
+	        // echo $sql;
+	        
+	        $result = $this->database->queryToArray($sql);
+	        // echo count($result);
+	        $groups = array();
+	        
+	        foreach($result as $r){
+	            $g = new SmartestAssetGroup;
+	            $g->hydrate($r);
+	            $groups[] = $g;
+	        }
+	        
+	        return $groups;
+	        
+        }
+	    
+	}
+	
+	public function getGalleryAssetGroupsThatAcceptType($types, $site_id=''){
+	    
+	    if(!is_array($types)){
+	        $types = array($types);
+	    }
+	    
+	    if(count($types)){
+	        
+	        $sql = "SELECT * FROM Sets WHERE set_type='SM_SET_ASSETGALLERY' AND set_is_hidden=0";
 	        
 	        if(is_numeric($site_id)){
     	        $sql .= " AND (set_site_id='".$site_id."' OR set_shared='1')";
@@ -931,6 +1000,8 @@ class SmartestAssetsLibraryHelper{
 	            $sql .=  " AND (set_filter_type='SM_SET_FILTERTYPE_NONE' OR (set_filter_type='SM_SET_FILTERTYPE_ASSETTYPE' AND set_filter_value='".$types[0]."') OR set_filter_value IN ('".implode($ok_assetclass_types, "', '")."'))";
 	            
 	        }
+	        
+	        // $sql .= " AND ((Sets.set_filter_type = 'SM_SET_FILTERTYPE_ASSETCLASS' AND Sets.set_filter_value IN ('".implode("','", $this->getGalleryPlaceholderTypeCodes())."')) OR (Sets.set_filter_type = 'SM_SET_FILTERTYPE_ASSETTYPE' AND Sets.set_filter_value IN ('".implode("','", $this->getGalleryAssetTypeIds())."')))";
 	        
 	        $result = $this->database->queryToArray($sql);
 	        $groups = array();

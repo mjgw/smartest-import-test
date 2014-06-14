@@ -124,6 +124,13 @@
 
 </form>
 
+<form id="item-autosave-form" method="post" action="{$domain}ajax:datamanager/autoSaveItem">
+  <input type="hidden" name="item_name" value="" />
+{foreach from=$item._editable_properties key="pid" item="property"}
+  
+{/foreach}
+</form>
+
 </div>
 
 <div id="actions-area">

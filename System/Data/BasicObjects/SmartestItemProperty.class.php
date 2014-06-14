@@ -289,16 +289,16 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	public function getPossibleValues(){
 	    
 	    if($this->_possible_values_retrieval_attempted){
-	    
+	        
 	        return $this->_possible_values;
-	    
+	        
         }else{
             
             if($this->isForeignKey() || $this->isManyToMany()){
 	            
 	            $info = $this->getTypeInfo();
 	            $filter = $this->getForeignKeyFilter();
-	            
+	            // echo $this->getDatatype();
 	            if($info['filter']['entitysource']['type'] == 'db'){
 	                
 	                if($this->getDatatype() == 'SM_DATATYPE_ASSET' || $this->getDatatype() == 'SM_DATATYPE_ASSET_SELECTION'){
@@ -391,16 +391,40 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	                    $alh = new SmartestAssetsLibraryHelper;
 	                    $this->_possible_values = $alh->getAssetsByTypeCode('SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE', $site_id, 1);
 	                    // Todo: take account of template groups here
-	                }else if($this->getDatatype() == 'SM_DATATYPE_ASSET_GROUP' || $this->getDatatype() == 'SM_DATATYPE_CMS_ITEM_SELECTION'){
 	                    
+	                }else if($this->getDatatype() == 'SM_DATATYPE_ASSET_GROUP' || $this->getDatatype() == 'SM_DATATYPE_ASSET_GALLERY'){
+	                    
+	                    // echo $this->getForeignKeyFilter();
 	                    $alh = new SmartestAssetsLibraryHelper;
 	                    
 	                    if(strlen($this->getForeignKeyFilter())){
+	                        
+	                        if(substr($this->getForeignKeyFilter(), 0, 13) == 'SM_ASSETCLASS'){
+                                // Assets are limited to a placeholder type, so multiple asset types
+                                $ach = new SmartestAssetClassesHelper;
+                                $types = $ach->getAssetTypeCodesFromAssetClassType($this->getForeignKeyFilter());
+                            }else{
+                                $types = array($this->getForeignKeyFilter());
+                            }
+                            
+                            // print_r($types);
+	                        
 	                        // get galleries or groups that match foreign key filter
+	                        if($this->getDatatype() == 'SM_DATATYPE_ASSET_GROUP'){
+	                            $this->_possible_values = $alh->getAssetGroupsThatAcceptType($types, $this->getCurrentSiteId());
+	                            // echo count($this->_possible_values);
+	                        }else if($this->getDatatype() == 'SM_DATATYPE_ASSET_GALLERY'){
+	                            $this->_possible_values = $alh->getGalleryAssetGroupsThatAcceptType($types, $this->getCurrentSiteId());
+	                        }
 	                        
 	                    }else{
-	                        // get all galleries or groups
 	                        
+	                        // get all galleries or groups
+	                        if($this->getDatatype() == 'SM_DATATYPE_ASSET_GROUP'){
+	                            $this->_possible_values = $alh->getAssetGroups($this->getCurrentSiteId(), true);
+	                        }else if($this->getDatatype() == 'SM_DATATYPE_ASSET_GALLERY'){
+	                            $this->_possible_values = $alh->getGalleryAssetGroups($this->getCurrentSiteId());
+	                        }
 	                    }
 	                    
 	                }else if($this->getDatatype() == 'SM_DATATYPE_CMS_ITEM' || $this->getDatatype() == 'SM_DATATYPE_CMS_ITEM_SELECTION'){

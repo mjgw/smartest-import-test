@@ -493,7 +493,7 @@ class SmartestBaseApplication extends QuinceBase{
         
     }
     
-    protected function getGlobalPreference($preference_name){
+    protected function getGlobalPreference($preference_name, $default=null){
         
         $name = SmartestStringHelper::toVarName($preference_name);
         
@@ -501,8 +501,13 @@ class SmartestBaseApplication extends QuinceBase{
             return $this->_cached_global_preferences->getParameter($name);
         }else{
             $value = $this->_preferences_helper->getGlobalPreference($name, $this->getUserIdOrZero(), $this->getSiteIdOrZero());
+        }
+        
+        if(isset($value) && strlen($value)){
             $this->_cached_global_preferences->setParameter($name, $value);
             return $value;
+        }else{
+            return $default;
         }
         
     }
