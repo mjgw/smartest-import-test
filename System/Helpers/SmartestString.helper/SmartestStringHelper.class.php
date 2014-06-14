@@ -115,8 +115,12 @@ class SmartestStringHelper extends SmartestHelper{
 	    
 	}
 	
-	public static function isAscii(){
+	public static function isAscii($str){
 	    return (preg_match('/(?:[^\x00-\x7F])/',$str) !== 1);
+	}
+	
+	public static function toWebId($string){
+	    return preg_replace('/[^\w\d\$-]/', '', $string);
 	}
 	
 	public static function toAscii($string){
