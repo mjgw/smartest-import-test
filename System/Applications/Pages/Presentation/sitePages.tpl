@@ -20,7 +20,7 @@ function viewPage(){
 
 <div id="work-area">
     
-    {load_interface file="cms_elements_tabs.tpl"}
+{load_interface file="cms_elements_tabs.tpl"}
 
 <h3>Site structure</h3>
 <a name="top"></a>
@@ -29,23 +29,6 @@ function viewPage(){
 <form id="pageViewForm" method="get" action="">
   <input type="hidden" name="page_id" id="item_id_input" value="" />
 </form>
-
-{* <table cellpadding="0" cellspacing="0" border="0" style="width:100%;border:0px;">
-  <tr class="mainpanel-row-ccf">
-    <td style="padding-left:10px" id="pageNameField" class="text">Sitemap: Pages in site "{$content.data[0].info.site_name}"</td></tr>
-{foreach from=$content.data item=page key=key}
-{capture name=indent assign=indent}{math equation="x*y+z" x=30 y=$page.treeLevel z=10}{/capture}
-{capture name=indent assign=doubleIndent}{math equation="x*y+z" x=30 y=$page.treeLevel z=40}{/capture}
-{if isset($content.data[0].info.site_name) }
-  <tr class="mainpanel-row-{cycle values="ddd,fff"}" id="page_{$page.info.webid}" ondblclick="window.location='{$domain}{$section}/getPageAssets?page_id={$page.info.webid}&amp;site_id={$content.data[0].info.site_id}'"><!-- onmouseover="this.style.backgroundColor='#f90'" onmouseout="this.style.backgroundColor='{cycle name="return" values="fff,ddd"}'-->
-    <td style="padding-left:{$indent}px;cursor:pointer" onclick="setSelectedItem('{$page.info.webid}', '{$page.info.title|escape:quotes}', '{cycle name="returnValue" values="ddd,fff"}');" class="text"><img src="{$domain}Resources/System/Images/spacer.gif" style="width:1px;height:22px;display:inline" border="0" alt="" />{if $page.info.type != "NORMAL"}<img src="{$domain}Resources/Icons/page_gear.gif" border="0" alt="">{else}{if $page.treeLevel == 0}<img src="{$domain}Resources/Icons/world.png" border="0" alt="">{else}<img src="{$domain}Resources/Icons/page.gif" border="0" alt="">{/if}{/if} <a href="javascript:void(0);" class="mainpanel-link">{$page.info.title}</a>{if $page.treeLevel == 1 && $page.info.type == "NORMAL"} (Section page){/if}</td></tr>
-{else}
-  <tr style="background-color:#{cycle values="ddd,fff"};height:22px">
-    <td><img src="{$domain}Resources/System/Images/spacer.gif" style="width:1px;height:22px;display:inline" border="0" alt="" />There are no pages yet. Click <a href="{$domain}{$section}addPage">here</a> to add one.</td></tr>
-{/if}
-{/foreach}
-
-</table> *}
 
 <ul class="tree-parent-node-open" id="tree-root">
   {defun name="menurecursion" list=$tree}

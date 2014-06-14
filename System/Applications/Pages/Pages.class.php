@@ -175,7 +175,7 @@ class Pages extends SmartestSystemApplication{
 	        
 	        if($this->getUser()->hasToken('clear_pages_cache')){
             
-                $page_prefix = 'site'.$this->getSite()->getId().'_';
+                /* $page_prefix = 'site'.$this->getSite()->getId().'_';
             
                 $cache_files = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Cache/Pages/');
             
@@ -214,7 +214,7 @@ class Pages extends SmartestSystemApplication{
                 
                     $this->send(false, 'show_result');
                 
-                }
+                } */
             
             }else{
                 

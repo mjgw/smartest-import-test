@@ -862,6 +862,7 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	    }
 	    
 	    $parameters->setParameter('name',  $form_name);
+	    $parameters->setParameter('id', SmartestStringHelper::toSlug($this->getName()));
 	    
 	    if(!$existing_value){
 	        $existing_value = $this->getDefaultValue();

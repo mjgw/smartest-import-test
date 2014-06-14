@@ -117,10 +117,14 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 		if(SmartestStringHelper::isMd5Hash($password)){
 			$this->_properties['password'] = $password;
 			$this->_modified_properties['password'] = $password;
+			return true;
 		}else{
 			if(strlen($password) > 3){
 				$this->_properties['password'] = md5($password);
 				$this->_modified_properties['password'] = md5($password);
+				return true;
+			}else{
+			    return false;
 			}
 		}
 	}

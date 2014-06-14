@@ -300,7 +300,7 @@ class SmartestRequestUrlHelper{
             							$page->setIdentifyingFieldName("webid");
             							$page->setIdentifyingFieldValue($actual_url_parts[$i]);
             						}
-        						
+            						
             						$page->setUrlNameValuePair($url_var_matches[2], $actual_url_parts[$i]);
 
             						$i++;

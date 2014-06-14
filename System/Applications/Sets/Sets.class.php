@@ -453,6 +453,7 @@ class Sets extends SmartestSystemApplication{
         	        $c->setItempropertyId($property_id);
         	        $c->setOperator($this->getRequestParameter('new_condition_operator'));
         	        $c->setValue($this->getRequestParameter('new_condition_value'));
+        	        
         	        $c->save();
 	        
         	    }
