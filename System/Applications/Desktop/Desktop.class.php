@@ -131,7 +131,7 @@ class Desktop extends SmartestSystemApplication{
     	        $site->setName($this->getRequestParameter('site_name'));
     	        $site->setInternalLabel($this->getRequestParameter('site_internal_label'));
     	        $site->setTitleFormat($this->getRequestParameter('site_title_format'));
-    	        $site->setDomain($this->getRequestParameter('site_domain'));
+    	        $site->setDomain(SmartestStringHelper::toValidDomain(preg_replace('/^https?:\/\//i', '', $this->getRequestParameter('site_domain'))));
     	        $site->setTagPageId($this->getRequestParameter('site_tag_page'));
     	        $site->setSearchPageId($this->getRequestParameter('site_search_page'));
     	        $site->setErrorPageId($this->getRequestParameter('site_error_page'));
