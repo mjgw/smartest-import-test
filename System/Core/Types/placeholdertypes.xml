@@ -80,6 +80,16 @@
     <accept>SM_ASSETTYPE_MS_POWERPOINT</accept>
   </type>
   
+  <type id="SM_ASSETCLASS_TEXT_RESOURCE">
+    <label>Text resource</label>
+    <accept>SM_ASSETTYPE_RICH_TEXT</accept>
+    <accept>SM_ASSETTYPE_TEXTILE_TEXT</accept>
+    <accept>SM_ASSETTYPE_PDF</accept>
+    <accept>SM_ASSETTYPE_MS_WORD</accept>
+    <setfrompreview>true</setfrompreview>
+    <descriptive>false</descriptive>
+  </type>
+  
   <type id="SM_ASSETCLASS_MOVIE">
     <label>A movie in any format</label>
     <setfrompreview>true</setfrompreview>

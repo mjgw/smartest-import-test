@@ -123,6 +123,10 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             case "is_image":
             return $this->isImage();
             
+            case "html_friendly":
+            case "can_appear_on_web_page":
+            return $this->isHtmlFriendly();
+            
             case "is_web_accessible":
             return ($this->isExternal() || $this->isWebAccessible());
             
@@ -533,6 +537,11 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	
 	public function isImage(){
 	    return in_array($this->getType(), array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE'));
+	}
+	
+	public function isHtmlFriendly(){
+	    $info = $this->getTypeInfo();
+	    return $info['html_friendly'] !== false;
 	}
 	
 	public function isTemplate(){

@@ -701,8 +701,17 @@ class Pages extends SmartestSystemApplication{
 	                $container->setFilterType('SM_ASSETCLASS_FILTERTYPE_NONE');
 	                $container->setFilterValue('');
 	            }else{
-	                $container->setFilterType('SM_ASSETCLASS_FILTERTYPE_TEMPLATEGROUP');
-	                $container->setFilterValue($this->getRequestParameter('container_filter'));
+	                
+	                $group = new SmartestTemplateGroup;
+	                
+	                if($group->find($this->getRequestParameter('container_filter'))){
+	                    if($group->getFilterValue() == 'SM_ASSETTYPE_CONTAINER_TEMPLATE'){
+	                        $group->setShared(1);
+	                        $group->save();
+	                        $container->setFilterType('SM_ASSETCLASS_FILTERTYPE_TEMPLATEGROUP');
+	                        $container->setFilterValue($this->getRequestParameter('container_filter'));
+                        }
+                    }
 	            }
 	        }
 	        

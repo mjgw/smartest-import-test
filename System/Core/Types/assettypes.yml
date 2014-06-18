@@ -561,6 +561,7 @@ type:
     class: SmartestAsset
     parsable: false
     icon: page_white_acrobat.png
+    html_friendly: false
     input_options:
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
@@ -578,6 +579,7 @@ type:
     label: Archive
     description: An archived folder or document
     class: SmartestAsset
+    html_friendly: false
     parsable: false
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
@@ -598,6 +600,7 @@ type:
     label: Microsoft Word
     description: A document in Microsoft Word format
     class: SmartestAsset
+    html_friendly: false
     parsable: false
     icon: page_word.png
     input_options:
@@ -618,6 +621,7 @@ type:
     label: Microsoft Excel Spreadsheet
     description: A document in XLS Spreadsheet format
     class: SmartestAsset
+    html_friendly: false
     parsable: false
     icon: page_excel.png
     input_options:
@@ -638,6 +642,7 @@ type:
     label: Microsoft Powerpoint
     description: A document in Microsoft Powerpoint format
     class: SmartestAsset
+    html_friendly: false
     parsable: false
     icon: page_white_powerpoint.png
     input_options:
