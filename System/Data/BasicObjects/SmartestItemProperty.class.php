@@ -301,6 +301,8 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	            // echo $this->getDatatype();
 	            if($info['filter']['entitysource']['type'] == 'db'){
 	                
+	                // echo $this->getDatatype();
+	                
 	                if($this->getDatatype() == 'SM_DATATYPE_ASSET' || $this->getDatatype() == 'SM_DATATYPE_ASSET_SELECTION'){
 	                    
 	                    if($this->getOptionSetType() == 'SM_PROPERTY_FILTERTYPE_ASSETGROUP'){
@@ -394,7 +396,6 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	                    
 	                }else if($this->getDatatype() == 'SM_DATATYPE_ASSET_GROUP' || $this->getDatatype() == 'SM_DATATYPE_ASSET_GALLERY'){
 	                    
-	                    // echo $this->getForeignKeyFilter();
 	                    $alh = new SmartestAssetsLibraryHelper;
 	                    
 	                    if(strlen($this->getForeignKeyFilter())){
@@ -407,9 +408,7 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
                                 $types = array($this->getForeignKeyFilter());
                             }
                             
-                            // print_r($types);
-	                        
-	                        // get galleries or groups that match foreign key filter
+                            // get galleries or groups that match foreign key filter
 	                        if($this->getDatatype() == 'SM_DATATYPE_ASSET_GROUP'){
 	                            $this->_possible_values = $alh->getAssetGroupsThatAcceptType($types, $this->getCurrentSiteId());
 	                            // echo count($this->_possible_values);

@@ -225,7 +225,7 @@ class SmartestAssetsLibraryHelper{
     
     public function getGalleryAssetGroups($site_id){
         
-        $sql = "SELECT * FROM Sets WHERE Sets.set_type='SM_SET_ASSETGROUP' AND (Sets.set_site_id = '".$site_id."' OR Sets.set_shared = '1') AND set_is_hidden != '1' AND set_is_system != '1'";
+        $sql = "SELECT * FROM Sets WHERE Sets.set_type='SM_SET_ASSETGALLERY' AND (Sets.set_site_id = '".$site_id."' OR Sets.set_shared = '1') AND set_is_hidden != '1' AND set_is_system != '1'";
         $sql .= " AND ((Sets.set_filter_type = 'SM_SET_FILTERTYPE_ASSETCLASS' AND Sets.set_filter_value IN ('".implode("','", $this->getGalleryPlaceholderTypeCodes())."')) OR (Sets.set_filter_type = 'SM_SET_FILTERTYPE_ASSETTYPE' AND Sets.set_filter_value IN ('".implode("','", $this->getGalleryAssetTypeIds())."')))";
         $result = $this->database->queryToArray($sql);
         
