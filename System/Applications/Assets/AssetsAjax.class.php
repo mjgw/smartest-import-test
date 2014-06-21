@@ -116,6 +116,27 @@ class AssetsAjax extends SmartestSystemApplication{
         
     }
     
+    public function setAssetThumbnailId(){
+        
+        $asset = new SmartestAsset;
+	    
+	    if($asset->find($this->getRequestParameter('asset_id'))){
+	        
+	        header('HTTP/1.1 200 OK');
+	        $asset->setThumbnailId($this->getRequestParameter('thumbnail_id'));
+	        SmartestLog::getInstance('site')->log($this->getUser()->getFullName().' set the thumbnail asset id of file '.$asset->getLabel().' to'.$this->getRequestParameter('thumbnail_id').'.');
+	        $asset->save();
+	        
+	    }else{
+	        
+	        header('HTTP/1.1 404 Not Found');
+	        
+	    }
+	    
+	    exit;
+        
+    }
+    
     public function setAssetLanguage(){
         
         $asset = new SmartestAsset;

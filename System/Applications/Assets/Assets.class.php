@@ -1579,6 +1579,10 @@ class Assets extends SmartestSystemApplication{
 		    $this->send($asset->getPossibleGroups(), 'possible_groups');
 		    $this->send(new SmartestArray($asset->getOtherPointers()), 'pointers');
 		    
+		    $helper = new SmartestAssetsLibraryHelper;
+    	    $attachable_files = $helper->getAttachableFiles($this->getSite()->getId());
+    	    $this->send($attachable_files, 'thumbnail_files');
+		    
 		    if(isset($data['type_info']['source_editable']) && SmartestStringHelper::toRealBool($data['type_info']['source_editable'])){
 		        $this->send(true, 'allow_source_edit');
 		    }else{

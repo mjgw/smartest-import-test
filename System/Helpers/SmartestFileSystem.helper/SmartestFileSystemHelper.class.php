@@ -256,6 +256,18 @@ class SmartestFileSystemHelper extends SmartestHelper{
         }
 	}
 	
+	public static function saveToNewFile($path, $data, $binary_safe=false){
+	    
+	    $file_name = self::getUniqueFileName($path);
+	    
+	    if(self::save($file_name, $data, $binary_safe)){
+	        return $file_name;
+	    }else{
+	        return false;
+	    }
+	    
+	}
+	
 	public static function getUniqueFileName($full_path){
 	    
 	    if(!strlen($full_path)){
@@ -371,7 +383,7 @@ class SmartestFileSystemHelper extends SmartestHelper{
     
         curl_close ($ch);
     
-        return self::save($local_path, $rawdata);
+        return self::saveToNewFile($local_path, $rawdata, true);
         
 	}
 	

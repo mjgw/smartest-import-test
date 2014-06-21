@@ -21,9 +21,12 @@ class SmartestImage extends SmartestFile{
     const SQUARE = 'sq';
     const PORTRAIT = 'pr';
     
-    public function __construct(){
+    public function __construct($img_path=null){
         parent::__construct();
         $this->_render_data = new SmartestParameterHolder('Image render data');
+        if($img_path){
+            $this->loadFile($img_path);
+        }
     }
     
     public function __toString(){
@@ -204,7 +207,7 @@ class SmartestImage extends SmartestFile{
     }
     
     public function getAssetTypeFromSuffix(){
-        switch($this->getSuffix()){
+        switch(strtolower($this->getSuffix())){
             case "jpeg":
             case "jpg":
             return "SM_ASSETTYPE_JPEG_IMAGE";

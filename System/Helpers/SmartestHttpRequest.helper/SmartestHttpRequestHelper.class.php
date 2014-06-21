@@ -89,7 +89,8 @@ class SmartestHttpRequestHelper extends SmartestHelper{
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_USERAGENT, 'Smartest PageGrab [HTTP Request Helper], (Version '.SM_SYSTEM_VERSION.')');
+		// curl_setopt($ch, CURLOPT_USERAGENT, 'Smartest PageGrab [HTTP Request Helper], (Version '.SM_SYSTEM_VERSION.')');
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1');
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
 		if($type == 'POST'){
@@ -186,18 +187,66 @@ class SmartestHttpRequestHelper extends SmartestHelper{
 			$html = $page;
 		}
 		
-		preg_match_all('/<meta (name|http-equiv)=[\'"]?([^"\']+)[\'"]? content=[\'"]?([^"\']*)[\'"]?/', $html, $matches);
+		// echo $page;
+		
+		// echo $html;
+		
+		preg_match_all('/<meta (name|http-equiv|property)=[\'"]?([^"\']+)[\'"]? content=[\'"]?([^"\']*)[\'"]?/m', $html, $matches);
 		
 		$metas = array();
 		
 		foreach($matches[0] as $key=>$meta){
 			$metas[$key]['name'] = $matches[2][$key];
 			$metas[$key]['value'] = $matches[3][$key];
-			$metas[$key]['type'] = ($matches[1][$key] == 'http-equiv') ? 'http-equiv' : 'normal';
+			$metas[$key]['type'] = $matches[1][$key];
 		}
 		
 		return $metas;
 		
+	}
+	
+	public static function getOpenGraphMetas($url){
+	    
+	    $all_metas = self::getMetas($url);
+	    $open_graph_metas = array();
+	    
+	    foreach($all_metas as $m){
+	        
+	        if(substr($m['name'], 0, 3) == 'og:'){
+	            $open_graph_metas[$m['name']] = $m['value'];
+	        }
+	        
+	    }
+	    
+	    return $open_graph_metas;
+	    
+	}
+	
+	public static function getOpenGraphThumbnailUrl($url){
+	    
+	    $og_metas = self::getOpenGraphMetas($url);
+	    
+	    if(isset($og_metas['og:image'])){
+	        $image_url = $og_metas['og:image'];
+	        // Fix agnostic links, just for the purposes of grabbing image
+	        if(substr($image_url, 0, 2) == '/'.'/'){
+	            $image_url = 'http:'.$image_url;
+	        }
+	        
+	        $url = new SmartestExternalUrl($image_url);
+	        $local_filename = end(explode('/', $image_url));
+	        
+	        try{
+                SmartestFileSystemHelper::saveRemoteBinaryFile($url->getValue(), $local_filename);
+            }catch(SmartestException $e){
+                SmartestLog::getInstance('system')->log('Remote Open Graph image file could not be saved: '.$e->getMessage());
+                return false;
+            }
+	        
+	    }else{
+	        return null;
+	    }
+	    
 	}
 	
 	public static function isSecure($address){

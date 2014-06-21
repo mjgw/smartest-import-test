@@ -186,6 +186,26 @@ type:
       - {name: style, label: "Style attribute", type: SM_DATATYPE_SL_TEXT,  required: false}
       - {name: link_href, label: Link destination, type: SM_DATATYPE_URL, required: false}
       
+  SM_ASSETTYPE_INSTAGRAM_IMAGE:
+    id: SM_ASSETTYPE_INSTAGRAM_IMAGE
+    category: image
+    label: Instagram image
+    description: Exterally hosted image on Instagram
+    class: SmartestExternallyHostedVideoAsset
+    parsable: false
+    input_options:
+      - SM_ASSETINPUTTYPE_URL_INPUT
+    url_translation:
+      format: "^https?:\/\/((instagram\.com)|(instagr\.am))\/p\/([\w_-]+).*"
+      id_position: 4
+    storage:
+      type: external_translated
+    render:
+      template: System/Presentation/WebPageBuilder/display.instagram.tpl
+    param:
+      - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true}
+      - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true}
+
   SM_ASSETTYPE_SVG_IMAGE:
     id: SM_ASSETTYPE_SVG_IMAGE
     category: image
