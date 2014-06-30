@@ -203,8 +203,8 @@ type:
     render:
       template: System/Presentation/WebPageBuilder/display.instagram.tpl
     param:
-      - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true}
-      - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true}
+      - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 500}
+      - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 598}
 
   SM_ASSETTYPE_SVG_IMAGE:
     id: SM_ASSETTYPE_SVG_IMAGE

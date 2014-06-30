@@ -11,6 +11,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     protected $_save_textfragment_on_save = false;
     protected $_set_textfragment_asset_id_on_save = false;
     protected $_absolute_uri_object;
+    protected $_thumbnail_asset = null;
     
     public function __toArray($include_object=false, $include_owner=false){
         
@@ -122,6 +123,9 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             
             case "is_image":
             return $this->isImage();
+            
+            case "thumbnail_image":
+            return $this->getThumbnailImage();
             
             case "html_friendly":
             case "can_appear_on_web_page":
@@ -563,6 +567,37 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	        }
 		    return $this->_image;
 		}
+	}
+	
+	public function getThumbnailImage(){
+	    
+	    if($this->isImage()){
+	        return $this;
+	    }else{
+	        if($this->getThumbnailId()){
+	            
+	            if(is_object($this->_thumbnail_asset)){
+	                return $this->_thumbnail_asset;
+	            }else{
+	                if(get_class($this) == 'SmartestRenderableAsset'){
+    	                $a = new SmartestRenderableAsset;
+    	            }else{
+    	                $a = new SmartestAsset;
+    	            }
+
+    	            if($a->find($this->getThumbnailId())){
+    	                $this->_thumbnail_asset = $a;
+    	                return $a;
+    	            }else{
+    	                return null;
+    	            }
+	            }
+	            
+	        }else{
+	            return null;
+	        }
+	    }
+	    
 	}
 	
 	public function getStoreMethodName(){

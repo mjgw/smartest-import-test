@@ -214,34 +214,72 @@ class SmartestBasicRenderer extends SmartestEngine{
                 }
             }
             
-            $show_preview_edit_link = (!isset($asset_type_info['show_preview_edit_link']) || SmartestStringHelper::toRealBool($asset_type_info['show_preview_edit_link']));
-            
-            if($render_data->hasParameter('show_preview_edit_link')){
-                $show_preview_edit_link = SmartestStringHelper::toRealBool($render_data->getParameter('show_preview_edit_link'));
+            if(isset($path)){
+                $path = (!in_array($path, array('file', 'full'))) ? 'none' : $path;
+                if($path == 'none'){
+                    $edit_link = $this->renderEditAssetButton($this->_asset->getId(), $render_data);
+                }
+            }else{
+                $path = 'none';
+                $edit_link = $this->renderEditAssetButton($this->_asset->getId(), $render_data);
             }
-            
-            if(($this->_request_data->g('action') == "renderEditableDraftPage" || ($this->_request_data->g('action') == "pageFragment" && $this->getDraftMode())) && $path == 'none' && $show_preview_edit_link){
-			    
-			    if(isset($asset_type_info['editable']) && SmartestStringHelper::toRealBool($asset_type_info['editable'])){
-			        $edit_link = '';
-			        $edit_url = $this->_request_data->g('domain')."assets/editAsset?asset_id=".$this->_asset->getId()."&amp;from=pagePreview";
-			        if($this->_request_data->g('request_parameters')->hasParameter('item_id')) $edit_url .= '&item_id='.$this->_request_data->g('request_parameters')->getParameter('item_id');
-			        if($this->_request_data->g('request_parameters')->hasParameter('page_id')) $edit_url .= '&page_id='.$this->_request_data->g('request_parameters')->getParameter('page_id');
-			        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit file: ".$this->_asset->getUrl()." (".$this->_asset->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/pencil.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Swap this asset--></a>";
-			    }else{
-			        $edit_link = "<!--edit link-->";
-		        }
-		    
-	        }else{
-	            $edit_link = "<!--no edit link-->";
-	        }
-		    
-		    $content .= $edit_link;
+	        
+	        $content .= $edit_link;
             return $content;
             
         }else{
             return $this->raiseError("Render template '".$render_template."' not found.");
         }
+        
+    }
+    
+    public function renderEditAssetButton($asset_id, $render_data='', $editableonly=true){
+        
+        if(is_object($this->_asset) && $this->_asset->getId() == $asset_id){
+            $asset = $this->_asset;
+        }else{
+            $asset = new SmartestAsset;
+            if(!$asset->find($asset_id)){
+                return $this->_raiseError('Asset with ID '.$asset_id.' could not be found.');
+            }
+        }
+        
+        if(!is_array($render_data) && !($render_data instanceof SmartestParameterHolder)){
+            $render_data = array();
+        }
+        
+        $asset_type_info = $asset->getTypeInfo();
+        
+        $show_preview_edit_link = (!isset($asset_type_info['show_preview_edit_link']) || SmartestStringHelper::toRealBool($asset_type_info['show_preview_edit_link']));
+        
+        /* var_dump(isset($asset_type_info['editable']) && SmartestStringHelper::toRealBool($asset_type_info['editable']));
+        
+        print_r($asset_type_info); */
+        
+        if($render_data instanceof SmartestParameterHolder && $render_data->hasParameter('show_preview_edit_link')){
+            $show_preview_edit_link = SmartestStringHelper::toRealBool($render_data->getParameter('show_preview_edit_link'));
+        }else if(is_array($render_data) && isset($render_data['show_preview_edit_link'])){
+            $show_preview_edit_link = SmartestStringHelper::toRealBool($render_data['show_preview_edit_link']);
+        }
+        
+        if(($this->_request_data->g('action') == "renderEditableDraftPage" || ($this->_request_data->g('action') == "pageFragment" && $this->getDraftMode())) && $show_preview_edit_link){
+		    
+		    if(!$editableonly || (isset($asset_type_info['editable']) && SmartestStringHelper::toRealBool($asset_type_info['editable']))){
+		        $edit_link = '';
+		        $edit_url = $this->_request_data->g('domain')."assets/editAsset?asset_id=".$asset->getId()."&amp;from=pagePreview";
+		        if($this->_request_data->g('request_parameters')->hasParameter('item_id')) $edit_url .= '&item_id='.$this->_request_data->g('request_parameters')->getParameter('item_id');
+		        if($this->_request_data->g('request_parameters')->hasParameter('page_id')) $edit_url .= '&page_id='.$this->_request_data->g('request_parameters')->getParameter('page_id');
+		        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit file: ".$asset->getUrl()." (".$asset->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/pencil.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Swap this asset--></a>";
+		    }else{
+		        $edit_link = "<!--edit link-->";
+	        }
+	    
+        }else{
+            
+            $edit_link = "<!--no edit link-->";
+        }
+        
+        return $edit_link;
         
     }
     

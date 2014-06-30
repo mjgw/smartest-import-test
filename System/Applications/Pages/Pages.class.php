@@ -1090,6 +1090,8 @@ class Pages extends SmartestSystemApplication{
         
         $this->send($pagesTree, "tree");
         $this->send($site_id, "site_id");
+        $this->send($this->getSite(), "site");
+        $this->send($this->getSite()->getHomePage(true), "home_page");
         $this->send(true, "site_recognised");
         
         $recent = $this->getUser()->getRecentlyEditedPages($this->getSite()->getId());

@@ -924,10 +924,10 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             if($g->findBy('name', $name, $this->page->getSiteId())){
                 
                 if($g->getIsGallery()){
-                    if(isset($params['skip_memberships']) && !SmartestStringHelper::toRealBool($params['skip_memberships'])){
-                        return $g->getMemberships();
-                    }else{
+                    if(isset($params['skip_memberships']) && SmartestStringHelper::toRealBool($params['skip_memberships'])){
                         return $g->getMembers();
+                    }else{
+                        return $g->getMemberships();
                     }
                 }else{
                     // the file group is not a gallery

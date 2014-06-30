@@ -23,9 +23,8 @@
       </div>
   
       <div class="asset-gallery-membership-file" style="float:right;width:400px">
-        <div class="editable" id="membership-caption-{$membership.id}">
-          {$membership.caption}
-        </div>
+        
+        <div class="editable" id="membership-caption-{$membership.id}">{$membership.caption}</div>
         
         <script type="text/javascript">
         

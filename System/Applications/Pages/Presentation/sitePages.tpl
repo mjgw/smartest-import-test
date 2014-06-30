@@ -92,7 +92,7 @@ function viewPage(){
 	<li><b>Static Page Options</b></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('openPage'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this page</a></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="workWithItem('addPage');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Add a new page under this one</a></li>
-  <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('publishPageConfirm'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this page</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('publishPageConfirm'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this page</a></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('preview'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/eye.png" border="0" alt=""> Preview This Page</a></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('movePageUp'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/arrow_up.png" border="0" alt=""> Move Up</a></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('movePageDown'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/arrow_down.png" border="0" alt=""> Move Down</a></li>
@@ -121,6 +121,7 @@ function viewPage(){
 
 <ul class="actions-list" id="non-specific-actions">
     <li><b>Site Options</b></li>
+    <li class="permanent-action"><a href="{$domain}website/renderEditableDraftPage?page_id={$home_page.webid}&amp;hide_newwin_link=true"><img src="{$domain}Resources/Icons/eye.png" border="0" alt=""> Enter site preview mode</a></li>
     <li class="permanent-action"><a href="{$domain}smartest/page/new" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Add page</a></li>
     <li class="permanent-action"><a href="{$domain}websitemanager/releaseCurrentUserHeldPages" class="right-nav-link"><img src="{$domain}Resources/Icons/lock_open.png" border="0" alt=""> Release all pages</a></li>
     <li class="permanent-action"><a href="{$domain}smartest/pagegroups" class="right-nav-link"><img src="{$domain}Resources/Icons/page_white_stack.png" border="0" alt=""> Page groups</a></li>

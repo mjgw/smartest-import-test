@@ -475,20 +475,31 @@ class SmartestSite extends SmartestBaseSite{
     public function offsetGet($offset){
         
         switch($offset){
+            
             case "unique_id":
             return $this->getUniqueId();
+            
             case "user_page_id":
             return $this->getUserPageId();
+            
             case "tag_page_id":
             return $this->getTagPageId();
+            
             case "error_page_id":
             return $this->getErrorPageId();
+            
             case "search_page_id":
             return $this->getSearchPageId();
+            
             case "logo":
             return $this->getLogoAsset();
+            
             case "language_code":
             return $this->getLanguageCode();
+            
+            case "home_page":
+            return $this->getHomePage();
+            
         }
         
         return parent::offsetGet($offset);

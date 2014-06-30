@@ -45,6 +45,9 @@
     <accept>SM_ASSETTYPE_YOUTUBE_CLIP</accept>
     <accept>SM_ASSETTYPE_VIMEO_CLIP</accept>
     <accept>SM_ASSETTYPE_SVG_IMAGE</accept>
+    <accept>SM_ASSETTYPE_JPEG_IMAGE</accept>
+    <accept>SM_ASSETTYPE_PNG_IMAGE</accept>
+    <accept>SM_ASSETTYPE_GIF_IMAGE</accept>
     <accept>SM_ASSETTYPE_MP3</accept>
     <accept>SM_ASSETTYPE_OGG_VORBIS</accept>
     <gallery>true</gallery>
@@ -58,6 +61,9 @@
     <accept>SM_ASSETTYPE_YOUTUBE_CLIP</accept>
     <accept>SM_ASSETTYPE_VIMEO_CLIP</accept>
     <accept>SM_ASSETTYPE_SVG_IMAGE</accept>
+    <accept>SM_ASSETTYPE_JPEG_IMAGE</accept>
+    <accept>SM_ASSETTYPE_PNG_IMAGE</accept>
+    <accept>SM_ASSETTYPE_GIF_IMAGE</accept>
     <accept>SM_ASSETTYPE_MP3</accept>
     <accept>SM_ASSETTYPE_OGG_VORBIS</accept>
     <gallery>true</gallery>

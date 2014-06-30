@@ -271,6 +271,9 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
 	        case 'M':
 	        return date('m', $this->_value);
 	        
+	        case 'month_name':
+	        return date('F', $this->_value);
+	        
 	        case 'D':
 	        return date('d', $this->_value);
 	        
