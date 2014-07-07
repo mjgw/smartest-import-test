@@ -767,6 +767,26 @@ class SmartestImage extends SmartestFile{
 	    
 	}
 	
+	public function setMarkupRenderWidth($h){
+		$this->_render_data['width'] = $h;
+	}
+	
+	public function setMarkupRenderHeight($h){
+		$this->_render_data['height'] = $h;
+	}
+	
+	public function getMarkupRenderWidth(){
+		if(!$this->_render_data['width']){
+			return $this->getWidth();
+		}
+	}
+	
+	public function getMarkupRenderHeight(){
+		if(!$this->_render_data['height']){
+			return $this->getHeight();
+		}
+	}
+	
 	public function render($og_meta=false){
 	    
 	    $sm = new SmartyManager('BasicRenderer');

@@ -634,31 +634,96 @@ class SmartestCmsLink extends SmartestHelper{
                     
                 }
                 
+				// print_r($this->_render_data->getParameter('img_scale_ratio'));
+				
                 if(is_numeric($this->_render_data->getParameter('img_width')) && is_numeric($this->_render_data->getParameter('img_height'))){
                     
-                    if($this->_render_data->hasParameter('img_scale') && !SmartestStringHelper::toRealBool($this->_render_data->getParameter('img_scale'))){
-                        $img = $img->getResizedVersionNoScale($this->_render_data->getParameter('img_width'), $this->_render_data->getParameter('img_height'));
-                    }else if($this->_render_data->hasParameter('img_scale') && $this->_render_data->getParameter('img_scale') == 'constrain'){
-                        $img = $img->getConstrainedVersionWithin($this->_render_data->getParameter('img_width'), $this->_render_data->getParameter('img_height'));
-                    }else{
-                        $img = $img->resizeAndCrop($this->_render_data->getParameter('img_width'), $this->_render_data->getParameter('img_height'));
-                    }
+					if(!$this->_render_data->hasParameter('create_resized_image') || SmartestStringHelper::toRealBool($this->_render_data->getParameter('create_resized_image'))){
+	                    
+						if($this->_render_data->hasParameter('img_scale') && !SmartestStringHelper::toRealBool($this->_render_data->getParameter('img_scale'))){
+	                        $img = $img->getResizedVersionNoScale($this->_render_data->getParameter('img_width'), $this->_render_data->getParameter('img_height'));
+	                    }else if($this->_render_data->hasParameter('img_scale') && $this->_render_data->getParameter('img_scale') == 'constrain'){
+	                        $img = $img->getConstrainedVersionWithin($this->_render_data->getParameter('img_width'), $this->_render_data->getParameter('img_height'));
+	                    }else{
+	                        $img = $img->resizeAndCrop($this->_render_data->getParameter('img_width'), $this->_render_data->getParameter('img_height'));
+	                    }
+						
+					}else{
+						
+						// if($this->_render_data->hasParameter('img_width')){
+							$img->setMarkupRenderWidth($this->_render_data->getParameter('img_width'));
+						// }
+						
+						// if($this->_render_data->hasParameter('img_height')){
+							$img->setMarkupRenderHeight($this->_render_data->getParameter('img_height'));
+						// }
+					}
                     
                 }else if(is_numeric($this->_render_data->getParameter('img_width'))){
                     
-                    if($this->_render_data->getParameter('img_square') && SmartestStringHelper::toRealBool($this->_render_data->getParameter('img_square'))){
-                        $img = $img->getSquareVersion($this->_render_data->getParameter('img_width'));
-                    }else{
-                        $img = $img->restrictToWidth($this->_render_data->getParameter('img_width'));
-                    }
+					if(!$this->_render_data->hasParameter('create_resized_image') || SmartestStringHelper::toRealBool($this->_render_data->getParameter('create_resized_image'))){
+					
+                    	if($this->_render_data->getParameter('img_square') && SmartestStringHelper::toRealBool($this->_render_data->getParameter('img_square'))){
+                    	    $img = $img->getSquareVersion($this->_render_data->getParameter('img_width'));
+                    	}else{
+                    	    $img = $img->restrictToWidth($this->_render_data->getParameter('img_width'));
+                    	}
+					
+					}else{
+						
+						$actual_height = $img->getHeight();
+						$new_height = (int) ($actual_height*$this->_render_data->getParameter('img_width')/$img->getWidth());
+						$img->setMarkupRenderWidth($this->_render_data->getParameter('img_width'));
+						$img->setMarkupRenderHeight($new_height);
+						
+					}
                     
                 }else if(is_numeric($this->_render_data->getParameter('img_height'))){
                     
-                    if($this->_render_data->getParameter('img_square') && SmartestStringHelper::toRealBool($this->_render_data->getParameter('img_square'))){
-                        $img = $img->getSquareVersion($this->_render_data->getParameter('img_height'));
-                    }else{
-                        $img = $img->restrictToHeight($this->_render_data->getParameter('img_height'));
-                    }
+					if(!$this->_render_data->hasParameter('create_resized_image') || SmartestStringHelper::toRealBool($this->_render_data->getParameter('create_resized_image'))){
+					
+	                    if($this->_render_data->getParameter('img_square') && SmartestStringHelper::toRealBool($this->_render_data->getParameter('img_square'))){
+	                        $img = $img->getSquareVersion($this->_render_data->getParameter('img_height'));
+	                    }else{
+	                        $img = $img->restrictToHeight($this->_render_data->getParameter('img_height'));
+	                    }
+					
+					}else{
+						
+						$actual_width = $img->getWidth();
+						$new_width = (int) ($actual_width*$this->_render_data->getParameter('img_height')/$img->getHeight());
+						$img->setMarkupRenderHeight($this->_render_data->getParameter('img_height'));
+						$img->setMarkupRenderWidth($new_width);
+						
+					}
+					
+                }else if($this->_render_data->hasParameter('img_scale_ratio')){
+                	
+					if(strpos($this->_render_data->getParameter('img_scale_ratio'), '%') !== false){
+						preg_match('/^(\d+)%$/', $this->_render_data->getParameter('img_scale_ratio'), $scalematches);
+						$percentage = $scalematches[1];
+						$ratio = $percentage/100;
+					}else if(is_numeric($this->_render_data->hasParameter('img_scale_ratio'))){
+						$ratio = $this->_render_data->getParameter('img_scale_ratio');
+					}
+					
+					$actual_height = $img->getHeight();
+					$actual_width = $img->getWidth();
+					
+					$new_width = $actual_width*$ratio;
+					$new_height = $actual_height*$ratio;
+					
+					if(!$this->_render_data->hasParameter('create_resized_image') || SmartestStringHelper::toRealBool($this->_render_data->getParameter('create_resized_image'))){
+						
+						$img = $img->resizeAndCrop($new_width, $new_height);
+						
+					}else{
+						
+						$img->setMarkupRenderWidth($new_width);
+						$img->setMarkupRenderHeight($new_height);
+						
+					}
+					
                 }
                 
                 if($this->_render_data->hasParameter('img_alt')){

@@ -414,6 +414,7 @@ class Assets extends SmartestSystemApplication{
     		        break;
     		        
     		        case "SM_ASSETINPUTTYPE_URL_INPUT":
+    		        $this->send(SmartestHttpRequestHelper::curlInstalled(), 'curl_installed');
     		        break;
     		        
     		    }
@@ -739,7 +740,8 @@ class Assets extends SmartestSystemApplication{
         		        // insert URL only
         		        case 'SM_ASSETINPUTTYPE_URL_INPUT':
         		        $url = new SmartestExternalUrl($this->getRequestParameter('asset_url'));
-        		        $ach->createNewAssetFromUrl($url, $this->getRequestParameter('asset_label'));
+        		        $create_thumbnail = (bool) $this->getRequestParameter('retrieve_thumbnail');
+        		        $ach->createNewAssetFromUrl($url, strip_tags($this->getRequestParameter('asset_label')), $create_thumbnail);
         		        $asset = $ach->finish();
         		        break;
     		        
