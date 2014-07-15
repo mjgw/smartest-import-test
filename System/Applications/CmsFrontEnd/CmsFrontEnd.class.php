@@ -321,7 +321,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	        
 	            $database = SmartestDatabase::getInstance('SMARTEST');
 	        
-    	        $asset_url = urldecode($this->getRequestParameter('url'));
+    	        $asset_url = addslashes(urldecode($this->getRequestParameter('url')));
     	        $asset_webid = $this->getRequestParameter('key');
 	        
     	        $sql = "SELECT * FROM Assets WHERE (asset_site_id='".$this->_site->getId()."' OR asset_shared='1') AND asset_url='".$asset_url."' AND asset_webid='".$asset_webid."'";
@@ -366,6 +366,11 @@ class CmsFrontEnd extends SmartestSystemApplication{
                 
             }
 	    
+        }else{
+
+            include SM_ROOT_DIR."System/Response/ErrorPages/nosuchdomain.php";
+            exit;
+
         }
         
         exit;

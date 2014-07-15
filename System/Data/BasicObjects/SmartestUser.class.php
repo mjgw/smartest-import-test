@@ -7,6 +7,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	protected $_model_plural_names = array();
 	protected $_parameters; // Only useful when the user is being stored in the session
 	protected $_user_info;
+    protected $_user_info_modified;
 	
 	protected function __objectConstruct(){
 	    
@@ -17,7 +18,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 		
 		$this->_preferences_helper = SmartestPersistentObject::get('prefs_helper');
 		
-		$this->_user_info = new SmartestParameterHolder("User info");
+		$this->_user_info = new SmartestDbStorageParameterHolder("User info");
 		
 	}
 	
@@ -43,6 +44,10 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 				if($bother_with_tokens){
 				    $this->getTokens();
 			    }
+                
+                if(method_exists($this, '__postHydrationAction')){
+                    $this->__postHydrationAction();
+                }
 				
 				return true;
 			
@@ -78,6 +83,9 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 				}
 			
 				$this->_came_from_database = true;
+                if(method_exists($this, '__postHydrationAction')){
+                    $this->__postHydrationAction();
+                }
 				return true;
 				
 			}else{
@@ -89,8 +97,10 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	public function __postHydrationAction(){
 	    
 	    if(!$this->_user_info){
-	        $this->_user_info = new SmartestParameterHolder("Info for user '".$this->_properties['username']."'");
+	        $this->_user_info = new SmartestDbStorageParameterHolder("Info for user '".$this->_properties['username']."'");
         }
+        
+        $this->_user_info->loadArray(unserialize($this->_properties['info']));
 	    
 	}
 	
@@ -223,10 +233,15 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
             }else{
                 break;
             }
+            
+            case "info":
+            return $this->_user_info;
 	        
 	        default:
 	        if(in_array($offset, array_keys($this->getModelPluralNames()))){
                 return $this->getCreditedItemsOnCurrentSite($this->_model_plural_names[$offset]);
+            }else if($this->_user_info->hasParameter($offset)){
+                return $this->_user_info->getParameter($offset);
             }else{
                 return parent::offsetGet($offset);
             }
@@ -487,17 +502,17 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    $field = SmartestStringHelper::toVarName($field);
 	    // URL Encoding is being used to work around a bug in PHP's serialize/unserialize. No actual URLS are necessarily in use here:
 	    $this->_user_info->setParameter($field, rawurlencode(utf8_decode($new_data)));
-	    // $this->_user_info_modified = true;
-	    $this->_modified_properties['settings'] = SmartestStringHelper::sanitize(serialize($this->_user_info->getArray()));
+        $this->_user_info_modified = true;
+	    $this->_modified_properties['info'] = SmartestStringHelper::sanitize(serialize($this->_user_info->getArray()));
 	    
 	}
 	
 	public function getInfoValue($field){
 	    
 	    $field = SmartestStringHelper::toVarName($field);
-	    
-	    if($this->_user_info->hasParameter($field)){
-	        return utf8_encode(stripslashes(rawurldecode($this->_user_info->getParameter($field))));
+        
+        if($this->_user_info->hasParameter($field)){
+            return $this->_user_info->getParameter($field);
 	    }else{
 	        return null;
 	    }

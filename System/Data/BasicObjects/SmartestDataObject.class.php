@@ -485,7 +485,9 @@ class SmartestDataObject implements ArrayAccess{
 	            }
 	        }
 	        
-	        $this->__postHydrationAction();
+            if(method_exists($this, '__postHydrationAction')){
+                $this->__postHydrationAction();
+            }
 			
 			if($dup){
 			    $this->_came_from_database = false;
@@ -531,8 +533,8 @@ class SmartestDataObject implements ArrayAccess{
 			    $this->_came_from_database = true; */
 			    
 			    $this->hydrate($result[0]);
-		    
-			    return true;
+                
+                return true;
 		    }else{
 			    return false;
 		    }
@@ -573,6 +575,10 @@ class SmartestDataObject implements ArrayAccess{
 		    }
 	
 		    $this->_came_from_database = true;
+            
+            if(method_exists($this, '__postHydrationAction')){
+                $this->__postHydrationAction();
+            }
 		    
 		    return true;
 	    }else{

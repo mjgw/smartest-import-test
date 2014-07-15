@@ -96,7 +96,6 @@ class SmartestResponse{
         );
         
         // Temporary
-        // echo "blah";
         include_once(SM_ROOT_DIR.'Library/SimplePie/autoloader.php');
         include_once(SM_ROOT_DIR.'Library/SimplePie/idn/idna_convert.class.php');
         
@@ -108,6 +107,7 @@ class SmartestResponse{
         	'System/Data/ExtendedTypes/SmartestAssetsCollection.class.php',
         	'System/Data/ExtendedTypes/SmartestTwitterAccountName.class.php',
         	'System/Data/ExtendedTypes/SmartestExternalFeed.class.php',
+            'System/Data/ExtendedTypes/SmartestDbStorageParameterHolder.class.php',
         	'System/Data/ExtendedTypes/SmartestEmailAddress.class.php'
 
         );

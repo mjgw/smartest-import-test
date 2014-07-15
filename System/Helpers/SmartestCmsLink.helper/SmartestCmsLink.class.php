@@ -612,8 +612,8 @@ class SmartestCmsLink extends SmartestHelper{
                 } */
                 
                 // return $a->render($draft_mode);
-                
-                if($this->_render_data->getParameter('with') instanceof SmartestImage){
+								
+								if($this->_render_data->getParameter('with') instanceof SmartestImage){
                     
                     $img = $this->_render_data->getParameter('with');
                 
@@ -737,7 +737,10 @@ class SmartestCmsLink extends SmartestHelper{
                 return $img->render();
                 
             }else{
-                return $this->_render_data->getParameter('with');
+							
+				$fa_prefix = $this->_render_data->hasParameter('fa_iconname') ? '<i class="fa fa-'.SmartestStringHelper::toSlug($this->_render_data->getParameter('fa_iconname')).'"> </i>' : '';
+				return $fa_prefix.$this->_render_data->getParameter('with');
+                
             }
             
         }else if($this->_destination_properties->getParameter('text') && ($this->_destination_properties->getParameter('text') != SmartestLinkParser::LINK_TARGET_TITLE)){
@@ -746,12 +749,14 @@ class SmartestCmsLink extends SmartestHelper{
         }else{
             // otherwise guess
             
+			$fa_prefix = $this->_render_data->hasParameter('fa_iconname') ? '<i class="fa fa-'.SmartestStringHelper::toSlug($this->_render_data->getParameter('fa_iconname')).'"> </i>' : '';
+						
             if($this->getType() == SM_LINK_TYPE_EXTERNAL){
                 
-                if($this->_render_data->hasParameter('hide_protocol') && SmartestStringHelper::toRealBool($this->_render_data->hasParameter('hide_protocol'))){
-                    return SmartestStringHelper::toUrlStringWithoutProtocol($this->_destination_properties->getParameter('destination'));
+				if($this->_render_data->hasParameter('hide_protocol') && SmartestStringHelper::toRealBool($this->_render_data->hasParameter('hide_protocol'))){
+                    return $fa_prefix.SmartestStringHelper::toUrlStringWithoutProtocol($this->_destination_properties->getParameter('destination'));
                 }else{
-                    return $this->_destination_properties->getParameter('destination');
+                    return $fa_prefix.$this->_destination_properties->getParameter('destination');
                 }
                 
             }else{
@@ -765,15 +770,15 @@ class SmartestCmsLink extends SmartestHelper{
                     switch($this->getType()){
 
                         case SM_LINK_TYPE_PAGE:
-                        return SmartestStringHelper::toXmlEntities($this->_destination->getTitle());
+                        return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getTitle());
                         break;
 
                         case SM_LINK_TYPE_METAPAGE:
                 
                         if($this->_destination->getForceStaticTitle() == 1){
-                            return SmartestStringHelper::toXmlEntities($this->_destination->getTitle(true));
+                            return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getTitle(true));
                         }else{
-                            return SmartestStringHelper::toXmlEntities($this->_destination->getTitle());
+                            return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getTitle());
                         }
                 
                         break;
@@ -783,19 +788,19 @@ class SmartestCmsLink extends SmartestHelper{
                         break;
                 
                         case SM_LINK_TYPE_TAG:
-                        return SmartestStringHelper::toXmlEntities($this->_destination->getLabel());
+                        return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getLabel());
                         break;
                         
                         case SM_LINK_TYPE_AUTHOR:
-                        return SmartestStringHelper::toXmlEntities($this->_destination->getFullName());
+                        return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getFullName());
                         break;
                 
                         case SM_LINK_TYPE_DOWNLOAD:
-                        return $this->_destination->getUrl();
+                        return $fa_prefix.$this->_destination->getUrl();
                         break;
                         
                         case SM_LINK_TYPE_MAILTO:
-                        return $this->_destination->toHtmlEncoded();
+                        return $fa_prefix.$this->_destination->toHtmlEncoded();
                         break;
                         
                     }
@@ -870,14 +875,18 @@ class SmartestCmsLink extends SmartestHelper{
                 return $url;
             }else{
                 if(($this->_destination->getIsPublishedAsBoolean() && $this->_destination->getPrincipalItem()->isPublished()) || $ignore_status){
+                    
                     $template_url = $this->_request->getDomain().$this->_destination->getDefaultUrl();
                     $url = str_replace(':id', $this->_destination->getPrincipalItem()->getId(), $template_url);
                     $url = str_replace(':long_id', $this->_destination->getPrincipalItem()->getWebid(), $url);
                     $url = str_replace(':name', $this->_destination->getPrincipalItem()->getSlug(), $url);
+                    
                     if(strlen($this->_hash)){
                         $url .= '#'.$this->_hash;
                     }
+                    
                     return $url;
+                    
                 }else{
                     return '#';
                 }

@@ -17,10 +17,10 @@ class SmartestUploadHelper extends SmartestHelper{
 		    $this->_upload_name = $upload_name;
 		    
 		    if(!@strlen($new_file_name)){
-    			$this->_file_name = $_FILES[$this->_upload_name]['name'];
+    			$this->_file_name = SmartestStringHelper::toAscii($_FILES[$this->_upload_name]['name']);
     		}
     		
-    		$this->_original_file_name = $_FILES[$this->_upload_name]['name'];
+    		$this->_original_file_name = SmartestStringHelper::toAscii($_FILES[$this->_upload_name]['name']);
     		$this->_temp_file_name = $_FILES[$this->_upload_name]['tmp_name'];
     		
     		if(strlen($new_file_dir)){
@@ -49,6 +49,10 @@ class SmartestUploadHelper extends SmartestHelper{
         }else{
             return false;
         }
+	}
+    
+	public static function getUnsavedUploadDotSuffix($name){
+	    return SmartestStringHelper::getDotSuffix($_FILES[$name]['name']);
 	}
 	
 	public function save(){
@@ -133,14 +137,8 @@ class SmartestUploadHelper extends SmartestHelper{
 	
 	public function setFileName($file_name){
 	    
-	    // $max_tries = 1;
-	    
 	    if($this->getUploadDirectory()){
 	    
-	        /*while(file_exists($this->getUploadDirectory().$file_name) && $max_tries < 1000){
-	            $file_name = $file_name.'_'.$max_tries;
-	        }*/
-	        
 	        $file_name = basename(SmartestFileSystemHelper::getUniqueFileName($this->getUploadDirectory().$file_name));
 	        $this->_file_name = $file_name;
 	        

@@ -924,6 +924,8 @@ class Quince{
 	    
 	    $test_url = $url{(strlen($url)-1)} == '/' ? substr($url, 0, -1) : $url;
 	    
+		// var_dump($test_url);
+		
 	    // Calculate the domain
 	    $dr = realpath($_SERVER["DOCUMENT_ROOT"]).'/';
 	    $hdp = explode('/', $test_url);
@@ -1217,6 +1219,8 @@ class Quince{
                 }
             }
             
+			// print_r($aliases);
+			
             // write one long list of the aliases to cache
             QuinceUtilities::cacheSet('all_aliases', $aliases);
             self::$raw_aliases = $aliases;
@@ -1251,10 +1255,12 @@ class Quince{
             self::$alias_shortcuts = QuinceUtilities::cacheGet('alias_url_shortcuts');
             self::$routes = QuinceUtilities::cacheGet('routes');
             
-            // print_r(self::$modules);
+            // 
             
             $this->module_shortnames = QuinceUtilities::cacheGet('module_shortnames');
         }
+		
+		// print_r(self::$modules);
 	    
 	    if(!in_array($this->_default_module_name, $this->module_shortnames)){
             $this->handleException(new QuinceException("The specified default module, '{$this->_default_module_name}', does not exist."));

@@ -381,7 +381,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
         
         }
     
-        return $this->_data[$offset];
+        return $this->_items[$offset];
     }
 
     public function offsetExists($offset){
@@ -447,6 +447,35 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
         }else{
             throw new SmartestException('SmartestSortableItemReferenceSet of model '.$this->_model->getName().' merged with SmartestSortableItemReferenceSet of model '.$set->getModel()->getName());
         }
+    }
+    
+    public static function mergeSeveral(){
+        
+        $sets = func_get_args();
+        $num_sets = count($sets);
+        
+        if($num_sets){
+        
+            $primary_set = $sets[0];
+        
+            for($i=1;$i<$num_sets;$i++){
+            
+                if(isset($sets[$i])){
+                
+                    if($sets[$i] instanceof SmartestSortableItemReferenceSet){
+                        $primary_set = $primary_set->mergeWith($sets[$i]);
+                    }else{
+                        throw new SmartestException('Argument no '.($i+1).' provided to SmartestSortableItemReferenceSet::mergeSeveral() was not an instance of SmartestSortableItemReferenceSet.');
+                    }
+                
+                }
+            
+            }
+            
+            return $primary_set;
+        
+        }
+        
     }
     
     public function remove(SmartestSortableItemReferenceSet $set){

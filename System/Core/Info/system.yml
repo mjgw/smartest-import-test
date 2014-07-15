@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 649
+    revision: 651
     minimum_php_version: 5.2
     minimum_database_version: 19
     default_timezone: Europe/London
@@ -18,11 +18,9 @@ system:
     - Pages
     - Sets
     - Templates
-    - Vocabulary
-    - Feed
-    - Schemas
+#    - Feed
     - Settings
-    - XmlData
+#    - XmlData
   public_methods:
     - loginscreen/loginScreen
     - loginscreen/doAuth

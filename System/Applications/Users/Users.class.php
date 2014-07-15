@@ -190,6 +190,8 @@ class Users extends SmartestSystemApplication{
                 $this->addUserMessageToNextRequest("The User ID was not recognised.");
                 $this->formForward();
             }
+			
+			// echo SmartestStringHelper::toHtmlEncoded('Username');
             
             $this->send($this->getUser()->hasToken('modify_user_permissions'), 'show_tokens_edit_tab');
             $this->send($this->getUser()->hasToken('require_user_password_change'), 'require_password_changes');
@@ -448,13 +450,13 @@ class Users extends SmartestSystemApplication{
 		    
     		    $user->setFirstname($post['user_firstname']);
     		    $user->setLastname($post['user_lastname']);
-    		    $user->setEmail($post['user_email']);
+    		    $user->setEmail($post['email']);
     		    $user->setWebsite($post['user_website']);
     		    $user->setBio(addslashes($post['user_bio']));
     		    
-    		    if($this->getRequestParameter('username') && SmartestStringHelper::toUsername($this->getRequestParameter('username')) && SmartestStringHelper::toUsername($this->getRequestParameter('username')) != $user->getUsername()){
+    		    if($this->getRequestParameter('thing_that_aint_u5ern4me') && SmartestStringHelper::toUsername($this->getRequestParameter('thing_that_aint_u5ern4me')) && SmartestStringHelper::toUsername($this->getRequestParameter('thing_that_aint_u5ern4me')) != $user->getUsername()){
     		        if($this->getUser()->hasToken('modify_usernames')){
-    		            $user->setUsername(SmartestStringHelper::toUsername($this->getRequestParameter('username')));
+    		            $user->setUsername(SmartestStringHelper::toUsername($this->getRequestParameter('thing_that_aint_u5ern4me')));
     		        }else{
     		            // attempt at changing the username without having permission
     		        }
