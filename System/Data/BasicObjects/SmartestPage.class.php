@@ -1367,6 +1367,17 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        
 	        case "fallback_url":
 	        return "website/renderPageFromId?page_id=".$this->getWebid();
+            
+            case "preview_safe_url":
+            if($this->getDraftMode()){
+                if(isset($_GET['hide_newwin_link'])){
+                    return "website/renderEditableDraftPage?page_id=".$this->getWebid().'&hide_newwin_link=true';
+                }else{
+                    return "websitemanager/preview?page_id=".$this->getWebid();
+                }
+            }else{
+                return $this->getUrl();
+            }
 	        
 	        case 'date':
             return $this->getDate();
