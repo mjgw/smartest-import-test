@@ -118,6 +118,9 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             return strlen($this->_string);
             case "paragraphs":
             return SmartestStringHelper::toParagraphs($this->_string);
+            case "first_paragraph":
+            case "first_para":
+            return SmartestStringHelper::getFirstParagraph($this->_string);
             case "convert_line_breaks":
             return $this->toParagraphs();
             case "encoded":

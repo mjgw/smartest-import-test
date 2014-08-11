@@ -943,6 +943,10 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             if($this->getParentSite()->getSearchPageId() && !in_array($this->getParentSite()->getSearchPageId(), $special_page_ids)){
                 $special_page_ids[] = $this->getParentSite()->getSearchPageId();
             }
+            
+            if($this->getParentSite()->getUserPageId() && !in_array($this->getParentSite()->getUserPageId(), $special_page_ids)){
+                $special_page_ids[] = $this->getParentSite()->getUserPageId();
+            }
         
             $sql = "SELECT DISTINCT * FROM Pages WHERE page_parent='".$this->_properties['id']."' AND page_site_id='".$this->_properties['site_id']."' AND page_deleted != 'TRUE'";
 		

@@ -42,6 +42,22 @@ class SmartestPageNavigationDataRequestHandler implements ArrayAccess{
         }
     }
     
+    public function getSiblingPages($hide_page_itself=false){
+        
+        $siblings =  $this->_page->getParentPage($this->_page->getDraftMode())->getPageChildrenForWeb();
+        
+        if($hide_page_itself){
+            foreach($siblings as $k => $s){
+                if($s->getId() == $this->_page->getId()){
+                    unset($siblings[$k]);
+                }
+            }
+        }
+        
+        return $siblings;
+        
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){
@@ -63,9 +79,12 @@ class SmartestPageNavigationDataRequestHandler implements ArrayAccess{
             return $this->_page->getPageBreadCrumbs();
         
             case "sibling_level_pages":
-            case "sibling_pages":
             case "pages_with_same_parent":
-            return $this->_page->getParentPage($this->_page->getDraftMode())->getPageChildrenForWeb();
+            return $this->getSiblingPages();
+            
+            case "sibling_pages":
+            case "other_pages_with_same_parent":
+            return $this->getSiblingPages(true);
         
             case "parent_level_pages":
             return $this->getParentLevelPages();

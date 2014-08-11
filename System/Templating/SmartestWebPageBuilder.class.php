@@ -186,14 +186,12 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 $this->run($container_def->getTemplateFilePath(), array());
                 
                 if($this->_request_data->g('action') == "renderEditableDraftPage"){
-		    
-    			    $edit_link = '';
+		            
+                    $edit_link = '';
     			    
     			    if(constant("SM_OPTIONS_ALLOW_CONTAINER_EDIT_PREVIEW_SCREEN")){
     			        
-		                // print_r($container_def->getTemplate());
-		                    
-    	    		    if(is_object($container_def->getTemplate())){
+		                if(is_object($container_def->getTemplate())){
         			        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit template: ".$container_def->getTemplate()->getUrl()."\" href=\"".$this->_request_data->g('domain')."templates/editTemplate?template=".$container_def->getTemplate()->getId()."&amp;type=SM_ASSETTYPE_CONTAINER_TEMPLATE&amp;from=pagePreview\" style=\"text-decoration:none;font-size:11px\" target=\"_top\">&nbsp;<img src=\"".$this->_request_data->g('domain')."Resources/Icons/pencil.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this template--></a>";
         			    }
 	                    
