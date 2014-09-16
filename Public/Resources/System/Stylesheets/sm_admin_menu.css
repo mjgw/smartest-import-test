@@ -1,88 +1,151 @@
 /*** Style ***/
 
-div#admin-menu{
-	/* background-color:#a5b4bc; */
-	background-color:#fff;
-	border-right:1px solid #aaa;
-	/* border-top-right-radius:8px;
-    border-bottom-right-radius:8px; */
+#admin-menu{
+	background-color:#E3E3E3;
 }
 
-div#admin-menu ul{
+#admin-menu ul{
 	list-style-type:none;
-	border-top:1px solid #aaa;
-	/* border-top-right-radius:8px;
-    border-bottom-right-radius:8px; */
 }
 
-div#admin-menu ul li{
+#admin-menu ul li{
 	font-size:12px;
 	margin:0px;
+	background-repeat:no-repeat;
+	background-position:10px 50%;
 }
 
-div#admin-menu ul li.off a{
+/* #admin-menu ul li a{
+	
+} */
+
+#admin-menu ul li a i{
+	font-size:1.2em;
+	margin-right:8px;
+}
+
+#admin-menu ul li.off a{
 	color: #333;
 }
 
-div#admin-menu ul li.off a:hover{
+#admin-menu ul li.off a:hover{
 	text-decoration:none;
 }
 
-div#admin-menu ul li.on a{
-	color: #333;
+#admin-menu ul li.on a{
+	color: #fff;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-div#admin-menu ul li.on a:hover{
+#admin-menu ul li.on a:hover{
 	text-decoration:none;
 }
 
-div#admin-menu ul li.on{
-	background-image:url('../Images/admin_left_nav_bg_on.gif');
-	background-repeat:repeat-x;
-	/* background:rgba(255,255,255,0.3); */
+#admin-menu ul li.on{
+	background-color:#68849E;
 }
 
-div#admin-menu ul li.site-top-level{
+#admin-menu ul li.site-top-level{
     font-weight:bold;
-    border-top-right-radius:8px;
 }
+
+/* #nav-pages.on{background-image:url(../Images/leftnav-pages-on.png)}
+#nav-pages.off{background-image:url(../Images/leftnav-pages-off.png)}
+
+#nav-items.on{background-image:url(../Images/leftnav-items-on.png)}
+#nav-items.off{background-image:url(../Images/leftnav-items-off.png)}
+
+#nav-files.off{background-image:url(../Images/leftnav-files-off.png)}
+#nav-files.on{background-image:url(../Images/leftnav-files-on.png)}
+
+#nav-templates.off{background-image:url(../Images/leftnav-templates-off.png)}
+#nav-templates.on{background-image:url(../Images/leftnav-templates-on.png)}
+
+#nav-users.off{background-image:url(../Images/leftnav-users-off.png)}
+#nav-users.on{background-image:url(../Images/leftnav-users-on.png)}
+
+#nav-metadata.off{background-image:url(../Images/leftnav-metadata-off.png)}
+#nav-metadata.on{background-image:url(../Images/leftnav-metadata-on.png)}
+
+#nav-settings.off{background-image:url(../Images/leftnav-settings-off.png)}
+#nav-settings.on{background-image:url(../Images/leftnav-settings-on.png)}
+
+#nav-sites.off{background-image:url(../Images/leftnav-sites-off.png)}
+#nav-sites.on{background-image:url(../Images/leftnav-sites-on.png)}
+
+#nav-profile.off{background-image:url(../Images/leftnav-users-off.png)}
+#nav-profile.on{background-image:url(../Images/leftnav-users-on.png)}
+
+#nav-about.off{background-image:url(../Images/leftnav-about-off.png)}
+#nav-about.on{background-image:url(../Images/leftnav-about-on.png)} */
 
 /*** Layout ***/
 
-div#admin-menu{
+#admin-menu{
 	position:absolute;
 	left:0px;
-	top:45px;
-	height:100%;
-	/* min-height:300px; */
-	width:165px;
-	z-index:21;
+	top:0px;
+	bottom:0px;
+	/* height:100%;
+	min-height:300px; */
+	width:175px;
+	z-index:15;
 }
 
-div#admin-menu ul{
+#admin-menu ul{
 	padding:0px;
 	margin:0px;
+	padding-top:55px;
 }
 
-div#admin-menu ul li{
+#admin-menu ul li{
 	display:block;
-	height:24px;
+	height:30px;
 }
 
-div#admin-menu ul li.off a{
-	padding-left:10px;
-	padding-top:4px;
-	height:20px;
-	display:block;
+#admin-menu ul li{
+    transition: background-color .25s ease-in-out;
+    -moz-transition: background-color .25s ease-in-out;
+    -webkit-transition: background-color .25s ease-in-out;
 }
 
-div#admin-menu ul li.on a{
-	padding-left:10px;
-	padding-top:4px;
-	height:20px;
-	display:block;
+#admin-menu ul li a{
+    padding-left:10px;
+		/* display:table-cell;
+		vertical-align:middle; */
+		display:block;
+		height:30px;
 }
 
-div#admin-menu ul li.break{
+#admin-menu ul li a span.option-holder i{
+	/* padding-top:3px; */
+	display:inline-block;
+}
+
+#admin-menu ul li a span.option-holder{
+	  display:table-cell;
+		vertical-align:middle;
+		height:30px;
+}
+
+#admin-menu ul li.off a{
+	/* padding-left:10px; 
+	padding-top:7px;*/
+	height:22px;
+	/* display:block; */
+}
+
+#admin-menu ul li.off:hover{
+    background-color:#d9d9d9;
+}
+
+#admin-menu ul li.on a{
+	/* padding-left:10px; 
+	padding-top:7px;*/
+	height:22px;
+	/* display:block; */
+}
+
+#admin-menu ul li.break{
     margin-top:10px;
 }

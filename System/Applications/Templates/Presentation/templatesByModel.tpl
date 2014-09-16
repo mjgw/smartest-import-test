@@ -8,10 +8,34 @@
 
 {if $model.id}
 <h3>{$model.name} templates</h3>
+
+{if count($locations)}
+  <div class="warning">
+      <p>For smooth operation of the templates repository, the following locations need to be made writable:</p>
+      <ul>
+{foreach from=$locations item="l"}
+        <li><code>{$l}</code></li>
+{/foreach}        
+      </ul>
+  </div>
+{/if}
+
 {load_interface file="template_browse_tabs.tpl"}
 <div class="instruction">Showing templates used to display information about {$model.plural_name|lower}</div>
 {else}
-<h3>Templates</h3>
+<h3>Templates by model</h3>
+
+{if count($locations)}
+  <div class="warning">
+      <p>For smooth operation of the templates repository, the following locations need to be made writable:</p>
+      <ul>
+{foreach from=$locations item="l"}
+        <li><code>{$l}</code></li>
+{/foreach}        
+      </ul>
+  </div>
+{/if}
+
 {load_interface file="template_browse_tabs.tpl"}
 <div class="instruction">Showing templates that are not used to display information about any specific model</div>
 {/if}
@@ -34,17 +58,26 @@
   <input type="hidden" name="template" id="item_id_input"  value="" />
 </form>
 
-<div id="options-view-chooser">
-Found {$templates._count} template{if $templates._count != 1}s{/if}. View as:
-<a href="#" onclick="return templates.setView('list', 'list_by_type_view')">List</a> /
-<a href="#" onclick="return templates.setView('grid', 'list_by_type_view')">Icons</a>
+<div id="options-view-header">
+
+  <div id="options-view-info">
+    Found {$templates._count} template{if $templates._count != 1}s{/if}.
+  </div>
+  
+  <div id="options-view-chooser">
+    <a href="#list-view" onclick="return templates.setView('list', 'list_by_type_view')" id="options-view-list-button" class="{if $list_style == "list"}on{else}off{/if}"></a>
+    <a href="#grid-view" onclick="return templates.setView('grid', 'list_by_type_view')" id="options-view-grid-button" class="{if $list_style == "grid"}on{else}off{/if}"></a>
+  </div>
+  
+  <div class="breaker"></div>
+  
 </div>
 
 <ul class="options-{$list_style}" style="margin-top:0px" id="options_grid">
 {foreach from=$templates item="template"}
 <li>
   <a href="#" class="option" id="item_{$template.id}" onclick="return templates.setSelectedItem('{$template.id}', 'item');" ondblclick="window.location='{$domain}{$section}/editTemplate?asset_type={$template.type}&amp;template={$template.id}'">
-    <img border="0" src="{$domain}Resources/Icons/blank_page.png" />{$template.url}</a>
+    <i class="fa fa-file-code-o list"></i><img border="0" src="{$domain}Resources/Icons/blank_page.png" class="grid" />{$template.url}</a>
 </li>
 {/foreach}
 </ul>

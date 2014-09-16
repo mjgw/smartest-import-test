@@ -7,7 +7,7 @@
     </div>
     <div class="edit-form-row">
       <div class="form-section-label">Password</div>
-      <a href="{$domain}smartest/account/password">Click here to change your password</a>
+      <a href="{$domain}smartest/account/password" class="button">Click here to change your password</a>
     </div>
     <div class="edit-form-row">
       <div class="form-section-label">First name</div>

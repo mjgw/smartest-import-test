@@ -1,14 +1,12 @@
 <script type="text/javascript">
-
 var itemList = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'item', 'options_list');
-
 </script>
 
 <div id="work-area">
 
 {load_interface file="edit_set_tabs.tpl"}
 
-<h3><a href="{$domain}smartest/models">Items</a> &gt; {if $model.id}<a href="{$domain}datamanager/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; <a href="{$domain}sets/getItemClassSets?class_id={$model.id}">Sets</a>{else}<a href="{$domain}smartest/sets">Sets</a>{/if} &gt; <a href="{$domain}sets/editSet?set_id={$set.id}">{$set.label}</a> &gt; Browse</h3>
+<h3>Browse set <span class="light">"{$set.label}"</span></h3>
 
 <form id="pageViewForm" method="get" action="">
   <input type="hidden" name="set_id"  value="{$set.id}" />
@@ -46,22 +44,33 @@ var itemList = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'item'
   </div>
 </form>
 
-{if $set.type == 'STATIC' || $count > 0}
-  {if empty($items)}
-    <div class="warning">There are currently no items in this set. <a href="{$domain}{$section}/editSet?set_id={$set.id}">Click here</a> to add some.</div>
-  {else}
-    <div class="instruction">Found {$count} item{if $count != 1}s{/if} in this data set</div>
-  {/if}
+
+
+{if empty($items)}
+
+{if $set.type == 'STATIC'}
+  <div class="warning">There are currently no items in this set. <a href="{$domain}{$section}/editSet?set_id={$set.id}">Click here</a> to add some.</div>
 {else}
-<div class="warning">Please note: This saved query is currently empty because there are no items that match its conditions in the current mode. {help id="datamanager:query_modes"}What's a mode{/help}</div>
+  <div class="warning">Please note: This saved query is currently empty because there are no items that match its conditions in the current mode. {help id="datamanager:query_modes"}What's a mode{/help}</div>
 {/if}
 
-{if !empty($items)}
+{else}
 
-View as:
-<a href="{dud_link}" onclick="return itemList.setView('list', 'item_list_style')">List</a> /
-<a href="{dud_link}" onclick="return itemList.setView('grid', 'item_list_style')">Icons</a>
+<div id="options-view-header">
+
+  <div id="options-view-info">
+    Found {$count} {if $count != 1}{$model.plural_name|lower}{else}{$model.name|lower}{/if} in this set.
+  </div>
   
+  <div id="options-view-chooser">
+    <a href="#list-view" onclick="return itemList.setView('list', 'item_list_style')" id="options-view-list-button" class="{if $list_view == "list"}on{else}off{/if}"></a>
+    <a href="#grid-view" onclick="return itemList.setView('grid', 'item_list_style')" id="options-view-grid-button" class="{if $list_view == "grid"}on{else}off{/if}"></a>
+  </div>
+  
+  <div class="breaker"></div>
+  
+</div>
+
   <ul class="options-{$list_view}" id="options_list">
   {foreach from=$items key="key" item="item"}
     <li>
@@ -69,6 +78,7 @@ View as:
         {if $item.public == 'TRUE'}<img src="{$domain}Resources/Icons/item.png" border="0" class="grid" /><img border="0" src="/Resources/Icons/package_small.png" class="list" />{else}<img src="{$domain}Resources/Icons/item_grey.png" border="0" class="grid" /><img border="0" src="/Resources/Icons/package_small_grey.png" class="list" />{/if}{$item.name}</a></li>
   {/foreach}
   </ul>
+
 {/if}
 
 </div>

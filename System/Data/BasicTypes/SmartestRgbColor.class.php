@@ -180,6 +180,10 @@ class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorab
             return $this->getBrightness();
             case "brightness_int":
             return (int) (string) $this->getBrightness();
+            case "text_white":
+            return $this->getBrightness()->getValue() <= 154;
+            case "text_black":
+            return $this->getBrightness()->getValue() > 154;
         }
     }
     

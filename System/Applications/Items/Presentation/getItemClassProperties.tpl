@@ -2,7 +2,7 @@
 
 {load_interface file="model_list_tabs.tpl"}
 
-<h3><a href="{$domain}smartest/models">Items</a> &gt; <a href="{$domain}{$section}/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; Properties</h3>
+<h3>Properties of {$model.name|lower} model</h3>
 
 <div class="text" style="margin-bottom:10px">Click a property once and choose from the options on the right.</div>
 
@@ -16,10 +16,8 @@
        {foreach from=$list item="element"}
     <li>
        <a id="item_{$element.id}" class="option" href="javascript:nothing()" onclick="setSelectedItem('{$element.id}');" ondblclick="window.location='{$domain}{$section}/editItemClassProperty?class_id={$model.id}&amp;itemproperty_id={$element.id}'">		 
-        <img border="0" src="{$domain}Resources/Icons/page_code.png" />{$element.name}
-      </a>
-     
-    </li>
+         <i class="fa fa-tag"></i>{$element.name}</a>
+     </li>
     {/foreach}
   {/defun}
 </ul>

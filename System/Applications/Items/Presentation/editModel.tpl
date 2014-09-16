@@ -2,7 +2,7 @@
   
   {load_interface file="model_list_tabs.tpl"}
   
-  <h3><a href="{$domain}smartest/models">Items</a> &gt; <a href="{$domain}{$section}/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; Edit model</h3>
+  <h3>Edit {$model.name|lower} model settings</h3>
   
   {if $can_edit_model}<form action="{$domain}{$section}/updateModel" method="post">{/if}
     
@@ -249,7 +249,7 @@
       
         <div class="edit-form-row">
           <div class="form-section-label">Static sets to which new items should automatically be added</div>
-          <div><span id="model-set-auto-add-ajax-field">{load_interface file="model_auto_sets_info.tpl"}</span> {if $can_edit_model}<a href="#edit-automatic-sets" id="edit-automatic-sets-link">Edit</a>{/if}</div>
+          <div><span id="model-set-auto-add-ajax-field">{load_interface file="model_auto_sets_info.tpl"}</span> {if $can_edit_model}<a href="#edit-automatic-sets" id="edit-automatic-sets-link" class="button">Edit</a>{/if}</div>
           <script type="text/javascript">
             
             $('edit-automatic-sets-link').observe('click', function(e){ldelim}

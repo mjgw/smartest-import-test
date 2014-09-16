@@ -24,6 +24,12 @@ li.permanent-action a:hover{
 	color:#F4842A;
 }
 
+li.permanent-action a i.fa{
+	font-size:1.35em!important;
+	color:#666;
+	margin-right:2px;
+}
+
 /*** Layout ***/
 
 ul.actions-list{

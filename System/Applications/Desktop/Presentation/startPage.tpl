@@ -4,12 +4,12 @@
 
 <h3>Welcome to Smartest</h3>
 
-{if $num_sites > 0}<div class="instruction">Select a site to work with.</div>{/if}
+{if $num_sites > 0}<div class="instruction">{if $num_sites > 1}There are {$num_sites} sites installed here. Select one of them to continue.{else}There is one site installed here. Click it to continue.{/if}</div>{/if}
 
 <ul class="apps">
 {foreach from=$sites item="site" key="key"}
 {if isset($site.name) }
-  <li><a href="{$domain}smartest/site/open/{$site.id}" class="icon"{if $site.logo_image_asset_id != '0'} style="background-image:url({$site.logo.startpage_glossy.web_path})"{/if}>&nbsp;</a><br /><a class="label" href="{$domain}smartest/site/open/{$site.id}">{$site.internal_label}</a></li>
+  <li><a href="{$domain}smartest/site/open/{$site.id}" class="icon"{if $site.logo_image_asset_id != '0'} style="background-image:url({$site.logo.image.130x130.web_path})"{/if}>&nbsp;</a><br /><a class="label" href="{$domain}smartest/site/open/{$site.id}">{$site.internal_label}</a></li>
 {/if}
 {/foreach}
 {* <li><a class="icon" id="new" href="{$domain}smartest/site/new"></a><br /><a class="label" href="{$domain}smartest/site/new">Create a new site</a></li> *}

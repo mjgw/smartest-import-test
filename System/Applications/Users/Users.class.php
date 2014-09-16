@@ -187,7 +187,7 @@ class Users extends SmartestSystemApplication{
     		    $this->setTitle('Edit user | '.$user->__toString());
     		    $this->send($user, 'user');
             }else{
-                $this->addUserMessageToNextRequest("The User ID was not recognised.");
+                $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
                 $this->formForward();
             }
 			
@@ -199,7 +199,7 @@ class Users extends SmartestSystemApplication{
         
         }else{
             
-            $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.");
+            $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.", SmartestUserMessage::ACCESS_DENIED);
             $this->formForward();
             
         }
@@ -243,12 +243,12 @@ class Users extends SmartestSystemApplication{
     		    $this->send($allow_global, 'allow_global');
     	
     	    }else{
-    	        $this->addUserMessageToNextRequest("The user ID was not recognised");
+    	        $this->addUserMessageToNextRequest("The user ID was not recognised", SmartestUserMessage::ERROR);
     	        $this->formForward();
     	    }
 	    
         }else{
-            $this->addUserMessageToNextRequest("You don't have permission to edit user permissions.");
+            $this->addUserMessageToNextRequest("You don't have permission to edit user permissions.", SmartestUserMessage::ACCESS_DENIED);
 	        $this->formForward();
         }
     	
@@ -273,7 +273,7 @@ class Users extends SmartestSystemApplication{
     		    }
     		    
             }else{
-                $this->addUserMessageToNextRequest("The user ID was not recognised.");
+                $this->addUserMessageToNextRequest("The user ID was not recognised.", SmartestUserMessage::ERROR);
                 $this->formForward();
             }
             
@@ -281,7 +281,7 @@ class Users extends SmartestSystemApplication{
         
         }else{
             
-            $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.");
+            $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.", SmartestUserMessage::ACCESS_DENIED);
             $this->formForward();
             
         }
@@ -347,7 +347,7 @@ class Users extends SmartestSystemApplication{
 		        }
     		    
             }else{
-                $this->addUserMessageToNextRequest("The user ID was not recognised.");
+                $this->addUserMessageToNextRequest("The user ID was not recognised.", SmartestUserMessage::ERROR);
                 $this->formForward();
             }
             
@@ -355,7 +355,7 @@ class Users extends SmartestSystemApplication{
         
         }else{
             
-            $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.");
+            $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.", SmartestUserMessage::ACCESS_DENIED);
             $this->formForward();
             
         }
@@ -405,12 +405,12 @@ class Users extends SmartestSystemApplication{
 		
 	}
 	
-	public function deleteUser($get){
+	public function deleteUser(){
 	    
 	    if($this->getUser()->hasToken('delete_users')){
 	    
         	$user = new SmartestUser;
-        	$user_id = (int) $get['user_id'];
+        	$user_id = (int) $this->getRequestParameter('user_id');
     	
         	if($user_id == $this->getUser()->getId()){
     	
@@ -418,7 +418,7 @@ class Users extends SmartestSystemApplication{
     	
         	}else{
     	
-        	    if($user->hydrate($user_id)){
+        	    if($user->find($user_id)){
     	        
         	        $this->addUserMessageToNextRequest("The user '".$user->getUsername()."' was successfully deleted.", SmartestUserMessage::SUCCESS);
     		        $user->delete();
@@ -464,10 +464,10 @@ class Users extends SmartestSystemApplication{
     		    
     		    if(isset($post['password']) && strlen($post['password']) && $post['password'] == $post['passwordconfirm']){
     		        $user->setPasswordWithSalt($post['password'], SmartestStringHelper::random(40));
-    		        $this->addUserMessageToNextRequest("The user has been updated, including a new password.");
+    		        $this->addUserMessageToNextRequest("The user has been updated, including a new password.", SmartestUserMessage::SUCCESS);
     		        $user->setPasswordChangeRequired(0);
     	        }else{
-    		        $this->addUserMessageToNextRequest("The user has been updated.");
+    		        $this->addUserMessageToNextRequest("The user has been updated.", SmartestUserMessage::SUCCESS);
     		        if($this->getUser()->hasToken('require_user_password_change')){
     		            if($this->getRequestParameter('require_password_change')){
         		            $user->setPasswordChangeRequired(1);
@@ -661,13 +661,13 @@ class Users extends SmartestSystemApplication{
 	public function updateMyPassword(){
 	    
 	    if(strlen($this->getRequestParameter('password_1')) < 8){
-	        $this->addUserMessage("Your password must be eight or more characters.", SmartestUserMessage::INFO);
+	        $this->addUserMessage("Your password must be eight or more characters.", SmartestUserMessage::WARNING);
 	        $this->forward('users', 'setMyPassword');
 	    }else if($this->getRequestParameter('password_1') != $this->getRequestParameter('password_2')){
 	        $this->addUserMessage("The passwords you entered didn't match.", SmartestUserMessage::WARNING);
 	        $this->forward('users', 'setMyPassword');
-        }else if($this->getRequestParameter('password_1') == 'password'){
-	        $this->addUserMessage("Your password can't be 'password'. Come on, you can do better than that!", SmartestUserMessage::INFO);
+        }else if(preg_match('/^p[a4][s5][s5]w[o0]rd$/i', $this->getRequestParameter('password_1'))){
+	        $this->addUserMessage("Your password can't be any drivation of the word 'password'. Come on, you can do better than that!", SmartestUserMessage::ERROR);
 	        $this->forward('users', 'setMyPassword');
 	    }else{
 	        $salt = SmartestStringHelper::random(40);
@@ -678,7 +678,7 @@ class Users extends SmartestSystemApplication{
     	        $this->addUserMessageToNextRequest("Your password has been successfully updated.", SmartestUserMessage::SUCCESS);
     	        $this->redirect('/smartest/profile');
     	    }else{
-    	        $this->addUserMessage("That password is the same. Please try again.", SmartestUserMessage::INFO);
+    	        $this->addUserMessage("That password is the same. Please try again.", SmartestUserMessage::WARNING);
     	        $this->forward('users', 'setMyPassword');
     	    }
 	    }

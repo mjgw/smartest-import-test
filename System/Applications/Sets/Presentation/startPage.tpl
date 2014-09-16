@@ -1,10 +1,10 @@
 <div id="work-area">
 
-<h3><a href="{$domain}smartest/data">Items</a> &gt; Sets</h3>
+<h3>Sets of items</h3>
 
 {load_interface file="items_front_tabs.tpl"}
 
-<div class="instruction">Use Data Sets to organize your data into smaller groups. {help id="datamanager:sets"}What are sets?{/help}</div>
+<div class="instruction">Use sets to organize and group your items into more meaningful collections that belong together. {help id="datamanager:sets"}What are sets?{/help}</div>
 
 <form id="pageViewForm" method="get" action="">
   <input type="hidden" name="set_id" id="item_id_input" value="" />
@@ -28,7 +28,6 @@
   <li><b>Selected Data Set</b></li>
   <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editSet');}{/literal}"><img border="0" src="{$domain}Resources/Icons/folder_edit.png"> Modify data set contents</a></li>
   <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('previewSet');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_go.png"> List data set contents</a></li>
-{* <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('copySet');}{/literal}"><img border="0" src="{$domain}Resources/Icons/page_code.png"> Duplicate<!--structure, not template because it does not propigate back to template--></a></li> *}
   <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('deleteSetConfirm');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_delete.png"> Delete this data set</a></li>
 {* <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('chooseSchemaForExport');}{/literal}"><img border="0" src="{$domain}Resources/Icons/page_code.png"> Export</a></li> *}
 </ul>

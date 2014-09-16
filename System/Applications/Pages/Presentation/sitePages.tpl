@@ -46,7 +46,7 @@ function viewPage(){
       {/if}
       
       <a id="item_{$page.info.webid}" class="option" href="#" onclick="setSelectedItem('{$page.info.webid}', '{$page.info.title|escape:quotes}', '{if $page.info.type == 'ITEMCLASS'}meta-page{else}static-page{/if}');return false;" ondblclick="window.location='{$domain}{$section}/openPage?page_id={$page.info.webid}&amp;site_id={$content.data[0].info.site_id}'">		 
-        {if $page.info.type == 'ITEMCLASS'}<img border="0" src="{$domain}Resources/Icons/page_gear.png" />{elseif $page.info.is_section == '1'}<img border="0" src="{$domain}Resources/Icons/page_red.png" />{else}<img border="0" src="{$domain}Resources/Icons/page.png" />{/if}
+        {if $page.info.type == 'ITEMCLASS'}<i class="fa fa-cog"></i>{elseif $page.info.is_section == '1'}<i class="flaticon solid menu-list-4"></i>{else}{if $home_page.id == $page.info.id}<i class="flaticon solid earth-1"></i>{else}<i class="flaticon solid document-3"></i>{/if}{/if}
         <span>{$page.info.title}</span>
         <span style="color:#aaa">{if $page.info.is_published == "TRUE"}(published){else}(not published){/if}</span>
       </a>
@@ -90,7 +90,7 @@ function viewPage(){
 <ul class="actions-list" id="static-page-specific-actions" style="display:none">
 
 	<li><b>Static Page Options</b></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('openPage'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this page</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('openPage'); }{/literal}" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this page</a></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="workWithItem('addPage');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Add a new page under this one</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('publishPageConfirm'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this page</a></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('preview'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/eye.png" border="0" alt=""> Preview This Page</a></li>

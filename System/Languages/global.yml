@@ -2,11 +2,13 @@ strings:
   main_nav:
     pages: Pages
     items: Items
-    files: Files
+    files: Media library
     templates: Templates
     users: Users
     metadata: "Meta-data"
+    settings: "Settings"
     websites: Your websites
+    user_profile: "Your profile"
     about: About Smartest
     sign_out: Sign out
   top_bar:

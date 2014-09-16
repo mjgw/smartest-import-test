@@ -6,7 +6,7 @@
 
 {load_interface file="edit_filegroup_tabs.tpl"}
 
-<h3>{if $group.is_gallery}{$_l10n_strings.groups.gallery_files}{else}{$_l10n_strings.groups.group_files}{/if}"{$group.label}"</h3>
+<h3>{if $group.is_gallery}{$_l10n_strings.groups.gallery_files}{else}{$_l10n_strings.groups.group_files}{/if}<span class="light">"{$group.label}"</span></h3>
 
 <form id="pageViewForm" method="get" action="">
   <input type="hidden" name="asset_id" id="item_id_input" value="" />
@@ -26,10 +26,21 @@
 
 {if $group.is_gallery}<div class="instruction">Drag and drop files in this gallery to change their order. The new order is saved automatically.</div>{/if}
 
-<div id="options-view-chooser">
-{$num_assets} file{if $num_assets != 1}s{/if}. View as:
-<a href="#display-as-list" onclick="return assets.setView('list', 'asset_list_style')">List</a> /
-<a href="#display-as-icons" onclick="return assets.setView('grid', 'asset_list_style')">Icons</a>
+<div id="options-view-header">
+
+  <div id="options-view-info">
+    {if $num_assets == 0}No files in this group yet.{else}{$num_assets} file{if $num_assets != 1}s{/if} in this group.{/if}
+  </div>
+  
+  {if $num_assets > 0}
+  <div id="options-view-chooser">
+    <a href="#list-view" onclick="return assets.setView('list', 'asset_list_style')" id="options-view-list-button" class="{if $list_view == "list"}on{else}off{/if}"></a>
+    <a href="#grid-view" onclick="return assets.setView('grid', 'asset_list_style')" id="options-view-grid-button" class="{if $list_view == "grid"}on{else}off{/if}"></a>
+  </div>
+  {/if}
+  
+  <div class="breaker"></div>
+  
 </div>
 
 <ul class="options-{$list_view}{if $contact_sheet_view} images{/if}{if $group.is_gallery} reorderable{/if}" style="margin-top:0px" id="options_grid">

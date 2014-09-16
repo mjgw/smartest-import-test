@@ -48,7 +48,7 @@ var section = '{$section}';
 
 <div class="edit-form-row">
   <div class="form-section-label">Hostname</div>
-  <input type="text" name="site_domain" value="{$site.domain}" /><div class="form-hint">Please be careful. The wrong value here will make your site inaccessible.</div>
+  <input type="text" name="site_domain" value="{$site.domain}" /><div class="form-hint">Please be careful. The wrong value here will make your site temporarily inaccessible.</div>
 </div>
 
 <div class="edit-form-row">

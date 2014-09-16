@@ -2,7 +2,7 @@
     
     {load_interface file="model_list_tabs.tpl"}
     
-    <h3><a href="{$domain}smartest/models">Items</a> &gt; <a href="{$domain}{$section}/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; Comments</h3>
+    <h3>Comments on {$model.plural_name|lower}</h3>
     
         <form action="{$domain}{$section}/getItemClassComments" id="comment_status_filter">
 

@@ -2,14 +2,14 @@
 
 {load_interface file="edit_tabs.tpl"}
 
-<h3><a href="{$domain}smartest/models">Items</a> &gt; <a href="{$domain}{$section}/getItemClassMembers?class_id={$item._model.id}">{$item._model.plural_name}</a> &gt; Edit {$item._model.name}</h3>
+<h3>Edit {$item._model.name|lower}: <span class="light">{$item.name}</span></h3>
 
 {if $item.deleted}<div class="warning">Warning: This {$item._model.name|strtolower} is currently in the trash.</div>{/if}
 
 <div id="instruction">You are editing the draft property values of the {$item._model.name|strtolower} &quot;<strong>{$item.name}</strong>&quot;</div>
 
 <div id="sets" class="special-box">
-     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> (<a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem">remove</a>), {/foreach}{else}<em style="color:#666">None (<a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}">Create one</a>)</em>{/if}
+     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem" class="button">remove</a> {/foreach}{else}<em style="color:#666">None (<a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}">Create one</a>)</em>{/if}
  {if count($possible_sets)}
          <div>
            <form action="{$domain}sets/transferSingleItem" method="post">
@@ -28,7 +28,7 @@
  {/if}
 </div>
 
-{if $item.has_metapage}
+{if $item.has_metapage && count($metapages)}
 
 <div class="special-box">
   

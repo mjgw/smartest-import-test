@@ -37,7 +37,7 @@
       <li style="padding:5px;" id="comment-{$comment.id}">
         <p><b>{$comment.user.full_name}</b>, {$comment.posted_at}</p>
         <p>{$comment.content}</p>
-        <p class="small" style="font-size:10px"><a href="#delete-comment-{$comment.id}" id="delete-comment-link-{$comment.id}">Delete</a></p>
+        {if $_user.id == $comment.user.id}<p class="small" style="font-size:10px"><a href="#delete-comment-{$comment.id}" id="delete-comment-link-{$comment.id}">Delete</a></p>{/if}
       </li>
 {foreachelse}
       <li style="padding:5px;" id="none-yet"><div class="instruction">No notes yet</div></li>
@@ -46,6 +46,6 @@
     
 <script type="text/javascript">
   {foreach from=$comments item="comment"}
-  $('delete-comment-link-{$comment.id}').observe('click', function(e){ldelim}Smartest.AjaxModalViewer.variables.deleteAssetComment('{$comment.id}');e.stop();{rdelim});
+  {if $_user.id == $comment.user.id}$('delete-comment-link-{$comment.id}').observe('click', function(e){ldelim}Smartest.AjaxModalViewer.variables.deleteAssetComment('{$comment.id}');e.stop();{rdelim});{/if}
   {/foreach}
 </script>

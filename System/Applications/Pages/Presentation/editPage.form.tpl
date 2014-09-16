@@ -188,8 +188,7 @@
     	
   	</div>
   	
-  	<a href="{$domain}{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&amp;item_id={$item.id}{/if}">{if count($page.urls) || $ishomepage == "true"}Add another url{else}Give this page a nicer URL{/if}</a><br />
-  	<img src="{$domain}Resources/Images/spacer.gif" width="1" height="10" />
+  	<a href="{$domain}{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&amp;item_id={$item.id}{/if}" class="button">{if count($page.urls) || $ishomepage == "true"}Add another url{else}Give this page a nicer URL{/if}</a><br />
   	
   	</div>
 	

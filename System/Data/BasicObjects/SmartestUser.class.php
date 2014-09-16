@@ -219,6 +219,17 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	        
 	        case "email":
 	        return new SmartestEmailAddress($this->_properties['email']);
+            
+            case "profile_initials":
+            if(strlen($this->_properties['firstname']) && strlen($this->_properties['lastname'])){
+                return $this->_properties['firstname']{0}.$this->_properties['lastname']{0};
+            }else if(strlen($this->_properties['firstname'])){
+                return substr($this->_properties['firstname'], 0, 2);
+            }else if(strlen($this->_properties['lastname'])){
+                return substr($this->_properties['lastname'], 0, 2);
+            }else{
+                return '?';
+            }
 	        
 	        case "has_twitter_handle":
 	        case "has_twitter_account":

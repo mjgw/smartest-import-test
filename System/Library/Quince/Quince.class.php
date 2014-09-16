@@ -924,33 +924,23 @@ class Quince{
 	    
 	    $test_url = $url{(strlen($url)-1)} == '/' ? substr($url, 0, -1) : $url;
 	    
-		// var_dump($test_url);
-		
 	    // Calculate the domain
 	    $dr = realpath($_SERVER["DOCUMENT_ROOT"]).'/';
 	    $hdp = explode('/', $test_url);
         
         array_shift($hdp);
-        // array_pop($hdp);
         $possible_dir = implode('/', $hdp).'/';
         
         // MultiViews support: look for URLS like index.php/module/action
 		// $fc_filename = basename($_SERVER['SCRIPT_FILENAME']);
 		// $fc_filename_len = strlen($fc_filename)+1;
 		
-		// echo $possible_dir;
-        // echo substr($possible_dir, 0, $fc_filename_len+1);
-        
-        // echo $dr.$possible_dir.' ';
-        
-        while(!is_dir($dr.$possible_dir)){
+		while(!is_dir($dr.$possible_dir)){
             array_pop($hdp);
             $possible_dir = implode('/', $hdp).'/';
         }
         
-        // echo $possible_dir;
-		
-		/* if(substr($possible_dir, 0, $fc_filename_len) == '/'.$fc_filename){
+        /* if(substr($possible_dir, 0, $fc_filename_len) == '/'.$fc_filename){
 		    $possible_dir .= $fc_filename.'/';
 		    $url = substr($url, $fc_filename_len);
 		} */
@@ -973,14 +963,7 @@ class Quince{
             $r->setRequestString(substr($url, 1));
         } */
         
-        // print_r($r);
-        
-        
-        
-        /* echo $dr.' * ';
-        echo $test_url;
-        
-        if($f === false){
+        /* if($f === false){
             throw new QuinceException("Domain could not be calculated: Document root not found in current working directory");
         }else{
             if($f > 0){
@@ -988,10 +971,6 @@ class Quince{
             }else{
                 $docroot = $_SERVER["DOCUMENT_ROOT"];
             }
-        } */
-        
-        /* if(){
-            
         } */
         
         /* if(strlen($cwd) == strlen($docroot)){
@@ -1012,8 +991,6 @@ class Quince{
             }
             
         } */
-        
-        // echo $cwd.' '.$docroot;
         
         // $num_folders = count($hdp);
         
@@ -1112,6 +1089,12 @@ class Quince{
 	    return self::$modules;
 	    
 	}
+    
+    public function getAllModuleDirectories(){
+        
+        return $this->_existing_modules;
+        
+    }
 	
 	public function getAllModulesByShortName(){
 	    

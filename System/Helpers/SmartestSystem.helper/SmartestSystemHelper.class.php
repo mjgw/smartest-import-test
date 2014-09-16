@@ -223,4 +223,76 @@ class SmartestSystemHelper{
 		
 	}
     
+    public static function getSystemApplicationData(){
+        
+        $controller = SmartestPersistentObject::get('controller');
+        $all_quince_modules = $controller->getAllModulesById();
+        $system_applications = array();
+        $system_applications_dir = SM_ROOT_DIR.'System/Applications/';
+        $system_applications_dir_len = strlen($system_applications_dir);
+        
+        foreach($all_quince_modules as $module_id=>$module){
+            if(isset($module['meta']) && isset($module['meta']['system']) && SmartestStringHelper::toRealBool($module['meta']['system'])){
+                // the module claims it is a system module
+                if(substr($module['directory'], 0, $system_applications_dir_len) == $system_applications_dir){
+                    // the module is also in the correct place
+                    $system_applications[$module_id] = $module;
+                }
+            }
+        }
+        
+        return $system_applications;
+        
+    }
+    
+    public static function getSystemApplicationDirectories(){
+        
+        $system_applications = self::getSystemApplicationData();
+        $directories = array();
+        
+        foreach($system_applications as $id=>$app){
+            $directories[$id] = $app['directory'];
+        }
+        
+        return $directories;
+        
+    }
+    
+	public static function getInstallId(){
+	    
+	    $ph = SmartestPersistentObject::get('prefs_helper');
+	    $value = $ph->getGlobalPreference('install_id', '0', '0');
+	    
+	    if(!strlen($value)){
+            $value = implode(':', str_split(substr(md5(SM_ROOT_DIR.$_SERVER["SERVER_ADDR"]), 0, 12), 2));
+            $ph->setGlobalPreference('install_id', $value, '0', '0');
+        }
+        
+        return $value;
+	    
+	}
+	
+	public static function getSiteLogosFileGroupId(){
+	    
+	    $ph = SmartestPersistentObject::get('prefs_helper');
+	    $id = $ph->getGlobalPreference('default_site_logo_asset_group_id', '0', '0');
+	    
+	    if(!strlen($id)){
+            $group = new SmartestAssetGroup;
+            $group->setLabel("Site logos");
+            $group->setName("site_logos");
+            $group->setIsSystem(1);
+            $group->setIsHidden(1);
+            $group->setShared(1);
+            $group->setFilterType("SM_SET_FILTERTYPE_ASSETCLASS");
+            $group->setFilterValue("SM_ASSETCLASS_STATIC_IMAGE");
+            $group->save();
+            $id = $group->getId();
+            $ph->setGlobalPreference('default_site_logo_asset_group_id', $id, '0', '0');
+        }
+        
+        return $id;
+	    
+	}
+    
 }

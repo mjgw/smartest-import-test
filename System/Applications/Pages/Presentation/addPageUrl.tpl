@@ -16,14 +16,16 @@
       <input type="checkbox" name="forward_to_default" id="forward_to_default" value="1" onchange="toggleFormAreaVisibilityBasedOnCheckbox('forward_to_default', 'show-redirect-type');" /><label for="forward_to_default">Forward to default URL</label>
     </div>
     
-    <div class="edit-form-row" style="display:none" id="show-redirect-type">
-      <div class="form-section-label">Redirect type</div>
-      <select name="url_redirect_type">
-        <option value="301"{if $url.redirect_type == "301"} selected="selected"{/if}>301 Moved Permanently (SEO friendly - recommended)</option>
-        <option value="302"{if $url.redirect_type == "302"} selected="selected"{/if}>302 Found (unspecified reason)</option>
-        <option value="303"{if $url.redirect_type == "303"} selected="selected"{/if}>303 See other</option>
-        <option value="307"{if $url.redirect_type == "307"} selected="selected"{/if}>307 Temporary redirect</option>
-      </select>
+    <div style="display:none" id="show-redirect-type">
+      <div class="edit-form-row">
+        <div class="form-section-label">Redirect type</div>
+        <select name="url_redirect_type">
+          <option value="301"{if $url.redirect_type == "301"} selected="selected"{/if}>301 Moved Permanently (SEO friendly - recommended)</option>
+          <option value="302"{if $url.redirect_type == "302"} selected="selected"{/if}>302 Found (unspecified reason)</option>
+          <option value="303"{if $url.redirect_type == "303"} selected="selected"{/if}>303 See other</option>
+          <option value="307"{if $url.redirect_type == "307"} selected="selected"{/if}>307 Temporary redirect</option>
+        </select>
+      </div>
     </div>
     
 {if $is_valid_item}

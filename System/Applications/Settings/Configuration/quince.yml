@@ -3,6 +3,8 @@ module:
   shortname: settings
   identifier: com.smartest.Settings
   longname: Settings
-  default_action: startPage
+  default_action: editSite
+  aliases:
+    - {url: /smartest/settings, action: editSite}
   meta:
     system: true

@@ -2,8 +2,6 @@
 
 <h3>Templates</h3>
 
-{load_interface file="template_browse_tabs.tpl"}
-
 {if count($locations)}
   <div class="warning">
       <p>For smooth operation of the templates repository, the following locations need to be made writable:</p>
@@ -15,11 +13,13 @@
   </div>
 {/if}
 
+{load_interface file="template_browse_tabs.tpl"}
+
 <form id="pageViewForm" method="get" action="">
   <input type="hidden" id="item_id_input" name="type" value="" />
 </form>
 
-<div class="instruction">There are six different kinds of template. Please select which type you'd like to work with.</div>
+<div class="instruction">There are five different kinds of template. Please select which type you'd like to work with.</div>
 
 <ul class="options-grid-no-scroll" style="margin-top:0px">
   {foreach from=$types item="assetType"}

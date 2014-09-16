@@ -14,6 +14,9 @@ class Items extends SmartestSystemApplication{
 	public function startPage($get){	
 	    
 		$this->setTitle("Items");
+        
+		$recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId());
+        $this->send($recent, 'recent_items');
 		
 	}
 		
@@ -41,6 +44,20 @@ class Items extends SmartestSystemApplication{
         $this->send($recent, 'recent_items');
 		
 	}
+    
+    public function recentItems(){
+        
+        $this->send($this->getApplicationPreference('item_list_style', 'grid'), 'list_view');
+        
+		$this->setTitle("Recent items");
+		$this->setFormReturnDescription('recent items');
+        
+        $this->send($this->getUser()->hasToken('modify_items'), 'can_edit_items');
+		
+		$recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), null, 24);
+        $this->send($recent, 'recent_items');
+        
+    }
 	
 	public function getItemClassSets($get){
 	    
@@ -99,6 +116,10 @@ class Items extends SmartestSystemApplication{
 	        $this->setTitle("Arrange property order | ".$model->getPluralName());
 		    $this->send($this->getUser()->hasToken('create_remove_properties'), 'can_edit_properties');
 	        $this->send($model->getProperties(), 'properties');
+			$this->send(is_writable($model->getAutoClassFilePath()), 'auto_class_file_writable');
+			$this->send($model->getAutoClassFilePath(), 'auto_class_file');
+			$this->send(is_writable(dirname($model->getAutoClassFilePath())), 'auto_class_dir_writable');
+			$this->send(dirname($model->getAutoClassFilePath()), 'auto_class_dir');
 	    }
 	    
 	}
@@ -218,7 +239,11 @@ class Items extends SmartestSystemApplication{
         if($model->hydrate($this->getRequestParameter('class_id'))){
             $num_held_items = $this->getUser()->getNumHeldItems($model->getId(), $this->getSite()->getId());
 	        $this->getUser()->releaseItems($model->getId(), $this->getSite()->getId());
-	        $this->addUserMessageToNextRequest($num_held_items.' '.$model->getPluralName()." were released.", SmartestUserMessage::SUCCESS);
+	        if($num_held_items > 0){
+	            $this->addUserMessageToNextRequest($num_held_items.' '.strtolower($model->getPluralName())." were released.", SmartestUserMessage::SUCCESS);
+            }else{
+                $this->addUserMessageToNextRequest('No '.strtolower($model->getPluralName())." were released, as none were held.", SmartestUserMessage::INFO);
+            }
         }else{
             $this->addUserMessageToNextRequest("The model ID was not recognized.");
         }
@@ -1716,7 +1741,7 @@ class Items extends SmartestSystemApplication{
 			    
 			    }
 			    
-			    $this->addUserMessageToNextRequest('The item was updated successfully.', SmartestUserMessage::SUCCESS);
+			    $this->addUserMessageToNextRequest('The '.strtolower($item->getModel()->getName()).' was updated successfully.', SmartestUserMessage::SUCCESS);
 		
 	        }else{
 	        
@@ -2823,7 +2848,11 @@ class Items extends SmartestSystemApplication{
     		    $this->send($model, 'model');
     		    $this->setTitle('Add a Property to Model | '.$model->getPluralName());
     		    $this->send($this->getRequestParameter('continue') ? $this->getRequestParameter('continue') : 'PROPERTIES', 'continue');
-    		    
+				$this->send(is_writable($model->getAutoClassFilePath()), 'auto_class_file_writable');
+				$this->send($model->getAutoClassFilePath(), 'auto_class_file');
+				$this->send(is_writable(dirname($model->getAutoClassFilePath())), 'auto_class_dir_writable');
+				$this->send(dirname($model->getAutoClassFilePath()), 'auto_class_dir');
+				
     		    if($this->getRequestParameter('itemproperty_datatype')){
     		        
     		        $data_type_code = $this->getRequestParameter('itemproperty_datatype');

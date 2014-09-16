@@ -172,7 +172,7 @@ class SmartestUploadHelper extends SmartestHelper{
 		    
 	    }else{
 	        
-	        throw new SmartestException("Upload directory ".$directory." does not exist or is not writable.");
+	        throw new SmartestException("Upload directory ".$directory." does not exist or is not writable.", SM_ERROR_PERMISSIONS);
 	        
 	    }
 	    

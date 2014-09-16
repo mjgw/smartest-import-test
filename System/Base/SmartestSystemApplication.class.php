@@ -69,6 +69,8 @@ class SmartestSystemApplication extends SmartestBaseApplication{
             }
 	        
 	    }
+		
+		$this->send($this->getUserAgent()->isExplorer(), 'is_msie');
 	    
     }
     
@@ -99,12 +101,12 @@ class SmartestSystemApplication extends SmartestBaseApplication{
     
     ///// Communicate with the user /////
 	
-	final public function addUserMessage($message, $type=1){
-		$message = new SmartestUserMessage($message, $type);
+	final public function addUserMessage($message, $type=1, $sticky=false){
+		$message = new SmartestUserMessage($message, $type, $sticky);
 		SmartestResponse::$user_messages[] = $message;
 	}
 	
-	final protected function addUserMessageToNextRequest($message, $type=1){
+	final protected function addUserMessageToNextRequest($message, $type=1, $sticky=false){
 	    
 	    if(SmartestSession::get('user:isAuthenticated')){
 	    
@@ -114,7 +116,7 @@ class SmartestSystemApplication extends SmartestBaseApplication{
     		    $next_request_messages = array();
     		}
 		
-    		$message = new SmartestUserMessage($message, $type);
+    		$message = new SmartestUserMessage($message, $type, $sticky);
     		$next_request_messages[] = $message;
     		SmartestCache::save('user:messages:nextRequest:'.$this->getUser()->getId(), $next_request_messages, -1, true);
 		

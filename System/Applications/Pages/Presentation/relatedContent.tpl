@@ -2,7 +2,7 @@
   
   {load_interface file="edit_tabs.tpl"}
   
-  <h3>Related Content</h3>
+  <h3>Related to this page</h3>
   
   {if $require_item_select}
   
@@ -10,7 +10,7 @@
   
   {else}
   
-    <h4>Static Pages</h4>
+    <h4>Other pages</h4>
     
     {if empty($related_pages)}
       <i>No other pages are linked to this page.</i><br /><br />
@@ -22,7 +22,7 @@
     </ul>
     {/if}
   
-    <a href="{$domain}{$section}/editRelatedContent?page_id={$page.webid}" class="arrow-right">Edit...</a><br /><br />
+    <a href="{$domain}{$section}/editRelatedContent?page_id={$page.webid}" class="button">Edit</a><br /><br />
   
     {foreach from=$models item="model"}
     
@@ -38,7 +38,7 @@
       </ul>
     {/if}
     
-    <a href="{$domain}{$section}/editRelatedContent?page_id={$page.webid}&amp;model_id={$model.id}" class="arrow-right">Edit...</a><br /><br />
+    <a href="{$domain}{$section}/editRelatedContent?page_id={$page.webid}&amp;model_id={$model.id}" class="button">Edit</a><br /><br />
     
     {/foreach}
   

@@ -28,7 +28,7 @@ function executeTransfer(){
   
   {load_interface file="edit_filegroup_tabs.tpl"}
   
-  <h3>{if $group.is_gallery}{$_l10n_strings.groups.gallery_files}{else}{$_l10n_strings.groups.group_files}{/if}"{$group.label}"</h3>
+  <h3>{if $group.is_gallery}{$_l10n_strings.groups.gallery_files}{else}{$_l10n_strings.groups.group_files}{/if}<span class="light">"{$group.label}"</span></h3>
   
   <form action="{$domain}{$section}/transferAssets" method="post" name="transferForm">
 

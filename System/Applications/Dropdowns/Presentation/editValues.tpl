@@ -24,7 +24,7 @@
 {foreach from=$dropdown.values item="value"}
             <option value="">{$value.label}</option>
 {/foreach}
-          </select> <a href="{$domain}{$section}/addDropDownValue?dropdown_id={$dropdown.id}">+ Add a value</a>
+          </select> <a href="{$domain}{$section}/addDropDownValue?dropdown_id={$dropdown.id}" class="button">+ Add a value</a>
         </div>
 
         	<ul class="options-list" id="options">

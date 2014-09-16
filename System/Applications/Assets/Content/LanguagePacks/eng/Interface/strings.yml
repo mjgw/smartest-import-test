@@ -1,5 +1,5 @@
 strings:
-  title: Files repository
+  title: Media library
   files:
     types_instruction: Double click an icon below to see files of that type.
     search_instruction: Search for a file
@@ -29,7 +29,7 @@ strings:
     file_info: About this file
   file_groups_box:
     label: File groups
-    none: remove
+    remove: remove
     none: None
   tabs:
     file_types: Files by type
@@ -41,4 +41,4 @@ strings:
     file_preview: Preview
     file_tags: Tags
   warnings:
-    storage_locations_unwriteable: "For smooth operation of the files repository, the following locations need to be made writable:"
+    storage_locations_unwriteable: "For smooth operation of the media library, the following locations need to be made writable:"

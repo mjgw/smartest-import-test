@@ -164,7 +164,7 @@ class SmartestDataObject implements ArrayAccess{
 	
 	public function offsetExists($offset){
 	    $offset = strtolower($offset);
-	    return isset($this->_properties[$offset]);
+	    return (isset($this->_properties[$offset]) || in_array($offset, array('_class', '_php_class', '_print_r', 'empty')));
 	}
 	
 	public function offsetGet($offset){

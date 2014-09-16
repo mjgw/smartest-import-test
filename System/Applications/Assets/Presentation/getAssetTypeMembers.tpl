@@ -58,10 +58,19 @@
   </form>
 </div>
 
-<div id="options-view-chooser">
-Found {$num_assets} file{if $num_assets != 1}s{/if}. View as:
-<a href="#" onclick="return assets.setView('list', 'asset_list_style')">List</a> /
-<a href="#" onclick="return assets.setView('grid', 'asset_list_style')">Icons</a>
+<div id="options-view-header">
+
+  <div id="options-view-info">
+    Found {$num_assets} file{if $num_assets != 1}s{/if}.
+  </div>
+  
+  <div id="options-view-chooser">
+    <a href="#list-view" onclick="return assets.setView('list', 'asset_list_style')" id="options-view-list-button" class="{if $list_view == "list"}on{else}off{/if}"></a>
+    <a href="#grid-view" onclick="return assets.setView('grid', 'asset_list_style')" id="options-view-grid-button" class="{if $list_view == "grid"}on{else}off{/if}"></a>
+  </div>
+  
+  <div class="breaker"></div>
+  
 </div>
 
 <ul class="options-{$list_view}{if $contact_sheet_view} images{/if}" style="margin-top:0px" id="options_grid">

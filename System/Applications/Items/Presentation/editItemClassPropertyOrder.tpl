@@ -2,7 +2,23 @@
   
   {load_interface file="model_list_tabs.tpl"}
   
-  <h3><a href="{$domain}smartest/models">Items</a> &gt; <a href="{$domain}{$section}/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; Property order</h3>
+	{if !$auto_class_file_writable || !$auto_class_dir_writable}
+	<div class="warning">
+		{if !$auto_class_file_writable && !$auto_class_dir_writable}
+		In order for changes made here to fully take effect, the following file locations need to be made writable:
+		<ul class="file-list">
+			<li><code>{$auto_class_file}</code></li>
+			<li><code>{$auto_class_dir}</code></li>
+		</ul>
+		{elseif !$auto_class_file_writable}
+		In order for changes made here to fully take effect, the file <code>{$auto_class_file}</code> needs to be writable by the web server.
+		{elseif !$auto_class_dir_writable}
+		In order for changes made here to fully take effect, the directory <code>{$auto_class_dir}</code> needs to be writable by the web server.
+		{/if}
+	</div>
+	{/if}
+	
+  <h3>Property order of {$model.name|lower} model</h3>
   
   <ul class="re-orderable-list div1" id="property-order" style="padding-top:10px">
       {foreach from=$properties item="property" key="key"}

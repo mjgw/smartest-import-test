@@ -2,8 +2,9 @@ ul.tree-parent-node-open{
 	list-style-type:none;
 	margin:0px;
 	padding:0px;
+	padding-top:5px;
 	/*padding-left:15px;*/
-	margin-left:16px;
+	margin-left:15px;
 	background-image:url(../Images/top.gif);
 	background-repeat:no-repeat;
 	/*border:1px solid #000;*/
@@ -24,6 +25,8 @@ ul.tree-parent-node-open li.first, ul.tree-parent-node-closed li.first{
 	background-image:url(../Images/first.gif);
 	background-repeat:no-repeat;
 	margin:0px;
+	padding-bottom:3px;
+	margin-left:2px;
 	/*border:1px solid #0f0;*/
 	/*padding-left:15px;*/
 }
@@ -32,6 +35,8 @@ ul.tree-parent-node-open li.middle, ul.tree-parent-node-closed li.middle{
 	background-image:url(../Images/middle.gif);
 	background-repeat:repeat-y;
 	margin:0px;
+	padding-bottom:3px;
+	margin-left:2px;
 	/*border:1px solid #f90;*/
 	/*padding-left:15px;*/
 }
@@ -40,6 +45,8 @@ ul.tree-parent-node-open li.last, ul.tree-parent-node-closed li.last{
 	background-image:url(../Images/last.gif);
 	background-repeat:no-repeat;
 	margin:0px;
+	padding-bottom:3px;
+	margin-left:2px;
 	/*border:1px solid #f00;*/
 	/*padding-left:15px;*/
 }
@@ -52,10 +59,18 @@ ul.tree-parent-node-open li a.option, ul.tree-parent-node-closed li a.option{
 	/*margin-left:15px;*/
 }
 
+ul.tree-parent-node-open li a.option i, ul.tree-parent-node-closed li a.option i{
+	color:#777;
+	text-decoration:none;
+	font-size:1.4em;
+	width:16px;
+	height:16px;
+}
+
 ul.tree-parent-node-open li a.option:hover, ul.tree-parent-node-closed li a.option:hover{
 	color:#333;
 	text-decoration:none;
-	font-size:11px;
+	/* font-size:11px; */
 	/*display:block;*/
 	/*margin-left:15px;*/
 }
@@ -68,11 +83,16 @@ ul.tree-parent-node-open li a.selected-option, ul.tree-parent-node-closed li a.s
 	/*margin-left:15px;*/
 }
 
+ul.tree-parent-node-open li a.selected-option i, ul.tree-parent-node-closed li a.selected-option i{
+	color:#777;
+	font-size:1.4em;
+}
+
 ul.tree-parent-node-open li a.selected-option:hover, ul.tree-parent-node-closed li a.selected-option:hover{
 	color:#f60;
 	text-decoration:none;
-	font-size:11px;
-	/*display:block;*/
+	/*font-size:11px;
+	display:block;*/
 	/*margin-left:15px;*/
 }
 

@@ -17,8 +17,11 @@ class Sets extends SmartestSystemApplication{
 		
 		$du = new SmartestDataUtility;
 		$sets = $du->getDataSets(false, $this->getSite()->getId());
-		$this->setTitle("Data Sets");
+		$this->setTitle("Item sets");
 		$this->send($sets, 'sets');
+        
+		$recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId());
+        $this->send($recent, 'recent_items');
 		
 	}
 	
@@ -149,6 +152,7 @@ class Sets extends SmartestSystemApplication{
 	            $models = $du->getModels();
     		    $this->send($models, 'models');
     		    $this->send(true, 'allow_choose_model');
+    		    $this->addUserMessage("The model ID has not been recognized. Please choose a model from the dropdown list below.", SmartestUserMessage::WARNING, true);
 	        }
 	        
 		}else{

@@ -107,6 +107,8 @@ function toggleParamsHolder(){
       
 {if !empty($params)}
 
+<div class="v-spacer"></div>
+
 <div class="special-box">
     
     <div class="heading">Instance parameters (<a id="params-holder-toggle-link" href="javascript:toggleParamsHolder()">show</a>)</div>

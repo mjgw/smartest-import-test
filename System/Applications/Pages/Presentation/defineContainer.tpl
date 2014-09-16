@@ -16,7 +16,7 @@
   
     <div class="edit-form-row">
       <div class="form-section-label">Container:</div>
-      {$container.name}
+      <code>{$container.name}</code>
     </div>
   
   {if $show_item_options}
@@ -49,9 +49,21 @@
   
   </form>
   
-  <div id="options-view-chooser">
-  <a href="#" onclick="return templates.setView('list', 'define_container_list_view')">List</a> /
-  <a href="#" onclick="return templates.setView('grid', 'define_container_list_view')">Icons</a>
+  {if $num_templates > 0}
+  
+  <div id="options-view-header">
+
+    <div id="options-view-info">
+      Found {$count} container template{if $count != 1}s{/if}.
+    </div>
+
+    <div id="options-view-chooser">
+      <a href="#list-view" onclick="return templates.setView('list', 'define_container_list_view')" id="options-view-list-button" class="{if $list_view == "list"}on{else}off{/if}"></a>
+      <a href="#grid-view" onclick="return templates.setView('grid', 'define_container_list_view')" id="options-view-grid-button" class="{if $list_view == "grid"}on{else}off{/if}"></a>
+    </div>
+
+    <div class="breaker"></div>
+
   </div>
 
   <ul class="options-{$list_view}" style="margin-top:0px" id="options_grid">
@@ -62,6 +74,15 @@
   </li>
   {/foreach}
   </ul>
+  
+  {else}
+  
+  <div class="v-spacer"></div>
+  <div class="warning">
+    There are no container templates in the system yet that can be used on this site. <a href="{$domain}templates/importNewTemplateForContainerDefinition?container_id={$container.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}">Click here</a> if you have uploaded one but have not imported it into Smartest yet.
+  </div>
+  
+  {/if}
   
 </div>
 

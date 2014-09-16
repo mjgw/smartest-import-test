@@ -308,6 +308,7 @@ class SmartestModel extends SmartestBaseModel{
 	        return $this->getLongIdFormatIsCustom();
 	        
 	        case "properties":
+	        case "_properties":
 	        return new SmartestArray($this->getProperties());
 	        
 	        case 'default_sort_property':

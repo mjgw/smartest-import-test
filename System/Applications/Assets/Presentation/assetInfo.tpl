@@ -190,7 +190,7 @@
   
   <div class="special-box">
     <div class="special-box-key">File groups:</div>
-    {if count($groups)}{foreach from=$groups item="group"}<a href="{$domain}{$section}/browseAssetGroup?group_id={$group.id}">{$group.label}</a> (<a href="{$domain}{$section}/transferSingleAsset?asset_id={$asset.id}&amp;group_id={$group.id}&amp;transferAction=remove">remove</a>), {/foreach}{else}<em style="color:#666">None</em>{/if}
+    {if count($groups)}{foreach from=$groups item="group"}<a href="{$domain}{$section}/browseAssetGroup?group_id={$group.id}">{$group.label}</a> <a href="{$domain}{$section}/transferSingleAsset?asset_id={$asset.id}&amp;group_id={$group.id}&amp;transferAction=remove" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em>{/if}
 {if count($possible_groups)}
       <div>
         <form action="{$domain}{$section}/transferSingleAsset" method="post">

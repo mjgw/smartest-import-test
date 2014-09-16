@@ -2,7 +2,7 @@
   
   {load_interface file="edit_set_tabs.tpl"}
   
-  <h3><a href="{$domain}smartest/models">Items</a> &gt; {if $model.id}<a href="{$domain}datamanager/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; <a href="{$domain}sets/getItemClassSets?class_id={$model.id}">Sets</a>{else}<a href="{$domain}smartest/sets">Sets</a>{/if} &gt; <a href="{$domain}sets/editSet?set_id={$set.id}">{$set.label}</a> &gt; Set Order</h3>
+  <h3>Edit set order: <span class="light">{$set.label}</span></h3>
   
   {if count($items)}
   

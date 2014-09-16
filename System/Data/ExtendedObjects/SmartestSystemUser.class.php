@@ -596,7 +596,7 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
 	    
 	}
 	
-	public function getRecentlyEditedItems($site_id, $class_id=''){
+	public function getRecentlyEditedItems($site_id, $class_id='', $limit=5){
 	    
 	    $q = new SmartestManyToManyQuery('SM_MTMLOOKUP_RECENTLY_EDITED_ITEMS');
 	    
@@ -612,7 +612,7 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
         
         $q->addSortField('ManyToManyLookups.mtmlookup_id');
         $q->setSortDirection('DESC');
-        $q->setLimit(5);
+        $q->setLimit($limit);
         
         $items = $q->retrieve();
         

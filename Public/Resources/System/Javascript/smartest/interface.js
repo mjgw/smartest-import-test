@@ -430,17 +430,36 @@ Smartest.UI.OptionSet = Class.create({
     
     setView: function(view, preferenceName){
         
-        // alert(view);
-        
         if(view == 'grid'){
             $(this.listId).removeClassName('options-list');
             $(this.listId).addClassName('options-grid');
+            
+            if($('options-view-list-button')){
+                $('options-view-list-button').removeClassName('on');
+                $('options-view-list-button').addClassName('off');
+            }
+            
+            if($('options-view-grid-button')){
+                $('options-view-grid-button').removeClassName('off');
+                $('options-view-grid-button').addClassName('on');
+            }
+            
         }else if(view == 'list'){
+            
             $(this.listId).removeClassName('options-grid');
             $(this.listId).addClassName('options-list');
+            
+            if($('options-view-list-button')){
+                $('options-view-list-button').removeClassName('off');
+                $('options-view-list-button').addClassName('on');
+            }
+            
+            if($('options-view-grid-button')){
+                $('options-view-grid-button').removeClassName('on');
+                $('options-view-grid-button').addClassName('off');
+            }
+            
         }
-        
-        // alert($(this.listId).classNames())
         
         if(preferenceName && PREFS){
             PREFS.setApplicationPreference(preferenceName, view);

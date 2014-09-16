@@ -18,11 +18,16 @@
   <input type="hidden" name="user_id" id="item_id_input" value="" />
 </form>
 
-<ul class="options-list" id="options_list">
+<ul class="options-grid" id="options_list">
 {foreach from=$users key=key item=user}
   <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/editUser?user_id={$user.id}'">
     <a href="#" class="option" id="item_{$user.id}" onclick="setSelectedItem('{$user.id}'); return false;" >
-      <img border="0" src="{$domain}Resources/Icons/user{if $active_tab == 'ordinary'}_red{/if}.png">
+      {if $user.profile_pic.id > 1}
+      <div class="user-avatar-holder" style="background-image:url({$user.profile_pic.image.75x75.web_path})"></div>
+      {else}
+      {getsystemcolor assign="usercolor"}
+      <div class="user-avatar-holder" style="background-color:#{$usercolor.hex};color:{if $usercolor.text_white}#fff{else}#000{/if}">{$user.profile_initials}</div>
+      {/if}
   {$user.fullname}</a></li>
 {/foreach}
 </ul>

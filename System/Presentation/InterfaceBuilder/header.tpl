@@ -1,16 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+        
+<html>
   <head>
-  
     <title>Smartest{if $_interface_title} | {$_interface_title}{/if}</title>
     
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" href="{$domain}Resources/System/Images/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="{$domain}Resources/System/Images/favicon.ico" type="image/x-icon">
     
+		<!--Load icons as fonts-->
+		{if $is_msie}
+		<link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Icons/flaticons-eot.css" />
+		<link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Icons/font-awesome-eot.css" />
+		{else}
+		<link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Icons/flaticons.css" />
+		<link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Icons/font-awesome.css" />
+		{/if}
+		
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_style.css" />
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_layout.css" />
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_admin_menu.css" />
@@ -22,9 +28,8 @@
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_tabs.css" />
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_buttons.css" />
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_modals.css" />
-    
-    
-    <script type="text/javascript" language="javascript">
+		
+		<script type="text/javascript" language="javascript">
 
        var sm_domain = '{$domain}';
        var sm_section = '{$section}';
@@ -46,6 +51,7 @@
     <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/smartest/treeview.js"></script>
     <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/smartest/help.js"></script>
     <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/smartest/prefs.js"></script>
+    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/vsclabs/vsc-scrollwatcher.js"></script>
     
     <script type="text/javascript">
       {literal}
@@ -53,6 +59,12 @@
       var PREFS = new Smartest.PreferencesBridge();
       var MODALS = new Smartest.AjaxModalViewer();
       Smartest.createNew = function(){MODALS.load('desktop/createDialog', 'Create something new');}
+      
+      document.observe('scrolled:vertically', function(evt){
+        if(evt.memo.currentScrollTop > 50){
+          
+        }
+      });
       
       {/literal}
     </script>
@@ -62,26 +74,8 @@
     </style>
 		
   </head>
+  
   <body>
-    
-    <div id="top-strip" style="background-image:url({$domain}Resources/System/Images/admin_top_bar_bg.gif)">
-      <img src="{$domain}Resources/System/Images/admin_top_bar_logo.gif" alt="Smartest" border="0" />
-    </div>
-    
-    <div id="user-info">
-      {if $show_left_nav_options}{$_l10n_global_strings.top_bar.signed_in_before_site_name} {if $_user_allow_site_edit}<a href="{$domain}smartest/settings">{$_site.internal_label|summary:"20"}</a>{else}<strong>{$_site.internal_label|summary:"20"}</strong>{/if}{else}{$_l10n_global_strings.top_bar.signed_in_without_site_name}{/if} {$_l10n_global_strings.top_bar.signed_in_after_site_name} <strong>{$_user.firstname} {$_user.lastname}</strong>&nbsp;&nbsp;{if $show_left_nav_options || $show_create_button}<a href="#create" id="sm-button-create" title="Create something new" class="sm-top-bar-button">&nbsp;</a>{/if}<a href="{$domain}smartest/profile" id="sm-button-profile" title="Edit your user account" class="sm-top-bar-button">&nbsp;</a>{if $show_left_nav_options && ($_user.num_allowed_sites > 1 || $_user_allow_site_create)}<a href="{$domain}smartest/close" id="sm-button-close" title="Close this site" class="sm-top-bar-button">&nbsp;</a>{/if}<a href="{$domain}smartest/logout" id="sm-button-exit" title="Sign out" class="sm-top-bar-button">&nbsp;</a>&nbsp;&nbsp;
-    </div>
-    
-    {if $show_left_nav_options || $show_create_button}
-    <script type="text/javascript">
-    {literal}
-    $('sm-button-create').observe('click', function(e){
-        Smartest.createNew();
-        e.stop();
-    });
-    {/literal}
-    </script>
-    {/if}
     
     <div id="help" style="display:none" class="modal-outer">
       <div id="help-viewer" class="modal">

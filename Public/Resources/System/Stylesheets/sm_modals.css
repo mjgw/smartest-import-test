@@ -14,7 +14,7 @@
     width:550px;
     height:350px;
     background-color:#fff;
-    border:3px solid #ccc;
+    /* border:3px solid #ccc; */
     position:relative;
     
     margin-left:auto;
@@ -74,6 +74,11 @@
     overflow:hidden;
 }
 
+.modal-updater h1{
+    font-family:"source-sans";
+    color:#666;
+}
+
 .modal-scrollbar-track {  
     position:absolute;  
     top:40px;  
@@ -99,7 +104,7 @@
 
 .modal-title-bar{
     position:absolute;
-    top:10px;
+    top:4px;
     left:0px;
     width:562px;
     color:#999;
@@ -107,11 +112,12 @@
 }
 
 .modal-title-bar h2{
-    font-weight:normal;
+    font-weight:bold;
     text-align:left;
     color:#666;
-    font-size:16px;
+    font-size:1.5em;
     padding-left:10px;
+    font-family:"source-sans";
 }
 
 a.modal-closer{
@@ -120,15 +126,16 @@ a.modal-closer{
     height:23px;
     background-image:url(../Images/close_button_out.png);
     display:inline-block;
+    margin-top:6px;
 }
 
 a.modal-closer:hover{
     background-image:url(../Images/close_button_over.png);
 }
 
-a.sm-help-link.button{
+/* a.sm-help-link{
     margin-top:1px;
-    color:#fff;
+    color:#fff!important;
     background-color:#999;
     display:inline-block;
     padding:2px 5px 2px 5px;
@@ -137,10 +144,10 @@ a.sm-help-link.button{
     font-size:12px;
 }
 
-a.sm-help-link.button:hover{
-    background-color:#f90;
+a.sm-help-link:hover{
+    background-color:#F4842A!important;
     text-decoration:none;
-}
+} */
 
 div#modal-work-area{
     font-size:12px;
@@ -171,8 +178,29 @@ div#modal-work-area div.buttons-bar{
 }
 
 ul.modal-basic-list{
-    list-style-type:disc;
-    list-style-image:url('../Images/generic_bullet.gif');
-    padding:5px 10px 5px 30px;
+    list-style-type:none;
+    /* list-style-image:url('../Images/generic_bullet.gif'); */
+    padding:5px 10px 5px 5px;
     margin:5px 5px 5px 0;
+}
+
+/*** Retina display stuff ***/
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx) {
+    
+    a.modal-closer{
+        background-image:url(../Images/close_button_out_2x.png);
+        background-size:23px 23px;
+    }
+
+    a.modal-closer:hover{
+        background-image:url(../Images/close_button_over_2x.png);
+    }
+    
 }

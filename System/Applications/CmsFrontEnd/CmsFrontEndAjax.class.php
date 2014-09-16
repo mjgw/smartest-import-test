@@ -179,5 +179,27 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
         }
         
     }
+    
+    public function searchResults(){
+        
+	    if($this->lookupSiteDomain()){
+	        
+	        define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
+		    define('SM_CMS_PAGE_SITE_UNIQUE_ID', $this->_site->getUniqueId());
+            
+            // search pages and all items
+            $search_page_id = $this->_site->getSearchPageId();
+	        
+            /* $p = new SmartestSearchPage;
+            
+            if($p->find($search_page_id)){
+                $p->setSearchQuery($this->getRequestParameter('q'));
+                $this->_page = $p;
+                $this->renderPage();
+            } */
+            
+        }
+        
+    }
 
 }

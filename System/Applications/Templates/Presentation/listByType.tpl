@@ -20,17 +20,26 @@
   <input type="hidden" name="template" id="item_id_input"  value="" />
 </form>
 
-<div id="options-view-chooser">
-Found {$count} {$type.label|lower}{if $count != 1}s{/if}. View as:
-<a href="#" onclick="return templates.setView('list', 'list_by_type_view')">List</a> /
-<a href="#" onclick="return templates.setView('grid', 'list_by_type_view')">Icons</a>
+<div id="options-view-header">
+
+  <div id="options-view-info">
+    Found {$count} {$type.label|lower}{if $count != 1}s{/if}.
+  </div>
+  
+  <div id="options-view-chooser">
+    <a href="#list-view" onclick="return templates.setView('list', 'list_by_type_view')" id="options-view-list-button" class="{if $list_style == "list"}on{else}off{/if}"></a>
+    <a href="#grid-view" onclick="return templates.setView('grid', 'list_by_type_view')" id="options-view-grid-button" class="{if $list_style == "grid"}on{else}off{/if}"></a>
+  </div>
+  
+  <div class="breaker"></div>
+  
 </div>
 
 <ul class="options-{$list_style}" style="margin-top:0px" id="options_grid">
 {foreach from=$templates item="template"}
 <li>
   <a href="#" class="option" id="{if $template.status == 'imported'}imported-template{else}unimported-template{/if}_{if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}" onclick="return templates.setSelectedItem('{if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}', '{if $template.status == 'imported'}imported-template{else}unimported-template{/if}');" ondblclick="window.location='{$domain}{$section}/editTemplate?asset_type={$template.type}&amp;template={if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}'">
-    <img border="0" src="{$domain}Resources/Icons/{if $template.status == 'imported'}blank{else}mystery{/if}_page.png" /><span class="label">{$template.url}</span></a>
+    <i class="fa fa-file-code-o list"></i><img border="0" src="{$domain}Resources/Icons/{if $template.status == 'imported'}blank{else}mystery{/if}_page.png" class="grid" /><span class="label">{$template.url}</span></a>
 </li>
 {/foreach}
 </ul>

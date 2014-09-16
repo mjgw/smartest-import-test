@@ -1,30 +1,10 @@
 type:
 # Text & static markup
   
-  SM_ASSETTYPE_TEXTILE_TEXT:
-    id: SM_ASSETTYPE_TEXTILE_TEXT
-    category: user_text
-    label: Easy Text
-    description: Formatted text using Textile.
-    class: SmartestTextAsset
-    editable: true
-    convert_to_smarty: true
-    parsable: true
-    icon: style.png
-    input_options:
-      - SM_ASSETINPUTTYPE_DIRECT_INPUT
-    input_panel: add.plain_text.tpl
-    render:
-      template: System/Presentation/WebPageBuilder/display.plain_text.tpl
-    storage:
-      type: database
-    suffix:
-      - {mime: text/plain, _content: txt}
-
   SM_ASSETTYPE_RICH_TEXT:
     id: SM_ASSETTYPE_RICH_TEXT
     category: user_text
-    label: HTML Text
+    label: Rich text
     description: "Text with rich formatting, using HTML."
     class: SmartestTextAsset
     source_editable: true
@@ -43,11 +23,31 @@ type:
     suffix:
       - {mime: text/html, _content: html}
       - {mime: text/html, _content: htm}
+      
+  SM_ASSETTYPE_TEXTILE_TEXT:
+    id: SM_ASSETTYPE_TEXTILE_TEXT
+    category: user_text
+    label: Textile markup
+    description: Formatted text using Textile.
+    class: SmartestTextAsset
+    editable: true
+    convert_to_smarty: true
+    parsable: true
+    icon: style.png
+    input_options:
+      - SM_ASSETINPUTTYPE_DIRECT_INPUT
+    input_panel: add.plain_text.tpl
+    render:
+      template: System/Presentation/WebPageBuilder/display.plain_text.tpl
+    storage:
+      type: database
+    suffix:
+      - {mime: text/plain, _content: txt}
   
   SM_ASSETTYPE_PLAIN_TEXT:
     id: SM_ASSETTYPE_PLAIN_TEXT
     category: user_text
-    label: Plain Text
+    label: Plain text
     description: "Plain, static unformatted text."
     class: SmartestTextAsset
     source_editable: false
@@ -70,7 +70,7 @@ type:
   SM_ASSETTYPE_HTML_FRAGMENT:
     id: SM_ASSETTYPE_HTML_FRAGMENT
     category: user_text
-    label: Embed code
+    label: HTML Embed code
     description: "A piece of HTML usually provided by another site or service."
     class: SmartestAsset
     source_editable: false
@@ -206,6 +206,7 @@ type:
       - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 500}
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 598}
 
+
   SM_ASSETTYPE_SVG_IMAGE:
     id: SM_ASSETTYPE_SVG_IMAGE
     category: image
@@ -278,8 +279,8 @@ type:
       location: Public/Resources/Stylesheets/
       system_location: Public/Resources/System/Stylesheets/
     param:
-      - {name: use_style_tag, label: "Use &lt;style&gt; tag and @import", type: SM_DATATYPE_BOOLEAN, required: false}
-      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false}
+      - {name: use_style_tag, label: "Use &lt;style&gt; tag and @import", type: SM_DATATYPE_BOOLEAN, required: false, default: false}
+      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false, default: screen}
     render:
       template: System/Presentation/WebPageBuilder/display.stylesheet.tpl
       preview_template: System/Presentation/WebPageBuilder/preview.stylesheet.tpl
@@ -746,22 +747,22 @@ type:
     suffix:
       - {mime: application/octet-stream, _content: tpl}
   
-  SM_ASSETTYPE_ART_LIST_TEMPLATE:
-    id: SM_ASSETTYPE_ART_LIST_TEMPLATE
-    template_type: SM_LIST_ITEM_TEMPLATE
-    category: templates
-    label: Articulated list template
-    description: "Template used to define the header, footer, or repeating parts of articulated lists"
-    editable: true
-    model_specific: always
-    deprecated: true
-    icon: layout.png
-    class: SmartestTemplateAsset
-    storage: 
-      type: file
-      location: Presentation/ListItems/
-    suffix:
-      - {mime: application/octet-stream, _content: tpl}
+#  SM_ASSETTYPE_ART_LIST_TEMPLATE:
+#    id: SM_ASSETTYPE_ART_LIST_TEMPLATE
+#    template_type: SM_LIST_ITEM_TEMPLATE
+#    category: templates
+#    label: Articulated list template
+#    description: "Template used to define the header, footer, or repeating parts of articulated lists"
+#    editable: true
+#    model_specific: always
+#    deprecated: true
+#    icon: layout.png
+#    class: SmartestTemplateAsset
+#    storage: 
+#      type: file
+#      location: Presentation/ListItems/
+#    suffix:
+#      - {mime: application/octet-stream, _content: tpl}
   
   SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE:
     id: SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE

@@ -18,7 +18,7 @@
   <div class="instruction">{$_l10n_action_strings.you_are_editing.before_file} {$asset.type_info.label}: <code>{$asset.type_info.storage.location}</code><strong><code>{$asset.url}</code></strong> {$_l10n_action_strings.you_are_editing.after_file} </div>
   
   <div id="groups" class="special-box">
-    {$_l10n_strings.file_groups_box.label} {if count($groups)}{foreach from=$groups item="group"}<a href="{$domain}{$section}/browseAssetGroup?group_id={$group.id}">{$group.label}</a> (<a href="{$domain}{$section}/transferSingleAsset?asset_id={$asset.id}&amp;group_id={$group.id}&amp;transferAction=remove&amp;from=edit">{$_l10n_strings.file_groups_box.remove}</a>), {/foreach}{else}<em style="color:#666">{$_l10n_strings.file_groups_box.none}</em>{/if}
+    {$_l10n_strings.file_groups_box.label} {if count($groups)}{foreach from=$groups item="group"}<a href="{$domain}{$section}/browseAssetGroup?group_id={$group.id}">{$group.label}</a> <a href="{$domain}{$section}/transferSingleAsset?asset_id={$asset.id}&amp;group_id={$group.id}&amp;transferAction=remove&amp;from=edit" class="button">{$_l10n_strings.file_groups_box.remove}</a> {/foreach}{else}<em style="color:#666">{$_l10n_strings.file_groups_box.none}</em>{/if}
 {if count($possible_groups)}
         <div>
           <form action="{$domain}{$section}/transferSingleAsset" method="post">

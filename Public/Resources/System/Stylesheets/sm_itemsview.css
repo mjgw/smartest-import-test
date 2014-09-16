@@ -1,18 +1,63 @@
-div#options-view-chooser{
+#options-view-header{
 	padding:4px;
 	border-bottom:1px solid #ccc;
+	margin-bottom:10px;
+}
+
+#options-view-chooser{
+    float:right;
+    display:inline-block;
+}
+
+#options-view-info{
+    display:inline-block;
+}
+
+#options-view-header #options-view-chooser a{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    padding:2px;
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#options-view-list-button.on{
+    background-image:url(../Images/list-view-on.png);
+		background-size: 85%;
+		-webkit-background-size: 18px 18px;
+}
+
+#options-view-list-button.off{
+    background-image:url(../Images/list-view-off.png);
+		background-size: 85%;
+		-webkit-background-size: 18px 18px;
+}
+
+#options-view-grid-button.on{
+    background-image:url(../Images/grid-view-on.png);
+		background-size: 75%;
+		-webkit-background-size: 16px 16px;
+}
+
+#options-view-grid-button.off{
+    background-image:url(../Images/grid-view-off.png);
+		background-size: 75%;
+		-webkit-background-size: 16px 16px;
 }
 
 /* Grid View*/
 
 ul.options-grid{
 	padding:0px;
-	border:0px;
+	/* border:1px solid #eee; */
 	list-style-type:none;
 	height:400px;
 	text-align:left;
 	margin:0px;
 	overflow: scroll;
+	/* border-radius:6px;
+    -moz-border-radius:6px; */
 }
 
 ul.options-grid li{
@@ -88,7 +133,7 @@ ul.options-grid li a img{
 	height:73px;
 }
 
-ul.options-grid li a img.list, ul.options-grid li a.selected-option img.list{
+ul.options-grid li a img.list, ul.options-grid li a.selected-option img.list, ul.options-grid li a i.fa.list{
 	display:none;
 }
 
@@ -107,6 +152,22 @@ ul.options-grid li a.normal{
 	background-image:none;
 }
 
+ul.options-grid li a div.user-avatar-holder{
+    width:72px;
+    height:62px;
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:10px;
+    margin-bottom:5px;
+    border-radius:36px;
+    text-transform:uppercase;
+    font-size:3.8em;
+    font-family:"source-sans";
+    text-align:center;
+    padding-top:10px;
+}
+
 /** New options grid for Images **/
 
 ul.options-grid.images{
@@ -121,14 +182,21 @@ ul.options-grid.images{
 ul.options-grid.images li{
   background-color:transparent;
   margin:10px 0 0 10px;
-  width:112px ! important;
-	height:112px! important;
+  width:112px!important;
+	height:112px!important;
 }
 
 ul.options-grid.images li a{
   -moz-box-shadow:    3px 3px 6px 0px rgba(0,0,0,0.4);
   -webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.4);
   box-shadow:         3px 3px 6px 0px rgba(0,0,0,0.4);
+}
+
+ul.options-grid.images li a i.fa, ul.options-grid.images li a i.flaticon{
+	/* font-size:1.2em;
+	display:inline-block;
+	width:16px;
+	height:16px; */
 }
 
 ul.options-grid.reorderable li a, ul.options-list.reorderable li a{
@@ -172,6 +240,7 @@ ul.options-grid.images li a.selected-option img{
 
 ul.options-grid-no-scroll{
 	padding:0px;
+	padding-bottom:25px;
 	border:0px;
 	list-style-type:none;
 	text-align:left;
@@ -189,6 +258,11 @@ ul.options-grid-no-scroll li{
 	border:0px solid #fff;
 	padding:0px;
 	font-size:0.9em;
+}
+
+ul.options-grid-no-scroll li.breaker{
+    clear:both!important;
+    height:20px;
 }
 
 ul.options-grid-no-scroll li a.option{
@@ -291,6 +365,16 @@ ul.options-list li a.option{
 	color:#333;
 }
 
+ul.options-list li a i.fa, ul.options-list li a i.flaticon{
+	font-size:1.6em;
+	display:inline-block;
+	width:20px;
+	height:20px;
+	padding:5px;
+	text-align:center;
+	color:#666;
+}
+
 ul.options-list li a.option:hover{
 	background-color:#ddd;
 	background-repeat:no-repeat;
@@ -306,8 +390,9 @@ ul.options-list li a.selected-option{
 	height:30px;
 	text-align:left;
 	text-decoration:none;
-/*	background-color:#FFEBCB; */
-    background-color:#69f;
+/*	background-color:#FFEBCB; 
+    background-color:#69f;*/ 
+    background-color:#68849E;
 	border:0px;
 	padding:0px;
 	font-weight:bold;
@@ -319,7 +404,7 @@ ul.options-list li a.selected-option{
 }
 
 ul.options-list li a.selected-option:hover{
-	background-color:#69f;
+	/* background-color:#69f; */
 	border:0px;
 	padding:0px;
 	text-decoration:none;
@@ -327,6 +412,10 @@ ul.options-list li a.selected-option:hover{
     /*	color:#F4842A;  */
     /*  color:#3f85dc; */
     color:#fff;
+}
+
+ul.options-list li a.selected-option i.fa, ul.options-list li a.selected-option i.flaticon{
+	color:#222;
 }
 
 ul.options-list li a img{

@@ -29,7 +29,7 @@ class SmartestSiteCreationHelper{
 	    }else if($p->getParameter('site_master_template') == '_BLANK'){
 	        
 	        $master_template_name = SmartestFileSystemHelper::getFileName(SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Masters/'.SmartestStringHelper::toVarName($site->getName()).'.tpl'));
-	        $master_template_contents = str_replace('default.tpl', $master_template_name, file_get_contents(SM_ROOT_DIR.'System/Install/Samples/default.tpl'));
+	        $master_template_contents = str_replace('%DEFAULTTEMPLATENAME%.tpl', $master_template_name, file_get_contents(SM_ROOT_DIR.'System/Install/Samples/default.tpl'));
 	        
 	        if(file_put_contents(SM_ROOT_DIR.'Presentation/Masters/'.$master_template_name, $master_template_contents)){
 	            

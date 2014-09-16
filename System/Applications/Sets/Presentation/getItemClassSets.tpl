@@ -2,7 +2,7 @@
 
 {load_interface file="model_list_tabs.tpl"}
 
-<h3><a href="{$domain}smartest/models">Items</a> &gt; <a href="{$domain}datamanager/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; Sets</h3>
+<h3>Sets of {$model.plural_name|lower}</h3>
 
 <div class="instruction">Use Data Sets to organize your data into smaller groups. {help id="datamanager:sets"}What are sets?{/help}</div>
 

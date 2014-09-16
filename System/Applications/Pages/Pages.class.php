@@ -1086,7 +1086,7 @@ class Pages extends SmartestSystemApplication{
             SmartestCache::clear('site_pages_tree_'.$site_id, true);
         }
         
-        $this->setTitle($this->getSite()->getName()." | Site Tree");
+        $this->setTitle($this->getSite()->getInternalLabel()." | Site Tree");
         
         $this->send($pagesTree, "tree");
         $this->send($site_id, "site_id");
@@ -1105,7 +1105,15 @@ class Pages extends SmartestSystemApplication{
 	    
 	    $num_held_pages = $this->getUser()->getNumHeldPages($this->getSite()->getId());
 	    $this->getUser()->releasePages($this->getSite()->getId());
-	    $this->addUserMessageToNextRequest($num_held_pages." pages were released.", SmartestUserMessage::SUCCESS);
+	    
+	    if($num_held_pages == 0){
+	        $this->addUserMessageToNextRequest("No pages were released, as none were held.", SmartestUserMessage::INFO);
+	    }else if($num_held_pages == 1){
+	        $this->addUserMessageToNextRequest("One page was released.", SmartestUserMessage::SUCCESS);
+        }else{
+            $this->addUserMessageToNextRequest($num_held_pages." pages were released.", SmartestUserMessage::SUCCESS);
+        }
+        
 	    $this->redirect('/smartest/pages');
 	    
 	}
@@ -2359,6 +2367,7 @@ class Pages extends SmartestSystemApplication{
 	            $assets = $container->getPossibleAssets($this->getSite()->getId());
 	            
 	            $this->send($assets, 'templates');
+	            $this->send(count($assets), 'num_templates');
 	            $this->send($page, 'page');
 	            $this->send($container, 'container');
 	            
@@ -2635,9 +2644,14 @@ class Pages extends SmartestSystemApplication{
     	                        $item_uses_default = true;
     	                    }
     	                }
-	                
+    	                
+    	                // var_dump($page_definition->getDraftRenderData());
+    	                
+    	                $params = array();
+    	                
     	                if($existing_render_data = unserialize($page_definition->getDraftRenderData())){
-    	                    if(is_array($existing_render_data) && is_array($params)){
+    	                    
+    	                    if(is_array($existing_render_data)){
 	                        
     	                        foreach($params as $key => $value){
     	                            if(isset($existing_render_data[$key])){
@@ -2665,22 +2679,23 @@ class Pages extends SmartestSystemApplication{
                     if($this->getRequestParameter('chosen_asset_id')){
                     
                         $chosen_asset_id = (int) $this->getRequestParameter('chosen_asset_id');
-                        $chosen_asset_exists = $asset->hydrate($chosen_asset_id);
+                        $chosen_asset_exists = $asset->find($chosen_asset_id);
                     
             	    }else{
         	        
             	        if($is_defined){
         	            
-            	            // if asset is chosen
+            	            // if file is chosen
             	            if($type_index[$page_webid] == 'ITEMCLASS' && $item_definition->load($placeholder_name, $page, true, $item_id)){
             	                $chosen_asset_id = $item_definition->getDraftAssetId();
             	            }else{
             	                $chosen_asset_id = $page_definition->getDraftAssetId();
         	                }
     	                
-            	            $chosen_asset_exists = $asset->hydrate($chosen_asset_id);
+            	            $chosen_asset_exists = $asset->find($chosen_asset_id);
+            	            
             	        }else{
-            	            // No asset choasen. don't show params or 'continue' button
+            	            // No file chosen. don't show params or 'continue' button
             	            $chosen_asset_id = 0;
             	            $chosen_asset_exists = false;
             	        }
@@ -2698,6 +2713,7 @@ class Pages extends SmartestSystemApplication{
 
                 	        $raw_xml_params = $type['param'];
                             $params = array();
+                            
                 	        foreach($raw_xml_params as $rxp){
             	            
                 	            if(isset($rxp['default'])){
@@ -2719,7 +2735,9 @@ class Pages extends SmartestSystemApplication{
                 	    }
             	    
                 	    $asset_params = $asset->getDefaultParameterValues();
-            	    
+            	        
+            	        print_r($asset_params);
+            	        
                 	    $this->send($asset_params, 'asset_params');
             	    
                 	    foreach($params as $key=>$p){

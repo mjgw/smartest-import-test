@@ -2,7 +2,7 @@
   
   {load_interface file="edit_tabs.tpl"}
   
-  <h3>Related Content</h3>
+  <h3>Related to this {$model.name|lower}</h3>
   
   <h4>Other {$model.plural_name}</h4>
   
@@ -18,7 +18,7 @@
   {/if}
   </div>
   
-  <a href="{$domain}{$section}/editRelatedContent?item_id={$item.id}&amp;model_id={$model.id}" class="arrow-right" id="edit-related-same-model-link">Edit...</a><br /><br />
+  <a href="{$domain}{$section}/editRelatedContent?item_id={$item.id}&amp;model_id={$model.id}" class="button" id="edit-related-same-model-link">Edit</a><br /><br />
   
   <script type="text/javascript">
 
@@ -43,7 +43,7 @@
   {/if}
   </div>
 
-  <a href="{$domain}{$section}/editRelatedContent?item_id={$item.id}" class="arrow-right" id="edit-related-pages-link">Edit...</a><br /><br />
+  <a href="{$domain}{$section}/editRelatedContent?item_id={$item.id}" class="button" id="edit-related-pages-link">Edit</a><br /><br />
   
   <script type="text/javascript">
 
@@ -70,7 +70,7 @@
   {/if}
   </div>
   
-  <a href="{$domain}{$section}/editRelatedContent?item_id={$item.id}&amp;model_id={$related_model.id}" class="arrow-right" id="edit-related-model-{$related_model.id}-link">Edit...</a><br /><br />
+  <a href="{$domain}{$section}/editRelatedContent?item_id={$item.id}&amp;model_id={$related_model.id}" class="button" id="edit-related-model-{$related_model.id}-link">Edit</a><br /><br />
   
   <script type="text/javascript">
 

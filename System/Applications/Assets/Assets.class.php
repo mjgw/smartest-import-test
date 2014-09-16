@@ -775,7 +775,7 @@ class Assets extends SmartestSystemApplication{
 		        
 		        }catch(SmartestAssetCreationException $e){
 	                // deal with any issues here
-	                $this->addUserMessage($e->getMessage(), SmartestUserMessage::ERROR);
+	                $this->addUserMessage($e->getMessage(), SmartestUserMessage::ERROR, true);
     		        $this->setRequestParameter('asset_type', $this->getRequestParameter('asset_type'));
     		        SmartestLog::getInstance('site')->log($e->getMessage(), SmartestLog::ERROR);
     		        $this->forward('assets', 'addAsset');
@@ -805,18 +805,21 @@ class Assets extends SmartestSystemApplication{
 		                $asset->addToGroupById($this->getRequestParameter('initial_group_id'), true);
 		                $message = sprintf("The file was successfully saved as '%s' and added to group '%s'.", $asset->getUrl(), $group->getLabel());
 		                $status = SmartestUserMessage::SUCCESS;
+		                $sticky = false;
 		            }else{
 		                $message = sprintf("The file was successfully saved as '%s', but the selected group ID was not recognized.", $asset->getUrl());
 		                $status = SmartestUserMessage::INFO;
+		                $sticky = true;
 		            }
 		            
 		        }else{
 		            $message = sprintf("The file was successfully saved as '%s'", $asset->getUrl());
 		            $status = SmartestUserMessage::SUCCESS;
+		            $sticky = false;
 		        }
 		        
 		        $this->getUser()->addRecentlyEditedAssetById($asset->getId(), $this->getSite()->getId());
-		        $this->addUserMessageToNextRequest($message, $status);
+		        $this->addUserMessageToNextRequest($message, $status, $sticky);
 		        SmartestLog::getInstance('site')->log($this->getUser().' created file: '.$asset->getUrl(), SmartestLog::USER_ACTION);
 		        
 		        // If the file was being added for a particular usage
@@ -876,7 +879,7 @@ class Assets extends SmartestSystemApplication{
                 	                    }
                                     
                                     }else{
-                                        $this->addUserMessageToNextRequest("The new file was not the right type to use with this placeholder.", SmartestUserMessage::ERROR);   
+                                        $this->addUserMessageToNextRequest("The new file was not the right type to use with this placeholder.", SmartestUserMessage::ERROR, true);   
                                     }
                                     // forward back to placeholder def screen
                                     
@@ -947,7 +950,7 @@ class Assets extends SmartestSystemApplication{
                                     $this->redirect('/datamanager/openItem?item_id='.$item->getId());
                                     
                                 }else{
-                                    $this->addUserMessageToNextRequest("The property does not store assets.", SmartestUserMessage::ERROR);
+                                    $this->addUserMessageToNextRequest("The selected property does not store assets.", SmartestUserMessage::ERROR);
                                 }
                                 
                             }else{
@@ -977,8 +980,8 @@ class Assets extends SmartestSystemApplication{
 		    
     		}else{
 		    
-    		    $this->addUserMessage("The asset type was not recognized.", SmartestUserMessage::ERROR);
-    		    SmartestLog::getInstance('site')->log("The asset type was not recognized.", SmartestLog::ERROR);
+    		    $this->addUserMessage("The file type '".$asset_type."' was not recognized.", SmartestUserMessage::ERROR);
+    		    SmartestLog::getInstance('site')->log("The asset type '".$asset_type."' was not recognized.", SmartestLog::ERROR);
     		    $this->setRequestParameter('asset_type', null);
     		    $this->forward('assets', 'addAsset');
 		    
@@ -1202,7 +1205,7 @@ class Assets extends SmartestSystemApplication{
 	        
 	        if($group->find($this->getRequestParameter('group_id'))){
 	            if($group->getIsSystem()){
-	                $this->addUserMessageToNextRequest("The file group is part of system functioning and could not be deleted.", SmartestUserMessage::INFO);
+	                $this->addUserMessageToNextRequest("The file group is part of system functioning and could not be deleted.", SmartestUserMessage::INFO, true);
 	            }else{
 	                $group->delete();
 	                $this->addUserMessageToNextRequest("The file group was deleted", SmartestUserMessage::SUCCESS);

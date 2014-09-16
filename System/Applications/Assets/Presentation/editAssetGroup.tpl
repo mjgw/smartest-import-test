@@ -2,7 +2,7 @@
   
   {load_interface file="edit_filegroup_tabs.tpl"}  
   
-  <h3>Edit file group "{$group.label}"</h3>
+  <h3>Edit file group <span class="light">"{$group.label}"</span></h3>
   
   <form action="{$domain}{$section}/updateAssetGroup" method="post">
     

@@ -2,7 +2,7 @@
   
   {load_interface file="edit_tabs.tpl"}
   
-  <h3>Tags for this {$model.name} ({$item.name})</h3>
+  <h3>Tags for {$model.name|lower}: <span class="light">{$item.name}</span></h3>
   <div class="instruction">Choose which tags this item is attached to. Some tags may not make sense for certain sites, but they can be ignored.</div>
   
   <script type="text/javascript">

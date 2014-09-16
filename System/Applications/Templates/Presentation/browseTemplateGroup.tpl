@@ -6,19 +6,26 @@
 
 {load_interface file="template_group_edit_tabs.tpl"}
 
-<h3>Templates in group "{$group.label}"</h3>
+<h3>Templates in group <span class="light">"{$group.label}"</span></h3>
 
 <form id="pageViewForm" method="get" action="">
   <input type="hidden" name="template" id="item_id_input" value="" />
 </form>
 
-<div id="options-view-chooser">
-{$templates._count} template{if $templates._count != 1}s{/if} in this group. View as:
-<a href="javascript:templates.setView('list', 'list_by_type_view')">List</a> /
-<a href="javascript:templates.setView('grid', 'list_by_type_view')">Icons</a>
+<div id="options-view-header">
+
+  <div id="options-view-info">
+    {$templates._count} template{if $templates._count != 1}s{/if} in this group.
+  </div>
+  
+  <div id="options-view-chooser">
+    <a href="#list-view" onclick="return templates.setView('list', 'list_by_type_view')" id="options-view-list-button" class="{if $list_style == "list"}on{else}off{/if}"></a>
+    <a href="#grid-view" onclick="return templates.setView('grid', 'list_by_type_view')" id="options-view-grid-button" class="{if $list_style == "grid"}on{else}off{/if}"></a>
+  </div>
+  
+  <div class="breaker"></div>
+  
 </div>
-
-
 
 <ul class="options-{$list_style}" style="margin-top:0px" id="options_grid">
 

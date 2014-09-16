@@ -17,7 +17,7 @@
   
   <div class="edit-form-row">
     <div class="form-section-label">Value:</div>
-    <input type="text" name="dropdownvalue_value" id="drop_down_value" /><span class="form-hint">numbers, lowercase letters, and underscores only please</span>
+    <input type="text" name="dropdownvalue_value" id="drop_down_value" /><div class="form-hint">numbers, lowercase letters, and underscores only please</div>
   </div>
   
   <div class="edit-form-row">

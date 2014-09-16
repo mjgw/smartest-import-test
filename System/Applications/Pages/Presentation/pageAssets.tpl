@@ -32,16 +32,16 @@ function viewLivePage(parameters){
 {if $allow_edit}
 
   {if $require_item_select}
-    <h3>Page Elements</h3>
+    <h3>Page elements</h3>
     {load_interface file="choose_item.tpl"}
   {else}
-    <h3>Elements used on page: {$page.static_title}{if $page.type == 'ITEMCLASS'} ({$page.title}){/if}</h3>
+    <h3>Elements used on page: {$page.static_title}{if $page.type == 'ITEMCLASS'} <span class="light">({$page.title})</span>{/if}</h3>
     {load_interface file=$sub_template}
   {/if}
 
 {else}
 
-<h3>Page Elements</h3>
+<h3>Page elements</h3>
 
 {/if}
 

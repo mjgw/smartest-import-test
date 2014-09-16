@@ -301,6 +301,8 @@ class SmartestStringHelper extends SmartestHelper{
 		    $was_object = false;
 		}
 		
+		$string = self::toAscii($string);
+		
 		// takes a string, splits it by -, _, or '', and returns it lowercase with the first letter of each 'word' being uppercase
 		$string = self::toSlug($string, true);
 		$words = preg_split('/[_-]/', $string);

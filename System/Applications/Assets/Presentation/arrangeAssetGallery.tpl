@@ -10,7 +10,7 @@
 
     <li style="padding:10px;border:1px solid #ccc;border-radius:6px;margin-bottom:8px;background-color:#fff;cursor:move;position:relative" id="membership_{$membership.file.id}">
       
-      <a href="#remove" style="position:absolute;top:10px;right:10px" id="membership-remove-{$membership.id}"><img src="{$domain}Resources/Icons/cross.png" alt="" /></a>
+      <a href="#remove" style="position:absolute;top:10px;right:10px" id="membership-remove-{$membership.id}"><i class="fa fa-times-circle"></i></a>
       
       <p style="clear:both;margin:0 0 10px 0"><strong>File: {$membership.file.label}</strong> ({$membership.file.url}) <a href="{$domain}assets/editAsset?asset_id={$membership.file.id}"><img src="{$domain}Resources/Icons/pencil.png" alt="" /></a> <a href="{$domain}assets/assetInfo?asset_id={$membership.file.id}"><img src="{$domain}Resources/Icons/information.png" alt="" /></a></p>
   

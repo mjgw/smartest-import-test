@@ -16,7 +16,23 @@ function setVarName(){
 
 <div id="work-area">
 
-<h3><a href="{$domain}smartest/models">Items</a> &gt; <a href="{$domain}{$section}/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; Add Property</h3>
+<h3>Add a property to model</h3>
+
+	{if !$auto_class_file_writable || !$auto_class_dir_writable}
+	<div class="warning">
+		{if !$auto_class_file_writable && !$auto_class_dir_writable}
+		In order for changes made here to fully take effect, the following file locations need to be made writable:
+		<ul class="file-list">
+			<li><code>{$auto_class_file}</code></li>
+			<li><code>{$auto_class_dir}</code></li>
+		</ul>
+		{elseif !$auto_class_file_writable}
+		In order for changes made here to fully take effect, the file <code>{$auto_class_file}</code> needs to be writable by the web server.
+		{elseif !$auto_class_dir_writable}
+		In order for changes made here to fully take effect, the directory <code>{$auto_class_dir}</code> needs to be writable by the web server.
+		{/if}
+	</div>
+	{/if}
 
 <div class="instruction">You will be adding a new property to the model "{$model.plural_name}".</div>
   

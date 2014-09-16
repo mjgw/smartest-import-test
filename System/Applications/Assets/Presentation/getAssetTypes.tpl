@@ -69,9 +69,13 @@
     <a href="javascript:;" id="item_{$assetType.id}" class="option" onclick="setSelectedItem('{$assetType.id}', '{$assetType.label|escape:quotes}');">
       <img border="0" src="{$domain}Resources/Icons/folder.png" />{$assetType.label}</a></li>{* $assetType.icon *}
 {/foreach}
+<li class="breaker"></li>
+</ul>
+<div class="breaker"></div>
 
-</ul><br clear="all" />
 {/foreach}
+
+
 
 </div>
 

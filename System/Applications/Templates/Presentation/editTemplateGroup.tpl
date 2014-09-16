@@ -2,7 +2,7 @@
   
   {load_interface file="template_group_edit_tabs.tpl"}  
   
-  <h3>Edit file group "{$group.label}"</h3>
+  <h3>Edit file group <span class="light">"{$group.label}"</span></h3>
   
   <form action="{$domain}{$section}/updateTemplateGroup" method="post">
     
@@ -17,7 +17,7 @@
     
       <div class="edit-form-row">
         <div class="form-section-label">Short name</div>
-        {if $allow_name_edit}<input type="text" name="group_name" value="{$group.name}" /><span class="form-hint">letters, numbers and underscored only, please.</span>{else}{$group.name}{/if}
+        {if $allow_name_edit}<input type="text" name="group_name" value="{$group.name}" /><div class="form-hint">letters, numbers and underscored only, please.</div>{else}{$group.name}{/if}
       </div>
       
   {if $allow_type_change}

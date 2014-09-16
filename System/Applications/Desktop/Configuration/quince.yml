@@ -5,7 +5,6 @@ module:
   longname: Desktop
   default_action: startpage
   aliases:
-    - {url: /smartest/settings, action: editSite}
     - {url: /smartest/_start, action: newDesktop}
     - {url: /smartest/about, action: aboutSmartest}
     - {url: /smartest/close, action: closeCurrentSite}

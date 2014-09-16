@@ -43,13 +43,14 @@ class Templates extends SmartestSystemApplication{
 	    $this->requireOpenProject();
 	    
 	    $this->setTitle("Template groups");
-	    $h = new SmartestAssetsLibraryHelper;
-	    $locations = $h->getUnWritableStorageLocations();
+	    $tlh = new SmartestTemplatesLibraryHelper;
+	    // $h = new SmartestAssetsLibraryHelper;
+	    $locations = $tlh->getUnWritableStorageLocations();
 		$this->send($locations, 'locations');
 		$this->setFormReturnUri();
 		$this->setFormReturnDescription('template groups');
 		
-	    $tlh = new SmartestTemplatesLibraryHelper;
+	    
 	    
 	    if($this->getRequestParameter('template_type') && in_array($this->getRequestParameter('template_type'), $tlh->getTypeCodes())){
 	        $type = $this->getRequestParameter('template_type');
@@ -73,6 +74,8 @@ class Templates extends SmartestSystemApplication{
         $model_ids = $du->getModelIds($this->getSite()->getId());
         $tlh = new SmartestTemplatesLibraryHelper;
         $this->setApplicationPreference('startpage_view', 'models');
+        $locations = $tlh->getUnWritableStorageLocations();
+		$this->send($locations, 'locations');
         
         $this->setFormReturnUri();
         
@@ -1311,9 +1314,10 @@ class Templates extends SmartestSystemApplication{
 	            
 	            if(is_writable($template->getStorageLocation(true)) && is_writable($template->getFullPathOnDisk())){
 	                $allow_update = true;
+	                $this->addUserMessageToNextRequest("The template has been successfully updated.", SmartestUserMessage::SUCCESS);
                 }else{
                     $allow_update = false;
-                    $this->addUserMessageToNextRequest("The file cannot be written. Please check permissions.", SmartestUserMessage::WARNING);
+                    $this->addUserMessageToNextRequest("The file cannot be written. Please check permissions.", SmartestUserMessage::WARNING, true);
                 }
 	        }else{
 	            $this->addUserMessageToNextRequest("The template ID was not recognized", SmartestUserMessage::ERROR);

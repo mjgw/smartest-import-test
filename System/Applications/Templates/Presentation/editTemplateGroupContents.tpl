@@ -28,7 +28,7 @@ function executeTransfer(){
   
   {load_interface file="template_group_edit_tabs.tpl"}
   
-  <h3>Templates in group "{$group.label}"</h3>
+  <h3>Templates in group <span class="light">"{$group.label}"</span></h3>
   
   <form action="{$domain}{$section}/transferTemplates" method="post" name="transferForm">
 

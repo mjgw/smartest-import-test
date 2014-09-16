@@ -6,6 +6,7 @@ strings:
     templates: Plantillas
     users: Usarios
     metadata: "Meta-dados"
+    settings: "Ajustes"
     websites: Sus proyectos
     about: Sobre Smartest
     sign_out: Salir

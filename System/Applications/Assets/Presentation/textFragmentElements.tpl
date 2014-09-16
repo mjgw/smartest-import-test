@@ -15,7 +15,7 @@
   </div>
   {/foreach}
 {else}
-    <div class="special-box">There are no attachment tags in this text yet. <a href="{$domain}{$section}/editTextFragmentSource?asset_id={$asset.id}">Click here</a> to add some.</div>
+    <div class="special-box">There are no attachment tags in this text yet. <a href="{$domain}{$section}/editTextFragmentSource?asset_id={$asset.id}" class="button">Click here</a> to add some.</div>
 {/if}
 
 </div>

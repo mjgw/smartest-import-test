@@ -708,16 +708,27 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
     
 	    }else{
 	        // No urls have been defined.
-	        if($this->isHomePage()){
-	            // Return "/"
-	            $url = '';
-	        }else{
-	            // Return a dynamic one.
-	            $url = 'website/renderPageFromId?page_id='.$this->getWebid();
-            }
+	        $url = $this->getFallbackUrl();
 	    }
 
 	    return $url;
+	}
+	
+	public function getFallbackUrl(){
+	    
+	    if($this->isHomePage()){
+            // Return "/"
+            $url = '';
+        }else{
+            // Return a dynamic one.
+            $url = 'website/renderPageFromId?page_id='.$this->getWebid();
+            if($this->getType() == 'ITEMCLASS'){
+                $url .= '&amp;item_id=:long_id';
+            }
+        }
+        
+        return $url;
+	    
 	}
 	
 	public function getJsonInfoUrl($complete=false){
@@ -1370,7 +1381,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        return new SmartestExternalUrl('http://'.$this->getSite()->getDomain().$this->_request->getDomain().$this->getDefaultUrl());
 	        
 	        case "fallback_url":
-	        return "website/renderPageFromId?page_id=".$this->getWebid();
+	        return $this->getFallbackUrl();
             
             case "preview_safe_url":
             if($this->getDraftMode()){
