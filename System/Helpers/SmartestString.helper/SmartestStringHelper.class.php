@@ -224,14 +224,14 @@ class SmartestStringHelper extends SmartestHelper{
 	    if(preg_match('/^((htt?ps?):\/\/?\/?)?(.+)\/?$/', $url, $matches)){
             
             if(isset($matches[2]{4})){
-                return 'https://'.$matches[3];
+                return str_replace(' ', '', trim('https://'.$matches[3]));
             }else{
-                return 'http://'.$matches[3];
+                return str_replace(' ', '', trim('http://'.$matches[3]));
             }
         
         }else{
             
-            return 'http://'.$url;
+            return str_replace(' ', '', trim('http://'.$url));
             
         }
 	    
@@ -241,7 +241,8 @@ class SmartestStringHelper extends SmartestHelper{
 	    
 	    $url = self::toValidExternalUrl($url);
 	    preg_match('/^((htt?ps?):\/\/?)?(.+)\/?$/', $url, $matches);
-	    return $matches[3];
+        
+        return $matches[3];
 	    
 	}
 	

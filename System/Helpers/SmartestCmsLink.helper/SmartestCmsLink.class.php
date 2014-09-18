@@ -23,6 +23,7 @@ class SmartestCmsLink extends SmartestHelper{
     const AUTHOR = 32;
     const EXTERNAL = 256;
     const MAILTO = 512;
+    const QUINCE = 1024;
     
     const ERROR_PAGE_NOT_FOUND = 1;
     const ERROR_ITEM_NOT_FOUND = 2;
@@ -52,8 +53,8 @@ class SmartestCmsLink extends SmartestHelper{
             $this->_hash = $this->_destination_properties->getParameter('hash');
         }
         
-        if($this->_markup_attributes->hasParameter('hash')){
-            $this->_hash = $this->_markup_attributes->getParameter('hash');
+        if($this->_render_data->hasParameter('hash')){
+            $this->_hash = $this->_render_data->getParameter('hash');
         }
         
         if($this->_destination_properties->getParameter('from_item')){
@@ -92,7 +93,7 @@ class SmartestCmsLink extends SmartestHelper{
             $du = new SmartestDataUtility;
             $model_names = array_keys($du->getModelNamesLowercase());
         
-            if(in_array($ns, array('page', 'metapage', 'item', 'image', 'img', 'download', 'dl', 'tag', 'tag_page', 'user', 'author', 'mailto'))){
+            if(in_array($ns, array('page', 'metapage', 'item', 'image', 'img', 'download', 'dl', 'tag', 'tag_page', 'user', 'author', 'mailto', 'quince'))){
             
                 switch($ns){
                 
@@ -132,6 +133,11 @@ class SmartestCmsLink extends SmartestHelper{
                     case "mailto":
                     $this->setType(SM_LINK_TYPE_MAILTO);
                     $this->addClass('sm-link-mailto');
+                    break;
+                    
+                    case "quince":
+                    $this->setType(SM_LINK_TYPE_QUINCE_ROUTE);
+                    $this->addClass('sm-link-internal');
                     break;
                     
                 }
@@ -175,6 +181,8 @@ class SmartestCmsLink extends SmartestHelper{
         }else if($markup_attributes instanceof SmartestParameterHolder){
             $data = $markup_attributes->getParameters();
         }
+        
+        // print_r(array_keys($data));
         
         $allowed_attributes = array('title', 'id', 'name', 'style', 'class', 'target', 'rel', 'dir', 'accesskey', 'tabindex', 'lang', 'download');
         $deprecated_javascript_attributes = array('onclick', 'ondblclick', 'onmouseover', 'onmouseout');
@@ -753,7 +761,7 @@ class SmartestCmsLink extends SmartestHelper{
 						
             if($this->getType() == SM_LINK_TYPE_EXTERNAL){
                 
-				if($this->_render_data->hasParameter('hide_protocol') && SmartestStringHelper::toRealBool($this->_render_data->hasParameter('hide_protocol'))){
+				if($this->_render_data->hasParameter('hide_protocol') && SmartestStringHelper::toRealBool($this->_render_data->getParameter('hide_protocol'))){
                     return $fa_prefix.SmartestStringHelper::toUrlStringWithoutProtocol($this->_destination_properties->getParameter('destination'));
                 }else{
                     return $fa_prefix.$this->_destination_properties->getParameter('destination');

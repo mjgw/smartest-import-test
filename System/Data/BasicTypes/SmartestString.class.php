@@ -151,6 +151,9 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             case "_php_class":
             return __CLASS__;
             default:
+            if(preg_match('/^truncate_(\d+)$/', $offset, $matches)){
+                return SmartestStringHelper::truncate($this->_string, $matches[1]);
+            }
             return $this->_string;
         }
     }

@@ -293,7 +293,6 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
 	        $render_process_id = SmartestStringHelper::toVarName('template_'.SmartestStringHelper::removeDotSuffix($requested_file).'_'.substr(microtime(true), -6));
 	        $child = $this->startChildProcess($render_process_id);
 	        $child->caching = false;
-	        // echo get_class($this);
 	        $child->setContext(SM_CONTEXT_COMPLEX_ELEMENT);
 	        $child->assign('this', $this->_tpl_vars['this']);
 	        $content = $child->fetch($template);
@@ -538,6 +537,8 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 
                 $item_name = isset($params['item_name']) ? SmartestStringHelper::toVarName($params['item_name']) : 'item';
                 
+                $item_name = isset($params['assign']) ? SmartestStringHelper::toVarName($params['assign']) : $item_name;
+                
                 // Tell Smartest that this particular item appears on this page.
                 // Strictly speaking, this information is already stored as the itemspace def, 
                 // but we want to standardise this information so that it can be processed efficiently
@@ -578,6 +579,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                     $item = $def->getItem(false, $this->getDraftMode());
         	        $item->setDraftMode($this->getDraftMode());
         	        $item_name = isset($params['item_name']) ? SmartestStringHelper::toVarName($params['item_name']) : $itemspace_name.'_item';
+                    $item_name = isset($params['assign']) ? SmartestStringHelper::toVarName($params['assign']) : $item_name;
         	        $this->assign($item_name, $item);
         	        return $this->renderItemEditButton($item->getId()).$this->renderItemSpaceDefineButton($itemspace_name);
                 
@@ -684,10 +686,31 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         
     }
     
+    public function renderEditSetButton($set_identifier, $params){
+        
+        if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
+        
+            $set = new SmartestCmsItemSet;
+        
+            if(is_numeric($set_identifier)){
+                $found_set = $set->find($set_identifier);
+            }else{
+                $found_set = $set->findBy('name', $name, $this->getPage()->getSiteId());
+            }
+        
+            if($found_set){
+                $markup = "<a class=\"sm-edit-button\" title=\"click to edit set: ".$set->getLabel()."\" href=\"".$this->_request_data->g('domain')."sets/editSet?set_id=".$set->getId()."\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/pencil.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
+            }
+        
+        }
+        
+    }
+    
     public function renderList($list_name, $params){
         
         $list = new SmartestCmsItemList;
         
+        // If a definition for this list exists on this page
         if($list->load($list_name, $this->getPage(), $this->getDraftMode())){
             
             $content = '';
@@ -695,8 +718,18 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             if($list->hasRepeatingTemplate($this->getDraftMode())){
                 
                 $limit = $list->getMaximumLength() > 0 ? $list->getMaximumLength() : null;
-                $data = $list->getItems($this->getDraftMode(), $limit);
-                // var_dump($limit);
+                
+                try{
+                    $data = $list->getItems($this->getDraftMode(), $limit);
+                }catch(SmartestException $e){
+                    $this->raiseError($e->getMessage());
+                }
+                
+                try{
+                    $set = $list->getSet($this->getDraftMode());
+                }catch(SmartestException $e){
+                    $this->raiseError($e->getMessage());
+                }
                 
                 if($list->getType() == 'SM_LIST_ARTICULATED'){
                 
@@ -729,13 +762,18 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 
                 }else{
                     
+                    // The list uses a simple list template
+                    
+                    // If the user has chosen to assign the set's items to a variable instead of display the template:
                     if(isset($params['assign']) && strlen($params['assign'])){
                         $this->assign(SmartestStringHelper::toVarName($params['assign']), $data);
                     }else{
+                        // Display the simple list template, having defined the necessary preset variables
                         $child = $this->startChildProcess(substr(md5($list->getName().microtime()), 0, 8));
         	            $child->assign('items', $data);
         	            $child->assign('num_items', count($data));
         	            $child->assign('title', $list->getTitle());
+                        $child->assign('set', $set);
         	            $child->setContext(SM_CONTEXT_COMPLEX_ELEMENT);
         	            $child->setDraftMode($this->getDraftMode());
         	            $child->caching = false;
@@ -746,10 +784,6 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 }
             
             } // end if: the list has repeating template
-            
-            // var_dump($list->hasRepeatingTemplate($this->getDraftMode()));
-            
-            // echo 'hello';
             
             if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
 			    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definitions for embedded list: ".$list->getName()."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineList?assetclass_id=".$list->getName()."&amp;page_id=".$this->getPage()->getWebid()."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_blue.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this list--></a>";
@@ -763,7 +797,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             
         }else{
             
-            // echo 'list did not load.';
+            // No definition exists for this list on this page
             
         }
     

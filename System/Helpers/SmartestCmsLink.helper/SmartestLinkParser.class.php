@@ -3,6 +3,7 @@
 class SmartestLinkParser{
     
     const LINK_TARGET_TITLE = 'SM_LINK_GET_TARGET_TITLE';
+    const LINK_TARGET_URL = 'SM_LINK_GET_TARGET_URL';
     
     public static function replaceAll($string){
         
@@ -12,7 +13,7 @@ class SmartestLinkParser{
     
     public static function parseEasyLinks($string){
         
-        $pattern = '/\[(\[(([\w_-]+):)?([^\]\|]+)(\|([^\]]+))?\]|(\+)?(https?:\/\/[^\s\]]+)(\s+([^\]]+))?)\]/i';
+        $pattern = '/\[(\[(([\w_-]+):)?([^\]\|]+)(\|([^\]]+))?\]|(\+)?(https?:\/\/[^\s\]]+)(\s+([^\]]+))?)\]|\[(@([\w_]+:[\w_]+))(\s+([^\]]+))?\]/i';
         preg_match_all($pattern, $string, $matches, PREG_SET_ORDER);
         
         $links = array();
@@ -41,6 +42,24 @@ class SmartestLinkParser{
                     }
                     
                     $l->setParameter('format', SM_LINK_FORMAT_URL);
+                    
+                }else if(isset($m[11])){
+                    
+                    $l = new SmartestParameterHolder("Parsed Link Destination Properties: ".$m[11]);
+                    
+                    $l->setParameter('route', $m[11]);
+                    
+                    $l->setParameter('scope', SM_LINK_SCOPE_INTERNAL);
+                    $l->setParameter('format', SM_LINK_FORMAT_QUINCE_ROUTE);
+                    $l->setParameter('destination', $m[11]);
+                    $l->setParameter('original', $m[0]);
+                    $l->setParameter('namespace', 'quince');
+                    
+                    if(isset($m[14])){
+                        $l->setParameter('text', $m[14]);
+                    }else{
+                        $l->setParameter('text', self::LINK_TARGET_URL);
+                    }
                 
                 }else{
                     
@@ -58,7 +77,7 @@ class SmartestLinkParser{
                     }else if($m[3] == 'mailto'){
                         $l->setParameter('destination', $m[4]);
                     }else{
-                        $l->setParameter('destination', $m[2].SmartestStringHelper::toSlug($m[4]));
+                        $l->setParameter('destination', $m[2].$m[4]);
                     }
                     
                     $l->setParameter('original', $m[0]);
@@ -138,7 +157,7 @@ class SmartestLinkParser{
             $l->setParameter('scope', SM_LINK_SCOPE_NONE);
             $l->setParameter('destination', '#');
         
-        }else if(preg_match('/^(https?:\/\/[^\s]+)(\s+([^\]]+))?$/i', $string, $m)){
+        }else if(preg_match('/^(https?:\/\/[^\s]+)(\s+([^\]]+))?$/i', trim($string), $m)){
             
             $l = new SmartestParameterHolder("Parsed Link Destination Properties: ".$m[0]);
             $l->setParameter('destination', $m[1]);
@@ -150,7 +169,20 @@ class SmartestLinkParser{
         
         }else if(strlen($string) && $string{0} == '@'){
             
-            // TODO: Integrate with Quince's "URL For" functionality
+            // TODO: Finish integration with Quince's "URL For" functionality
+            /* $controller = SmartestPersistentObject::get('controller');
+            $url = $controller->getUrlFor($string);
+            return strlen($url) ? $url : '#'; */
+            
+            // This is unfinished
+            $l = new SmartestParameterHolder("Parsed Link Destination Properties: ".$string);
+            
+            $l->setParameter('route', $string);
+            
+            $l->setParameter('scope', SM_LINK_SCOPE_INTERNAL);
+            $l->setParameter('format', SM_LINK_FORMAT_QUINCE_ROUTE);
+            $l->setParameter('destination', $string);
+            $l->setParameter('namespace', 'quince');
             
         }else{
         

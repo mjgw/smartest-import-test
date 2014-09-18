@@ -148,22 +148,18 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
 	        $this->_data_set = new SmartestCmsItemSet;
 	    
     	    if($draft){
-    	        $this->_data_set->find($this->getDraftSetId());
+    	        if(!$this->_data_set->find($this->getDraftSetId())){
+    	            throw new SmartestException('The set chosen as the draft definition for this page (ID='.$this->getDraftSetId().') does not exist.');
+    	        }
     	    }else{
-    	        $this->_data_set->find($this->getLiveSetId());
+    	        if(!$this->_data_set->find($this->getLiveSetId())){
+    	            throw new SmartestException('The set chosen as the live definition for this page (ID='.$this->getLiveSetId().') does not exist.');
+    	        }
     	    }
 	        
 	        $mode = $draft ? SM_QUERY_ALL_DRAFT_CURRENT : SM_QUERY_PUBLIC_LIVE_CURRENT;
 	        
-	        // $has_limit = (bool) $this->getMaximumLength();
-	        // $limit = $has_limit ? (int) $this->getMaximumLength() : null;
-	        // var_dump($limit);
-	        
-	        // if($has_limit){
-	        //    $this->_list_items = array_slice($this->_data_set->getMembers($mode, $limit), 0, $limit);
-            // }else{
-                $this->_list_items = $this->_data_set->getMembersPaged($mode, $limit);
-            // }
+	        $this->_list_items = $this->_data_set->getMembersPaged($mode, $limit);
 	        
 	        $this->_fetch_attempted = true;
 	    
@@ -173,7 +169,7 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
 	    
 	}
 	
-	public function getItemsAsArrays($draft){
+	public function getItemsAsArrays($draft){ // This function is deprecated and should be removed soon
 	    
 	    if(!$this->_fetch_attempted){
 	    
@@ -195,5 +191,33 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
 	    
 	    return $this->_data_set->getMembersAsArrays($draft);
 	}
+    
+    public function getSet($draft=false){
+        
+        if(!$this->_fetch_attempted || is_object($this->_data_set)){
+            return $this->_data_set;
+        }else{
+            
+	        $this->_data_set = new SmartestCmsItemSet;
+	    
+    	    if($draft){
+                if($this->_data_set->find($this->getDraftSetId())){
+    	            $this->_data_set->setRetrieveMode(SM_QUERY_ALL_DRAFT_CURRENT);
+                }else{
+                    throw new SmartestException('The set chosen as the draft definition for this page (ID='.$this->getDraftSetId().') does not exist.');
+                }
+    	    }else{
+                if($this->_data_set->find($this->getLiveSetId())){
+    	            $this->_data_set->setRetrieveMode(SM_QUERY_PUBLIC_LIVE_CURRENT);
+                }else{
+                    throw new SmartestException('The set chosen as the live definition for this page (ID='.$this->getLiveSetId().') does not exist.');
+                }
+    	    }
+            
+            return $this->_data_set;
+            
+        }
+        
+    }
 
 }

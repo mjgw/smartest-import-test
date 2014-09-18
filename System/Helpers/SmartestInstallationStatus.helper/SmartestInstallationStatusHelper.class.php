@@ -225,6 +225,8 @@ class SmartestInstallationStatusHelper{
 
                 	    if(!is_dir($site_dir)){mkdir($site_dir);}
                 	    if(!is_dir($site_dir.'Presentation')){mkdir($site_dir.'Presentation');}
+                        if(!is_dir($site_dir.'Presentation/Layouts')){mkdir($site_dir.'Presentation/Layouts');}
+                        if(!is_dir($site_dir.'Presentation/Special')){mkdir($site_dir.'Presentation/Special');}
                 	    if(!is_dir($site_dir.'Configuration')){mkdir($site_dir.'Configuration');}
                 	    if(!is_file($site_dir.'Configuration/site.yml')){file_put_contents($site_dir.'Configuration/site.yml', '');}
                 	    if(!is_dir($site_dir.'Library')){mkdir($site_dir.'Library');}

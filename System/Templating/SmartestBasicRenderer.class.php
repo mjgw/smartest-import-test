@@ -138,6 +138,7 @@ class SmartestBasicRenderer extends SmartestEngine{
                     
                     // If draft, check that a temporary preview copy has been created, and creat it if not
                     if($this->getDraftMode()){
+                        
                         if($this->_asset->getTextFragment()->ensurePreviewFileExists()){
                             
                             $child = $this->startChildProcess($render_process_id);
@@ -148,11 +149,12 @@ class SmartestBasicRenderer extends SmartestEngine{
                 	        
                 	        $content = $child->fetch($this->_asset->getTextFragment()->getParsableFilePath(true));
                 	        
-                	        $this->killChildProcess($child->getProcessId());
+                            $this->killChildProcess($child->getProcessId());
                 	        
                         }else{
                             $content = $this->raiseError('TextFragment render preview could not be created.');
                         }
+                        
                     }else{
                     // otherwise parse local disk copy.
                         if($this->_asset->getTextFragment()->isPublished()){
