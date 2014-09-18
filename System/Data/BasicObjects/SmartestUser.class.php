@@ -301,13 +301,18 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
     public function getDefaultProfilePicAssetId(){
         
         $ph = new SmartestPreferencesHelper;
+        $asset = new SmartestAsset;
         
         // does the setting exist?
         if($ph->getGlobalPreference('default_user_profile_pic_asset_id', null, $this->getCurrentSiteId(), true)){
             
             // if so, what is it's value?
             return $ph->getGlobalPreference('default_user_profile_pic_asset_id', null, $this->getCurrentSiteId());
-            
+        
+        }elseif($asset->findBy('url', 'default_user_profile_pic.jpg')){
+        
+            return $asset->getId();
+        
         }else{
             
             // if not, create the asset and set the value of the preference to the id of the new asset
@@ -343,12 +348,12 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
             
             $asset = new SmartestRenderableAsset;
             
-            if($this->getRequest()->getAction() == 'renderEditableDraftPage'){
-                $asset->setDraftMode(true);
-            }
-            
             if($asset->find($this->getProfilePicAssetId())){
                 $this->_profile_pic_asset = $asset;
+            }
+            
+            if($this->getRequest()->getAction() == 'renderEditableDraftPage'){
+                $asset->setDraftMode(true);
             }
             
             return $asset;

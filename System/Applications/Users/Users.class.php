@@ -19,6 +19,21 @@ class Users extends SmartestSystemApplication{
 		}
 		
 		$this->send($active_tab, 'active_tab');
+        
+        $ph = new SmartestPreferencesHelper;
+        $asset = new SmartestAsset;
+        
+        if($ph->getGlobalPreference('default_user_profile_pic_asset_id', null, $this->getSite()->getId(), true)){
+            
+            $dfuppi = $ph->getGlobalPreference('default_user_profile_pic_asset_id', null, $this->getSite()->getId());
+        
+        }elseif($asset->findBy('url', 'default_user_profile_pic.jpg')){
+        
+            $dfuppi = $asset->getId();
+        
+        }
+        
+        $this->send($dfuppi, 'default_user_profile_pic_id');
 		
 		// $database = SmartestDatabase::getInstance('SMARTEST');
 		// $users = $database->queryToArray("SELECT * FROM Users WHERE username != 'smartest'");

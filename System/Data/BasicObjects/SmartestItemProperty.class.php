@@ -408,6 +408,21 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
                                 $types = array($this->getForeignKeyFilter());
                             }
                             
+	                        if($this->getDatatype() == 'SM_DATATYPE_ASSET_GROUP'){
+	                            $this->_possible_values = $alh->getAssetGroupsThatAcceptType($types, $this->getCurrentSiteId());
+	                            // echo count($this->_possible_values);
+	                        }else if($this->getDatatype() == 'SM_DATATYPE_ASSET_GALLERY'){
+	                            $this->_possible_values = $alh->getGalleryAssetGroupsThatAcceptType($types, $this->getCurrentSiteId());
+	                        }
+	                        
+	                        if(substr($this->getForeignKeyFilter(), 0, 13) == 'SM_ASSETCLASS'){
+                                // Assets are limited to a placeholder type, so multiple asset types
+                                $ach = new SmartestAssetClassesHelper;
+                                $types = $ach->getAssetTypeCodesFromAssetClassType($this->getForeignKeyFilter());
+                            }else{
+                                $types = array($this->getForeignKeyFilter());
+                            }
+                            
                             // get galleries or groups that match foreign key filter
 	                        if($this->getDatatype() == 'SM_DATATYPE_ASSET_GROUP'){
 	                            $this->_possible_values = $alh->getAssetGroupsThatAcceptType($types, $this->getCurrentSiteId());

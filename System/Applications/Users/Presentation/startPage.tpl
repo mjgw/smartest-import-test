@@ -22,7 +22,7 @@
 {foreach from=$users key=key item=user}
   <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/editUser?user_id={$user.id}'">
     <a href="#" class="option" id="item_{$user.id}" onclick="setSelectedItem('{$user.id}'); return false;" >
-      {if $user.profile_pic.id > 1}
+      {if $user.profile_pic.id > 1 && $user.profile_pic.id != $default_user_profile_pic_id}
       <div class="user-avatar-holder" style="background-image:url({$user.profile_pic.image.75x75.web_path})"></div>
       {else}
       {getsystemcolor assign="usercolor"}

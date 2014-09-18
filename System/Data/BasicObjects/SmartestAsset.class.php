@@ -767,8 +767,40 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         return $this->_absolute_uri_object;
 	}
 	
-	public function save(){
+    public function save(){
 	    
+        if(!isset($this->_modified_properties['parent_id'])){
+            $this->setParentId(0);
+        }
+        
+        if(!isset($this->_modified_properties['variant_id'])){
+            $this->setVariantId(0);
+        }
+        
+        if(!isset($this->_modified_properties['model_id'])){
+            $this->setModelId(0);
+        }
+        
+        if(!isset($this->_modified_properties['thumbnail_id'])){
+            $this->setThumbnailId(0);
+        }
+        
+        if(!isset($this->_modified_properties['info'])){
+            $this->setField('info', null);
+        }
+        
+        if(!isset($this->_modified_properties['is_subbed'])){
+            $this->setIsSubbed(0);
+        }
+        
+        if(!isset($this->_modified_properties['is_hidden'])){
+            $this->setIsHidden(0);
+        }
+        
+        if(!isset($this->_modified_properties['search_field'])){
+            $this->setSearchField('');
+        }
+        
 	    parent::save();
 	    
 	    if($this->usesTextFragment()){
