@@ -220,6 +220,14 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
             }
             break;
             
+            case "text":
+            case "text_content":
+            if($this->isParsable()){
+                return new SmartestString($this->render());
+            }else{
+                return $this->getContent();
+            }
+            
             case "is_defined":
             return (bool) $this->getId();
         
