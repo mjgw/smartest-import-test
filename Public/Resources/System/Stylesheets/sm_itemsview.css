@@ -372,7 +372,12 @@ ul.options-list li a i.fa, ul.options-list li a i.flaticon{
 	height:20px;
 	padding:5px;
 	text-align:center;
-	color:#666;
+	/* color:#666; */
+    color:#68849E;
+}
+
+ul.options-list li a i.fa.not-live, ul.options-list li a i.flaticon.not-live{
+    color:#bbb;
 }
 
 ul.options-list li a.option:hover{
@@ -382,6 +387,10 @@ ul.options-list li a.option:hover{
 	padding:0px;
 	border:0px;
 	color:#333;
+}
+
+ul.options-list li a.option:hover i.fa.not-live, ul.options-list li a.option:hover i.flaticon.not-live{
+    color:#777;
 }
 
 ul.options-list li a.selected-option{

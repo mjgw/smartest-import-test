@@ -2736,7 +2736,7 @@ class Pages extends SmartestSystemApplication{
             	    
                 	    $asset_params = $asset->getDefaultParameterValues();
             	        
-            	        print_r($asset_params);
+            	        // print_r($asset_params);
             	        
                 	    $this->send($asset_params, 'asset_params');
             	    

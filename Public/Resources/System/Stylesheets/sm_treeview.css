@@ -60,11 +60,16 @@ ul.tree-parent-node-open li a.option, ul.tree-parent-node-closed li a.option{
 }
 
 ul.tree-parent-node-open li a.option i, ul.tree-parent-node-closed li a.option i{
-	color:#777;
+	/* color:#777; */
+    color:#68849E;
 	text-decoration:none;
 	font-size:1.4em;
 	width:16px;
 	height:16px;
+}
+
+ul.tree-parent-node-open li a.option i.not-live, ul.tree-parent-node-closed li a.option i.not-live{
+    color:#bbb;
 }
 
 ul.tree-parent-node-open li a.option:hover, ul.tree-parent-node-closed li a.option:hover{

@@ -46,9 +46,9 @@ function viewPage(){
       {/if}
       
       <a id="item_{$page.info.webid}" class="option" href="#" onclick="setSelectedItem('{$page.info.webid}', '{$page.info.title|escape:quotes}', '{if $page.info.type == 'ITEMCLASS'}meta-page{else}static-page{/if}');return false;" ondblclick="window.location='{$domain}{$section}/openPage?page_id={$page.info.webid}&amp;site_id={$content.data[0].info.site_id}'">		 
-        {if $page.info.type == 'ITEMCLASS'}<i class="fa fa-cog"></i>{elseif $page.info.is_section == '1'}<i class="flaticon solid menu-list-4"></i>{else}{if $home_page.id == $page.info.id}<i class="flaticon solid earth-1"></i>{else}<i class="flaticon solid document-3"></i>{/if}{/if}
+        {if $page.info.type == 'ITEMCLASS'}<i class="fa fa-cog{if $page.info.is_published == "TRUE"}{else} not-live{/if}"></i>{elseif $page.info.is_section == '1'}<i class="flaticon solid menu-list-4{if $page.info.is_published == "TRUE"}{else} not-live{/if}"></i>{else}{if $home_page.id == $page.info.id}<i class="flaticon solid earth-1{if $page.info.is_published == "TRUE"}{else} not-live{/if}"></i>{else}<i class="flaticon solid document-3{if $page.info.is_published == "TRUE"}{else} not-live{/if}"></i>{/if}{/if}
         <span>{$page.info.title}</span>
-        <span style="color:#aaa">{if $page.info.is_published == "TRUE"}(published){else}(not published){/if}</span>
+        {* <span style="color:#aaa">{if $page.info.is_published == "TRUE"}(published){else}(not published){/if}</span> *}
       </a>
       
       {if !empty($page.children)}
