@@ -127,8 +127,10 @@ function smarty_block_repeat($params, $content, &$smartest_engine, &$repeat){
             $smartest_engine->assign("is_first", true);
         }
 	    
+        // var_dump($smartest_engine->getPage()->getId());
+        
 	    // if($smartest_engine->getDraftMode()){
-	        $dah->setItemAppearsOnPage($item->getId(), $smartest_engine->getPage()->getId());
+	        // $dah->setItemAppearsOnPage($item->getId(), $smartest_engine->getPage()->getId());
         // }
 	}
 	

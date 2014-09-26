@@ -253,9 +253,11 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            // Sergiy - Moved your if statement to here: (Marcus)
 	            return $this->getItem()->getRelatedContentForRender($this->getDraftMode());
 	            
+                case 'public_comments':
 	            case 'comments':
 	            return $this->getItem()->getPublicComments();
 	            
+                case 'num_public_comments':
 	            case 'num_comments':
 	            return $this->getItem()->getNumApprovedPublicComments();
 	            
@@ -830,6 +832,22 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    }
 	    
 	}
+    
+    public function getPublicComments(){
+        return $this->getItem()->getPublicComments();
+    }
+    
+    public function getNumPublicComments(){
+        return $this->getItem()->getNumApprovedPublicComments();
+    }
+    
+    public function getPrivateComments(){
+        return $this->getItem()->getPrivateComments();
+    }
+    
+    public function getNumPrivateComments(){
+        return $this->getItem()->getNumPrivateComments();
+    }
 	
 	public function compile($draft=false, $numeric_keys=false){
 	    return $this->__toArray($draft, $numeric_keys);

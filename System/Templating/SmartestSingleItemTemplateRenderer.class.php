@@ -4,6 +4,9 @@ class SmartestSingleItemTemplateRenderer extends SmartestEngine{
     
     protected $_draft_mode = false;
     protected $_template_path;
+	protected $_page_rendering_data = array();
+	protected $_page_rendering_data_retrieved = false;
+    protected $page;
     
     public function __construct($pid){
         
@@ -14,6 +17,8 @@ class SmartestSingleItemTemplateRenderer extends SmartestEngine{
 	    $this->left_delimiter = '<'.'?sm:';
 		$this->right_delimiter = ':?'.'>';
         
+        $this->caching = false;
+        
     }
     
     public function getDraftMode(){
@@ -22,6 +27,17 @@ class SmartestSingleItemTemplateRenderer extends SmartestEngine{
 
     public function setDraftMode($mode){
         $this->_draft_mode = SmartestStringHelper::toRealBool($mode);
+    }
+    
+	public function getPage(){
+        return $this->page;
+    }
+    
+    public function assignPage(SmartestPage $page){
+        $this->page = $page;
+        if(!defined('SM_CMS_PAGE_SITE_ID')){
+            define('SM_CMS_PAGE_SITE_ID', $page->getSiteId());
+        }
     }
     
     public function assignTemplate($tpl_path){

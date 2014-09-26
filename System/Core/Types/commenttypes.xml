@@ -14,8 +14,14 @@
     <moderated>true</moderated>
   </type>
   
+  <type id="SM_COMMENTTYPE_ITEM_PRIVATE">
+    <label>Comments used internally to discuss and keep track of items</label>
+    <class>SmartestItemPublicComment</class>
+    <moderated>true</moderated>
+  </type>
+  
   <type id="SM_COMMENTTYPE_ASSET_PRIVATE">
-    <label>Comments left by site visitors on static pages</label>
+    <label>Comments used internally to discuss and keep track of assets</label>
     <class>SmartestAssetComment</class>
     <moderated>true</moderated>
   </type>

@@ -1201,16 +1201,33 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    // $this->setNumComments(((int) $this->getNumComments()) + 1);
 	    
 	}
+    
+	public function attachPrivateComment($author_user_id, $content){
+	    
+	    $c = new SmartestItemPrivateComment;
+        $c->setAuthorUserId((int) $author_user_id);
+	    $c->setContent($content);
+	    $c->setItemId($this->getId());
+	    $c->setPostedAt(time());
+	    $c->save();
+	    
+	}
 	
 	public function getNumApprovedPublicComments(){
 	    
 	    return count($this->getPublicComments('SM_COMMENTSTATUS_APPROVED'));
 	    
 	}
+    
+	public function getNumPrivateComments(){
+	    
+	    return count($this->getPrivateComments());
+	    
+	}
 	
 	public function getPublicComments($status='SM_COMMENTSTATUS_APPROVED'){
 	    
-	    $sql = "SELECT * FROM Comments WHERE comment_type='SM_COMMENTTYPE_ITEM_PUBLIC' AND comment_object_id='".$this->getId()."' AND comment_status='".$status."'";
+	    $sql = "SELECT * FROM Comments WHERE comment_type='SM_COMMENTTYPE_ITEM_PUBLIC' AND comment_object_id='".$this->getId()."' AND comment_status='".$status."' ORDER BY comment_id ASC";
 	    
 	    $result = $this->database->queryToArray($sql);
 	    $comments = array();
@@ -1227,13 +1244,13 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	
 	public function getPrivateComments(){
 	    
-	    $sql = "SELECT * FROM Comments WHERE comment_type='SM_COMMENTTYPE_ITEM_PRIVATE' AND comment_object_id='".$this->getId()."'";
+	    $sql = "SELECT * FROM Comments WHERE comment_type='SM_COMMENTTYPE_ITEM_PRIVATE' AND comment_object_id='".$this->getId()."' ORDER BY comment_id ASC";
 	    
-	    $result = $this->database->queryToArray($sql);
+        $result = $this->database->queryToArray($sql);
 	    $comments = array();
 	    
 	    foreach($result as $r){
-	        $c = new SmartestComment;
+	        $c = new SmartestItemPrivateComment;
 	        $c->hydrate($r);
 	        $comments[] = $c;
 	    }
