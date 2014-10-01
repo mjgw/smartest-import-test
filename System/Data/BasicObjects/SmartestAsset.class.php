@@ -251,7 +251,8 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    }else{
 	        $site = new SmartestSite;
 	        
-	        if($site->hydrate($this->getSiteId())){
+            if($site->find($this->getSiteId())){
+                // echo "site found";
 	            $this->_site = $site;
 	            return $this->_site;
 	        }else{

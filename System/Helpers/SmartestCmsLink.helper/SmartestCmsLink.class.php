@@ -480,14 +480,18 @@ class SmartestCmsLink extends SmartestHelper{
             
             case SM_LINK_TYPE_DOWNLOAD:
             $d = new SmartestAsset;
-            $d->hydrateBy('url', $this->_destination_properties->getParameter('filename'));
-            $mime_type = $d->getMimeType();
             
-            if($mime_type){
-                $this->_markup_attributes->setParameter('type', $mime_type);
+            if($d->hydrateBy('url', $this->_destination_properties->getParameter('filename'))){
+                $mime_type = $d->getMimeType();
+                if($mime_type){
+                    $this->_markup_attributes->setParameter('type', $mime_type);
+                }
+            
+                $this->_destination = $d;
+            }else{
+                return $this->error("The requested asset (File name: '".$this->_destination_properties->getParameter('filename')."') was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
             }
             
-            $this->_destination = $d;
             break;
             
             case SM_LINK_TYPE_TAG:
