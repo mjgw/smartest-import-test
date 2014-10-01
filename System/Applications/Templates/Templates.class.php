@@ -85,13 +85,13 @@ class Templates extends SmartestSystemApplication{
             
             if($model_id > 0){
                 $model = $models[$this->getRequestParameter('model_id')];
-                $this->setApplicationPreference('model_view_model_id', $model_id);
+                $this->setApplicationPreference('templates_model_view_model_id', $model_id);
             }else{
                 $model = new SmartestModel;
-                $this->setApplicationPreference('model_view_model_id', 0);
+                $this->setApplicationPreference('templates_model_view_model_id', 0);
             }
             
-        }else if($pref_id = $this->getApplicationPreference('model_view_model_id')){
+        }else if($pref_id = $this->getApplicationPreference('templates_model_view_model_id')){
             $model_id = $pref_id;
             $model = $models[$pref_id];
         }else{

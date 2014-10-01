@@ -27,7 +27,7 @@
     <li style="list-style:none;" 
   			ondblclick="window.location='{$domain}{$section}/browseTemplateGroup?group_id={$group.id}'">
   			<a class="option" id="item_{$group.id}" onclick="setSelectedItem('{$group.id}', 'fff');" >
-  			  <img border="0" src="{$domain}Resources/Icons/folder.png">
+  			  <img border="0" src="{$domain}Resources/System/Images/template_group.png" class="grid" />
   			  {$group.label}</a></li>
   {/foreach}
   </ul>

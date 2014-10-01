@@ -9,5 +9,15 @@ class SmartestSet extends SmartestBaseSet{
         throw new SmartestException("SmartestSet should not be instantiated directly. Please instantiate a SmartestCmsItemSet, SmartestPageGroup, SmartestAssetGroup, or SmartestUserGroup", SM_ERROR_USER);
         
     }
+    
+    public function save(){
+        
+        if(!strlen($this->getWebId())){
+            $this->setWebId(SmartestStringHelper::random(32));
+        }
+        
+        parent::save();
+        
+    }
 
 }

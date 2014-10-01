@@ -130,7 +130,7 @@ ul.options-grid li a img{
 	margin-left:auto;
 	margin-right:auto;
 	width:65px;
-	height:73px;
+	height:65px;
 }
 
 ul.options-grid li a img.list, ul.options-grid li a.selected-option img.list, ul.options-grid li a i.fa.list{
@@ -143,7 +143,7 @@ ul.options-grid li a.selected-option img{
 	margin-left:auto;
 	margin-right:auto;
 	width:65px;
-	height:73px;
+	height:65px;
 }
 
 ul.options-grid li a.normal{
@@ -319,16 +319,11 @@ ul.options-grid-no-scroll li a img{
 	margin-left:auto;
 	margin-right:auto;
 	width:65px;
-	height:73px;
+	height:65px;
 }
 
 ul.options-grid-no-scroll li a.selected-option img{
-	display:block;
-	margin-top:10px;
-	margin-left:auto;
-	margin-right:auto;
-	width:65px;
-	height:73px;
+	
 }
 
 /* List View */

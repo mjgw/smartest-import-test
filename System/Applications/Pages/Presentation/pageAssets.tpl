@@ -35,7 +35,7 @@ function viewLivePage(parameters){
     <h3>Page elements</h3>
     {load_interface file="choose_item.tpl"}
   {else}
-    <h3>Elements used on page: {$page.static_title}{if $page.type == 'ITEMCLASS'} <span class="light">({$page.title})</span>{/if}</h3>
+    <h3>Elements used on page: {if $page.type == 'ITEMCLASS'}{$page.static_title} <span class="light">({$page.title})</span>{else}<span class="light">{$page.title}</span>{/if}</h3>
     {load_interface file=$sub_template}
   {/if}
 

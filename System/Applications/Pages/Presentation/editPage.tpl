@@ -47,7 +47,7 @@
   {load_interface file="edit_tabs.tpl"}
   
   {if $require_item_select}
-    <h3>Meta-Page Overview: <span id="page-name-in-h3">{$page.title}</span></h3>
+    <h3>Meta-Page Overview: <span id="page-name-in-h3" class="light">{$page.title}</span></h3>
     {load_interface file="choose_item.tpl"}
     {load_interface file="editMetaPageWithoutItem.tpl"}
   {else}

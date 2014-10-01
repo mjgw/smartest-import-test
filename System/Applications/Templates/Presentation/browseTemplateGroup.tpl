@@ -33,7 +33,7 @@
 
 <li>
     <a href="#" class="option" id="item_{$tpl.id}" onclick="return templates.setSelectedItem('{$tpl.id}', 'item');" ondblclick="workWithItem('editTemplate')" >
-    <img border="0" src="{$domain}Resources/Icons/blank_page.png" />{$tpl.label}</a>
+    <i class="fa fa-file-code-o list"></i><img border="0" src="{$domain}Resources/System/Images/template.png" class="grid" />{$tpl.label}</a>
 </li>
 
 {/foreach}

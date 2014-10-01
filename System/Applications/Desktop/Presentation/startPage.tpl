@@ -15,6 +15,8 @@
 {* <li><a class="icon" id="new" href="{$domain}smartest/site/new"></a><br /><a class="label" href="{$domain}smartest/site/new">Create a new site</a></li> *}
 </ul>
 
+<div style="clear:both"></div>
+
 {else}
 
 <h3>Welcome to Smartest</h3>

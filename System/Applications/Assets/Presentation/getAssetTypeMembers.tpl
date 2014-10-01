@@ -82,7 +82,11 @@
 {if in_array($type_code, array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE'))}
     <img border="0" src="{$asset.image._ui_preview.web_path}" class="grid" />
 {else}
+  {if $asset.type_info.large_icon}
+    <img border="0" src="{$domain}Resources/System/Images/{$asset.type_info.large_icon}" class="grid" />
+  {else}
     <img border="0" src="{$domain}Resources/Icons/blank_page.png" class="grid" />
+  {/if}
 {/if}
 
 <img border="0" src="{$asset.small_icon}" class="list" />

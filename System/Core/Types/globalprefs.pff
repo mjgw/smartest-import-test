@@ -15,3 +15,4 @@ twitter_consumer_secret:1:0:Twitter Consumer Secret
 twitter_access_token:1:0:Twitter Access Token
 twitter_access_token_secret:1:0:Twitter Access Token Secret
 hide_facebook_like_box:0:1:No longer display the Facebook "Likes" box on the About Smartest page
+enable_eu_cookie_compliance:1:0:Turns on a warning about cookies, so as to comply with the European Union's law on obtaining consent for cookie usage.

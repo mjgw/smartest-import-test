@@ -2,7 +2,7 @@
   
   {load_interface file="edit_asset_tabs.tpl"}
   
-  <h3>Tags</h3>
+  <h3>Tags on file <span class="light">&lsquo;{$asset.label}&rsquo;</span></h3>
   
   <script type="text/javascript">
   var TL = new Smartest.UI.TagsList();

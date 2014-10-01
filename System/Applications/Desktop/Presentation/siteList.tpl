@@ -12,6 +12,7 @@
 <li><a href="{$domain}smartest/site/open/{$site.id}">{$site.name} ({$site.domain})</a></li>
 {/if}
 {/foreach}
+<li style="clear:both"></li>
 </ul>
 
 {else}

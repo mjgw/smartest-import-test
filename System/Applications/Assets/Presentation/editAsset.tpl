@@ -1,7 +1,7 @@
 <div id="work-area">
   
   {load_interface file="edit_asset_tabs.tpl"}
-  <h3>{$_l10n_action_strings.main_h3.before_filename} {$asset.label} {$_l10n_action_strings.main_h3.after_filename}</h3>
+  <h3>{$_l10n_action_strings.main_h3.before_filename} <span class="light">{$asset.label}</span> {$_l10n_action_strings.main_h3.after_filename}</h3>
   
   {if $asset.deleted}<div class="warning">{$_l10n_action_strings.in_trash_warning.before_filetype} {$asset.type_info.label} {$_l10n_action_strings.in_trash_warning.after_filetype}</div>{/if}
   

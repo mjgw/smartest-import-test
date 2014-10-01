@@ -38,6 +38,8 @@ class SmartestPreferencesHelper extends SmartestHelper{
             $preference->hydrate($prefs[$name]);
             $preference->setApplicationId($application_id);
             $preference->setName($name);
+        }else{
+            throw new SmartestException('Unknown preference \''.$name.'\' requested for application '.$application_id);
         }
         
         return $preference;

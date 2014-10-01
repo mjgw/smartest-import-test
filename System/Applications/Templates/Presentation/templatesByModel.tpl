@@ -77,7 +77,7 @@
 {foreach from=$templates item="template"}
 <li>
   <a href="#" class="option" id="item_{$template.id}" onclick="return templates.setSelectedItem('{$template.id}', 'item');" ondblclick="window.location='{$domain}{$section}/editTemplate?asset_type={$template.type}&amp;template={$template.id}'">
-    <i class="fa fa-file-code-o list"></i><img border="0" src="{$domain}Resources/Icons/blank_page.png" class="grid" />{$template.url}</a>
+    <i class="fa fa-file-code-o list"></i><img border="0" src="{$domain}Resources/System/Images/template.png" class="grid" />{$template.url}</a>
 </li>
 {/foreach}
 </ul>

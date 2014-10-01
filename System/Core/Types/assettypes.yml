@@ -13,6 +13,7 @@ type:
     parsable: true
     smarty_render: true
     icon: style.png
+    large_icon: rich_text_file.png
     input_options:
       - SM_ASSETINPUTTYPE_DIRECT_INPUT
     input_panel: add.rich_text.tpl
@@ -34,6 +35,7 @@ type:
     convert_to_smarty: true
     parsable: true
     icon: style.png
+    large_icon: textile_file.png
     input_options:
       - SM_ASSETINPUTTYPE_DIRECT_INPUT
     input_panel: add.plain_text.tpl
