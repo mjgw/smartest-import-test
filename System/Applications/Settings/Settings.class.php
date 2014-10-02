@@ -34,6 +34,9 @@ class Settings extends SmartestSystemApplication{
                     $logos = array();
                 }
                 
+                $eu_cookie_compliance = $this->getGlobalPreference('enable_eu_cookie_compliance');
+                $this->send(SmartestStringHelper::toRealBool($eu_cookie_compliance), 'eu_cookie_compliance');
+                
                 $this->send($logos, 'logo_assets');
             
                 $this->setTitle("Edit Site Settings");
@@ -81,6 +84,8 @@ class Settings extends SmartestSystemApplication{
             }
 	        
 	        $site->setLanguageCode($this->getRequestParameter('site_language'));
+            
+            $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
 	        
 	        if($site->getIsEnabled() == '1' && $this->getRequestParameter('site_is_enabled') == '0'){
 	            if($this->getUser()->hasToken('disable_site')){

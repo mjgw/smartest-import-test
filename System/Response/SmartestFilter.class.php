@@ -54,6 +54,36 @@ class SmartestFilter{
         return $this->_request_data;
     }
     
+    public function getCurrentSite(){
+        
+        if(is_object($this->_site)){
+            
+            return $this->_site;
+            
+        }else{
+            
+            if($this->getRequestData()->g('application')->g('name') == 'website'){
+                $site_id = constant('SM_CMS_PAGE_SITE_ID');
+                
+                $site = new SmartestSite;
+        
+                if($site->find($site_id)){
+                    $this->_site = $site;
+                }
+                
+            }else if(is_object(SmartestSession::get('current_open_project'))){
+                // This is mostly for when objects are used within the Smartest backend
+                // make sure the site object exists
+                $site = SmartestSession::get('current_open_project');
+                $this->_site = $site;
+            }
+        
+            return $site;
+            
+        }
+        
+    }
+    
     public function execute($html){
         
         $function_name = 'smartest_filter_'.$this->_name;

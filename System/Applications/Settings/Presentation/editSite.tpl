@@ -56,7 +56,7 @@
 
 <div class="edit-form-row">
   <div class="form-section-label">Site ID</div>
-  <code>{$site.unique_id}</code> {help id="desktop:install_ids" buttonize="true"}What's this?{/help}
+  <code>{$site.unique_id}</code> {help id="desktop:install_ids" buttonize="true"}What&rsquo;s this?{/help}
 </div>
 
 <div class="edit-form-row">
@@ -71,7 +71,13 @@
 <div class="edit-form-row">
   <div class="form-section-label">Site status</div>
   <label for="enable-site">Enabled</label> <input type="radio" id="enable-site" name="site_is_enabled" value="1"{if $site.is_enabled == 1} checked="checked"{/if} />
-  <label for="disable-site">Disabled</label> <input type="radio" id="disable-site" name="site_is_enabled" value="0"{if $site.is_enabled == 0} checked="checked"{/if} /><span class="form-hint">This will take effect immediately</span>
+  <label for="disable-site">Disabled</label> <input type="radio" id="disable-site" name="site_is_enabled" value="0"{if $site.is_enabled == 0} checked="checked"{/if} /><span class="form-hint">Will take effect immediately</span>
+</div>
+
+<div class="edit-form-row">
+  <div class="form-section-label">EU cookie law compliance</div>
+  <label for="enable-site">Enabled</label> <input type="radio" id="enable-site" name="site_eu_cookie_compliance" value="1"{if $eu_cookie_compliance} checked="checked"{/if} />
+  <label for="disable-site">Disabled</label> <input type="radio" id="disable-site" name="site_eu_cookie_compliance" value="0"{if !$eu_cookie_compliance} checked="checked"{/if} /><span class="form-hint">Provides easy compliance with EU Directive 2009/136/EC. Will take effect immediately</span>
 </div>
 
 {* <div class="edit-form-row">

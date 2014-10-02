@@ -212,8 +212,7 @@ class SmartestResponse{
 	
 	public function init(){
 	    
-	    session_start();
-		$sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
+	    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
 		
         if(version_compare(PHP_VERSION, $sd['system']['info']['minimum_php_version']) === -1){
             $this->error("This version of PHP is too old to run Smartest. You need to have version ".$sd['system']['info']['minimum_php_version'].' or later.');
@@ -225,6 +224,8 @@ class SmartestResponse{
   	    }catch(SmartestException $e){
   	        $this->errorFromException($e);
   	    }
+        
+        session_start();
   	    
     	$this->_error_stack->display();
         
