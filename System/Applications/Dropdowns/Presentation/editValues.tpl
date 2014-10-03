@@ -32,7 +32,7 @@
 {foreach from=$dropdown.options key=key item="option"}
          	  <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/editDropDownValue?drop_down={$dropdown.id}&amp;dropdown_value_id={$option.id}'">
          	    <a class="option" id="item_{$option.id}" onclick="setSelectedItem('{$option.id}', '', 'value');" >
-                  <img border="0" src="{$domain}Resources/Icons/package.png"> {$option.label}</a></li>
+                 <i class="fa fa-check-square list"></i>{$option.label}</a></li>
 {/foreach}
         	</ul>
 {else}
@@ -55,4 +55,7 @@
 {/if}
     <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this page?')){workWithItem('deleteDropDownValue');}{/literal}"><img border="0" src="{$domain}Resources/Icons/package_delete.png"> Delete value</a></li>
   </ul>
+  
+  {load_interface file="edit_dropdown_actions_area.tpl"}
+  
 </div>

@@ -20,7 +20,7 @@
 	
   <h3>Property order of {$model.name|lower} model</h3>
   
-  <ul class="re-orderable-list div1" id="property-order" style="padding-top:10px">
+    <ul class="re-orderable-list div1" id="property-order" style="padding-top:10px">
       {foreach from=$properties item="property" key="key"}
       <li id="property_{$property.id}">{$property.name}</li>
       {/foreach}

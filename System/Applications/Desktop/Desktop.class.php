@@ -397,6 +397,7 @@ class Desktop extends SmartestSystemApplication{
         
         // Operating system
         $this->send(SmartestSystemHelper::getOperatingSystem(), 'linux_version');
+        $this->send(SmartestSystemHelper::isOsx(), 'is_osx');
         
         // Server speed
         $this->send($this->getUser()->hasToken('test_server_speed'), 'allow_test_server_speed');

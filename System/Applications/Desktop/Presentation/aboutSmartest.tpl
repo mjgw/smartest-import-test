@@ -126,8 +126,8 @@
       {if $allow_see_server_speed}<p><strong>Server Speed</strong>: <!--<img src="{$domain}Resources/System/Images/{$speed_category_info.image}" alt="" />--> <span style="color:#{$speed_category_info.color}">{$speed_category_info.description}</span> <span style="color:#ccc">({$speed_score})</span> {if $allow_test_server_speed}<input type="button" value="Test..." onclick="window.location='{$domain}desktop/testServerSpeed'" />{/if}</p>{/if}
       <p><strong>Web Server</strong>: {$platform}</p>
       <p><strong>Root directory</strong>: <code>{$root_dir}</code></p>
-      <p><strong>Install ID</strong>: <code>{$system_install_id}</code> {help id="desktop:install_ids" buttonize="true"}What's this?{/help}</p>
-      <p><strong>Operating System</strong>: {$linux_version}</p>
+      <p><strong>Install ID</strong>: <code>{$system_install_id}</code> {help id="desktop:install_ids" buttonize="true"}What&rsquo;s this?{/help}</p>
+      <p><strong>Operating System</strong>: {if $is_osx}<i class="fa fa-apple" style="font-size:1.2em"></i>{else}<i class="fa fa-linux" style="font-size:1.2em"></i>{/if} {$linux_version}</p>
       <p><strong>Is SVN checkout</strong>: {$is_svn_checkout.english}</p>
       {/if}
       <p style="margin-top:15px"><strong>Credits</strong>: Designed and developed by Marcus Gilroy-Ware. Originally devised by Marcus Gilroy-Ware and Eddie Tejeda. Many thanks to Eddie Tejeda, Dr. Chris Brauer, Rebecca Lewis Smith, Marcus Hemsley, Dr. Mariann Hardey, Sergiy Berezin, Sereen Joseph, Nancy Arnold, Matt Asay, the wisdom of Professor Lawrence Lessig, PG, VW, many dear friends, a few brave MA Journalism students at City University London, early adopters everywhere, and last but not least, {$_user.full_name}.</p>

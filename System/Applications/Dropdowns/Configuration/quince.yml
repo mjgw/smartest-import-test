@@ -11,3 +11,9 @@ module:
   meta:
     system: true
     author: Marcus Gilroy-Ware
+  namespaces:
+    ajax:
+      class: DropdownsAjax
+      meta:
+        template: _blank.tpl # Can also be 'none'
+        presentation_subfolder: Ajax/

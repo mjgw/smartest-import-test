@@ -272,7 +272,7 @@
         
         <filter>
           <typesource type="db" table="DropDowns" matchfield="id" label="Dropdown Menu" class="SmartestDropdown" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.dropdownmenus.tpl" />
-          <entitysource type="db" table="DropDownValues" matchfield="dropdownvalue_dropdown_id" class="SmartestDropdownOption" />
+          <entitysource type="db" table="DropDownValues" matchfield="dropdownvalue_dropdown_id" class="SmartestDropdownOption" sortfield="dropdownvalue_order" />
         </filter>
         
         <render template="System/Presentation/WebPageBuilder/property.dropdownvalue.tpl" />

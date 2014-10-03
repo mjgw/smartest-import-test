@@ -10,7 +10,7 @@ class SmartestSystemHelper{
         
         if(strlen($linux)){
             return $linux;
-        }else if(is_file('/Applications/Utilities/Terminal.app/Contents/version.plist')){
+        }else if(self::isOsx()){
             // sw_vers | grep 'ProductVersion:' | grep -o '[0-9]*\.[0-9]*\.[0-9]*'
             $linux = "Mac OS X ".`sw_vers | grep 'ProductVersion:' | grep -o '[0-9]*\.[0-9]*\.[0-9]*'`;
             return $linux;
@@ -18,6 +18,10 @@ class SmartestSystemHelper{
             return "Unknown";
         }
         
+    }
+    
+    public static function isOsx(){
+        return is_file('/Applications/Utilities/Terminal.app/Contents/version.plist');
     }
     
     public static function getInstallDate($refresh=false){

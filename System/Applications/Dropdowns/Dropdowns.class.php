@@ -254,6 +254,24 @@ class Dropdowns extends SmartestSystemApplication{
 	    }
 	    
 	}
+    
+	public function editDropdownOrder($get){ 
+	    
+	    $dropdown_id = (int) $this->getRequestParameter('dropdown_id');
+	    $dropdown = new SmartestDropdown;
+	    
+	    if($dropdown->find($dropdown_id)){
+	        
+	        $options = $dropdown->getOptions();
+	        
+	        $this->send($dropdown, 'dropdown');
+	        $this->send($options, 'options');
+	        
+	    }else{
+	        $this->addUserMessage("The supplied dropdown ID was not recognized.");
+	    }
+	    
+	}
 	
 	public function moveDropDownValueUp($get, $post){
 	    

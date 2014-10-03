@@ -45,4 +45,7 @@
 {/if}
     <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this page?')){workWithItem('deleteDropDownValue');}{/literal}"><img border="0" src="{$domain}Resources/Icons/package_delete.png"> Delete value</a></li>
   </ul>
+  
+  {load_interface file="edit_dropdown_actions_area.tpl"}
+  
 </div>
