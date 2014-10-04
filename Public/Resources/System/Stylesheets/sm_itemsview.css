@@ -358,6 +358,8 @@ ul.options-list li a.option{
 	text-decoration:none;
 	border:0px;
 	color:#333;
+    -webkit-transition: all 0.2s; /* For Safari 3.1 to 6.0 */
+    transition: all 0.2s;
 }
 
 ul.options-list li a i.fa, ul.options-list li a i.flaticon{

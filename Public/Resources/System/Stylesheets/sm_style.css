@@ -38,15 +38,18 @@ a{
   outline: none;
 }
 
-a.button, a.sm-help-link{
+a.button{
+    background-color:#f1f1f1;
     border:1px solid #ccc;
     display:inline-block;
     padding:2px 9px;
     border-radius:10px;
     color:#666!important;
+    -webkit-transition: all 0.2s; /* For Safari 3.1 to 6.0 */
+    transition: all 0.2s;
 }
 
-a.button:hover, a.sm-help-link:hover{
+a.button:hover{
     text-decoration:none;
     color:#fff!important;
     background-color:#68849E;
@@ -54,7 +57,41 @@ a.button:hover, a.sm-help-link:hover{
 }
 
 a.sm-help-link{
-    
+    border:1px solid #ccc;
+    display:inline-block;
+    padding:1px 5px;
+    border-radius:10px;
+    color:#444!important;
+    -webkit-transition: all 0.2s; /* For Safari 3.1 to 6.0 */
+    transition: all 0.2s;
+}
+
+a.sm-help-link:hover{
+    text-decoration:none;
+    color:#fff!important;
+    background-color:#68849E;
+    border-color:#68849E;
+}
+
+div.special-box a.sm-help-link, div.special-box a.button{
+    background-color:#fff;
+    text-decoration:none;
+}
+
+div.special-box a.sm-help-link:hover, div.special-box a.button:hover{
+    /* border-color:#EB9A38; */
+    background-color:#68849E;
+}
+
+div.warning a.sm-help-link, div.warning a.button{
+    background-color:transparent;
+    text-decoration:none;
+    border-color:#EB9A38;
+}
+
+div.warning a.sm-help-link:hover, div.warning a.button:hover{
+    border-color:#EB9A38;
+    background-color:#EB9A38;
 }
 
 /* a.sm-help-link{
@@ -638,6 +675,8 @@ a.tag, label.checkbox-array{
     -moz-border-radius:4px;
     cursor:pointer;
     color:#666;
+    -webkit-transition: all 0.2s; /* For Safari 3.1 to 6.0 */
+    transition: all 0.2s;
 }
 
 a.tag:hover{
@@ -722,7 +761,7 @@ ul.apps li a.icon{
     /* CSS3 standard */
     opacity:0.9;
     -moz-opacity:0.9;
-    border:1px solid #aaa;
+    /* border:1px solid #aaa; */
     background-color:#333;
     background-image:url(../Images/site-default-icon.png);
     background-repeat:no-repeat;
