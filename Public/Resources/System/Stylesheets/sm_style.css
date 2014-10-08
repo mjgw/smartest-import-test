@@ -39,21 +39,26 @@ a{
 }
 
 a.button{
-    background-color:#f1f1f1;
-    border:1px solid #ccc;
+    
+    color:#fff!important;
+    background-color:#68849E;
+    
+    border:1px solid #68849E;
+    
     display:inline-block;
     padding:2px 9px;
     border-radius:10px;
-    color:#666!important;
+    
     -webkit-transition: all 0.2s; /* For Safari 3.1 to 6.0 */
     transition: all 0.2s;
 }
 
 a.button:hover{
     text-decoration:none;
-    color:#fff!important;
-    background-color:#68849E;
-    border-color:#68849E;
+    /* border-color:#ccc; */
+    
+    background-color:#fff;
+    color:#68849E!important;
 }
 
 a.sm-help-link{
@@ -73,12 +78,22 @@ a.sm-help-link:hover{
     border-color:#68849E;
 }
 
-div.special-box a.sm-help-link, div.special-box a.button{
+/* div.special-box a.button{
+    background-color:#68849E;
+    text-decoration:none;
+}
+
+div.special-box a.button:hover{
+    border-color:#EB9A38; 
+    background-color:#fff;
+}*/
+
+div.special-box a.sm-help-link{
     background-color:#fff;
     text-decoration:none;
 }
 
-div.special-box a.sm-help-link:hover, div.special-box a.button:hover{
+div.special-box a.sm-help-link:hover{
     /* border-color:#EB9A38; */
     background-color:#68849E;
 }
