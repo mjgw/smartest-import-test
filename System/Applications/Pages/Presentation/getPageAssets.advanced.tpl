@@ -148,15 +148,15 @@ var elementTree = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'pa
 	
 	<b>{$assetclass.info.assetclass_name}</b> Smartest needs more information about this new {$assetclass.info.type}.&nbsp;
 	  {if $assetclass.info.type=='container'}
-	    <a href="{$domain}{$section}/addContainer?name={$assetclass.info.assetclass_name}">Enter it now</a>
+	    <a href="{$domain}{$section}/addContainer?name={$assetclass.info.assetclass_name}" class="button">Enter it now</a>
 	  {elseif $assetclass.info.type=='placeholder'}
-	    <a href="{$domain}{$section}/addPlaceholder?placeholder_name={$assetclass.info.assetclass_name}">Enter it now</a>
+	    <a href="{$domain}{$section}/addPlaceholder?placeholder_name={$assetclass.info.assetclass_name}" class="button">Enter it now</a>
 	  {elseif $assetclass.info.type=='list'}
-	    <a href="{$domain}{$section}/addList?name={$assetclass.info.assetclass_name}">Enter it now</a>
+	    <a href="{$domain}{$section}/addList?name={$assetclass.info.assetclass_name}" class="button">Enter it now</a>
 	  {elseif $assetclass.info.type=='field'}
-	    <a href="{$domain}metadata/addPageProperty?site_id={$site_id}&amp;name={$assetclass.info.assetclass_name}">Enter it now</a>
+	    <a href="{$domain}metadata/addPageProperty?site_id={$site_id}&amp;name={$assetclass.info.assetclass_name}" class="button">Enter it now</a>
 	  {elseif $assetclass.info.type=='itemspace'}
-  	  <a href="{$domain}{$section}/addItemSpace?site_id={$site_id}&amp;name={$assetclass.info.assetclass_name}">Enter it now</a>
+  	  <a href="{$domain}{$section}/addItemSpace?site_id={$site_id}&amp;name={$assetclass.info.assetclass_name}" class="button">Enter it now</a>
 	  {/if}
 	  
 	{/if}

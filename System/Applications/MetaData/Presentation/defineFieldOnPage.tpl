@@ -18,6 +18,12 @@
         <option value="{$option.value}"{if $option.value == $value} selected="selected"{/if}>{$option.label}</option>
         {/foreach}
       </select>
+      {elseif $field_type == 'SM_DATATYPE_ASSET_GALLERY'}
+      <select name="field_content">
+        {foreach from=$options item="option"}
+        <option value="{$option.id}"{if $option.id == $value} selected="selected"{/if}>{$option.label}</option>
+        {/foreach}
+      </select>
       {else}
       <input type="text" name="field_content" value="{$value}" />
       {/if}

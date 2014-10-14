@@ -1049,7 +1049,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	
 	public function getPageFieldDefinitions(){
 	    
-	    if(!count($this->_field_definitions)){
+        if(!count($this->_field_definitions)){
 	        
 	        $sql = "SELECT * FROM `PageProperties` WHERE pageproperty_site_id='".$this->_properties['site_id']."'";
     	    $result = $this->database->queryToArray($sql);
@@ -1062,16 +1062,16 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
     	        $property->hydrate($p);
     	        $fields[$property->getId()] = $property;
     	        $definitions->setParameter($p['pageproperty_name'], null);
-    	        // echo $p['pageproperty_name'].' ';
     	    }
 	    
     	    $sql = "SELECT * FROM `PagePropertyValues` WHERE pagepropertyvalue_page_id='".$this->_properties['id']."'";
     	    $result = $this->database->queryToArray($sql);
-	    
-    	    foreach($result as $pfda){
-    	        if(isset($fields[$pfda['pagepropertyvalue_pageproperty_id']])){
+            
+            foreach($result as $pfda){
+                
+                if(isset($fields[$pfda['pagepropertyvalue_pageproperty_id']])){
     	            if($this->getDraftMode()){
-    	                $value = SmartestDataUtility::objectize($pfda['pagepropertyvalue_draft_value'], $fields[$pfda['pagepropertyvalue_pageproperty_id']]->getType());
+                        $value = SmartestDataUtility::objectize($pfda['pagepropertyvalue_draft_value'], $fields[$pfda['pagepropertyvalue_pageproperty_id']]->getType());
                     }else{
                         $value = SmartestDataUtility::objectize($pfda['pagepropertyvalue_live_value'], $fields[$pfda['pagepropertyvalue_pageproperty_id']]->getType());
                     }
@@ -1084,7 +1084,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    
     	    foreach($result as $pfda){
     	        if(isset($fields[$pfda['pagepropertyvalue_pageproperty_id']])){
-    	            if($this->getDraftMode()){
+                    if($this->getDraftMode()){
     	                $value = SmartestDataUtility::objectize($pfda['pagepropertyvalue_draft_value'], $fields[$pfda['pagepropertyvalue_pageproperty_id']]->getType());
                     }else{
                         $value = SmartestDataUtility::objectize($pfda['pagepropertyvalue_live_value'], $fields[$pfda['pagepropertyvalue_pageproperty_id']]->getType());
@@ -1092,8 +1092,8 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
                     $definitions->setParameter($fields[$pfda['pagepropertyvalue_pageproperty_id']]->getName(), $value);
     	        }
     	    }
-	    
-	        $this->_field_definitions = $definitions;
+            
+            $this->_field_definitions = $definitions;
             
         }
 	    

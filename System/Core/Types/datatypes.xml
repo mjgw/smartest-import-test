@@ -385,7 +385,7 @@
         
         <label>File gallery</label>
         <description>One of the file groups from the files repository.</description>
-        <usage>itemproperty</usage>
+        <usage>itemproperty,field</usage>
         <long>false</long>
         
         <filter>

@@ -142,6 +142,10 @@ class MetaData extends SmartestSystemApplication{
         		        $dropdown->find($dropdown_id);
         		        $options = $dropdown->getOptions();
         		        $this->send($options, 'options');
+        		    }else if($field->getType() == 'SM_DATATYPE_ASSET_GALLERY'){
+        		        $alh = new SmartestAssetsLibraryHelper;
+                        $options = $alh->getGalleryAssetGroups($this->getSite()->getId());
+                        $this->send($options, 'options');
         		    }
     		    
         		    $this->send($def->getDraftValue(), 'value');

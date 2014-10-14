@@ -1,7 +1,14 @@
 <div id="work-area">
   
   {load_interface file="edit_tabs.tpl"}
+
+{if $require_item_select}
   
+  <h3>Authors</h3>
+  {load_interface file="choose_item.tpl"}
+  
+{else}
+
   <h3>Authors of this page</h3>
     
     <div class="instruction">Check the boxes next to the users you'd like to link to this page as authors.</div>
@@ -30,6 +37,7 @@
       </div>
   
     </form>
+{/if}
   
 </div>
 

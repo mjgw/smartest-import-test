@@ -1,6 +1,7 @@
 <script language="javascript">
   
   var toggle = 0;
+  var alreadyCleared = false;
   
   {literal}
   function toggleCacheResultDetails(){
@@ -40,17 +41,29 @@
 {literal}
 
     $('clear-cache-button').observe('click', function(){
-        
+      
         $('loader').show();
         $('clear-cache-button').disabled = true;
         
+        if(alreadyCleared){
+            
+          $('cache-details').update('');
+            
+        }
+      
         new Ajax.Updater('cache-details', url, {onComplete: function(){
-            
-            new Effect.Morph('cache-details', {style: 'height:300px'});
+          
+            if(!alreadyCleared){
+              new Effect.Morph('cache-details', {style: 'height:300px'});
+              alreadyCleared = true;
+            }
+          
             $('loader').hide();
-            
-        }});
+            $('clear-cache-button').disabled = false;
+            $('clear-cache-button').value = 'Clear the cache again';
         
+        }});
+          
     });
 
 {/literal}

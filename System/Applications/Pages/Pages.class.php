@@ -2067,16 +2067,42 @@ class Pages extends SmartestSystemApplication{
 	    
 	    if($page->hydrate($page_webid)){
 	        
-	        $uhelper = new SmartestUsersHelper;
-	        // $users = $uhelper->getUsersOnSiteAsArrays($this->getSite()->getId());
-	        $uhelper->distributeAuthorCreditTokenFromPage($page);
-	        $users = $uhelper->getCreditableUsersOnSite($this->getSite()->getId());
-	        $this->send($users, 'users');
-	        $author_ids = $page->getAuthorIds();
-	        $this->send($author_ids, 'author_ids');
-	        $this->send($page, 'page');
-	        $this->send($page->isEditableByUserId($this->getUser()->getId()), 'page_is_editable');
-	        $this->send($this->getUser()->hasToken('modify_user_permissions'), 'provide_tokens_link');
+            $editable = $page->isEditableByUserId($this->getUser()->getId());
+    		$this->send($editable, 'page_is_editable');
+            
+            if($page->getType() == 'ITEMCLASS' && (!$this->getRequestParameter('item_id') || !is_numeric($this->getRequestParameter('item_id')))){
+                
+                $this->send(true, 'require_item_select');
+                
+                $model = new SmartestModel;
+                
+                if($model->hydrate($page->getDatasetId())){
+                    $items  = $model->getSimpleItemsAsArrays($this->getSite()->getId());
+                    $this->send($items, 'items');
+                    $this->send($model, 'model');
+                    $this->send('You need to choose an item to change authors.', 'chooser_message');
+                    $this->send('websitemanager/pageAssets', 'continue_action');
+                    $this->send(true, 'allow_edit');
+                    $this->send($page, 'page');
+                }else{
+                    $this->send(array(), 'items');
+                }
+                
+            }else{
+            
+	            $uhelper = new SmartestUsersHelper;
+	            // $users = $uhelper->getUsersOnSiteAsArrays($this->getSite()->getId());
+	            $uhelper->distributeAuthorCreditTokenFromPage($page);
+	            $users = $uhelper->getCreditableUsersOnSite($this->getSite()->getId());
+	            $this->send($users, 'users');
+	            $author_ids = $page->getAuthorIds();
+	            $this->send($author_ids, 'author_ids');
+	            $this->send($page, 'page');
+	            $this->send($page->isEditableByUserId($this->getUser()->getId()), 'page_is_editable');
+	            $this->send($this->getUser()->hasToken('modify_user_permissions'), 'provide_tokens_link');
+                $this->send(false, 'require_item_select');
+            
+            }
 	        
 	    }else{
             $this->addUserMessage('The page ID was not recognized', SmartestUserMessage::ERROR);
