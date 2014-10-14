@@ -30,4 +30,11 @@
     <format>%TIMESTAMP%: (%LEVEL%) %MESSAGE%</format>
   </log>
   
+  <log id="SM_LOG_RENDER">
+    <name>renderer</name>
+    <description>Logs errors, warnings and notices that arise when pages are rendered.</description>
+    <file>Logs/Site_%SITEID%_render.log</file>
+    <format>%TIMESTAMP%: (%LEVEL%) %MESSAGE%</format>
+  </log>
+  
 </logs>

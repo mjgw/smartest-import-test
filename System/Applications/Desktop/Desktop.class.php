@@ -404,6 +404,7 @@ class Desktop extends SmartestSystemApplication{
         $this->send($this->getUser()->hasToken('see_server_speed'), 'allow_see_server_speed');
         
         $raw_speed_score = SmartestSystemSettingHelper::load('_server_speed_index');
+        $this->send(is_numeric($raw_speed_score), 'speed_score_available');
         $cats = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Core/Info/serverspeed.yml');
         $speed_categories = $cats['levels'];
         $speed_categories[0] = null;

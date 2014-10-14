@@ -80,6 +80,21 @@
   <label for="disable-site">Disabled</label> <input type="radio" id="disable-site" name="site_eu_cookie_compliance" value="0"{if !$eu_cookie_compliance} checked="checked"{/if} /><span class="form-hint">Provides easy compliance with EU Directive 2009/136/EC. Will take effect immediately</span>
 </div>
 
+<div class="edit-form-row">
+  <div class="form-section-label">Responsive mode</div>
+  <div style="float:left">
+    <input type="checkbox" name="site_responsive_mode" value="1" id="site-responsive-mode" onchange="toggleFormAreaVisibilityBasedOnCheckbox('site-responsive-mode', 'site-responsive-options');"{if $site_responsive_mode} checked="checked"{/if} /> <label for="site-responsive-mode">Serve different resources to different platforms</label>
+    <div id="site-responsive-options" style="display:{if $site_responsive_mode}block{else}none{/if}">
+      <ul style="list-style-type:none;margin:0px;padding:0 0 0 18px">
+        <li><input type="checkbox" name="site_responsive_distinguish_mobile" value="1" id="site-responsive-mode-mobile"{if $responsive_distinguish_mobiles} checked="checked"{/if} /> <label for="site-responsive-mode-mobile">Distinguish smartphones, iPod Touch, and other small mobile devices</label></li>
+        <li><input type="checkbox" name="site_responsive_distinguish_tablet" value="1" id="site-responsive-mode-tablet"{if $responsive_distinguish_tablets} checked="checked"{/if} /> <label for="site-responsive-mode-tablet">Distinguish tablets and other larger mobile devices</label></li>
+        <li><input type="checkbox" name="site_responsive_distinguish_oldpcs" value="1" id="site-responsive-mode-oldpcs"{if $responsive_distinguish_old_pcs} checked="checked"{/if} /> <label for="site-responsive-mode-oldpcs">Distinguish old or unsupported desktop browsers</label></li>
+      </ul>
+    </div>
+  </div>
+  <div class="breaker"></div>
+</div>
+
 {* <div class="edit-form-row">
   <div class="form-section-label">Select Home Page (Advanced)</div>
   <select name="site_top_page">

@@ -57,7 +57,7 @@ var elementTree = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'pa
         <option value="{$t.url}"{if $templateMenuField == $t.url} selected{/if}>{$t.url}</option>
 {/foreach}
       </select>
-      {if $page_template.filename && $version == "draft"}<a href="{$domain}templates/editTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={if $page_template.status == "imported"}{$page_template.id}{else}{$page_template.url}{/if}" class="button">Edit</a>{/if}
+      {if (($page_template.status == "imported" && $page_template.filename) || strlen($page_template)) && $version == "draft"}<a href="{$domain}templates/editTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={if $page_template.status == "imported"}{$page_template.id}{else}{$page_template.url}{/if}" class="button">Edit</a>{/if}
     </span>
 {else}
     <div class="special-box-key">Page template: </div>{if strlen($templateMenuField)}<strong>{$templateMenuField}</strong>{else}<em style="color:#666">None yet specified</em>{/if}</span>
@@ -67,7 +67,7 @@ var elementTree = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'pa
 </div>
 
 {if $show_template_warning}
-  <div class="warning">Warning: the page template you are currently using is not yet in the templates repository. Click <a href="{$domain}templates/importSingleTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={$templateMenuField}">here</a> to import it.</div>
+  <div class="warning">Warning: the page template you are currently using is not yet in the templates repository. <a href="{$domain}templates/importSingleTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={$templateMenuField}" class="button">Click here to import it</a></div>
 {/if}
 
 <div class="preference-pane" id="assets_draft" style="display:block">

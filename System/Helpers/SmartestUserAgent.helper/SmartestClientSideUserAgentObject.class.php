@@ -5,8 +5,9 @@ class SmartestClientSideUserAgentObject{
 	public $platform;
 	public $appName;
 	public $appVersion;
+    public $appVersionInteger;
 	public $engine;
-	public $isGecko;
+    public $supported;
 	public $language;
 	
 }

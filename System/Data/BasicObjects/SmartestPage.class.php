@@ -2418,15 +2418,68 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    return $title;
 	}
 	
-	public function getCacheFileName($platform='SM_PLATFORMTYPE_PC'){
+	public function getCacheFileName($platform='_DEFAULT'){
 	    
-	    $page_cache_name = "site".$this->_properties['site_id']."_cms_page_".$this->_properties['id'].$this->getCacheFileNameDatePart();
+        if($platform == '_DEFAULT'){
+            if(defined('SM_USERAGENT_TYPE')){
+                $platform = constant('SM_USERAGENT_TYPE');
+            }else{
+                $platform = constant('SM_USERAGENT_NORMAL');
+            }
+        }
+        
+        if((bool) $this->getGlobalPreference('enable_site_responsive_mode')){
+            
+            switch($platform){
+                
+                case SM_USERAGENT_LARGE_MOBILE:
+                if((bool) $this->getGlobalPreference('site_responsive_distinguish_tablet')){
+                    $platform_filename_insert = '_tablet';
+                }else{
+                    if((bool) $this->getGlobalPreference('site_responsive_distinguish_mobile')){
+                        $platform_filename_insert = '_mobile';
+                    }else{
+                        $platform_filename_insert = '';
+                    }
+                }
+                break;
+            
+                case SM_USERAGENT_MOBILE:
+                // $platform_filename_insert = '_mobile';
+                if((bool) $this->getGlobalPreference('site_responsive_distinguish_mobile')){
+                    $platform_filename_insert = '_mobile'; // site_responsive_distinguish_mobile
+                }else{
+                    if((bool) $this->getGlobalPreference('site_responsive_distinguish_tablet')){
+                        $platform_filename_insert = '_tablet';
+                    }else{
+                        $platform_filename_insert = '';
+                    }
+                }
+                break;
+            
+                case SM_USERAGENT_UNSUPPORTED_BROWSER:
+                if((bool) $this->getGlobalPreference('site_responsive_distinguish_oldpcs')){
+                    $platform_filename_insert = '_old_browser';
+                }else{
+                    $platform_filename_insert = '';
+                }
+                break;
+                
+                case SM_USERAGENT_NORMAL:
+                default:
+                $platform_filename_insert = '';
+                
+            }
+            
+        }
+        
+	    $page_cache_name = "site".$this->_properties['site_id']."_cms_page_".$this->_properties['id'].$platform_filename_insert.$this->getCacheFileNameDatePart();
 	    
 	    if($this->getType() == "ITEMCLASS" && $this->_principal_item){
 			$page_cache_name .= "__id".$this->_principal_item->getId();
 		}
-	    
-	    return $page_cache_name.'.html';
+        
+        return $page_cache_name.'.html';
 	    
 	}
 	

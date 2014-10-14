@@ -37,6 +37,20 @@ class Settings extends SmartestSystemApplication{
                 $eu_cookie_compliance = $this->getGlobalPreference('enable_eu_cookie_compliance');
                 $this->send(SmartestStringHelper::toRealBool($eu_cookie_compliance), 'eu_cookie_compliance');
                 
+                $site_responsive_mode = $this->getGlobalPreference('enable_site_responsive_mode');
+                $this->send(SmartestStringHelper::toRealBool($site_responsive_mode), 'site_responsive_mode');
+                
+                // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
+                    $distinguish_mobiles = $this->getGlobalPreference('site_responsive_distinguish_mobile');
+                    $this->send(SmartestStringHelper::toRealBool($distinguish_mobiles), 'responsive_distinguish_mobiles');
+                    
+                    $distinguish_tablets = $this->getGlobalPreference('site_responsive_distinguish_tablet');
+                    $this->send(SmartestStringHelper::toRealBool($distinguish_tablets), 'responsive_distinguish_tablets');
+                    
+                    $distinguish_old_pcs = $this->getGlobalPreference('site_responsive_distinguish_oldpcs');
+                    $this->send(SmartestStringHelper::toRealBool($distinguish_old_pcs), 'responsive_distinguish_old_pcs');
+                // }
+                
                 $this->send($logos, 'logo_assets');
             
                 $this->setTitle("Edit Site Settings");
@@ -86,6 +100,14 @@ class Settings extends SmartestSystemApplication{
 	        $site->setLanguageCode($this->getRequestParameter('site_language'));
             
             $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
+            
+            $this->setGlobalPreference('enable_site_responsive_mode', ($this->requestParameterIsSet('site_responsive_mode') ? 1 : 0));
+            
+            if($this->requestParameterIsSet('site_responsive_mode')){
+                $this->setGlobalPreference('site_responsive_distinguish_mobile', ($this->requestParameterIsSet('site_responsive_distinguish_mobile') ? 1 : 0));
+                $this->setGlobalPreference('site_responsive_distinguish_tablet', ($this->requestParameterIsSet('site_responsive_distinguish_tablet') ? 1 : 0));
+                $this->setGlobalPreference('site_responsive_distinguish_oldpcs', ($this->requestParameterIsSet('site_responsive_distinguish_oldpcs') ? 1 : 0));
+            }
 	        
 	        if($site->getIsEnabled() == '1' && $this->getRequestParameter('site_is_enabled') == '0'){
 	            if($this->getUser()->hasToken('disable_site')){

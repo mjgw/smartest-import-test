@@ -20,7 +20,7 @@ function turnOffAutoPlural(){
 
 <div id="work-area">
 
-<h3><a href="{$domain}smartest/models">Items</a> &gt; Build a new model</h3>
+<h3>Build a new model</h3>
 
 {if $permissions_issue}
 <div class="warning">

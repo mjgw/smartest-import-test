@@ -99,14 +99,16 @@ div.special-box a.sm-help-link:hover{
 }
 
 div.warning a.sm-help-link, div.warning a.button{
-    background-color:transparent;
     text-decoration:none;
+    background-color:#EB9A38;
     border-color:#EB9A38;
+    color:#fff!important;
 }
 
 div.warning a.sm-help-link:hover, div.warning a.button:hover{
-    border-color:#EB9A38;
-    background-color:#EB9A38;
+    /* border-color:#EB9A38; */
+    background-color:transparent;
+    color:#444!important;
 }
 
 /* a.sm-help-link{

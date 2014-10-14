@@ -13,6 +13,8 @@ class SmartestSiteCreationHelper{
             throw new SmartestException("Tried to create site without logged in user or valid user object");
         }
         
+        $ph = new SmartestPreferencesHelper;
+        
         $site = new SmartestSite;
         $site->setName($p->getParameter('site_name'));
         $site->setInternalLabel($p->getParameter('site_internal_label', $p->getParameter('site_name')));
@@ -24,6 +26,11 @@ class SmartestSiteCreationHelper{
 	    $site->getUniqueId();
 	    SmartestLog::getInstance('system')->log("User {$u->__toString()} created a new site record: '{$site->getName()}/{$site->getDomain()}'", SM_LOG_DEBUG);
 	    
+        $ph->setGlobalPreference('enable_site_responsive_mode', '1', '0', $site->getId());
+        $ph->setGlobalPreference('site_responsive_distinguish_mobile', '1', '0', $site->getId());
+        $ph->setGlobalPreference('site_responsive_distinguish_tablet', '1', '0', $site->getId());
+        $ph->setGlobalPreference('site_responsive_distinguish_oldpcs', '0', '0', $site->getId());
+        
 	    if($p->getParameter('site_master_template') == '_DEFAULT'){
 	        $master_template = '';
 	    }else if($p->getParameter('site_master_template') == '_BLANK'){

@@ -18,6 +18,8 @@ class SmartestDataObject implements ArrayAccess{
 	protected $_dbTableHelper;
 	protected $_request;
 	protected $_escape_values_on_save = false;
+    protected $_preferences_helper;
+    protected $_cached_global_preferences;
 	
 	public function __construct(){
 		
@@ -26,6 +28,12 @@ class SmartestDataObject implements ArrayAccess{
 		if(SmartestPersistentObject::get('controller')){
 		    $this->_request = SmartestPersistentObject::get('controller')->getCurrentRequest();
 		}
+        
+        if(SmartestPersistentObject::get('prefs_helper')){
+            $this->_preferences_helper = SmartestPersistentObject::get('prefs_helper');
+        }
+        
+        $this->_cached_global_preferences = new SmartestParameterHolder('Cached global preferences');
 		
 		if(method_exists($this, '__objectConstruct')){
 			$this->__objectConstruct();
@@ -798,5 +806,39 @@ class SmartestDataObject implements ArrayAccess{
 	public function getDbConnectionLastQuery(){
 	    return $this->database->getLastQuery();
 	}
+    
+	protected function getUser(){
+	    return SmartestSession::get('user');
+	}
+	
+	protected function getUserIdOrZero(){
+        if(is_object($this->getUser())){
+            return $this->getUser()->getId();
+        }else{
+            return '0';
+        }
+    }
+    
+    protected function getSiteIdOrZero(){
+        if($this->getCurrentSiteId()){
+            return $this->getCurrentSiteId();
+        }else{
+            return '0';
+        }
+    }
+    
+	protected function getGlobalPreference($preference_name){
+        
+        $name = SmartestStringHelper::toVarName($preference_name);
+        
+        if($this->_cached_global_preferences->hasParameter($name)){
+            return $this->_cached_global_preferences->getParameter($name);
+        }else{
+            $value = $this->_preferences_helper->getGlobalPreference($name, $this->getUserIdOrZero(), $this->getSiteIdOrZero());
+            $this->_cached_global_preferences->setParameter($name, $value);
+            return $value;
+        }
+        
+    }
 	
 }

@@ -1,0 +1,8 @@
+first_reliable_versions:
+  safari: 5.1.4
+  msie: 9.0
+  firefox: 9.0.1
+  chrome: 10
+  opera: 12.10
+  icecat: 4.0
+  iceweasel: 9.0.1

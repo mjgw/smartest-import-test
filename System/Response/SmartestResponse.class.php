@@ -205,6 +205,10 @@ class SmartestResponse{
     	$td->setParameter('start_time', microtime(true));
     	
     	SmartestPersistentObject::set('timing_data', $td);
+        
+		// Instantiate browser object
+		$this->_browser = new SmartestUserAgentHelper();
+		SmartestPersistentObject::set('userAgent', $this->_browser);
     	
     	$this->_error_stack->display();
 	    
@@ -219,7 +223,8 @@ class SmartestResponse{
         }
         
         try{
-    	    $this->_preferences_helper = new SmartestPreferencesHelper;
+    	    $ph = new SmartestPreferencesHelper;
+    	    SmartestPersistentObject::set('prefs_helper', $ph);
     	    $this->_cached_global_preferences = new SmartestParameterHolder('Cached global preferences');
   	    }catch(SmartestException $e){
   	        $this->errorFromException($e);
@@ -285,10 +290,6 @@ class SmartestResponse{
 	    // Instantiate user auth object
 		$this->_authentication = new SmartestAuthenticationHelper();
 		
-		// Instantiate browser object
-		$this->_browser = new SmartestUserAgentHelper();
-		SmartestPersistentObject::set('userAgent', $this->_browser);
-		
 		if($this->_browser->isExplorer() && $this->_browser->getPlatform() == 'Macintosh' && !$this->isWebsitePage()){
 		    include(SM_ROOT_DIR.'System/Response/ErrorPages/mac_ie.php');
 		    exit();
@@ -325,6 +326,10 @@ class SmartestResponse{
             return '0';
         }
     }
+    
+    protected function getPreferencesHelper(){
+        return SmartestPersistentObject::get('prefs_helper');
+    }
 	
 	protected function getGlobalPreference($preference_name){
         
@@ -333,7 +338,7 @@ class SmartestResponse{
         if($this->_cached_global_preferences->hasParameter($name)){
             return $this->_cached_global_preferences->getParameter($name);
         }else{
-            $value = $this->_preferences_helper->getGlobalPreference($name, $this->getUserIdOrZero(), $this->getSiteIdOrZero());
+            $value = $this->getPreferencesHelper()->getGlobalPreference($name, $this->getUserIdOrZero(), $this->getSiteIdOrZero());
             $this->_cached_global_preferences->setParameter($name, $value);
             return $value;
         }
@@ -343,7 +348,7 @@ class SmartestResponse{
     protected function setGlobalPreference($preference_name, $preference_value){
         
         $name = SmartestStringHelper::toVarName($preference_name);
-        return $this->_preferences_helper->setGlobalPreference($name, $preference_value, $this->getUserIdOrZero(), $this->getSiteIdOrZero());
+        return $this->getPreferencesHelper()->setGlobalPreference($name, $preference_value, $this->getUserIdOrZero(), $this->getSiteIdOrZero());
         
     }
 	
@@ -351,9 +356,6 @@ class SmartestResponse{
 	    
 	    // Start Application Controller
 	    $this->_controller = new Quince(SM_ROOT_DIR, 'Configuration/quince.yml');
-	    
-	    $ph = new SmartestPreferencesHelper;
-	    SmartestPersistentObject::set('prefs_helper', $ph);
 	    
 	    try{
 	        $this->_controller->prepare();

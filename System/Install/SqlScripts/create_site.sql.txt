@@ -11,6 +11,10 @@ INSERT INTO `Settings` (`setting_parent_id` ,`setting_site_id` ,`setting_user_id
 INSERT INTO `Settings` (`setting_parent_id` ,`setting_site_id` ,`setting_user_id` ,`setting_application_id` ,`setting_type` ,`setting_name` ,`setting_value`) VALUES ('0',  '1',  '0',  '_GLOBAL',  'SM_SETTINGTYPE_GLOBAL_PREFERENCE',  'site_tag_page_id',  '4');
 INSERT INTO `Settings` (`setting_parent_id` ,`setting_site_id` ,`setting_user_id` ,`setting_application_id` ,`setting_type` ,`setting_name` ,`setting_value`) VALUES ('0',  '1',  '0',  '_GLOBAL',  'SM_SETTINGTYPE_GLOBAL_PREFERENCE',  'site_user_page_id',  '5');
 
+INSERT INTO `Settings` (`setting_parent_id`, `setting_site_id`, `setting_user_id`, `setting_application_id`, `setting_type`, `setting_name`, `setting_value`) VALUES ('0',  '1',  '0',  '_GLOBAL',  'SM_SETTINGTYPE_GLOBAL_PREFERENCE',  'enable_site_responsive_mode', '1');
+INSERT INTO `Settings` (`setting_parent_id`, `setting_site_id`, `setting_user_id`, `setting_application_id`, `setting_type`, `setting_name`, `setting_value`) VALUES ('0',  '1',  '0',  '_GLOBAL',  'SM_SETTINGTYPE_GLOBAL_PREFERENCE',  'site_responsive_distinguish_mobile', '1');
+INSERT INTO `Settings` (`setting_parent_id`, `setting_site_id`, `setting_user_id`, `setting_application_id`, `setting_type`, `setting_name`, `setting_value`) VALUES ('0',  '1',  '0',  '_GLOBAL',  'SM_SETTINGTYPE_GLOBAL_PREFERENCE',  'site_responsive_distinguish_tablet', '1');
+
 INSERT INTO `UsersTokensLookup` (`utlookup_user_id`, `utlookup_token_id`, `utlookup_site_id`, `utlookup_is_global`, `utlookup_granted_timestamp`) VALUES (1, 0, NULL, 1, %NOW%);
 INSERT INTO `UsersTokensLookup` (`utlookup_user_id`, `utlookup_token_id`, `utlookup_site_id`, `utlookup_is_global`, `utlookup_granted_timestamp`) VALUES (1, 13, NULL, 1, %NOW%);
 INSERT INTO `UsersTokensLookup` (`utlookup_user_id`, `utlookup_token_id`, `utlookup_site_id`, `utlookup_is_global`, `utlookup_granted_timestamp`) VALUES (1, 21, NULL, 1, %NOW%);

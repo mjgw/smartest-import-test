@@ -1,9 +1,9 @@
 system:
   info:
     version: "0.5"
-    revision: 666
-    minimum_php_version: 5.2
-    minimum_database_version: 19
+    revision: 667
+    minimum_php_version: 5.3
+    minimum_database_version: 21
     default_timezone: Europe/London
     lastversion_last_revision: 473
     self_hosted: true

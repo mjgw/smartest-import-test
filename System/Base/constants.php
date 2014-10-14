@@ -150,4 +150,18 @@ define('SM_MTMLOOKUPMODE_ALL', 0);
 define('SM_MTMLOOKUPMODE_DRAFT', 1);
 define('SM_MTMLOOKUPMODE_PUBLIC', 2);
 
+// Different platforms
+define('SM_USERAGENT_NORMAL', 1);
+define('SM_USERAGENT_DESKTOP', 1);
+
+define('SM_USERAGENT_UNSUPPORTED_BROWSER', 2);
+define('SM_USERAGENT_OLD_BROWSER', 2);
+
+define('SM_USERAGENT_MOBILE', 4);
+define('SM_USERAGENT_SMALL_MOBILE', 4);
+define('SM_USERAGENT_PHONE', 4);
+
+define('SM_USERAGENT_LARGE_MOBILE', 8);
+define('SM_USERAGENT_TABLET', 8);
+
 $GLOBALS['reserved_keywords'] = array('__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'for', 'foreach', 'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor');

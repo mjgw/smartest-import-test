@@ -9,9 +9,19 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
     protected $_site;
     protected $_navigation_handler = null;
     protected $_search_info = null;
+    protected $_preferences_helper;
+    protected $_cached_global_preferences;
     
     public function __construct(SmartestPage $page){
+        
         $this->assignPage($page);
+        
+        if(SmartestPersistentObject::get('prefs_helper')){
+            $this->_preferences_helper = SmartestPersistentObject::get('prefs_helper');
+        }
+        
+        $this->_cached_global_preferences = new SmartestParameterHolder('Cached global preferences');
+		
     }
     
     public function assignPage(SmartestPage $page){
@@ -72,6 +82,32 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
             
             return $this->_search_info;
             
+        }
+        
+    }
+    
+	protected function getUser(){
+	    return SmartestSession::get('user');
+	}
+	
+	protected function getUserIdOrZero(){
+        if(is_object($this->getUser())){
+            return $this->getUser()->getId();
+        }else{
+            return '0';
+        }
+    }
+    
+    protected function getGlobalPreference($preference_name){
+        
+        $name = SmartestStringHelper::toVarName($preference_name);
+        
+        if($this->_cached_global_preferences->hasParameter($name)){
+            return $this->_cached_global_preferences->getParameter($name);
+        }else{
+            $value = $this->_preferences_helper->getGlobalPreference($name, $this->getUserIdOrZero(), $this->_page->getSiteId());
+            $this->_cached_global_preferences->setParameter($name, $value);
+            return $value;
         }
         
     }
@@ -174,6 +210,14 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
             
             case "_php_class":
             return __CLASS__;
+            
+            case "user_agent":
+            if(! (bool) $this->getGlobalPreference('enable_site_responsive_mode') && (bool) $this->_page->getCacheAsHTML()){
+                if(!$this->_page->getDraftMode()){
+                    SmartestLog::getInstance('renderer')->log('User agent information is being accessed on a page when responsive mode is not activated, meaning the wrong user agent info may be saved in cache for later users. Enable responsive mode in Site settings to turn off this message.');
+                }
+            }
+            return SmartestPersistentObject::get('userAgent');
         
         }
         

@@ -82,8 +82,6 @@ class SmartestUserAppBuilder extends SmartestBasicRenderer{
             return $params['from'];
         }
         
-        // print_r($params['from']);
-        
         if($params['from'] instanceof SmartestSortableItemReferenceSet){
             return $params['from']->getItems();
         }
