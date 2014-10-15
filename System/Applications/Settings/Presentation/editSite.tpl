@@ -69,6 +69,12 @@
 </div>
 
 <div class="edit-form-row">
+  <div class="form-section-label">Google Analytics Site ID</div>
+  <input type="text" name="site_ga_id" value="{$site_ga_id}" />
+  <div class="form-hint">Usually takes the form <em>UA-1234567-1</em></div>
+</div>
+
+<div class="edit-form-row">
   <div class="form-section-label">Site status</div>
   <label for="enable-site">Enabled</label> <input type="radio" id="enable-site" name="site_is_enabled" value="1"{if $site.is_enabled == 1} checked="checked"{/if} />
   <label for="disable-site">Disabled</label> <input type="radio" id="disable-site" name="site_is_enabled" value="0"{if $site.is_enabled == 0} checked="checked"{/if} /><span class="form-hint">Will take effect immediately</span>

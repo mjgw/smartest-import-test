@@ -1481,25 +1481,11 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
 	        if(isset($params['id'])){
 	            return '<!--On a live page, Google Analytics will be placed here ('.$params['id'].')-->';
             }
-	        
-	    }else{
 	    
-	        if(isset($params['id'])){
+        }else{
 	        
-    	        if(isset($params['legacy']) && SmartestStringHelper::toRealBool($params['legacy']) == false){
-    	            $file = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/google_analytics_legacy.tpl';
-                }else{
-                    $file = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/google_analytics.tpl';
-                }
-            
-                $render_process_id = 'google_analytics_'.$params['id'];
-    	        $child = $this->startChildProcess($render_process_id);
-    	        $child->assign('analytics_id', $params['id']);
-    	        $child->setContext(SM_CONTEXT_DYNAMIC_TEXTFRAGMENT);
-    	        $content = $child->fetch($file);
-    	        $this->killChildProcess($child->getProcessId());
-    	        return $content;
-	        
+            if(isset($params['id'])){
+                return '<!--SM_GA_TAG:ID='.$params['id'].'-->';
     	    }else{
     	        return $this->raiseError("Google Analytics ID not supplied.");
     	    }

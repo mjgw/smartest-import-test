@@ -40,6 +40,9 @@ class Settings extends SmartestSystemApplication{
                 $site_responsive_mode = $this->getGlobalPreference('enable_site_responsive_mode');
                 $this->send(SmartestStringHelper::toRealBool($site_responsive_mode), 'site_responsive_mode');
                 
+                $ga_id = $this->getGlobalPreference('google_analytics_id');
+                $this->send($ga_id, 'site_ga_id');
+                
                 // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
                     $distinguish_mobiles = $this->getGlobalPreference('site_responsive_distinguish_mobile');
                     $this->send(SmartestStringHelper::toRealBool($distinguish_mobiles), 'responsive_distinguish_mobiles');
@@ -99,8 +102,8 @@ class Settings extends SmartestSystemApplication{
 	        
 	        $site->setLanguageCode($this->getRequestParameter('site_language'));
             
+            $this->setGlobalPreference('google_analytics_id', $this->getRequestParameter('site_ga_id'));
             $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
-            
             $this->setGlobalPreference('enable_site_responsive_mode', ($this->requestParameterIsSet('site_responsive_mode') ? 1 : 0));
             
             if($this->requestParameterIsSet('site_responsive_mode')){

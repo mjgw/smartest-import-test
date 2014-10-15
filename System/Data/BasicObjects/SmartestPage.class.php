@@ -82,8 +82,6 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         		
 		    }else{
 		        
-		        // var_dump($id);
-		        // echo 'empty ';
 		        // throw new SmartestException('Attempted page hydration without valid page id, web_id, or name field.');
 		        
 		    }
@@ -2473,7 +2471,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             
         }
         
-	    $page_cache_name = "site".$this->_properties['site_id']."_cms_page_".$this->_properties['id'].$platform_filename_insert.$this->getCacheFileNameDatePart();
+        $page_cache_name = "site".$this->_properties['site_id']."_cms_page_".$this->_properties['id'].$platform_filename_insert.$this->getCacheFileNameDatePart();
 	    
 	    if($this->getType() == "ITEMCLASS" && $this->_principal_item){
 			$page_cache_name .= "__id".$this->_principal_item->getId();

@@ -3,8 +3,6 @@
 function smartest_filter_cookiealert($html, $filter){
     
     $ph = SmartestPersistentObject::get('prefs_helper');
-    $filter->getCurrentSite();
-    
     $preference_value = $ph->getGlobalPreference('enable_eu_cookie_compliance', null, $filter->getCurrentSite()->getId());
     
     if($preference_value){
