@@ -27,6 +27,11 @@ class SmartestExternalUrl implements SmartestBasicType, ArrayAccess, SmartestSto
         return (bool) strlen($this->_value);
     }
     
+    public function getHostName(){
+        preg_match('/^https?:\/\/([\w\.-]+)/', $this->_value, $matches);
+        return $matches[1];
+    }
+    
     // The next two methods are for the SmartestStorableValue interface
     public function getStorableFormat(){
         return $this->_value;
@@ -55,7 +60,7 @@ class SmartestExternalUrl implements SmartestBasicType, ArrayAccess, SmartestSto
     public function offsetGet($offset){
         switch($offset){
             case "_host":
-            return $this->getValue();
+            return $this->getHostName();
             case '_request':
             return $this->getValue();
             case '_protocol':
