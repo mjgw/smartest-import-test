@@ -9,7 +9,7 @@
 <div id="instruction">You are editing the draft property values of the {$item._model.name|strtolower} &quot;<strong>{$item.name}</strong>&quot;</div>
 
 <div id="sets" class="special-box">
-     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem" class="button">remove</a> {/foreach}{else}<em style="color:#666">None (<a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}">Create one</a>)</em>{/if}
+     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em> <a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}" class="button">Create one</a>{/if}
  {if count($possible_sets)}
          <div>
            <form action="{$domain}sets/transferSingleItem" method="post">
