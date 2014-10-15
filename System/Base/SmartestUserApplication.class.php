@@ -11,6 +11,7 @@ class SmartestUserApplication extends SmartestBaseApplication{
     
     public function __post(){
         parent::__post();
+        // If a CMS page has not already been assigned to the current action (to help with things like automatic nav generation and website integration), assign the home page:
         if(!$this->hasDefaultBackgroundPage()){
             $this->setDefaultBackgroundPage($this->getSite()->getHomePage());
         }
@@ -19,8 +20,6 @@ class SmartestUserApplication extends SmartestBaseApplication{
     protected function requireAuthenticatedUser($authservicename=null){
 	    if(!$this->userIsLoggedIn()){
 	        if($authdata = $this->getAuthenticationInfo()){
-	            // $this->redirect($authdata['login_point'].'?reason=session');
-	            // exit;
 	            if(isset($authdata['login_point'])){
 	                $e = new SmartestAuthenticationException;
         	        $e->lockOut('session', $authdata['login_point']);

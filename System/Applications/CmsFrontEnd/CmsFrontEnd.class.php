@@ -281,8 +281,6 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	
 	public function renderSiteTagSimpleRssFeed(){
 	    
-	    // var_dump($this->_site);
-	    
 	    if($this->lookupSiteDomain()){
 	        
 	        define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
@@ -344,7 +342,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
                     if($this->getRequestParameter('use_file_mime')){
                         $mime_type = $asset->getMimeType();
                     }else{
-                		if($ua == 'Explorer' || $ua == 'Opera'){
+                		if($ua == 'Internet Explorer' || $ua == 'Opera'){
                 		    $mime_type = 'application/octetstream';
                 		}else{
                 		    $mime_type = 'application/octet-stream';

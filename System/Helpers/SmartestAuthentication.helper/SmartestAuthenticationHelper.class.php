@@ -13,12 +13,16 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 		
 		$this->database = SmartestPersistentObject::get('db:main');
 		
+        /* if(session_is_registered()){
+            
+        }
+        
 		if(SmartestSession::get('user:isAuthenticated')){
 			// $this->userLoggedIn =& SmartestSession::get('user:isAuthenticated');
 		}else{
 			// $this->userLoggedIn = false;
 			SmartestSession::set('user:isAuthenticated', false);
-		}		
+		} */	
 	}
 
 	public function newLogin($username, $password, $service='smartest', $use_email=false){
@@ -65,6 +69,7 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 		            if($userObj->getPassword() === md5($password.$userObj->getPasswordSalt())){
 		            
     			        $userObj->getTokens();
+                        SmartestSession::start();
     			        SmartestSession::set('user:isAuthenticated', true);
     			        
     			        if($userObj->getType() == 'SM_USERTYPE_SYSTEM_USER'){
@@ -95,6 +100,8 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 			            $userObj->setLastVisit(time());
 			            $userObj->save();
 			            
+                        SmartestSession::start();
+                        
 			            if($userObj->getType() == 'SM_USERTYPE_SYSTEM_USER'){
     			            SmartestSession::set('user:isAuthenticatedToCms', true);
     			        }
@@ -131,6 +138,8 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 			return false;
 		}else{
 			
+            SmartestSession::start();
+            
 			$u->setLastVisit(time());
 	        $u->save();
 			

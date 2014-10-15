@@ -24,6 +24,8 @@ class Login extends SmartestSystemApplication{
 	
 	public function loginScreen(){
 		
+        $this->startSession();
+        
 		if($this->getUser() && $this->getUser()->isAuthenticated() && $this->_auth->getSystemUserIsLoggedIn()){
 		    $this->redirect('/smartest');
 		}
@@ -47,6 +49,8 @@ class Login extends SmartestSystemApplication{
 	
 	public function doAuth(){
 		
+        $this->startSession();
+        
 		if($this->requestParameterIsSet('service') && strlen($this->getRequestParameter('service'))){
 		    $service = $this->getRequestParameter('service');
 		}else{

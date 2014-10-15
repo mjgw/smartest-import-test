@@ -40,8 +40,10 @@ class SmartestBaseApplication extends QuinceBase{
 		$this->userTokenHelper = new SmartestUsersHelper();
 		$this->settings = new SmartestParameterHolder("Application settings");
 		
-		SmartestSession::set('user:currentApp', $this->getRequest()->getModule());
-		SmartestSession::set('user:currentAction', $this->getRequest()->getAction());
+        if(SM_SESSION_ACTIVE){
+		    SmartestSession::set('user:currentApp', $this->getRequest()->getModule());
+		    SmartestSession::set('user:currentAction', $this->getRequest()->getAction());
+        }
 		
 		$this->_preferences_helper = SmartestPersistentObject::get('prefs_helper');
 		$this->_cached_application_preferences = new SmartestParameterHolder('Cached application-level preferences');
@@ -135,16 +137,17 @@ class SmartestBaseApplication extends QuinceBase{
 	    $rp = new SmartestParameterHolder('Final request parameters');
 	    $rp->loadArray($this->getRequest()->getRequestParameters());
 	    $this->getPresentationLayer()->assign('request_parameters', $rp);
-	    $this->send($this->userIsLoggedIn(), 'user_logged_in');
+        
+        $this->send($this->userIsLoggedIn(), 'user_logged_in');
 	    $this->send($this->userIsLoggedInToCms(), 'system_user_logged_in');
 	    
 	}
 	
-	public function __call($method, $arguments){
+	/* public function __call($method, $arguments){
 	    
-	    throw new SmartestException('The action or method \''.$method.'\' does not exist.');
+	    // throw new SmartestException('The action or method \''.$method.'\' does not exist.');
 	    
-	}
+	} */
 	
 	public function lookupSiteDomain(){
 	    
@@ -349,11 +352,13 @@ class SmartestBaseApplication extends QuinceBase{
 	}
 	
 	///// Authentication Stuff /////
+    
+    protected function startSession(){
+        SmartestSession::start();
+    }
 	
 	protected function getUser(){
-	    
-	    return SmartestSession::get('user');
-	    
+        return SmartestSession::get('user');
 	}
 	
 	protected function userIsLoggedIn(){

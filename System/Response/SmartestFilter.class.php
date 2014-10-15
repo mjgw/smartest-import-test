@@ -63,13 +63,22 @@ class SmartestFilter{
         }else{
             
             if($this->getRequestData()->g('application')->g('name') == 'website'){
-                $site_id = constant('SM_CMS_PAGE_SITE_ID');
                 
-                $site = new SmartestSite;
+                if(isset($GLOBALS['_site']) && $GLOBALS['_site'] instanceof SmartestSite){
+                    $this->_site = $GLOBALS['_site'];
+                }else{
+                    $site_id = constant('SM_CMS_PAGE_SITE_ID');
+                
+                    $site = new SmartestSite;
         
-                if($site->find($site_id)){
-                    $this->_site = $site;
+                    if($site->find($site_id)){
+                        $this->_site = $site;
+                    }
                 }
+                
+            }elseif(isset($GLOBALS['_site']) && $GLOBALS['_site'] instanceof SmartestSite){
+                
+                $this->_site = $GLOBALS['_site'];
                 
             }else if(is_object(SmartestSession::get('current_open_project'))){
                 // This is mostly for when objects are used within the Smartest backend
@@ -78,7 +87,7 @@ class SmartestFilter{
                 $this->_site = $site;
             }
         
-            return $site;
+            return $this->_site;
             
         }
         

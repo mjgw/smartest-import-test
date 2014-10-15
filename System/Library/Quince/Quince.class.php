@@ -165,8 +165,11 @@ class QuinceAction{
         
         // make sure the method is callable
         if($this->_use_checking){
-        
+            
+            // var_dump($this->_action_object);
+            
             if(!is_callable(array($this->_action_object, $this->_action))){
+                
                 if($this->_action == $this->_module_info['default_action']){
                     throw new QuinceException("Method '".$this->_action."' of class '".$this->_class."' is either private or protected, and cannot be called.");
                 }else{

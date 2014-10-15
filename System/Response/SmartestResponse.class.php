@@ -230,9 +230,7 @@ class SmartestResponse{
   	        $this->errorFromException($e);
   	    }
         
-        session_start();
-  	    
-    	$this->_error_stack->display();
+        $this->_error_stack->display();
         
         if(version_compare(PHP_VERSION, '5.3.0') >= 0){
             if(!ini_get('date.timezone')){
@@ -285,10 +283,14 @@ class SmartestResponse{
 		    $this->errorFromException($e);
 	    }
 	    
-	    $this->_error_stack->display();
-	    
-	    // Instantiate user auth object
-		$this->_authentication = new SmartestAuthenticationHelper();
+	    try{
+	        // Instantiate user auth object
+		    $this->_authentication = new SmartestAuthenticationHelper();
+        }catch(SmartestException $e){
+            $this->errorFromException($e);
+        }
+        
+        $this->_error_stack->display();
 		
 		if($this->_browser->isExplorer() && $this->_browser->getPlatform() == 'Macintosh' && !$this->isWebsitePage()){
 		    include(SM_ROOT_DIR.'System/Response/ErrorPages/mac_ie.php');
@@ -320,8 +322,15 @@ class SmartestResponse{
     }
     
     protected function getSiteIdOrZero(){
-        if(is_object(SmartestSession::get('current_open_project'))){
+        
+        $rh = new SmartestRequestUrlHelper;
+        
+        if(isset($GLOBALS['_site'])){
+            return $GLOBALS['_site']->getId();
+        }elseif(is_object(SmartestSession::get('current_open_project')) && !$this->isWebsitePage()){
             return SmartestSession::get('current_open_project')->getId();
+        }elseif($this->isWebsitePage() && $site = $rh->getSiteByDomain(SmartestStringHelper::toValidDomain($_SERVER['HTTP_HOST']))){
+            return $site->getId();
         }else{
             return '0';
         }
@@ -368,6 +377,25 @@ class SmartestResponse{
 	    SmartestPersistentObject::set('controller', $this->_controller);
 	    $this->_controller->getCurrentRequest()->getUserActionObject()->give('_auth', $this->_authentication);
 	    
+        if($this->isWebsitePage()){
+            // if compliance mode is on, make starting the session and setting the cookie contingent on having permission to do so
+            if($this->getGlobalPreference('enable_eu_cookie_compliance') == '1') {
+                if($_COOKIE['SMARTEST_COOKIE_CONSENT'] == '1'){
+                    SmartestSession::start();
+                }
+            }else{
+                // Otherwise, as EU compliance is not activated, start the session
+                SmartestSession::start();
+            }
+        }else if($this->isSystemClass()){
+            // The session is always started for anything where you have to log in to Smartest
+            SmartestSession::start();
+        }else{
+            // It's not a system class or a public web page - so let the developer decide what to do with the session, and do nothing for now.
+        }
+        
+        $this->_error_stack->display();
+        
 	    try{
 	        $this->checkAuthenticationStatus();
         }catch(SmartestAuthenticationException $e){
@@ -411,20 +439,24 @@ class SmartestResponse{
 	    
     	    // Make sure site is always looked up
     	    if($this->isWebsitePage()){
-		    
-    		    if($this->_controller->getCurrentRequest()->getAction() == 'renderEditableDraftPage'){
-    		        if($site = $h->getSiteByPageWebId($_GET['page_id'])){
-    	                $GLOBALS['_site'] = $site;
-    	            }else{
-    	                // unknown page id
-    	            }
-    	        }else{
-    	            if($site = $h->getSiteByDomain($_SERVER['HTTP_HOST'])){
-    	                $GLOBALS['_site'] = $site;
-    	            }else{
-    	                // unknown site domain
-    	            }
-    	        }
+		        
+                if(!isset($GLOBALS['_site']) || !($GLOBALS['_site'] instanceof SmartestSite)){
+                    
+        		    if($this->_controller->getCurrentRequest()->getAction() == 'renderEditableDraftPage'){
+        		        if($site = $h->getSiteByPageWebId($_GET['page_id'])){
+        	                $GLOBALS['_site'] = $site;
+        	            }else{
+        	                // unknown page id
+        	            }
+        	        }else{
+        	            if($site = $h->getSiteByDomain($_SERVER['HTTP_HOST'])){
+        	                $GLOBALS['_site'] = $site;
+        	            }else{
+        	                // unknown site domain
+        	            }
+        	        }
+                    
+                }
 	    
     	    }else if($this->isSystemClass() && SmartestSession::hasData('current_open_project')){
     	        // Logged in to Smartest and working with objects in the backend
@@ -555,10 +587,15 @@ class SmartestResponse{
 	
 	public function isWebsitePage(){
 	    
-	    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
-		$websiteMethodNames = $sd['system']['content_interaction_methods'];
-		$method = $this->_controller->getCurrentRequest()->getModule().'/'.$this->_controller->getCurrentRequest()->getAction();
-		return in_array($method, $websiteMethodNames);
+        // This function is called even when the controller has not been set up yet, so needs to be able to respond when it doesn't yet know
+        if(is_object($this->_controller)){
+    	    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
+    		$websiteMethodNames = $sd['system']['content_interaction_methods'];
+    		$method = $this->_controller->getCurrentRequest()->getModule().'/'.$this->_controller->getCurrentRequest()->getAction();
+    		return in_array($method, $websiteMethodNames);
+        }else{
+            return null;
+        }
 	    
 	}
 	

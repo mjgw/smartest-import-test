@@ -17,11 +17,7 @@ class SmartestDataUtility{
         if(strlen($connection_name)){
             $this->database = SmartestDatabase::getInstance($connection_name);
         }else{
-            if(isset($_SESSION)){
-                $this->database = SmartestPersistentObject::get('db:main');
-            }else{
-                throw new SmartestException("Tried to construct a SmartestDataUtility object with neither an active session or a specified connection name;");
-            }
+            $this->database = SmartestPersistentObject::get('db:main');
         }
         
     }
