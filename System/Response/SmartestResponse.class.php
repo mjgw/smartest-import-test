@@ -492,7 +492,7 @@ class SmartestResponse{
 		}
 		
 		$this->_smarty->assign("sm_user_agent_json", $this->_browser->getSimpleClientSideObjectAsJson());
-		$this->_smarty->assign("sm_user_agent", $this->_browser->__toArray());
+		$this->_smarty->assign("sm_user_agent", $this->_browser);
 		
 		SmartestPersistentObject::set('presentationLayer', $this->_smarty);
 		
