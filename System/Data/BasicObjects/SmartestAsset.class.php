@@ -625,12 +625,19 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    
 	    $params = array();
         $type_lookups = array();
+        $ratio = null;
 	    
 	    if(isset($info['param'])){
 	        
 	        $raw_xml_params = $info['param'];
             
+            // print_r($raw_xml_params);
+            
             foreach($raw_xml_params as $rxp){
+                
+                if($rxp['name'] == 'ratio'){
+                    $ratio = $rxp['default'];
+                }
                 
                 $type_lookups[$rxp['name']] = $rxp['type'];
                 
@@ -649,8 +656,23 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	        if($asset_params = @unserialize($default_serialized_data)){
 	            
 	            if(is_array($asset_params)){
-	            
-	                // data found. loop through params from xml, replacing values with those from asset
+	                
+                    // If a ratio exists, and either width or height is missing (from assets where both are needed, use the ratio to calculate the missing value)
+                    if(isset($asset_params['ratio']) && is_numeric($asset_params['ratio'])){
+                        $ratio = $asset_params['ratio'];
+                    }
+                    
+                    if(isset($params['width']) && isset($params['height']) && is_numeric($ratio)){
+                        
+                        if((!isset($asset_params['width']) || !$asset_params['width']) && isset($asset_params['height']) && is_numeric($asset_params['height'])){
+                            $asset_params['width'] = floor($asset_params['height']*$ratio);
+                        }else if((!isset($asset_params['height']) || !$asset_params['height']) && isset($asset_params['width']) && is_numeric($asset_params['width'])){
+                            $asset_params['height'] = floor($asset_params['width']/$ratio);
+                        }
+                        
+                    }
+                    
+                    // data found. loop through params from xml, replacing values with those from asset
     	            foreach($asset_params as $key => $value){
     	                if($params[$key] !== null){
     	                    // $params[$key] = $value;
@@ -680,27 +702,32 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	        
 	        foreach($raw_xml_params as $rxp){
                 
-                $params[$rxp['name']]['datatype'] = $rxp['type'];
-                
-                if(isset($rxp['default'])){
-	                $sv = $rxp['default'];
+                if(isset($rxp['editable']) && !$rxp['editable']){
                 }else{
-                    $sv = '';
-                }
+                    
+                    $params[$rxp['name']]['datatype'] = $rxp['type'];
                 
-                $params[$rxp['name']]['value'] = SmartestDataUtility::objectize($sv, $rxp['type']);
+                    if(isset($rxp['default'])){
+    	                $sv = $rxp['default'];
+                    }else{
+                        $sv = '';
+                    }
                 
-                if(isset($rxp['label'])){
-                    $params[$rxp['name']]['label'] = $rxp['label'];
-                }else{
-                    $params[$rxp['name']]['label'] = $rxp['name'];
-                }
+                    $params[$rxp['name']]['value'] = SmartestDataUtility::objectize($sv, $rxp['type']);
                 
-                if(isset($rxp['options'])){
-                    $params[$rxp['name']]['has_options'] = true;
-                    $params[$rxp['name']]['options'] = new SmartestFixedOptionsList($rxp['options'], $rxp['type']);
-                }else{
-                    $params[$rxp['name']]['has_options'] = false;
+                    if(isset($rxp['label'])){
+                        $params[$rxp['name']]['label'] = $rxp['label'];
+                    }else{
+                        $params[$rxp['name']]['label'] = $rxp['name'];
+                    }
+                
+                    if(isset($rxp['options'])){
+                        $params[$rxp['name']]['has_options'] = true;
+                        $params[$rxp['name']]['options'] = new SmartestFixedOptionsList($rxp['options'], $rxp['type']);
+                    }else{
+                        $params[$rxp['name']]['has_options'] = false;
+                    }
+                    
                 }
                 
                 // TODO: Insert L10N stuff here
@@ -714,11 +741,8 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	            
 	                // data found. loop through params from xml, replacing values with those from asset
     	            foreach($asset_params as $key => $value){
-    	                if($params[$key] !== null){
-                            // var_dump($params[$key]['datatype']);
-                            // var_dump($value);
+    	                if(isset($params[$key]) && $params[$key] !== null){
                             $value_obj = SmartestDataUtility::objectize($value, $params[$key]['datatype']);
-                            // var_dump($value_obj);
                             $params[$key]['value'] = $value;
                         }
     	            }

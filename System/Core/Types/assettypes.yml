@@ -207,6 +207,7 @@ type:
     param:
       - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 500}
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 598}
+      - {name: ratio, label: "Ratio", type: SM_DATATYPE_NUMERIC, required: false, default: 0.836, editable: false}
 
 
   SM_ASSETTYPE_SVG_IMAGE:
