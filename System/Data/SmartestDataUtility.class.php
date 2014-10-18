@@ -482,6 +482,13 @@ class SmartestDataUtility{
         return $data;
         
 	}
+    
+    public static function isValidType($type, $usage_filter=''){
+        
+        $types = self::getDataTypes($usage_filter);
+        return isset($types[$type]);
+        
+    }
 	
 	public static function getDataTypes($usage_filter=''){
 	    

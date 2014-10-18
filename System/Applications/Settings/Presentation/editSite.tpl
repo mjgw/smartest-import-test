@@ -82,8 +82,8 @@
 
 <div class="edit-form-row">
   <div class="form-section-label">EU cookie law compliance</div>
-  <label for="enable-site">Enabled</label> <input type="radio" id="enable-site" name="site_eu_cookie_compliance" value="1"{if $eu_cookie_compliance} checked="checked"{/if} />
-  <label for="disable-site">Disabled</label> <input type="radio" id="disable-site" name="site_eu_cookie_compliance" value="0"{if !$eu_cookie_compliance} checked="checked"{/if} /><span class="form-hint">Provides easy compliance with EU Directive 2009/136/EC. Will take effect immediately</span>
+  {boolean name="site_eu_cookie_compliance" id="site-eu-cookie-compliance" value=$eu_cookie_compliance}
+  <div class="form-hint">Provides easy compliance with EU Directive 2009/136/EC. Will take effect immediately</div>
 </div>
 
 <div class="edit-form-row">

@@ -115,7 +115,7 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	
 	public function render($draft_mode='unset'){
 	    
-	    if($draft_mode === 'unset'){
+        if($draft_mode === 'unset'){
 	        $draft_mode = $this->_draft_mode;
 	    }
 	    
@@ -147,7 +147,7 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	
 	public function renderPreview(){
 	    
-	    if(isset($this->_type_info['render']['preview_template']) && is_file(SM_ROOT_DIR.$this->_type_info['render']['preview_template'])){
+        if(isset($this->_type_info['render']['preview_template']) && is_file(SM_ROOT_DIR.$this->_type_info['render']['preview_template'])){
 	        
 	        if($this->_type_info['storage']['type'] == 'external_translated'){
     	        $this->_render_data->setParameter('remote_id', $this->extractId());

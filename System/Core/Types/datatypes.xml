@@ -161,6 +161,27 @@
         <input template="System/Presentation/InterfaceBuilder/Inputs/boolean_radio.tpl" />
     </type>
     
+    <type id="SM_DATATYPE_DROPDOWN_MENU" valuetype="foreignkey">
+        
+        <label>Dropdown Menu</label>
+        <description>A value from one of the dropdown menus defined in the dropdown menu editor.</description>
+        <usage>field,itemproperty</usage>
+        <long>false</long>
+        <sortable>true</sortable>
+        
+        <filter>
+          <typesource type="db" table="DropDowns" matchfield="id" label="Dropdown Menu" class="SmartestDropdown" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.dropdownmenus.tpl" />
+          <entitysource type="db" table="DropDownValues" matchfield="dropdownvalue_dropdown_id" class="SmartestDropdownOption" sortfield="dropdownvalue_order" />
+        </filter>
+        
+        <render template="System/Presentation/WebPageBuilder/property.dropdownvalue.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/dropdown_menu.tpl" />
+        <menu value="value" display="label" />
+        
+        <class>SmartestDropdownOption</class>
+        
+    </type>
+    
     <type id="SM_DATATYPE_RGB_COLOR" valuetype="string">
         <label>Color</label>
         <description>A 24-bit RGB color</description>
@@ -259,27 +280,6 @@
         <input template="System/Presentation/InterfaceBuilder/Inputs/tag.tpl" />
         
         <class>SmartestTag</class>
-        
-    </type>
-    
-    <type id="SM_DATATYPE_DROPDOWN_MENU" valuetype="foreignkey">
-        
-        <label>Dropdown Menu</label>
-        <description>A value from one of the dropdown menus defined in the dropdown menu editor.</description>
-        <usage>field,itemproperty</usage>
-        <long>false</long>
-        <sortable>true</sortable>
-        
-        <filter>
-          <typesource type="db" table="DropDowns" matchfield="id" label="Dropdown Menu" class="SmartestDropdown" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.dropdownmenus.tpl" />
-          <entitysource type="db" table="DropDownValues" matchfield="dropdownvalue_dropdown_id" class="SmartestDropdownOption" sortfield="dropdownvalue_order" />
-        </filter>
-        
-        <render template="System/Presentation/WebPageBuilder/property.dropdownvalue.tpl" />
-        <input template="System/Presentation/InterfaceBuilder/Inputs/dropdown_menu.tpl" />
-        <menu value="value" display="label" />
-        
-        <class>SmartestDropdownOption</class>
         
     </type>
     

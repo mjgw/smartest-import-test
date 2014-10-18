@@ -60,14 +60,14 @@
 
 {if $item.has_metapage || $allow_edit_item_slug}
 
-<div class="edit-form-row">
+<div class="edit-form-row{if $allow_edit_item_slug && $item.public == "TRUE" && count($metapages)} warning{/if}">
   <div class="form-section-label">{$item._model.name} short name (Used in links and URLS)</div>
   {if $allow_edit_item_slug}
   <input type="text" name="item_slug" value="{$item.slug}" /><div class="form-hint">Numbers, lowercase letters and hyphens only, please</div>
   {else}
   {$item.slug}
   {/if}
-  {if $allow_edit_item_slug && $item.public == "TRUE" && count($metapages)}<div class="warning">Warning: This {$item._model.name|strtolower} is live. Editing its short name may cause links to it to break.</div>{/if}
+  {if $allow_edit_item_slug && $item.public == "TRUE" && count($metapages)}<p style="clear:both">Warning: This {$item._model.name|strtolower} is live. Editing its short name may cause links to it to break.</p>{/if}
 </div>
 
 {/if}

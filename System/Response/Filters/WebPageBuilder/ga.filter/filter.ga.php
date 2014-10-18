@@ -38,7 +38,8 @@ function smartest_filter_ga($html, $filter){
         $id = $ph->getGlobalPreference('google_analytics_id', null, $filter->getCurrentSite()->getId());
         if(strlen($id)){
             
-            if(strpos($html, 'i,s,o,g,r,a,m')){
+            // Check if analytics have been added to the page manually. If they have, issue a warning and do not proceed any further
+            if(strpos($html, 'i,s,o,g,r,a,m') || strpos($html, 'gaJsHost')){
                 if($filter->getDraftMode()){
                     $sm = new SmartyManager('BasicRenderer');
                     $render_process_id = 'google_analytics_error';

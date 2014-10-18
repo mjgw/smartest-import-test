@@ -16,7 +16,13 @@
   {foreach from=$asset._editor_parameters key="parameter_name" item="parameter"}
   <div class="edit-form-row">
     <div class="form-section-label">{$parameter.label}</div>
+    {if $parameter.datatype == 'SM_DATATYPE_BOOLEAN'}
+    {capture name="name" assign="name"}params[{$parameter_name}]{/capture}
+    {capture name="param_id" assign="param_id"}asset-parameter-{$parameter_name}{/capture}
+    {boolean name=$name id=$param_id value=$parameter.value}
+    {else}
     <input type="text" name="params[{$parameter_name}]" value="{$parameter.value}" style="width:250px" />
+    {/if}
   </div>
   {/foreach}
     

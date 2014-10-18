@@ -1370,6 +1370,7 @@ class Quince{
 	        
 	        // Aliases that do:
 	        $regex = '/^'.preg_replace('/\/(:|\$)([\w_]+)/i', "/([^\/]+)", QuinceUtilities::excapeRegexCharacters($alias['url'])).'\/?$/';
+            $regex = str_replace('*', '[^\/\.]+', $regex); // Marcus added this line Oct 5 2014
 	        
 	        if(preg_match($regex, '/'.$rs, $matches)){
 	            

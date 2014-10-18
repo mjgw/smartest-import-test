@@ -624,22 +624,27 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    $info = $this->getTypeInfo();
 	    
 	    $params = array();
+        $type_lookups = array();
 	    
 	    if(isset($info['param'])){
 	        
-	        // echo 'param';
-	        
 	        $raw_xml_params = $info['param'];
-	        
-	        foreach($raw_xml_params as $rxp){
-	            if(isset($rxp['default'])){
-	                $params[$rxp['name']] = $rxp['default'];
+            
+            foreach($raw_xml_params as $rxp){
+                
+                $type_lookups[$rxp['name']] = $rxp['type'];
+                
+                if(isset($rxp['default'])){
+	                $sv = $rxp['default'];
                 }else{
-                    $params[$rxp['name']] = '';
+                    $sv = '';
                 }
+                
+                $params[$rxp['name']] = SmartestDataUtility::objectize($sv, $rxp['type']);
+                
 	        }
-	        
-	        $default_serialized_data = $this->getParameterDefaults();
+            
+            $default_serialized_data = $this->getParameterDefaults();
 	        
 	        if($asset_params = @unserialize($default_serialized_data)){
 	            
@@ -648,19 +653,18 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	                // data found. loop through params from xml, replacing values with those from asset
     	            foreach($asset_params as $key => $value){
     	                if($params[$key] !== null){
-    	                    $params[$key] = $value;
+    	                    // $params[$key] = $value;
+                            $params[$key] = SmartestDataUtility::objectize($value, $type_lookups[$key]);
                         }
     	            }
 	            
                 }
 	            
-	        } // data not found, or not unserializable. just use defaults from 
-	        
-	        
+	        }
 	        
 	    }
-	    
-	    return $params;
+        
+        return $params;
 	    
 	}
 	
@@ -672,26 +676,37 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    
 	    if(isset($info['param'])){
 	        
-	        // echo 'param';
-	        
 	        $raw_xml_params = $info['param'];
 	        
 	        foreach($raw_xml_params as $rxp){
-	            if(isset($rxp['default'])){
-	                $params[$rxp['name']]['value'] = $rxp['default'];
+                
+                $params[$rxp['name']]['datatype'] = $rxp['type'];
+                
+                if(isset($rxp['default'])){
+	                $sv = $rxp['default'];
                 }else{
-                    $params[$rxp['name']]['value'] = '';
+                    $sv = '';
                 }
+                
+                $params[$rxp['name']]['value'] = SmartestDataUtility::objectize($sv, $rxp['type']);
                 
                 if(isset($rxp['label'])){
                     $params[$rxp['name']]['label'] = $rxp['label'];
                 }else{
                     $params[$rxp['name']]['label'] = $rxp['name'];
                 }
+                
+                if(isset($rxp['options'])){
+                    $params[$rxp['name']]['has_options'] = true;
+                    $params[$rxp['name']]['options'] = new SmartestFixedOptionsList($rxp['options'], $rxp['type']);
+                }else{
+                    $params[$rxp['name']]['has_options'] = false;
+                }
+                
                 // TODO: Insert L10N stuff here
 	        }
-	        
-	        $default_serialized_data = $this->getParameterDefaults();
+            
+            $default_serialized_data = $this->getParameterDefaults();
 	        
 	        if($asset_params = @unserialize($default_serialized_data)){
 	            
@@ -700,13 +715,17 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	                // data found. loop through params from xml, replacing values with those from asset
     	            foreach($asset_params as $key => $value){
     	                if($params[$key] !== null){
-    	                    $params[$key]['value'] = $value;
+                            // var_dump($params[$key]['datatype']);
+                            // var_dump($value);
+                            $value_obj = SmartestDataUtility::objectize($value, $params[$key]['datatype']);
+                            // var_dump($value_obj);
+                            $params[$key]['value'] = $value;
                         }
     	            }
 	            
                 }
 	            
-	        } // data not found, or not unserializable. just use defaults from 
+	        } // data not found, or not unserializable. just use defaults from above
 	        
 	        
 	        

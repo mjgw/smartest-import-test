@@ -121,8 +121,7 @@
   
   <div class="edit-form-row">
     <div class="form-section-label">Cache as Static HTML</div>
-    <input type="radio" name="page_cache_as_html" id="page_cache_as_html_on" value="TRUE"{if $page.cache_as_html == "TRUE"} checked="checked"{/if} />&nbsp;<label for="page_cache_as_html_on">Yes please</label>
-    <input type="radio" name="page_cache_as_html" id="page_cache_as_html_off" value="FALSE"{if $page.cache_as_html == "FALSE"} checked="checked"{/if} />&nbsp;<label for="page_cache_as_html_off">No, thanks</label>
+    {boolean name="page_cache_as_html" id="page-cache-as-html" value=$page.cache_as_html}
   </div>
   
   {if $page.cache_as_html == "TRUE"}

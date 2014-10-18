@@ -57,7 +57,20 @@ class SmartestCmsLink extends SmartestHelper{
             $this->_hash = $this->_render_data->getParameter('hash');
         }
         
+        /* if($this->_destination_properties->hasParameter('metapage')){
+            $this->_hash = $this->_destination_properties->getParameter('metapage');
+        }
+        
+        if($this->_render_data->hasParameter('metapage')){
+            $this->_hash = $this->_render_data->getParameter('metapage');
+        } */
+        
         if($this->_destination_properties->getParameter('from_item')){
+            
+            if($this->_render_data->hasParameter('metapage')){
+                $this->_destination_properties->setParameter('metapage_override', true);
+                $this->_destination_properties->setParameter('metapage_override_name', $this->_render_data->getParameter('metapage'));
+            }
             
             $this->setDestinationFromProvidedItem($this->_destination_properties->getParameter('item'));
         
@@ -74,7 +87,12 @@ class SmartestCmsLink extends SmartestHelper{
             $this->setDestinationFromProvidedAuthor($this->_destination_properties->getParameter('author'));
         
         }else{
-        
+            
+            if($this->_render_data->hasParameter('metapage')){
+                $this->_destination_properties->setParameter('metapage_override', true);
+                $this->_destination_properties->setParameter('metapage_override_name', $this->_render_data->getParameter('metapage'));
+            }
+            
             $this->setTypeFromNameSpace($this->_destination_properties->getParameter('namespace'));
             $this->_loadDestination();
         
@@ -182,8 +200,6 @@ class SmartestCmsLink extends SmartestHelper{
             $data = $markup_attributes->getParameters();
         }
         
-        // print_r(array_keys($data));
-        
         $allowed_attributes = array('title', 'id', 'name', 'style', 'class', 'target', 'rel', 'dir', 'accesskey', 'tabindex', 'lang', 'download');
         $deprecated_javascript_attributes = array('onclick', 'ondblclick', 'onmouseover', 'onmouseout');
         $html_attributes_array = array();
@@ -275,13 +291,37 @@ class SmartestCmsLink extends SmartestHelper{
          return $this->_destination_properties->getParameter('destination');
     }
     
+    public function getMetaPageObject($name, $iem_model_id){
+        
+        $name = SmartestStringHelper::toSlug($name);
+        $d = new SmartestItemPage;
+        
+        $sql = "SELECT * FROM Pages WHERE page_name='".$name."' AND page_site_id='".$this->getSiteId()."' AND page_type='ITEMCLASS' AND page_deleted != 'TRUE'";
+        $result = $this->database->queryToArray($sql);
+        
+        if(count($result)){
+            $d->hydrate($result[0]);
+            return $d;
+        }else{
+            return null;
+        }
+        
+    }
+    
     public function setDestinationFromProvidedItem(SmartestCmsItem $item){
         
         $this->setType(SM_LINK_TYPE_METAPAGE);
         $this->setNamespace('metapage');
         $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
         
-        if(is_object($item->getMetaPage()) && $item->getMetaPage()->getId()){
+        if($this->_destination_properties->hasParameter('metapage_override') && $this->_destination_properties->getParameter('metapage_override') == true && $d = $this->getMetaPageObject($this->_destination_properties->getParameter('metapage_override_name'), $item->getModelId())){
+            
+            $d->setPrincipalItem($item);
+            $this->addClass('sm-link-internal');
+        
+            $this->_destination = $d;
+            
+        }elseif(is_object($item->getMetaPage()) && $item->getMetaPage()->getId()){
             
             $d = $item->getMetaPage();
             $d->setPrincipalItem($item);
@@ -449,18 +489,28 @@ class SmartestCmsLink extends SmartestHelper{
                     
                     $item = SmartestCmsItem::retrieveByPk($result[0]['item_id']);
                     
-                    $sql = "SELECT * FROM Pages WHERE page_id='".$item->getMetaPageId()."' AND page_site_id='".constant('SM_CMS_PAGE_SITE_ID')."' AND page_type='ITEMCLASS' AND page_deleted != 'TRUE'";
-                    $result = $this->database->queryToArray($sql);
+                    if($this->_destination_properties->hasParameter('metapage_override') && $this->_destination_properties->getParameter('metapage_override') == true && $d = $this->getMetaPageObject($this->_destination_properties->getParameter('metapage_override_name'), $item->getModelId())){
+                        
+                        $sql = "SELECT * FROM Pages WHERE page_name='".$this->_destination_properties->getParameter('metapage_override_name')."' AND page_dataset_id='".$item->getModelId()."' AND page_site_id='".constant('SM_CMS_PAGE_SITE_ID')."' AND page_type='ITEMCLASS' AND page_deleted != 'TRUE'";
+                        $result = $this->database->queryToArray($sql);
+                        
+                    }else{
+                        
+                        $sql = "SELECT * FROM Pages WHERE page_id='".$item->getMetaPageId()."' AND page_site_id='".constant('SM_CMS_PAGE_SITE_ID')."' AND page_type='ITEMCLASS' AND page_deleted != 'TRUE'";
+                        $result = $this->database->queryToArray($sql);
+                        
+                    }
                     
                     if(count($result)){
-                    
+                        
+                        $d = new SmartestItemPage;
                         $d->hydrate($result[0]);
                         $d->setPrincipalItem($item);
                     
                         $this->_destination = $d;
                     
                     }else{
-                        return $this->error("The requested page was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
+                        return $this->error("The requested meta-page was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
                     }
                     
                 }else{
@@ -625,7 +675,7 @@ class SmartestCmsLink extends SmartestHelper{
                 
                 // return $a->render($draft_mode);
 								
-								if($this->_render_data->getParameter('with') instanceof SmartestImage){
+				if($this->_render_data->getParameter('with') instanceof SmartestImage){
                     
                     $img = $this->_render_data->getParameter('with');
                 
