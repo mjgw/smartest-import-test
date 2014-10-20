@@ -1,7 +1,7 @@
 <div id="work-area">
   
   {load_interface file="edit_dropdown_tabs.tpl"}
-  <h3>Dropdown values: {$dropdown.label}</h3>
+  <h3>Dropdown values: <span class="light">{$dropdown.label}</span></h3>
   
   <form id="pageViewForm" method="get" action="">
     <input type="hidden" name="dropdown_id" id="drop_down" value="{$dropdown.id}" />

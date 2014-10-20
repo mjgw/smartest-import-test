@@ -14,7 +14,7 @@
 {foreach from=$dropdowns key=key item=dropdown}
   <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/editValues?dropdown_id={$dropdown.id}'">
     <a class="option" id="item_{$dropdown.id}" onclick="setSelectedItem('{$dropdown.id}');" >
-      <i class="fa fa-list-alt list"></i> {$dropdown.dropdown_label}</a></li>
+      <i class="fa fa-list-alt list"></i><img src="{$domain}Resources/System/Images/dropdown_menu.png" alt="dropdown menu" class="grid" /> {$dropdown.dropdown_label}</a></li>
 {/foreach}
 </ul>
 {else}

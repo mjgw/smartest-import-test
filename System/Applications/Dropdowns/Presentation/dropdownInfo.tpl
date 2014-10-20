@@ -1,7 +1,7 @@
 <div id="work-area">
 
   {load_interface file="edit_dropdown_tabs.tpl"}
-  <h3>Dropdown menu: {$dropdown.label}</h3>
+  <h3>Dropdown menu: <span class="light">{$dropdown.label}</span></h3>
 
   <form id="pageViewForm" method="post" action="{$domain}{$section}/updateDropDown">
   
