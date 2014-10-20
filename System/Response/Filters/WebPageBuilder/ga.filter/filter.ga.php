@@ -3,7 +3,7 @@
 function smartest_filter_ga($html, $filter){
     
     $ph = SmartestPersistentObject::get('prefs_helper');
-    $preference_value = $ph->getGlobalPreference('enable_eu_cookie_compliance', null, $filter->getCurrentSite()->getId());
+    $preference_value = SmartestStringHelper::toRealBool($ph->getGlobalPreference('enable_eu_cookie_compliance', null, $filter->getCurrentSite()->getId()));
     
     $cookies_allowed = (!(bool) $preference_value) || ($preference_value && isset($_COOKIE['SMARTEST_COOKIE_CONSENT']) && $_COOKIE['SMARTEST_COOKIE_CONSENT'] == "1");
     

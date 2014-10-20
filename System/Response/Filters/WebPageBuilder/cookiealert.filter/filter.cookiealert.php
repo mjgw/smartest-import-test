@@ -5,7 +5,7 @@ function smartest_filter_cookiealert($html, $filter){
     $ph = SmartestPersistentObject::get('prefs_helper');
     $preference_value = $ph->getGlobalPreference('enable_eu_cookie_compliance', null, $filter->getCurrentSite()->getId());
     
-    if($preference_value){
+    if(SmartestStringHelper::toRealBool($preference_value)){
         
         if(isset($_COOKIE['SMARTEST_COOKIE_CONSENT']) && SmartestStringHelper::toRealBool($_COOKIE['SMARTEST_COOKIE_CONSENT'])){
             

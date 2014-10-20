@@ -442,6 +442,18 @@ class CmsFrontEnd extends SmartestSystemApplication{
         }
 		
 	}
+    
+    public function setPrivacyCookieNoJS(){
+        
+        // var_dump($this->lookupSiteDomain());
+        
+        if($this->lookupSiteDomain()){
+            
+            
+            
+        }
+        
+    }
 	
 	public function addRating(){
 	    

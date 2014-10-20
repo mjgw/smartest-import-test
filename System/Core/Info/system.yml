@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 676
+    revision: 677
     minimum_php_version: 5.3
     minimum_database_version: 21
     default_timezone: Europe/London
@@ -39,6 +39,7 @@ system:
     - website/getCaptchaImage
     - website/pageFragment
     - website/pageInfo
+    - website/setPrivacyCookieNoJS
   content_interaction_methods:
     - website/renderPageFromUrl
     - website/renderPageFromId
@@ -53,6 +54,7 @@ system:
     - website/getAuthorProfile
     - website/pageFragment
     - website/pageInfo
+    - website/setPrivacyCookieNoJS
   smarty_config:
     default_templates_dir: Presentation/
     templates_cache: System/Cache/Smarty/
