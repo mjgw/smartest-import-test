@@ -147,6 +147,7 @@ class PagesAjax extends SmartestSystemApplication{
                 if(strlen($this->getRequestParameter('value'))){
                     $page->setTitle($this->getRequestParameter('value'));
                     $page->save();
+                    SmartestCache::clear('site_pages_tree_'.$page->getSiteId(), true);
                     echo $this->getRequestParameter('value');
                 }else{
                     echo $page->getTitle();
@@ -158,6 +159,7 @@ class PagesAjax extends SmartestSystemApplication{
                     $v = SmartestStringHelper::toSlug($this->getRequestParameter('value'));
                     $page->setName($v);
                     $page->save();
+                    SmartestCache::clear('site_pages_tree_'.$page->getSiteId(), true);
                     echo $v;
                 }else{
                     echo $page->getName();
@@ -168,6 +170,7 @@ class PagesAjax extends SmartestSystemApplication{
                 if(strlen($this->getRequestParameter('value')) && is_numeric($this->getRequestParameter('value'))){
                     $page->setParent($this->getRequestParameter('value'));
                     $page->save();
+                    SmartestCache::clear('site_pages_tree_'.$page->getSiteId(), true);
                 }
                 exit;
                 
