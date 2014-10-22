@@ -2,7 +2,7 @@
 
 {load_interface file="edit_set_tabs.tpl"}
 
-<h3><a href="{$domain}smartest/models">Items</a> &gt; {if $model.id}<a href="{$domain}datamanager/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; <a href="{$domain}sets/getItemClassSets?class_id={$model.id}">Sets</a>{else}<a href="{$domain}smartest/sets">Sets</a>{/if} &gt; {$set.label}</h3>
+<h3>Edit set: <span class="light">{$set.label}</span></h3>
 
 <div class="instruction">Create conditions to filter your data into a pre-saved set that can be used anywhere.</div>
 
@@ -67,8 +67,6 @@
   
     <div class="edit-form-row">
       <div class="buttons-bar">
-        {* <input type="button" value="Cancel" />
-        <input type="submit" value="Save Changes" /> *}
         {save_buttons}
       </div>
     </div>
