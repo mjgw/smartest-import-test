@@ -21,6 +21,11 @@
         clearTimeout(t2);
     }
     
+    function cancelWait(){
+      $('preview-slow').fade({duration: 0.4});
+      showPreview();
+    }
+    
     function hidePreview(){
         
         // $('preview').fade({duration: 0.4, afterFinish: function(){
@@ -95,7 +100,7 @@
   </div>
   
   <div id="preview-slow" class="preview-component" style="display:none">
-    <p>Sorry for the wait. Just a bit longer... <a href="javascript:showPreview()">Show now</a></p>
+    <p>Sorry for the wait. Just a bit longer... <a href="javascript:cancelWait()">Show now</a></p>
     <p><img src="{$domain}Resources/System/Images/smartest_working.gif" /></p>
   </div>
   

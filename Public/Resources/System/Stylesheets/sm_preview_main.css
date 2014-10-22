@@ -1,6 +1,8 @@
 body{
 	margin: 0;
-	padding: 0;
+	padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 	
 div.smartest_preview_top_bar{
