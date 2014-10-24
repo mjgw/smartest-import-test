@@ -1,5 +1,5 @@
 <div id="work-area">
-<h3 id="definePageProperty">Define Page Property: {$field.name}</h3>
+<h3 id="definePageProperty">Define field: <span class="light">{$field.name}</span></h3>
 
 
 <form id="defineProperty" name="defineProperty" action="{$domain}{$section}/updatePagePropertyValue" method="POST" style="margin:0px">
@@ -11,13 +11,15 @@
     {if $field.is_sitewide}<div class="special-box">This field is global, meaning the value you enter on any page will be the same for all pages</div>{/if}
     
     <div class="edit-form-row">
-      <div class="form-section-label">Property Value:</div>
+      <div class="form-section-label">Field value:</div>
       {if $field_type == 'SM_DATATYPE_DROPDOWN_MENU'}
       <select name="field_content">
         {foreach from=$options item="option"}
         <option value="{$option.value}"{if $option.value == $value} selected="selected"{/if}>{$option.label}</option>
         {/foreach}
       </select>
+      {elseif $field_type == 'SM_DATATYPE_BOOLEAN'}
+      {boolean name="field_content" id="field-value" value=$value}
       {elseif $field_type == 'SM_DATATYPE_ASSET_GALLERY'}
       <select name="field_content">
         {foreach from=$options item="option"}

@@ -125,7 +125,7 @@ function adjustListOptions(currentListValue){
 <ul class="actions-list" id="non-specific-actions">
   <li><b>Options</b></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/sets'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_picture.png" border="0" alt=""> View data sets</a></li>
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}templates/listItemTemplates'" class="right-nav-link"><img src="{$domain}Resources/Icons/page_go.png" border="0" alt=""> Browse list item templates</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/templates/SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE'" class="right-nav-link"><img src="{$domain}Resources/Icons/page_go.png" border="0" alt=""> Browse list templates</a></li>
 </ul>
 
 </div>

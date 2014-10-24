@@ -1,4 +1,4 @@
-<div id="work-area">
+<div id="work-area-full">
 
 {if $num_sites > 0 || $show_create_button}
 

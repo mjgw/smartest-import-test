@@ -774,6 +774,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         	            $child->assign('num_items', count($data));
         	            $child->assign('title', $list->getTitle());
                         $child->assign('set', $set);
+                        $child->assign('list', $list);
         	            $child->setContext(SM_CONTEXT_COMPLEX_ELEMENT);
         	            $child->setDraftMode($this->getDraftMode());
         	            $child->caching = false;
