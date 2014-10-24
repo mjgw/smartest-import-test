@@ -3076,7 +3076,7 @@ class Pages extends SmartestSystemApplication{
 	            
 	            $definition = new SmartestPlaceholderDefinition;
 	            
-	            if($definition->loadForUpdate($placeholder->getName(), $page, $item_id)){
+	            if(is_numeric($item_id) && $definition->loadForUpdate($placeholder->getName(), $page, $item_id)){
 	                
 	                // update placeholder
 	                $definition->delete();
@@ -3085,9 +3085,9 @@ class Pages extends SmartestSystemApplication{
 	            }else if($definition->loadForUpdate($placeholder->getName(), $page)){
 	                
 	                // update placeholder
-	                $definition->setDraftAssetId('');
+	                $definition->setDraftAssetId(null);
 	                $definition->save();
-	                $this->addUserMessageToNextRequest('The placeholder definition was removed.', SmartestUserMessage::SUCCESS);
+	                $this->addUserMessageToNextRequest('The draft placeholder definition was removed. Next time the page is published, the placeholder will be emptied.', SmartestUserMessage::SUCCESS);
 	                
 	            }else{
 	                
