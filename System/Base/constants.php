@@ -55,103 +55,110 @@ define('SM_QUERY_GREATER_THAN', 6);
 define('SM_QUERY_LESSTHAN', 7);
 define('SM_QUERY_LESS_THAN', 7);
 
-define('SM_QUERY_TAGGEDWITH', 8);
-define('SM_QUERY_TAGGED_WITH', 8);
-define('SM_QUERY_NOTTAGGEDWITH', 9);
+define('SM_QUERY_TAGGEDWITH',      8);
+define('SM_QUERY_TAGGED_WITH',     8);
+define('SM_QUERY_NOTTAGGEDWITH',   9);
 define('SM_QUERY_NOT_TAGGED_WITH', 9);
 
 define('SM_STATUS_ALL', 0);
 
-define('SM_STATUS_HIDDEN', 1); // the default for draft pages/previews
-define('SM_STATUS_HIDDEN_CHANGED', 2);
+define('SM_STATUS_HIDDEN',          1); // the default for draft pages/previews
+define('SM_STATUS_HIDDEN_CHANGED',  2);
 define('SM_STATUS_HIDDEN_APPROVED', 3);
 
-define('SM_STATUS_LIVE', 4);
-define('SM_STATUS_LIVE_CHANGED', 5);
-define('SM_STATUS_LIVE_APPROVED', 6); // the default for published pages
+define('SM_STATUS_LIVE',            4);
+define('SM_STATUS_LIVE_CHANGED',    5);
+define('SM_STATUS_LIVE_APPROVED',   6); // the default for published pages
 
-define('SM_STATUS_CURRENT', 7);
-define('SM_STATUS_ARCHIVED', 8);
+define('SM_STATUS_CURRENT',         7);
+define('SM_STATUS_ARCHIVED',        8);
 
-define('SM_CONTEXT_GENERAL', 100);
-define('SM_CONTEXT_SYSTEM_UI', 101);
-define('SM_CONTEXT_CONTENT_PAGE', 102);
+define('SM_CONTEXT_GENERAL',              100);
+define('SM_CONTEXT_SYSTEM_UI',            101);
+define('SM_CONTEXT_CONTENT_PAGE',         102);
 define('SM_CONTEXT_DYNAMIC_TEXTFRAGMENT', 103);
-define('SM_CONTEXT_COMPLEX_ELEMENT', 104); // For rendering templates without containers
-define('SM_CONTEXT_ITEMSPACE_TEMPLATE', 105);
-define('SM_CONTEXT_INLINE_ASSET', 106);
-define('SM_CONTEXT_HYPERLINK', 107);
+define('SM_CONTEXT_COMPLEX_ELEMENT',      104); // For rendering templates without containers
+define('SM_CONTEXT_ITEMSPACE_TEMPLATE',   105);
+define('SM_CONTEXT_INLINE_ASSET',         106);
+define('SM_CONTEXT_HYPERLINK',            107);
 
-define('SM_USER_MESSAGE_INFO', 1);
-define('SM_USER_MESSAGE_SUCCESS', 2);
-define('SM_USER_MESSAGE_WARNING', 4);
-define('SM_USER_MESSAGE_ERROR', 8);
-define('SM_USER_MESSAGE_FAIL', 8);
-define('SM_USER_MESSAGE_ACCESSDENIED', 16);
+define('SM_USER_MESSAGE_INFO',          1);
+define('SM_USER_MESSAGE_SUCCESS',       2);
+define('SM_USER_MESSAGE_WARNING',       4);
+define('SM_USER_MESSAGE_ERROR',         8);
+define('SM_USER_MESSAGE_FAIL',          8);
+define('SM_USER_MESSAGE_ACCESSDENIED',  16);
 define('SM_USER_MESSAGE_ACCESS_DENIED', 16);
 
-define('SM_INSTALLSTATUS_COMPLETE', 0);
-define('SM_INSTALLSTATUS_NO_FILE_PERMS', 1);
-define('SM_INSTALLSTATUS_NO_CONFIG', 2);
-define('SM_INSTALLSTATUS_NO_DB_CONFIG', 4);
-define('SM_INSTALLSTATUS_DB_NO_CONN', 8);
-define('SM_INSTALLSTATUS_DB_NONE', 16);
-define('SM_INSTALLSTATUS_DB_NOT_ALLOWED', 32);
+define('SM_INSTALLSTATUS_COMPLETE',           0);
+define('SM_INSTALLSTATUS_NO_FILE_PERMS',      1);
+define('SM_INSTALLSTATUS_NO_CONFIG',          2);
+define('SM_INSTALLSTATUS_NO_DB_CONFIG',       4);
+define('SM_INSTALLSTATUS_DB_NO_CONN',         8);
+define('SM_INSTALLSTATUS_DB_NONE',            16);
+define('SM_INSTALLSTATUS_DB_NOT_ALLOWED',     32);
 define('SM_INSTALLSTATUS_DB_NO_CREATE_PERMS', 64);
-define('SM_INSTALLSTATUS_DB_DATA_INVALID', 96);
-define('SM_INSTALLSTATUS_NO_USERS', 128);
-define('SM_INSTALLSTATUS_USER_DATA_INVALID', 256);
-define('SM_INSTALLSTATUS_NO_SITES', 512);
-define('SM_INSTALLSTATUS_SITE_DATA_INVALID', 1024);
+define('SM_INSTALLSTATUS_DB_DATA_INVALID',    96);
+define('SM_INSTALLSTATUS_NO_USERS',           128);
+define('SM_INSTALLSTATUS_USER_DATA_INVALID',  256);
+define('SM_INSTALLSTATUS_NO_SITES',           512);
+define('SM_INSTALLSTATUS_SITE_DATA_INVALID',  1024);
 
 define('SM_COMMENTSTATUS_APPROVED', 0);
-define('SM_COMMENTSTATUS_PENDING', 1);
+define('SM_COMMENTSTATUS_PENDING',  1);
 define('SM_COMMENTSTATUS_REJECTED', 2);
 
-define('SM_LOG_DEBUG', 0);
-define('SM_LOG_NOTICE', 1);
-define('SM_LOG_WARNING', 2);
-define('SM_LOG_ERROR', 4);
-define('SM_LOG_PERMISSIONS', 8);
+define('SM_LOG_DEBUG',         0);
+define('SM_LOG_NOTICE',        1);
+define('SM_LOG_WARNING',       2);
+define('SM_LOG_ERROR',         4);
+define('SM_LOG_PERMISSIONS',   8);
 define('SM_LOG_ACCESS_DENIED', 8);
-define('SM_LOG_ACCESSDENIED', 8);
-define('SM_LOG_USER_ACTION', 16);
+define('SM_LOG_ACCESSDENIED',  8);
+define('SM_LOG_USER_ACTION',   16);
 
-define('SM_LINK_TYPE_DUD', 0);
-define('SM_LINK_TYPE_PAGE', 1);
-define('SM_LINK_TYPE_METAPAGE', 2);
-define('SM_LINK_TYPE_IMAGE', 4);
-define('SM_LINK_TYPE_DOWNLOAD', 8);
-define('SM_LINK_TYPE_TAG', 16);
-define('SM_LINK_TYPE_AUTHOR', 32);
-define('SM_LINK_TYPE_EXTERNAL', 256);
-define('SM_LINK_TYPE_MAILTO', 512);
+define('SM_LINK_TYPE_DUD',          0);
+define('SM_LINK_TYPE_PAGE',         1);
+define('SM_LINK_TYPE_METAPAGE',     2);
+define('SM_LINK_TYPE_IMAGE',        4);
+define('SM_LINK_TYPE_DOWNLOAD',     8);
+define('SM_LINK_TYPE_TAG',          16);
+define('SM_LINK_TYPE_AUTHOR',       32);
+define('SM_LINK_TYPE_EXTERNAL',     256);
+define('SM_LINK_TYPE_MAILTO',       512);
 define('SM_LINK_TYPE_QUINCE_ROUTE', 1024);
 
-define('SM_LINK_SCOPE_NONE', 0);
+define('SM_LINK_SCOPE_NONE',     0);
 define('SM_LINK_SCOPE_INTERNAL', 1);
 define('SM_LINK_SCOPE_EXTERNAL', 2);
 
-define('SM_LINK_FORMAT_AUTO', 1);
-define('SM_LINK_FORMAT_USER', 2);
-define('SM_LINK_FORMAT_URL', 4);
+define('SM_LINK_FORMAT_AUTO',         1);
+define('SM_LINK_FORMAT_USER',         2);
+define('SM_LINK_FORMAT_URL',          4);
 define('SM_LINK_FORMAT_QUINCE_ROUTE', 8);
+
+define('SM_DATETIME_RESOLUTION_SECONDS', 1);
+define('SM_DATETIME_RESOLUTION_MINUTES', 2);
+define('SM_DATETIME_RESOLUTION_HOURS',   4);
+define('SM_DATETIME_RESOLUTION_DAYS',    8);
+define('SM_DATETIME_RESOLUTION_MONTHS',  16);
+define('SM_DATETIME_RESOLUTION_YEARS',   32);
 
 define('SM_LINK_GET_TARGET_TITLE', 'SM_LINK_GET_TARGET_TITLE');
 
 define('SM_MTM_SORT_GROUP_ORDER', 'ManyToManyLookups.mtmlookup_order_index');
 
-define('SM_MTMLOOKUPSTATUS_ALL', 0);
+define('SM_MTMLOOKUPSTATUS_ALL',   0);
 define('SM_MTMLOOKUPSTATUS_DRAFT', 1);
-define('SM_MTMLOOKUPSTATUS_LIVE', 2);
-define('SM_MTMLOOKUPSTATUS_OLD', 4);
+define('SM_MTMLOOKUPSTATUS_LIVE',  2);
+define('SM_MTMLOOKUPSTATUS_OLD',   4);
 
-define('SM_MTMLOOKUPMODE_ALL', 0);
-define('SM_MTMLOOKUPMODE_DRAFT', 1);
+define('SM_MTMLOOKUPMODE_ALL',    0);
+define('SM_MTMLOOKUPMODE_DRAFT',  1);
 define('SM_MTMLOOKUPMODE_PUBLIC', 2);
 
 // Different platforms
-define('SM_USERAGENT_NORMAL', 1);
+define('SM_USERAGENT_NORMAL',  1);
 define('SM_USERAGENT_DESKTOP', 1);
 
 define('SM_USERAGENT_UNSUPPORTED_BROWSER', 2);

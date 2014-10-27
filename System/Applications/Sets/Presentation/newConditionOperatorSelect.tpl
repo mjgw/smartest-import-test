@@ -37,9 +37,9 @@
   <option value="4">Starts With</option>
   <option value="5">Ends With</option>
   {if $ordinary_property_available}
-  {if $property.datatype == 'SM_DATATYPE_TIMESTAMP' || $property.datatype == 'SM_DATATYPE_DATE'}
-  <option value="20">Is Before</option>
-  <option value="21">Is After</option>
+  {if $property._type_info.chronological && $property.datatype != 'SM_DATATYPE_CALENDAR_EVENT'}
+  <option value="7">Is Before</option>
+  <option value="6">Is After</option>
   <option value="22" data-hidevalueinput="true">Is in the past</option>
   <option value="23" data-hidevalueinput="true">Is in the future</option>
   {elseif $property.datatype == 'SM_DATATYPE_NUMERIC'}

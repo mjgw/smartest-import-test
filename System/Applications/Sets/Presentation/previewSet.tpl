@@ -75,7 +75,7 @@ var itemList = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'item'
   {foreach from=$items key="key" item="item"}
     <li>
       <a href="{dud_link}" class="option" id="item_{$item.id}" onclick="setSelectedItem('{$item.id}', '{$item.name|escape:quotes}');" ondblclick="window.location='{$domain}datamanager/openItem?item_id={$item.id}'">
-        {if $item.public == 'TRUE'}<img src="{$domain}Resources/Icons/item.png" border="0" class="grid" /><img border="0" src="/Resources/Icons/package_small.png" class="list" />{else}<img src="{$domain}Resources/Icons/item_grey.png" border="0" class="grid" /><img border="0" src="/Resources/Icons/package_small_grey.png" class="list" />{/if}{$item.name}</a></li>
+        {if $item.public == 'TRUE'}<img src="{$domain}Resources/Icons/item.png" border="0" class="grid" /><i class="fa fa-cube list"></i>{else}<img src="{$domain}Resources/Icons/item_grey.png" border="0" class="grid" /><i class="fa fa-cube list not-live"></i>{/if}{$item.name}</a></li>
   {/foreach}
   </ul>
 

@@ -84,6 +84,23 @@ class SmartestQueryCondition{
 		    }else{
 		        return " < '".$this->_value->getStorableFormat()."'";
 		    }
+            
+          //  case 20:
+          //  // Today or In the past - ie less than midnight tomorrow - Only used for chronological values
+          //  return " < '".time()."'";
+          //  
+          //  case 21:
+          //  // Today or in the future - ie greater than midnight today - Only used for chronological values
+          //  // figure out midnight today
+          //  return " >= '".time()."'";
+            
+            case 22:
+            // In the past - ie less than time() Only used for chronological values
+            return " < '".time()."'";
+            
+            case 23:
+            // Right now or in the future - ie great than or equal to time() Only used for chronological values
+            return " >= '".time()."'";
 			
         }
         

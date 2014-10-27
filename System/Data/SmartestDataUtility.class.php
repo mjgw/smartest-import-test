@@ -902,14 +902,22 @@ class SmartestDataUtility{
 	public static function getClassForDataType($as_type, $fk_filter=null){
 	    
 	    $types = self::getDataTypes();
+        
+        // var_dump($as_type);
+        
+        // print_r($types[$as_type]);
 	    
-	    if(isset(self::$_type_to_class_converter[$as_type])){
+	    /* if(isset(self::$_type_to_class_converter[$as_type])){
+            
+            echo "CACHED";
+            
 	        return self::$_type_to_class_converter[$as_type];
-        }else{
+            
+        }else{ */
             
             if(isset($types[$as_type]) && isset($types[$as_type]['class'])){
                 
-                if($as_type == 'SM_DATATYPE_CMS_ITEM' && is_numeric($fk_filter)){
+               if($as_type == 'SM_DATATYPE_CMS_ITEM' && is_numeric($fk_filter)){
                     
                     $classes = self::getModelClassNames();
                     if(isset($classes[$fk_filter])){
@@ -917,6 +925,7 @@ class SmartestDataUtility{
                     }else{
                         throw new SmartestException('Class could not be found for model with ID '.$fk_filter);
                     }
+                        
                 }else{
                     self::$_type_to_class_converter[$as_type] = $types[$as_type]['class'];
         	        return $types[$as_type]['class'];
@@ -925,13 +934,13 @@ class SmartestDataUtility{
             }else{
                 return null;
             }
-        }
+            // }
 	    
 	}
 	
 	public static function getBlankObjectForDataType($as_type, $fk_filter=null){
 	    
-	    if($class = self::getClassForDataType($as_type, $fk_filter)){
+        if($class = self::getClassForDataType($as_type, $fk_filter)){
 	        
 	        if(!class_exists($class)){
                 throw new SmartestException("Class ".$class." required for handling properties of type ".$t['id']." does not exist.");
@@ -1024,9 +1033,9 @@ class SmartestDataUtility{
 	
 	public static function objectizeFromRawFormData($value, $as_type, $fk_filter=null){
 	    
-	    if($object = self::getBlankObjectForDataType($as_type, $fk_filter)){
+        if($object = self::getBlankObjectForDataType($as_type, $fk_filter)){
 	        
-	        if($object instanceof SmartestStorableValue){
+            if($object instanceof SmartestStorableValue){
 	            // echo get_class($object);
 	            // var_dump($value);
 	            try{

@@ -62,7 +62,7 @@ function updateSetConditionsFormFromOperator(condition, value){
   {foreach from=$conditions item="rule" }
             <tr id="rule-tr-{$rule.itemproperty_id}">            
               <td>
-  					    <span id="no-property-input-{$rule.id}" style="{if $rule.itemproperty_id == '_SMARTEST_ITEM_TAGGED'}display:inline{else}display:none{/if}">The {$model.name}
+                <span id="no-property-input-{$rule.id}" style="{if $rule.itemproperty_id == '_SMARTEST_ITEM_TAGGED'}display:inline{else}display:none{/if}">The {$model.name}
   					    <input value="_SMARTEST_ITEM_TAGGED" name="conditions[{$rule.id}][property_id]" type="hidden" /></span>
     					  <select name="conditions[{$rule.id}][property_id]" id="property-select-input-{$rule.id}" style="{if $rule.itemproperty_id == '_SMARTEST_ITEM_TAGGED'}display:none{else}display:inline{/if}">
     						  <option value="_SMARTEST_ITEM_NAME" {if $rule.itemproperty_id == "_SMARTEST_ITEM_NAME"} selected{/if}>{$model.name} {$model.item_name_field_name}</option>
@@ -76,20 +76,31 @@ function updateSetConditionsFormFromOperator(condition, value){
   					  </td>
   					  <td>
     					  <select name="conditions[{$rule.id}][operator]" onchange="updateSetConditionsFormFromOperator('{$rule.id}', this.value)">
-    						  <option value="0" {if $rule.operator == "0"} selected="selected" {/if}>Equals</option>
-    						  <option value="1" {if $rule.operator == "1"} selected="selected" {/if}>Does Not Equal</option>
+    						  {if $rule.itemproperty_id != "_SMARTEST_ITEM_ID"}<option value="0" {if $rule.operator == "0"} selected="selected" {/if}>Equals</option>{/if}
+    						  <option value="1" {if $rule.operator == "1"} selected="selected" {/if}>Does not equal</option>
     						  <option value="2" {if $rule.operator == "2"} selected="selected" {/if}>Contains</option>
-    						  <option value="3" {if $rule.operator == "3"} selected="selected" {/if}>Does Not Contain</option>
-    						  <option value="4" {if $rule.operator == "4"} selected="selected" {/if}>Starts With</option>
-    						  <option value="5" {if $rule.operator == "5"} selected="selected" {/if}>Ends With</option>
-    						  <option value="6" {if $rule.operator == "6"} selected="selected" {/if}>Greater Than</option>
-    						  <option value="7" {if $rule.operator == "7"} selected="selected" {/if}>Less Than</option>
-    						  <option value="8" {if $rule.operator == "8"} selected="selected" {/if}>Is Tagged With</option>
-    						  <option value="9" {if $rule.operator == "9"} selected="selected" {/if}>Is Not Tagged With</option>
+    						  <option value="3" {if $rule.operator == "3"} selected="selected" {/if}>Does not contain</option>
+    						  <option value="4" {if $rule.operator == "4"} selected="selected" {/if}>Starts with</option>
+    						  <option value="5" {if $rule.operator == "5"} selected="selected" {/if}>Ends with</option>
+{if $rule.type_info.chronological}
+    						  <option value="6" {if $rule.operator == "6"} selected="selected" {/if}>Is after</option>
+    						  <option value="7" {if $rule.operator == "7"} selected="selected" {/if}>Is before</option>
+                  <option value="22" {if $rule.operator == "22"} selected="selected" {/if}>Is in the past</option>
+                  <option value="23" {if $rule.operator == "23"} selected="selected" {/if}>Is in the future</option>
+{else}
+    						  <option value="6" {if $rule.operator == "6"} selected="selected" {/if}>Greater than</option>
+    						  <option value="7" {if $rule.operator == "7"} selected="selected" {/if}>Less than</option>
+{/if}
+    						  <option value="8" {if $rule.operator == "8"} selected="selected" {/if}>Is tagged with</option>
+    						  <option value="9" {if $rule.operator == "9"} selected="selected" {/if}>Is not tagged with</option>
     					  </select>
     					</td>
-  						<td><input type="text" value="{$rule.value}" name="conditions[{$rule.id}][value]" /></td>
-              <td><input type="button" value="-" onclick="window.location='{$domain}{$section}/removeConditionFromSet?condition_id={$rule.id}'" /></td>
+  						<td>
+{if !is_numeric($rule.itemproperty_id) || $rule.operator < 20}
+                <input type="text" value="{$rule.value}" name="conditions[{$rule.id}][value]" />
+{/if}
+              </td>
+              <td><a class="button" href="#remove" onclick="window.location='{$domain}{$section}/removeConditionFromSet?condition_id={$rule.id}'">Remove</a></td>
 
           </tr>
   {/foreach}

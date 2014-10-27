@@ -8,9 +8,17 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     protected $_day_format = "l jS F, Y";
     protected $_sync_value_to_now = false;
     protected $_is_never = false;
+    protected $_resolution = SM_DATETIME_RESOLUTION_MINUTES;
     
     const NEVER = '%NEVER%';
     const NOW = '%NOW%';
+    
+    const RESOLUTION_SECONDS = 1;
+    const RESOLUTION_MINUTES = 2;
+    const RESOLUTION_HOURS   = 4;
+    const RESOLUTION_DAYS    = 8;
+    const RESOLUTION_MONTHS  = 16;
+    const RESOLUTION_YEARS   = 32;
     
     public function __construct($date=''){
         if($date == self::NEVER){
@@ -65,6 +73,14 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
         }else{
             return $this->_value;
         }
+    }
+    
+    public function getResolution(){
+        return $this->_resolution;
+    }
+    
+    public function setResolution($r){
+        $this->_resolution = $r;
     }
     
     public function getUnixFormat(){

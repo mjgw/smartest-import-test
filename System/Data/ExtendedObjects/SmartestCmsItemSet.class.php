@@ -730,7 +730,7 @@ class SmartestCmsItemSet extends SmartestSet implements SmartestSetApi, Smartest
 	    
 	    if($this->getType() != 'STATIC'){
 	        
-	        $sql = "SELECT * FROM SetRules WHERE setrule_set_id='".$this->getId()."'";
+	        $sql = "SELECT * FROM SetRules WHERE setrule_set_id='".$this->getId()."' ORDER BY setrule_id ASC";
 	        $result = $this->database->queryToArray($sql);
 	    
 	        foreach($result as $c){

@@ -24,12 +24,14 @@ Smartest.DynamicSetBuilder = Class.create({
     
     buildOperatorField: function(aspect){
         var url = sm_domain+'ajax:sets/newConditionOperatorSelect';
+        
         if(this.operatorFirstTime){
             $('operator-loading-text').style.display = 'inline';
             this.operatorFirstTime = false;
         }else{
             $('new-condition-operator-input').update('<span style="color:#999">loading...</span>');
         }
+        
         new Ajax.Updater(
             'new-condition-operator-input',
             url,

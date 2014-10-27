@@ -158,7 +158,7 @@
         <class>SmartestBoolean</class>
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
-        <input template="System/Presentation/InterfaceBuilder/Inputs/boolean_radio.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/boolean_switch.tpl" />
     </type>
     
     <type id="SM_DATATYPE_DROPDOWN_MENU" valuetype="foreignkey">
@@ -210,6 +210,7 @@
         <class>SmartestDateTime</class>
         <sortable>true</sortable>
         <quantity>true</quantity>
+        <chronological>true</chronological>
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.timestamp.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/timestamp.tpl" />
@@ -223,6 +224,7 @@
         <class>SmartestDateTime</class>
         <sortable>true</sortable>
         <quantity>true</quantity>
+        <chronological>true</chronological>
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.date.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/date.tpl" />
@@ -235,6 +237,7 @@
         <description>An event that has a start and end time, or runs all day.</description>
         <usage>itemproperty</usage>
         <class>SmartestCalendarEvent</class>
+        <chronological>true</chronological>
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.calendar_event.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/calendar_event.tpl" />
@@ -307,7 +310,6 @@
         
         <render template="System/Presentation/WebPageBuilder/property.asset.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/asset.tpl" />
-        
         
         <class>SmartestRenderableSingleItemTemplateAsset</class>
         
