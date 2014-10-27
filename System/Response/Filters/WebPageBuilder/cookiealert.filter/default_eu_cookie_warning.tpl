@@ -1,5 +1,5 @@
 <div id="smartest-cookie-alert">
-  <p>We would like to place cookies on your machine to help make this website better. <a href="#cookie-warning-dismiss" id="sm-cookie-warning-dismiss">I understand.</a></p>
+  <p>We would like to place cookies on your machine to help make this website better. If you continue, we'll assume that you are happy to receive all cookies on this website. <a href="#cookie-warning-dismiss" id="sm-cookie-warning-dismiss">I understand.</a></p>
 </div>
 
 <script type="text/javascript">
