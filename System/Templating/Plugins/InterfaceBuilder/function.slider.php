@@ -16,6 +16,14 @@ function smarty_function_slider($params, &$smartest_engine){
             $slider->setParameter('value_unit', $params['value_unit']);
         }
         
+        if(isset($params['slidehook'])){
+            $slider->setParameter('slidehook', $params['slidehook']);
+        }
+        
+        if(isset($params['changehook'])){
+            $slider->setParameter('changehook', $params['changehook']);
+        }
+        
         if(isset($params['min']) && isset($params['max'])){
             
             if(is_numeric($params['min']) && is_numeric($params['max'])){
@@ -53,12 +61,12 @@ function smarty_function_slider($params, &$smartest_engine){
             
             $slider->setParameter('js_value', $js_value);
         
-            if($smartest_engine->getScriptIncluded('scriptaculous/slider')){
+            /* if($smartest_engine->getScriptIncluded('scriptaculous/slider')){
                 $smartest_engine->assign('_include_slider_js', false);
             }else{
                 $smartest_engine->assign('_include_slider_js', true);
                 $smartest_engine->setScriptIncluded('scriptaculous/slider');
-            }
+            } */
             
             $smartest_engine->assign('_slider_input_data', $slider);
             $smartest_engine->run(SM_ROOT_DIR.'System/Presentation/InterfaceBuilder/Inputs/slider.tpl', array());

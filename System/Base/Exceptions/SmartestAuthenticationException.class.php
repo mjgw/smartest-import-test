@@ -46,7 +46,10 @@ class SmartestAuthenticationException extends SmartestException{
     	    }else{
     	        $e->setRedirectUrl($login_url.'#'.$hash);
     	    }
-	    
+	        
+            // echo '<pre>';
+            // print_r($this->getTrace());
+            // echo '</pre>';
     		$e->redirect(array(401, 303), true);
 		
 	    }

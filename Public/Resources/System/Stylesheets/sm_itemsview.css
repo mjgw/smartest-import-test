@@ -174,22 +174,22 @@ ul.options-grid.images{
 	padding:0 0 10px 0;
 	height:440px;
 	background-color:#666;
-	-moz-box-shadow:    inset 2px 2px 8px #000000;
+	/* -moz-box-shadow:    inset 2px 2px 8px #000000;
   -webkit-box-shadow: inset 2px 2px 8px #000000;
-  box-shadow:         inset 2px 2px 8px #000000;
+  box-shadow:         inset 2px 2px 8px #000000; */
 }
 
 ul.options-grid.images li{
   background-color:transparent;
-  margin:10px 0 0 10px;
-  width:112px!important;
-	height:112px!important;
+  margin:5px 0 0 5px;
+  width:106px!important;
+	height:106px!important;
 }
 
 ul.options-grid.images li a{
-  -moz-box-shadow:    3px 3px 6px 0px rgba(0,0,0,0.4);
-  -webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.4);
-  box-shadow:         3px 3px 6px 0px rgba(0,0,0,0.4);
+  -moz-box-shadow:    2px 2px 4px 0px rgba(0,0,0,0.4);
+  -webkit-box-shadow: 2px 2px 4px 0px rgba(0,0,0,0.4);
+  box-shadow:         2px 2px 4px 0px rgba(0,0,0,0.4);
 }
 
 ul.options-grid.images li a i.fa, ul.options-grid.images li a i.flaticon{
@@ -206,7 +206,7 @@ ul.options-grid.reorderable li a, ul.options-list.reorderable li a{
 ul.options-grid.images li a.option{
   width:100px ! important;
 	height:100px! important;
-	border:6px solid #fff;
+	border:3px solid #fff;
 	background-color:#fff;
 }
 
@@ -215,7 +215,8 @@ ul.options-grid.images li a.option:hover{
 }
 
 ul.options-grid.images li a.selected-option{
-  border:6px solid #3f85dc;
+  /* border:3px solid #3f85dc; */
+  border:3px solid #f90;
   background-image:none;
   width:100px ! important;
 	height:100px! important;

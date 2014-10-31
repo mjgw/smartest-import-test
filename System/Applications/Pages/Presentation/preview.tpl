@@ -67,7 +67,7 @@
 
     <div id="preview-actions-menu" class="js-menu" style="display:none">
       <ul></ul>
-      <ul><li><a href="#reload-preview" id="reload-preview"><i class="fa fa-repeat"></i> Reload preview</a></li><li>{if $show_approve_button}<a href="{dud_link}" onclick="window.location='{$domain}{$section}/approvePageChanges?page_id={$page.webid}'">{else}<span>{/if}<i class="fa fa-thumbs-o-up"></i> Approve changes{if $show_approve_button}</a>{else}</span>{/if}</li><li>{if $show_publish_button}<a href="{dud_link}" onclick="window.location='{$domain}{$section}/publishPageConfirm?page_id={$page.webid}{if $item}&amp;item_id={$item.id}{/if}'">{else}<span>{/if}<i class="fa fa-check-circle"></i> Publish this page{if $show_publish_button}</a>{else}</span>{/if}</li>{if $item && $item.id}{if $show_publish_item_option}<li><a href="{dud_link}" onclick="window.location='{$domain}datamanager/publishItem?page_id={$page.webid}&amp;item_id={$item.id}&amp;from=preview'">Publish this {$item._model.name|lower}</a></li>{/if}{else}<li><a href="{$domain}websitemanager/addPage?page_id={$page.webid}"><i class="fa fa-plus-square-o"></i> Add a child page</a></li>{/if}{if $show_edit_item_option}<li><a href="{dud_link}" onclick="window.location='{$domain}datamanager/editItem?item_id={$item.id}&amp;page_id={$page.webid}&amp;from=pagePreview'">Edit this {$item._model.name|lower}</a></li>{/if}<li>{if $show_release_page_option}<a href="{dud_link}" onclick="window.location='{$domain}{$section}/releasePage?page_id={$page.webid}'">{else}<span>{/if}<i class="fa fa-unlock"></i> Release this page{if $show_release_page_option}</a>{else}</span>{/if}</li></ul>
+      <ul><li><a href="#reload-preview" id="reload-preview"><i class="fa fa-repeat"></i> Reload preview</a></li><li>{if $show_approve_button}<a href="{dud_link}" onclick="window.location='{$domain}{$section}/approvePageChanges?page_id={$page.webid}'">{else}<span>{/if}<i class="fa fa-thumbs-o-up"></i> Approve changes{if $show_approve_button}</a>{else}</span>{/if}</li><li>{if $show_publish_button}<a href="{dud_link}" onclick="window.location='{$domain}{$section}/publishPageConfirm?page_id={$page.webid}{if $item}&amp;item_id={$item.id}{/if}'">{else}<span>{/if}<i class="fa fa-check-circle"></i> Publish this page{if $show_publish_button}</a>{else}</span>{/if}</li>{if $item && $item.id}{if $show_publish_item_option}<li><a href="{dud_link}" onclick="window.location='{$domain}datamanager/publishItem?page_id={$page.webid}&amp;item_id={$item.id}&amp;from=preview'"><i class="fa fa-cube"></i> Publish this {$item._model.name|lower}</a></li>{/if}{else}<li><a href="{$domain}websitemanager/addPage?page_id={$page.webid}"><i class="fa fa-plus-square-o"></i> Add a child page</a></li>{/if}{if $show_edit_item_option}<li><a href="{dud_link}" onclick="window.location='{$domain}datamanager/editItem?item_id={$item.id}&amp;page_id={$page.webid}&amp;from=pagePreview'"><i class="fa fa-pencil"></i> Edit this {$item._model.name|lower}</a></li>{/if}<li>{if $show_release_page_option}<a href="{dud_link}" onclick="window.location='{$domain}{$section}/releasePage?page_id={$page.webid}'">{else}<span>{/if}<i class="fa fa-unlock"></i> Release this page{if $show_release_page_option}</a>{else}</span>{/if}</li></ul>
       <script type="text/javascript">
       {literal}
       $('reload-preview').observe('click', function(e){
@@ -91,7 +91,7 @@
   </div>
   
   <div id="preview" class="preview-component" style="display:none">
-    <iframe class="building" id="preview-iframe" src="{$domain}website/renderEditableDraftPage?page_id={$page.webid}{if $item}&amp;item_id={$item.id}{/if}{if $request_parameters.author_id}&amp;author_id={$request_parameters.author_id}{/if}{if $request_parameters.search_query}&amp;q={$request_parameters.search_query}{/if}{if $request_parameters.tag}&amp;tag_name={$request_parameters.tag}{/if}{if $request_parameters.hash}#{$request_parameters.hash}{/if}" style="height:0px"></iframe>
+    <iframe class="building" id="preview-iframe" src="{$preview_url}" style="height:0px"></iframe>
   </div>
   
   <div id="preview-loading" class="preview-component">
@@ -101,7 +101,7 @@
   
   <div id="preview-slow" class="preview-component" style="display:none">
     <p>Sorry for the wait. Just a bit longer... <a href="javascript:cancelWait()">Show now</a></p>
-    <p><img src="{$domain}Resources/System/Images/smartest_working.gif" /></p>
+    <p><img src="{$domain}Resources/System/Images/smartest-working-flat.gif" /></p>
   </div>
   
   <div id="preview-failed" style="display:none" class="preview-component">
@@ -117,6 +117,14 @@
 {elseif $show_tag_list}
 
 {load_interface file="choose_tag.tpl"}
+
+{elseif $show_author_list}
+
+{load_interface file="choose_author.tpl"}
+
+{elseif $show_search_box}
+
+{load_interface file="enter_search.tpl"}
 
 {/if}
 

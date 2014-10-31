@@ -35,6 +35,11 @@
 </div>
 
 <div class="edit-form-row">
+  <div class="form-section-label">Temporarily disable site?</div>
+  {boolean name="site_is_disabled" id="site-disabled" value=$site_disabled red="true"}
+</div>
+
+<div class="edit-form-row">
   <div class="form-section-label">Logo</div>
   <select name="site_logo_image_asset_id">
     <option value="">None</option>
@@ -75,18 +80,6 @@
 </div>
 
 <div class="edit-form-row">
-  <div class="form-section-label">Site status</div>
-  <label for="enable-site">Enabled</label> <input type="radio" id="enable-site" name="site_is_enabled" value="1"{if $site.is_enabled == 1} checked="checked"{/if} />
-  <label for="disable-site">Disabled</label> <input type="radio" id="disable-site" name="site_is_enabled" value="0"{if $site.is_enabled == 0} checked="checked"{/if} /><span class="form-hint">Will take effect immediately</span>
-</div>
-
-<div class="edit-form-row">
-  <div class="form-section-label">EU cookie law compliance</div>
-  {boolean name="site_eu_cookie_compliance" id="site-eu-cookie-compliance" value=$eu_cookie_compliance}
-  <div class="form-hint">Provides easy compliance with EU Directive 2009/136/EC. Will take effect immediately</div>
-</div>
-
-<div class="edit-form-row">
   <div class="form-section-label">Responsive mode</div>
   <div style="float:left">
     <input type="checkbox" name="site_responsive_mode" value="1" id="site-responsive-mode" onchange="toggleFormAreaVisibilityBasedOnCheckbox('site-responsive-mode', 'site-responsive-options');"{if $site_responsive_mode} checked="checked"{/if} /> <label for="site-responsive-mode">Serve different resources to different platforms</label>
@@ -101,65 +94,10 @@
   <div class="breaker"></div>
 </div>
 
-{* <div class="edit-form-row">
-  <div class="form-section-label">Select Home Page (Advanced)</div>
-  <select name="site_top_page">
-    {foreach from=$pages item="page"}
-      {if $page.info.id != $site.error_page_id}
-      <option value="{$page.info.id}"{if $site.top_page_id == $page.info.id} selected="selected"{/if}>+{section name="dashes" loop=$page.treeLevel}-{/section} {$page.info.title}</option>
-      {/if}
-    {/foreach}
-  </select>
-</div> *}
-
 <div class="edit-form-row">
-  <div class="form-section-label">Search Page (Advanced)</div>
-  <select name="site_search_page">
-    {foreach from=$pages item="page"}
-      {if $page.info.id != $site.error_page_id && $page.info.id != $site.top_page_id}
-      <option value="{$page.info.id}"{if $site.search_page_id == $page.info.id} selected="selected"{/if}>+{section name="dashes" loop=$page.treeLevel}-{/section} {$page.info.title}</option>
-      {/if}
-    {/foreach}
-  </select>
-  <br /><div class="form-hint">This page will handle search queries made to http://{$site.domain}{$domain}search.</div>
-</div>
-
-<div class="edit-form-row">
-  <div class="form-section-label">Tag Page (Advanced)</div>
-  <select name="site_tag_page">
-    {foreach from=$pages item="page"}
-      {if $page.info.id != $site.error_page_id && $page.info.id != $site.top_page_id}
-      <option value="{$page.info.id}"{if $site.tag_page_id == $page.info.id} selected="selected"{/if}>+{section name="dashes" loop=$page.treeLevel}-{/section} {$page.info.title}</option>
-      {/if}
-    {/foreach}
-  </select>
-  <br /><div class="form-hint">This page will be loaded when a tag is requested, eg: http://{$site.domain}{$domain}tag/elephants.html.</div>
-</div>
-
-<div class="edit-form-row">
-  <div class="form-section-label">User Profile Page (Advanced)</div>
-  <select name="site_user_page">
-    {if !$site.user_page_id}<option value="NEW">Create a new page for this purpose</option>{/if}
-    {foreach from=$pages item="page"}
-      {if $page.info.id != $site.top_page_id}
-      <option value="{$page.info.id}"{if $site.user_page_id == $page.info.id} selected="selected"{/if}>+{section name="dashes" loop=$page.treeLevel}-{/section} {$page.info.title}</option>
-      {/if}
-    {/foreach}
-  </select>
-  <br /><div class="form-hint">This page will be loaded when a user profile is requested.</div>
-</div>
-
-<div class="edit-form-row">
-  <div class="form-section-label">404 Error Page (Advanced)</div>
-  <select name="site_error_page">
-    {foreach from=$pages item="page"}
-      {* Sergiy: Allow top page (why not?), I use this approach on my website already many years *}
-      {* if $page.info.id != $site.top_page_id *}
-      <option value="{$page.info.id}"{if $site.error_page_id == $page.info.id} selected="selected"{/if}>+{section name="dashes" loop=$page.treeLevel}-{/section} {$page.info.title}</option>
-      {* /if *}
-    {/foreach}
-  </select>
-  <br /><div class="form-hint">This page will be loaded when an unknown or unpublished page is requested, eg: http://{$site.domain}{$domain}kigsdfkjhg.</div>
+  <div class="form-section-label">EU cookie law compliance</div>
+  {boolean name="site_eu_cookie_compliance" id="site-eu-cookie-compliance" value=$eu_cookie_compliance}
+  <div class="form-hint">Provides easy compliance with EU Directive 2009/136/EC. Will take effect immediately</div>
 </div>
 
 <div class="breaker"></div>
@@ -168,6 +106,8 @@
   <input type="button" value="Cancel" onclick="window.location='{$domain}smartest'" />
   <input type="submit" name="action" value="Save Changes" />
 </div>
+
+</form>
 
 </div>
  
@@ -180,5 +120,3 @@
     <li class="permanent-action"><a href="{$domain}desktop/twitterSettings" class="right-nav-link"><img src="{$domain}Resources/Icons/cog.png" border="0" alt=""> Twitter settings</a></li>
   </ul>
 </div>
-
-</form>

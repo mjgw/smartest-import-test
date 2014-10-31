@@ -15,6 +15,8 @@ class Settings extends SmartestSystemApplication{
     
     public function editSite(){
 	    
+        $this->requireOpenProject();
+        
 	    if($this->getUser()->hasToken('modify_site_parameters')){
 	    
     	    if($this->getSite() instanceof SmartestSite){
@@ -42,6 +44,8 @@ class Settings extends SmartestSystemApplication{
                 
                 $ga_id = $this->getGlobalPreference('google_analytics_id');
                 $this->send($ga_id, 'site_ga_id');
+                
+                $this->send(!(bool) $this->getSite()->getIsEnabled(), 'site_disabled');
                 
                 // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
                     $distinguish_mobiles = $this->getGlobalPreference('site_responsive_distinguish_mobile');
@@ -77,6 +81,8 @@ class Settings extends SmartestSystemApplication{
 	
 	public function updateSiteDetails(){
 	    
+        $this->requireOpenProject();
+        
 	    if($this->getSite() instanceof SmartestSite){
 	        
 	        $site = $this->getSite();
@@ -87,9 +93,9 @@ class Settings extends SmartestSystemApplication{
     	        $site->setInternalLabel($this->getRequestParameter('site_internal_label'));
     	        $site->setTitleFormat($this->getRequestParameter('site_title_format'));
     	        $site->setDomain(SmartestStringHelper::toValidDomain(preg_replace('/^https?:\/\//i', '', $this->getRequestParameter('site_domain'))));
-    	        $site->setTagPageId($this->getRequestParameter('site_tag_page'));
-    	        $site->setSearchPageId($this->getRequestParameter('site_search_page'));
-    	        $site->setErrorPageId($this->getRequestParameter('site_error_page'));
+    	        // $site->setTagPageId($this->getRequestParameter('site_tag_page'));
+    	        // $site->setSearchPageId($this->getRequestParameter('site_search_page'));
+    	        // $site->setErrorPageId($this->getRequestParameter('site_error_page'));
     	        $site->setAdminEmail($this->getRequestParameter('site_admin_email'));
     	        $this->addUserMessageToNextRequest('Your site settings have been updated.', SmartestUserMessage::SUCCESS);
     	        $site->save();
@@ -112,17 +118,17 @@ class Settings extends SmartestSystemApplication{
                 $this->setGlobalPreference('site_responsive_distinguish_oldpcs', ($this->requestParameterIsSet('site_responsive_distinguish_oldpcs') ? 1 : 0));
             }
 	        
-	        if($site->getIsEnabled() == '1' && $this->getRequestParameter('site_is_enabled') == '0'){
+	        if($site->getIsEnabled() == '1' && SmartestStringHelper::toRealBool($this->getRequestParameter('site_is_disabled'))){
 	            if($this->getUser()->hasToken('disable_site')){
-	                $site->setIsEnabled((int) (bool) $this->getRequestParameter('site_is_enabled'));
+	                $site->setIsEnabled(0);
                 }else{
                     $this->addUserMessageToNextRequest('You don\'t have permission to disable sites', SmartestUserMessage::ACCESS_DENIED);
                 }
 	        }
 	        
-	        if($site->getIsEnabled() == '0' && $this->getRequestParameter('site_is_enabled') == '1'){
+            if($site->getIsEnabled() == '0' && !SmartestStringHelper::toRealBool($this->getRequestParameter('site_is_disabled'))){
 	            if($this->getUser()->hasToken('enable_site')){
-	                $site->setIsEnabled((int) (bool) $this->getRequestParameter('site_is_enabled'));
+	                $site->setIsEnabled(1);
                 }else{
                     $this->addUserMessageToNextRequest('You don\'t have permission to enable sites', SmartestUserMessage::ACCESS_DENIED);
                 }
@@ -161,7 +167,7 @@ class Settings extends SmartestSystemApplication{
 	            $site->save();
 	        }
 	        
-	        if($this->getRequestParameter('site_user_page') == 'NEW' && !is_numeric($site->getUserPageId())){
+	        /* if($this->getRequestParameter('site_user_page') == 'NEW' && !is_numeric($site->getUserPageId())){
 	            $p = new SmartestPage;
 	            $p->setTitle('User Profile');
 	            $p->setName('user');
@@ -172,13 +178,90 @@ class Settings extends SmartestSystemApplication{
         	    $p->setOrderIndex(1020);
         	    $p->save();
         	    $site->setUserPageId($p->getId());
-	        }
+	        } */
 	        
 	        SmartestCache::clear('site_pages_tree_'.$site->getId(), true);
 	        
 		    $this->formForward();
 	    }
 	}
+    
+    public function editSiteSpecialPages(){
+        
+        $this->requireOpenProject();
+        
+	    if($this->getSite() instanceof SmartestSite){
+	        
+	        $site = $this->getSite();
+            $pages = $this->getSite()->getPagesListWithSpecialPages(true);
+            $this->send($pages, 'pages');
+            $this->setTitle("Reconfigure site special pages");
+		    $this->send($this->getSite(), 'site');
+            
+        }
+        
+    }
+    
+    public function updateSiteSpecialPages(){
+        
+        $this->requireOpenProject();
+        
+	    if($this->getSite() instanceof SmartestSite){
+	        
+	        $site = $this->getSite();
+        
+            if($this->getUser()->hasToken('modify_site_parameters')){
+        
+    	        $site->setTagPageId($this->getRequestParameter('site_tag_page'));
+    	        $site->setSearchPageId($this->getRequestParameter('site_search_page'));
+    	        $site->setErrorPageId($this->getRequestParameter('site_error_page'));
+                
+    	        if($this->getRequestParameter('site_user_page') == 'NEW' && !is_numeric($site->getUserPageId())){
+    	            $p = new SmartestPage;
+    	            $p->setTitle('User Profile');
+    	            $p->setName('user');
+    	            $p->setSiteId($site->getId());
+    	            $p->setParent($site->getTopPageId());
+            	    $p->setWebid(SmartestStringHelper::random(32));
+            	    $p->setCreatedbyUserid($this->getUser()->getId());
+            	    $p->setOrderIndex(1020);
+            	    $p->save();
+            	    $site->setUserPageId($p->getId());
+    	        }else if(is_numeric($this->getRequestParameter('site_user_page'))){
+    	            $site->setUserPageId($this->getRequestParameter('site_user_page'));
+    	        }
+                
+    	        if($this->getRequestParameter('site_holding_page') == 'NEW' && !is_numeric($site->getHoldingPageId())){
+    	            $p = new SmartestPage;
+    	            $p->setTitle('Holding page');
+    	            $p->setName('error-503');
+    	            $p->setSiteId($site->getId());
+    	            $p->setParent($site->getTopPageId());
+            	    $p->setWebid(SmartestStringHelper::random(32));
+            	    $p->setCreatedbyUserid($this->getUser()->getId());
+            	    $p->setOrderIndex(1019);
+            	    $p->save();
+            	    $site->setHoldingPageId($p->getId());
+    	        }else if(is_numeric($this->getRequestParameter('site_holding_page'))){
+    	            $site->setHoldingPageId($this->getRequestParameter('site_holding_page'));
+    	        }
+    	        
+                $this->addUserMessageToNextRequest('Your site settings have been updated.', SmartestUserMessage::SUCCESS);
+    	        $site->save();
+                
+    	        SmartestCache::clear('site_pages_tree_'.$site->getId(), true);
+	        
+    		    $this->formForward();
+        
+            }else{
+            
+                $this->addUserMessageToNextRequest('You don\'t have permission to edit site settings', SmartestUserMessage::ACCESS_DENIED);
+            
+            }
+        
+        }
+        
+    }
     
     public function getPreferencePanels(){
         

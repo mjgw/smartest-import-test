@@ -52,6 +52,17 @@ div#user-info{
 	z-index:22;
 }
 
+#user-profile-pic-holder-big{
+    width:180px;
+    height:180px;
+    border:1px solid #ccc;
+    border-radius:91px;
+    -moz-border-radius:91px;
+    -webkit-border-radius:91px;
+    -o-border-radius:91px;
+    background-repeat:no-repeat;
+}
+
 #smartest-frame{
     position:relative;
     min-height:100%;
@@ -328,7 +339,7 @@ div.form-hint{
 }
 
 div.buttons-bar{
-	margin:0px;
+	margin:20px 0 0 0;
 	padding:4px;
 	text-align:right;
 	clear:both;
@@ -354,8 +365,13 @@ div.sm-boolean-switch.on{
     background-color:#16e787;
 }
 
-div.sm-boolean-switch.off{
+div.sm-boolean-switch.on.red{
     background-color:#f94d2b;
+}
+
+div.sm-boolean-switch.off{
+    /* background-color:#f94d2b; */
+    background-color:#eee;
 }
 
 a.sm-boolean-switch-inner{
@@ -370,6 +386,9 @@ a.sm-boolean-switch-inner{
     -o-border-radius:15px;
     -webkit-transition: all 0.3s; /* For Safari 3.1 to 6.0 */
     transition: all 0.3s;
+    -webkit-box-shadow: inset -1px 1px 2px 0px rgba(0,0,0,0.54);
+    -moz-box-shadow: inset -1px 1px 2px 0px rgba(0,0,0,0.54);
+    box-shadow: inset -1px 1px 2px 0px rgba(0,0,0,0.54);
 }
 
 div.sm-boolean-switch.on a.sm-boolean-switch-inner{
@@ -390,14 +409,24 @@ a.sm-boolean-switch-inner span.sm-boolean-switch-target{
     background-color:#fff;
     height:20px;
     width:20px;
+    
+    -webkit-box-shadow: -1px 1px 2px 0px rgba(0,0,0,0.54);
+    -moz-box-shadow: -1px 1px 2px 0px rgba(0,0,0,0.54);
+    box-shadow: -1px 1px 2px 0px rgba(0,0,0,0.54);
+    
 }
 
 div.sm-boolean-switch.on a.sm-boolean-switch-inner span.sm-boolean-switch-target{
     border:1px solid #16e787;
 }
 
-div.sm-boolean-switch.off a.sm-boolean-switch-inner span.sm-boolean-switch-target{
+div.sm-boolean-switch.on.red a.sm-boolean-switch-inner span.sm-boolean-switch-target{
     border:1px solid #fb674a;
+}
+
+div.sm-boolean-switch.off a.sm-boolean-switch-inner span.sm-boolean-switch-target{
+    /* border:1px solid #fb674a; */
+    border:1px solid #999;
 }
 
 a.sm-boolean-switch-inner span.sm-boolean-switch-on-label, a.sm-boolean-switch-inner span.sm-boolean-switch-off-label{
@@ -411,12 +440,35 @@ a.sm-boolean-switch-inner span.sm-boolean-switch-on-label, a.sm-boolean-switch-i
     font-size:0.8em;
 }
 
+a.sm-boolean-switch-inner span.sm-boolean-switch-off-label{
+    width:24px;
+}
+
 a.sm-boolean-switch-inner span.sm-boolean-switch-on-label{
     color:#333;
 }
 
-a.sm-boolean-switch-inner span.sm-boolean-switch-off-label{
+div.sm-boolean-switch.on.red a.sm-boolean-switch-inner span.sm-boolean-switch-on-label{
     color:#fff;
+}
+
+a.sm-boolean-switch-inner span.sm-boolean-switch-off-label{
+    color:#666;
+}
+
+div.sm-numeric-slider{
+    width:350px;
+    height:6px;
+    display:inline-block;
+    position:relative;
+}
+
+div.sm-numeric-slider-handle{
+    width:13px;
+    height:13px;
+    cursor:move;
+    position:absolute;
+    top:-3px;
 }
 
 /*** Special and warning boxes ***/
@@ -489,6 +541,8 @@ ul.item_property_actions li a i{
 	text-align:center;
 }
 
+/** List of sites just after log-in **/
+
 ul.apps{
     margin:0px;
     padding:20px 0 0 0;
@@ -527,6 +581,8 @@ ul.apps li a.label{
     top:140px;
     width:100%;
 }
+
+/** When options are shown in a grid via a modal, such as in the "Create" dialog **/
 
 ul.modal-options-grid{
     margin:0px!important;
@@ -584,6 +640,108 @@ ul.modal-options-grid li a{
                  
 #html-preview div.column-width-4{
     width:23%;
+}
+
+/** Other list styles **/
+
+ul.basic-list{
+    list-style-type:disc;
+    padding:10px;
+    margin:15px;
+    margin-top:5px;
+    padding-top:0px;
+}
+
+ul.basic-list li{
+    padding:4px;
+}
+
+ul.scroll-list{
+    overflow-y: scroll;
+    margin:0px;
+    padding-left:25px;
+}
+
+ul.authors-list{
+    list-style-type:none;
+    margin:0px;
+    padding:0px;
+}
+
+ul.authors-list li{
+    height:71px;
+    clear:both;
+    background-color:#fff;
+}
+
+ul.authors-list li input[type="checkbox"]{
+    display:none;
+}
+
+ul.authors-list li a{
+    display:block;
+    padding:5px;
+    -webkit-transition: all 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: all 0.3s;
+    color:#ccc;
+    border-bottom:1px solid #ccc;
+}
+
+ul.authors-list li a.selected{
+    background-color:#68849E;
+    color:#fff;
+    border-bottom:1px solid #fff;
+}
+
+ul.authors-list li a div.user-avatar-holder{
+    
+    display:block;
+    float:left;
+    width:60px;
+    height:53px;
+    
+    border-radius:30px;
+    -moz-border-radius:30px;
+    -webkit-border-radius:30px;
+    -o-border-radius:30px;
+    overflow:hidden;
+    
+    text-transform:uppercase;
+    font-size:3em;
+    font-family:"source-sans";
+    text-align:center;
+    padding-top:7px;
+    
+    opacity: 0.4;
+    -moz-opacity: 0.4;
+    -webkit-opacity: 0.4;
+    filter: alpha(opacity=40);
+    
+    
+    /* line-height:1em; */
+    
+}
+
+ul.authors-list li a.selected div.user-avatar-holder{
+    opacity: 1.0;
+    -moz-opacity: 1.0;
+    -webkit-opacity: 1.0;
+    filter: alpha(opacity=100);
+}
+
+ul.authors-list li a div.user-name-holder-outer{
+    float:left;
+    display:block;
+    height:60px;
+    padding-left:10px;
+}
+
+ul.authors-list li a div.user-name-holder-inner{
+    display:table-cell;
+    height:60px;
+    vertical-align:middle;
+    font-size:1.8em;
+    font-family:"source-sans";
 }
 
 /*** Favourites bar ***/

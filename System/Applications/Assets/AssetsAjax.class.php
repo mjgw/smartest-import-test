@@ -321,4 +321,30 @@ class AssetsAjax extends SmartestSystemApplication{
         
     }
     
+    public function getAssetInfoJsonForAttachmentForm(){
+        
+        $asset = new SmartestAsset;
+        
+        if($asset->find($this->getRequestParameter('attached_file_id'))){
+            
+            $obj = new stdClass;
+            
+            if($asset->isImage()){
+                $obj->width = $asset->getWidth();
+                $obj->height = $asset->getHeight();
+                $obj->is_image = true;
+            }else{
+                $obj->is_image = false;
+            }
+            
+            $obj->type = $asset->getType();
+            
+            header('Content-Type: application/json; charset=UTF8');
+            echo json_encode($obj);
+            exit;
+            
+        }
+        
+    }
+    
 }

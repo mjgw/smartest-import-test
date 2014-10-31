@@ -54,8 +54,8 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
             $data['caption_alignment'] = $this->getCaptionAlignment();
             $data['float'] = $this->getFloat();
             $data['border'] = $this->getBorder();
-            $data['asset'] = $this->_asset->__toArray();
-            $data['asset_object'] = $this->_asset;
+            // $data['asset'] = $this->_asset->__toArray();
+            $data['asset'] = $this->_asset;
         }
         
         return $data;
@@ -75,11 +75,14 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
             case "caption":
             return $this->hasAsset() ? $this->getCaption() : '';
             
+            case "allow_resize":
+            return $this->hasAsset() ? $this->getResizeImageResizeFlag() : false;
+            
             case "zoom":
             return $this->hasAsset() ? $this->getZoomFromThumbnail() : false;
             
             case "thumbnail_relative_size":
-            return $this->getZoomFromThumbnail() ? $this->getThumbnailRelativeSize() : null;
+            return $this->getResizeImageResizeFlag() ? $this->getThumbnailRelativeSize() : null;
             
             case "alignment":
             return $this->hasAsset() ? $this->getAlignment() : null;
@@ -107,6 +110,7 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
             break;
             
             case "asset_object":
+            case "asset":
             return $this->hasAsset() ? $this->_asset : null;
             
         }
@@ -191,6 +195,14 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
     
     public function setBorder($border){
         $this->setContextDataField('border', SmartestStringHelper::toRealBool($border));
+    }
+    
+    public function getResizeImageResizeFlag(){
+        return $this->getContextDataField('allow_resize');
+    }
+    
+    public function setResizeImageResizeFlag($allow_resize){
+        $this->setContextDataField('allow_resize', (bool) $allow_resize);
     }
     
     public function getZoomFromThumbnail(){

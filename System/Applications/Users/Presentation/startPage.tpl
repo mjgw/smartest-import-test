@@ -5,7 +5,8 @@
 <div id="work-area">
 
 <h3>User accounts</h3>
-<a name="top"></a>
+
+{if count($users)}
 
 <div class="instruction">Double click a user to edit or choose from the options on the right.</div>
 
@@ -31,6 +32,9 @@
   {$user.fullname}</a></li>
 {/foreach}
 </ul>
+{else}
+<div class="special-box">There are no ordinary users in the system yet. To add a user, <a href="{$domain}smartest/users/add" class="button">click here</a></div>
+{/if}
 
 </div>
 

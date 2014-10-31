@@ -35,8 +35,8 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 					if(substr($key, 0, strlen($this->_table_prefix)) == $this->_table_prefix){
 						$this->_properties[substr($key, strlen($this->_table_prefix))] = $value;
 						$this->_came_from_database = true;
-					}else if(isset($this->_no_prefix[$name])){
-						$this->_properties[$name] = $value;
+					}else if(isset($this->_no_prefix[$key])){
+						$this->_properties[$key] = $value;
 					}
 					
 				}

@@ -363,7 +363,9 @@ class SmartestResponse{
 	
 	public function build(){
 	    
-	    // Start Application Controller
+        SmartestHelper::loadAllLaterFiles();
+        
+        // Start Application Controller
 	    $this->_controller = new Quince(SM_ROOT_DIR, 'Configuration/quince.yml');
 	    
 	    try{
@@ -377,7 +379,10 @@ class SmartestResponse{
 	    SmartestPersistentObject::set('controller', $this->_controller);
 	    $this->_controller->getCurrentRequest()->getUserActionObject()->give('_auth', $this->_authentication);
 	    
+        // var_dump($this->isSystemClass());
+        
         if($this->isWebsitePage()){
+            
             // if compliance mode is on, make starting the session and setting the cookie contingent on having permission to do so
             if(SmartestStringHelper::toRealBool($this->getGlobalPreference('enable_eu_cookie_compliance'))) {
                 if($_COOKIE['SMARTEST_COOKIE_CONSENT'] == '1'){
@@ -460,7 +465,7 @@ class SmartestResponse{
 	    
     	    }else if($this->isSystemClass() && SmartestSession::hasData('current_open_project')){
     	        // Logged in to Smartest and working with objects in the backend
-    		    $GLOBALS['_site'] =& SmartestSession::get('current_open_project')->getId();
+    		    $GLOBALS['_site'] =& SmartestSession::get('current_open_project');
     		}else if($site = $h->getSiteByDomain($_SERVER['HTTP_HOST'], $this->_controller->getCurrentRequest()->getRequestStringWithVars())){
     		    // Anything else - just look up the domain
     		    $GLOBALS['_site'] =& $site;
@@ -550,6 +555,8 @@ class SmartestResponse{
 	
 	protected function checkAuthenticationStatus(){
 	    
+        // var_dump($this->_authentication->getUserIsLoggedIn());
+        // http://new-ui-1.dev.smartestproject.org/website/renderEditableDraftPage?page_id=TD64D52880EoruCw09q4VZJo7$AyH3Rf
 	    if($this->isSystemClass() && !$this->isPublicMethod()){
 		    
 		    if(!$this->_authentication->getUserIsLoggedIn()){
@@ -588,7 +595,7 @@ class SmartestResponse{
 	public function isWebsitePage(){
 	    
         // This function is called even when the controller has not been set up yet, so needs to be able to respond when it doesn't yet know
-        if(is_object($this->_controller)){
+        if(isset($this->_controller) && is_object($this->_controller)){
     	    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
     		$websiteMethodNames = $sd['system']['content_interaction_methods'];
     		$method = $this->_controller->getCurrentRequest()->getModule().'/'.$this->_controller->getCurrentRequest()->getAction();

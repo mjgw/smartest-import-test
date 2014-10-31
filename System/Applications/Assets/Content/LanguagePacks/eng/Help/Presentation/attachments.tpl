@@ -1,0 +1,4 @@
+<p>Attachments are the way your images are blended with text in Smartest.</p>
+<p>To create a new attachment, add <code>&lt;?sm:attachment name="[ATTACHMENTNAME]":?&gt;</code> to the text below, where <code>[ATTACHMENTNAME]</code> is something to identify your picture. Each attachment should have a different value here. Values must be composed of lowercase letters, numbers, and underscores. For example, if attaching several maps, you might put <code>&lt;?sm:attachment name="map_1":?&gt;</code> for the first one.</p>
+<p>Then, click "Save" below, and then head on over to the "Attachments" tab, where you can control the details of how your image will look.</p>
+<p>For more detail on text attachments, see <a href="http://wiki.smartestproject.org/Text_attachments" target="_blank">wiki.smartestproject.org/Text_attachments</a>.</p>

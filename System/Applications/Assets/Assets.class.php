@@ -2330,6 +2330,12 @@ class Assets extends SmartestSystemApplication{
                         $attached_asset_id = $current_def->getAttachedAssetId();
                         $this->send($attached_asset_id, 'attached_asset_id');
                         
+                        $attached_asset = $current_def->getAsset();
+                        $this->send($attached_asset, 'attached_asset');
+                        
+                        $resize = $current_def->getResizeImageResizeFlag();
+                        $this->send($resize, 'resize');
+                        
                         $zoom = $current_def->getZoomFromThumbnail();
                         $this->send($zoom, 'zoom');
                         
@@ -2430,13 +2436,15 @@ class Assets extends SmartestSystemApplication{
 	        
 	        $current_def->setAttachedAssetId((int) $this->getRequestParameter('attached_file_id'));
 	        $current_def->setAttachmentName($attachment_name);
-	        $current_def->setZoomFromThumbnail($this->getRequestParameter('attached_file_zoom'));
+            // var_dump($this->getRequestParameter('attached_file_zoom'));
+	        $current_def->setResizeImageResizeFlag(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_resize')));
+            $current_def->setZoomFromThumbnail(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_zoom')));
 	        $current_def->setThumbnailRelativeSize((int) $this->getRequestParameter('thumbnail_relative_size'));
 	        $current_def->setCaption(htmlentities($this->getRequestParameter('attached_file_caption')));
 	        $current_def->setAlignment(SmartestStringHelper::toVarName($this->getRequestParameter('attached_file_alignment')));
 	        $current_def->setCaptionAlignment(SmartestStringHelper::toVarName($this->getRequestParameter('attached_file_caption_alignment')));
-	        $current_def->setFloat($this->getRequestParameter('attached_file_float'));
-	        $current_def->setBorder($this->getRequestParameter('attached_file_border'));
+	        $current_def->setFloat(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_float')));
+	        $current_def->setBorder(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_border')));
 	        
 	        $current_def->save();
 	        

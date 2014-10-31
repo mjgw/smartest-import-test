@@ -10,6 +10,9 @@ module:
     pages:
       action: sitePages
       url: /smartest/pages
+    special_pages:
+      action: siteSpecialPages
+      url: /smartest/pages/special
     preview:
       action: preview
       url: /smartest/page/:page_id/preview

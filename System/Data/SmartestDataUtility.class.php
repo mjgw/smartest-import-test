@@ -321,8 +321,8 @@ class SmartestDataUtility{
 	    $sql = "SELECT * FROM Tags ORDER BY tag_name";
 	    $result = $this->database->queryToArray($sql);
 	    $tags = array();
-	    
-	    foreach($result as $raw_tag_array){
+        
+        foreach($result as $raw_tag_array){
 	        $tag = new SmartestTag;
 	        $tag->hydrate($raw_tag_array);
 	        $tags[] = $tag;

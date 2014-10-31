@@ -60,11 +60,15 @@ class SmartestBasicRenderer extends SmartestEngine{
                     
                     if($attachment['status'] == 'DEFINED'){
                         
-                        if($attachment['zoom'] && $attachment['asset']->isImage()){
+                        if($attachment['allow_resize'] && $attachment['asset']->isImage()){
                             $attachment['div_width'] = (int) $attachment['thumbnail']['width'];
-                            $file = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/zoom_attachment.tpl';
                         }else{
                             $attachment['div_width'] = (int) $attachment['asset']['width'];
+                        }
+                        
+                        if($attachment['zoom'] && $attachment['asset']->isImage()){
+                            $file = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/zoom_attachment.tpl';
+                        }else{
                             $file = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/attachment.tpl';
                         }
                         

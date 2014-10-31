@@ -254,24 +254,7 @@ a#site-exit-button:hover{
     background-image:url('../Images/site_exit_on.png');
 } */
 
-ul.basic-list{
-    list-style-type:disc;
-    /* list-style-image:url('../Images/generic_bullet.gif'); */
-    padding:10px;
-    margin:15px;
-    margin-top:5px;
-    padding-top:0px;
-}
-
-ul.scroll-list{
-    overflow: scroll;
-    margin:0px;
-    padding-left:25px;
-}
-
-ul.basic-list li{
-    padding:4px;
-}
+/** Other list styles **/
 
 ul.basic-list li a{
     color:#444;
@@ -279,6 +262,18 @@ ul.basic-list li a{
 
 ul.basic-list li a:hover{
     color:#F4842A;
+}
+
+ul.author-list{
+    
+}
+
+ul.author-list li{
+    
+}
+
+ul.author-list li a{
+    
 }
 
 /* .blue_text{
@@ -470,6 +465,23 @@ input[type="text"].search:focus{
 
 select.error{
     border:2px solid #c30;
+}
+
+div.sm-numeric-slider{
+    background-color:#ddd;
+    border-radius:4px;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+}
+
+div.sm-numeric-slider-handle{
+    
+    background-color:#68849E;
+    
+    border-radius:7px;
+    -moz-border-radius:7px;
+    -webkit-border-radius:7px;
+    
 }
 
 p.editable{

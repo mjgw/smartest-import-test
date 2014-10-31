@@ -99,17 +99,20 @@
   <div class="edit-form-row">
     <div class="form-section-label">Status</div>
       <div style="display:inline" class="text">
-    	{if $page.is_published == "TRUE"}
+      {if $page.is_published == "TRUE"}
     	  <strong>Live</strong> - Last published: {convert_timestamp format="h:i a, l jS F, Y" time=$page.last_published}{if $page.last_built}; Last built: {convert_timestamp format="h:i a, l jS F, Y" time=$page.last_built}{/if}
-    	  <input type="button" onclick="window.location='{$domain}{$section}/unPublishPage?page_id={$page.webid}'" value="Un-Publish">
+    	  <a class="button" href="{$domain}{$section}/unPublishPage?page_id={$page.webid}'">Un-Publish</a>
     	{else}
     	  {if $page.last_published == 0 }
     	  	<strong>Never Published</strong>
     	  {else}
     	    <strong>Not Published</strong> <a href="{$domain}{$section}/pageAssets?page_id={$page.webid}">Go To Page Tree</a>
     	  {/if}
+        {if $is_special_page}<p>This is a special page. Not being published means a part of your site's functionality may be unavailable to users.</p>{/if}
     	{/if}</div>
   </div>
+  
+  {if !$is_special_page}
   
   {if $page.type == "NORMAL"}
   <div class="edit-form-row">
@@ -137,6 +140,8 @@
     	</select>
   </div>
   {/if}
+  
+  
   
   {if $page.id > 0}
   <div class="edit-form-row">
@@ -204,6 +209,8 @@
     <div class="form-hint">This image can be used when referring to a page from another page.</div>
   </div>
   
+  {/if}
+  
   {if !$ishomepage}
   <div class="edit-form-row">
     <div class="form-section-label">Parent Page</div>
@@ -236,11 +243,11 @@
     {/if}
   </div>
   
-    {/if}
+    {/if}{* show parent meta page property control *}
   
-  {/if}
+  {/if}{* if the page is not the homepage *}
   
-  {/if}
+  
   
   {if $page.type == 'NORMAL'}
   
@@ -264,7 +271,16 @@
       <textarea name="page_keywords" style="width:500px;height:100px">{$page.keywords}</textarea>
     </div>
     
-  {/if}
+  {/if}{* if the page is not a meta page *}
+  
+  {elseif $page.id == $site.error_page_id}
+  
+  <div class="edit-form-row">
+    <div class="form-section-label">Meta Description</div>
+      <textarea name="page_meta_description" style="width:500px;height:60px">{$page.meta_description}</textarea>
+  </div>
+  
+  {/if}{* if the page is not a special page *}
     
     <div class="buttons-bar">
       <input type="button" value="Cancel" onclick="cancelForm();" />

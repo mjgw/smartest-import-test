@@ -43,7 +43,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 		
 		if($this->lookupSiteDomain()){
 		    
-		    define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
+            define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
 		    define('SM_CMS_PAGE_SITE_UNIQUE_ID', $this->_site->getUniqueId());
 		    
 		    if(strlen($this->getRequest()->getRequestString())){
@@ -176,6 +176,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
                         // Search page
                         $p = $this->_page->copy('SmartestSearchPage');
                         $p->setSearchQuery($this->getRequestParameter('q'));
+                        echo $this->getRequestParameter('q');
                         $this->_page = $p;
                     }
                     
@@ -205,6 +206,16 @@ class CmsFrontEnd extends SmartestSystemApplication{
                         }
                         
                     }
+                    
+                    // echo $this->_page->getId();
+                    // echo $this->_site->getErrorPageId();
+                    
+                    if($this->_page->getId() == $this->_site->getErrorPageId()){
+                        
+                        $this->renderNotFoundPage();
+                        
+                    }
+                    
                 }
                 
                 if($this->getRequestParameter('hide_newwin_link')){
@@ -359,8 +370,10 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	        
             }else{
                 
-                header("HTTP/1.1 503 Service Unavailable");
-                echo "Site not enabled";
+                /* header("HTTP/1.1 503 Service Unavailable");
+                echo "Site not enabled"; */
+                
+                $this->renderNotAvailablePage();
                 
             }
 	    
@@ -377,7 +390,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	
 	private function renderPage($draft_mode=false){
 	    
-	    if($draft_mode || (is_object($this->_site) && (bool) $this->_site->getIsEnabled())){
+	    if($draft_mode || (is_object($this->_site) && (bool) $this->_site->getIsEnabled()) || ($this->_page->getId() == $this->_site->getHoldingPageId())){
 	        
 	        $ph = new SmartestWebPagePreparationHelper($this->_page);
 	    
@@ -412,36 +425,89 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	    
         }else{
             
-            header("HTTP/1.1 503 Service Unavailable");
+            /* header("HTTP/1.1 503 Service Unavailable");
             echo "Site not enabled";
-            exit;
+            exit; */
+            
+            $this->renderNotAvailablePage();
             
         }
 	    
 	}
 	
-	private function renderNotFoundPage($error=SM_ERROR_PAGE_NOT_FOUND){
+	private function renderNotFoundPage(){
 	    
-	    if($this->lookupSiteDomain()){
+        $draft_mode = ($this->getRequest()->getAction() == 'renderEditableDraftPage');
+        
+        $error_page_id = $this->_site->getErrorPageId();
+        
+        if($this->_page instanceof SmartestNotFoundPage){
+            // Great
+        }else{
+            if(is_object($this->_page) && $this->_page->getId() == $error_page_id){
+                $p = $this->_page->copy('SmartestNotFoundPage');
+                $this->_page = $p;
+            }else{
+                $this->_page = new SmartestNotFoundPage;
+                if(!$this->_page->find($error_page_id)){
+                    // The page ID specified as the error page no longer seems to exist
+                    throw new SmartestException('The page ID specified as the error page no longer seems to exist');
+                }
+            }
+        }
+        
+        $this->_page->setDraftMode($draft_mode);
+        define('SM_CMS_PAGE_SITE_ID', $this->_page->getSiteId());
+        
+        if($draft_mode){
+            if($this->getRequestParameter('request')){
+                // echo $this->getRequestParameter('request');
+                $this->_page->setRequestedUrl($this->getRequestParameter('request'));
+            }else{
+                // echo $_SERVER['REQUEST_URI'];
+                $this->_page->setRequestedUrl($_SERVER['REQUEST_URI']);
+            }
+        }else{
+            $this->_page->setRequestedUrl($_SERVER['REQUEST_URI']);
+        }
+        
+        header("HTTP/1.1 404 Not Found");
+        $this->renderPage($draft_mode);
+		
+	}
+    
+    protected function renderNotAvailablePage(){
+        
+	    // if($this->lookupSiteDomain()){
 	        
+            header("HTTP/1.1 503 Service Unavailable");
+            
 	        $draft_mode = ($this->getRequest()->getAction() == 'renderEditableDraftPage');
 	        
-	        $error_page_id = $this->_site->getErrorPageId();
-	        $this->_page = new SmartestPage;
-	        $this->_page->find($error_page_id);
-	        $this->_page->setDraftMode($draft_mode);
-	        define('SM_CMS_PAGE_SITE_ID', $this->_page->getSiteId());
+	        $error_page_id = $this->_site->getHoldingPageId();
+            
+            if($error_page_id){
+    	        
+                $this->_page = new SmartestPage;
+                
+    	        if($this->_page->find($error_page_id) && $this->_page->isPublished()){
+    	            $this->_page->setDraftMode($draft_mode);
+                    define('SM_CMS_PAGE_SITE_ID', $this->_page->getSiteId());
+                    $this->renderPage($draft_mode);
+    	        }else{
+    	            echo "Site not enabled.";
+                    exit;
+    	        }
+    	        
+            }
 	        
-	        header("HTTP/1.1 404 Not Found");
-	        $this->renderPage($draft_mode);
-	        
-        }else{
+            /* }else{
             
             // site domain not recognised, so we don't even knkow whether a page with this URL exists or not!
             
-        }
-		
-	}
+        } */
+        
+    }
     
     public function setPrivacyCookieNoJS(){
         

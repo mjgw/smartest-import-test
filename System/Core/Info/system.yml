@@ -43,7 +43,7 @@ system:
   content_interaction_methods:
     - website/renderPageFromUrl
     - website/renderPageFromId
-    - website/renderEditableDraftPage
+#    - website/renderEditableDraftPage
     - website/searchDomain
     - website/renderSiteTagSimpleRssFeed
     - website/downloadAsset

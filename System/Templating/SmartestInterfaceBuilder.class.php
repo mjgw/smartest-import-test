@@ -7,6 +7,7 @@ class SmartestInterfaceBuilder extends SmartestEngine{
 	    parent::__construct($pid);
 	    $this->_context = SM_CONTEXT_SYSTEM_UI;
 	    $this->plugins_dir[] = SM_ROOT_DIR."System/Templating/Plugins/InterfaceBuilder/";
+        $this->assign('sm_user_agent', SmartestPersistentObject::get('userAgent'));
 	    
 	}
 	

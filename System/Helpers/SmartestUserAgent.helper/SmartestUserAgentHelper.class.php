@@ -358,7 +358,8 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
 	}
 	
 	public function __toArray(){
-	    $array = array();
+        
+        $array = array();
 	    $array['appName'] = $this->getAppName();
 	    $array['appVersion'] = $this->getAppVersion();
 	    $array['appVersionInteger'] = $this->getAppVersionInteger();

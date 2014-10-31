@@ -1,9 +1,28 @@
 <!--Smartest Text Attachment: <?sm:$_textattachment._name:?>-->
-<div class="attachment" style="<?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>width:<?sm:$_textattachment.div_width :?>px;<?sm:/if:?><?sm:if $_textattachment.border :?>border: 1px solid #ccc;padding:10px;<?sm:/if:?><?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>float: <?sm:else:?>text-align: <?sm:/if:?><?sm:$_textattachment.alignment:?>; margin<?sm:if $_textattachment.alignment == "right" :?>-left<?sm:else if $_textattachment.alignment == "left" :?>-right<?sm:/if:?>: 10px!important;">
+<div class="sm-attachment" style="<?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>width:<?sm:$_textattachment.div_width :?>px;<?sm:/if:?><?sm:if $_textattachment.border :?>border: 1px solid #ccc;padding:6px;<?sm:/if:?><?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>float: <?sm:else:?>text-align: <?sm:/if:?><?sm:$_textattachment.alignment:?>; margin:<?sm:if $_textattachment.alignment == "right" :?>0 0 10px 10px!important;<?sm:else if $_textattachment.alignment == "left" :?>0 10px 10px 0!important;<?sm:/if:?>">
+
 <?sm:if $_textattachment.float :?>
-<?sm:_asset_from_object object=$_textattachment.asset_object style="margin:5px!important;display:inline-block":?>
+  <?sm:if $_textattachment.allow_resize && $_textattachment.asset.is_image:?>
+  <img src="<?sm:$_textattachment.thumbnail.url:?>" style="display:block" alt="<?sm:$_textattachment.asset.render_data.alt_text:?>" />
+  <?sm:else:?>
+  <?sm:_asset_from_object object=$_textattachment.asset style="display:block":?>
+  <?sm:/if:?>
 <?sm:else:?>
-<?sm:_asset_from_object object=$_textattachment.asset_object style="margin:5px 0 5px 0!important;display:inline-block":?>
+  <?sm:if $_textattachment.allow_resize && $_textattachment.asset.is_image:?>
+  <img src="<?sm:$_textattachment.thumbnail.url:?>" style="display:block" alt="<?sm:$_textattachment.asset.render_data.alt_text:?>" />
+  <?sm:else:?>
+  <?sm:_asset_from_object object=$_textattachment.asset style="display:block":?>
+  <?sm:/if:?>
 <?sm:/if:?>
-<?sm:if strlen($_textattachment.caption) || strlen($_textattachment.asset_object.credit) :?><div class="attachment-caption" style="text-align:<?sm:$_textattachment.caption_alignment :?>;display:block; margin:5px;font-size:11px;<?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>width:<?sm:$_textattachment.asset.width :?>px<?sm:/if:?>"><?sm:$_textattachment.caption:?> <?sm:if strlen($_textattachment.asset_object.credit):?>Image: <?sm:$_textattachment.asset_object.credit:?><?sm:/if:?> <?sm:$_textattachment.edit_link:?></div><?sm:else:?><?sm:$_textattachment.edit_link:?><?sm:/if:?>
+
+<?sm:if strlen($_textattachment.caption) || strlen($_textattachment.asset.credit) :?>
+<div class="sm-attachment-caption" style="text-align:<?sm:$_textattachment.caption_alignment :?>;display:block; margin:5px 0 0 0;font-size:0.8em;<?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>width:<?sm:$_textattachment.div_width :?>px<?sm:/if:?>">
+  <?sm:$_textattachment.caption:?>
+  <?sm:if strlen($_textattachment.asset.credit):?>Image: <?sm:$_textattachment.asset.credit:?><?sm:/if:?>
+  <?sm:$_textattachment.edit_link:?>
+</div>
+<?sm:else:?>
+  <?sm:$_textattachment.edit_link:?>
+<?sm:/if:?>
+
 </div>

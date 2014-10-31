@@ -5,7 +5,7 @@
 * @subpackage CMS Object Model
 * @author Marcus Gilroy-Ware <marcus@mjgw.com>
 * SmartestCmsItem is the underlying class that is extended to create the objects that are created and edited in the CMS
-* It is also used
+* Please store any additional information on this class at: http://wiki.smartestproject.org/SmartestCmsItem
 */
 
 class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, SmartestStorableValue, SmartestDualModedObject{

@@ -1,5 +1,5 @@
 {if $sm_user_agent.is_supported_browser}
-<div class="sm-boolean-switch {if $_input_data.value}on{else}off{/if}" id="{$_input_data.id}-outer">
+<div class="sm-boolean-switch {if $_input_data.value}on{else}off{/if}{if $_input_data.red} red{/if}" id="{$_input_data.id}-outer">
   <a href="#toggle-switch" id="{$_input_data.id}-link" class="sm-boolean-switch-inner">
     <span class="sm-boolean-switch-on-label">On</span><span class="sm-boolean-switch-target"></span><span class="sm-boolean-switch-off-label">Off</span>
   </a>
@@ -13,10 +13,18 @@
       $('{$_input_data.id}-input').value = 'FALSE';
       $('{$_input_data.id}-outer').removeClassName('on');
       $('{$_input_data.id}-outer').addClassName('off');
+      {if $_input_data.change_js}{$_input_data.change_js}{/if}
+{if $_input_data.change_hook}{$_input_data.change_hook}false, '{$_input_data.id}');
+{/if}
+
     {rdelim}else{ldelim}
       $('{$_input_data.id}-input').value = 'TRUE';
       $('{$_input_data.id}-outer').removeClassName('off');
       $('{$_input_data.id}-outer').addClassName('on');
+      {if $_input_data.change_js}{$_input_data.change_js}{/if}
+{if $_input_data.change_hook}{$_input_data.change_hook}true, '{$_input_data.id}');
+{/if}
+
     {rdelim};
   {rdelim});
 </script>

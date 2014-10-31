@@ -525,6 +525,16 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
 	    
 	    $this->database->rawQuery($sql);
 	}
+    
+    public function getAvailableProfilePictures(){
+	    
+        $uh = new SmartestUsersHelper;
+	    
+	    if($g = $uh->getUserProfilePicsGroup()){
+	        $this->send($g->getMembers(1, $this->getSite()), 'assets');
+	    }
+        
+    }
 	
     ////////////////////////////////// Todo list stuff ///////////////////////////////////////
 	

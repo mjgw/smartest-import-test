@@ -137,6 +137,20 @@ class SmartestSiteCreationHelper{
 	    $site->setUserPageId($user_page->getId());
 	    SmartestLog::getInstance('system')->log("Created and connected user page to new site (page ID {$user_page->getId()})", SM_LOG_DEBUG);
 	    
+	    $holding_page = new SmartestPage;
+	    $holding_page->setTitle('Holding page');
+	    $holding_page->setName('error-503');
+	    $holding_page->setSiteId($site->getId());
+	    $holding_page->setDraftTemplate($master_template);
+	    $holding_page->setLiveTemplate($master_template);
+	    $holding_page->setParent($home_page->getId());
+	    $holding_page->setWebid(SmartestStringHelper::random(32));
+	    $holding_page->setCreatedbyUserid($u->getId());
+	    $holding_page->setOrderIndex(1019);
+	    $holding_page->save();
+	    $site->setHoldingPageId($holding_page->getId());
+	    SmartestLog::getInstance('system')->log("Created and connected holding page to new site (page ID {$holding_page->getId()})", SM_LOG_DEBUG);
+        
 	    $site->save();
     
 	    self::createSiteDirectory($site);

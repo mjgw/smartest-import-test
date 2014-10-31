@@ -2,12 +2,12 @@
 
 {load_interface file="edit_user_tabs.tpl"}
 
-<h3 id="user">{if $user.id == $_user.id}Your profile pic{else}Profile pic for {$user.fullname}{/if}</h3>
+<h3 id="user">{if $user.id == $_user.id}Your profile pic{else}Profile pic for <span class="light">{$user.fullname}</span>{/if}</h3>
 
 <form action="{$domain}users/saveUserProfilePic" method="post" enctype="multipart/form-data">
   <input type="hidden" name="user_id" value="{$user.id}" />
-  <div style="width:200px;padding:10px;float:left">
-    {$user.profile_pic.image.width_200}
+  <div style="width:180px;padding:10px;float:left;">
+    <div id="user-profile-pic-holder-big" style="background-image:url({$user.profile_pic.image.square_180.web_path});"></div>
   </div>
   <div style="float:left">
     <div class="edit-form-row">Choose a picture

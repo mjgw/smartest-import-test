@@ -261,6 +261,8 @@ class Pages extends SmartestSystemApplication{
                 $this->send(true, 'show_deleted_warning');
             }
             
+            $this->send($this->getSite()->pageIdIsSpecial($page->getId()), 'is_special_page');
+            
             $page->setDraftMode(true);
     	    
     	    if(($page->getType() == 'ITEMCLASS' || $page->getType() == 'SM_PAGETYPE_ITEMCLASS' || $page->getType() == 'SM_PAGETYPE_DATASET') && (!$this->getRequestParameter('item_id') || !is_numeric($this->getRequestParameter('item_id')))){
@@ -815,16 +817,18 @@ class Pages extends SmartestSystemApplication{
 	    $this->formForward();
 	}
 	
-	public function preview($get){
+	public function preview(){
 		
 		// if(!$this->getRequestParameter('from')){
 		    $this->setFormReturnUri();
 		    $this->setFormReturnDescription('page preview');
 	    // }
 		
-		$content = array();
-		
-		$page_webid = $this->getRequestParameter('page_id');
+		// $content = array();
+        
+        // echo $this->getRequestParameter('page_id');
+        
+        $page_webid = $this->getRequestParameter('page_id');
 		$page = new SmartestPage;
 		
 		if($page->hydrate($page_webid)){
@@ -832,17 +836,29 @@ class Pages extends SmartestSystemApplication{
 		    $page->setDraftMode(true);
 		    $this->send($page, 'page');
 		    
-		    $domain = 'http://'.$page->getParentSite()->getDomain();
+		    // $domain = 'http://'.$page->getParentSite()->getDomain();
 		    
-		    if(!SmartestStringHelper::endsWith('/', $domain)){
+		    /* if(!SmartestStringHelper::endsWith('/', $domain)){
 		        $domain .= '/';
-		    }
+		    } */
+                
+            $domain = $this->getRequest()->getDomain();
+            $preview_url = $domain.'website/renderEditableDraftPage?page_id='.$page->getWebId();
+            
+            // {$domain}website/renderEditableDraftPage?page_id={$page.webid}
+            // {if $item}&amp;item_id={$item.id}{/if}
+            // {if $request_parameters.author_id}&amp;author_id={$request_parameters.author_id}{/if}
+            // {if $request_parameters.search_query}&amp;q={$request_parameters.search_query}{/if}
+            // {if $request_parameters.tag}&amp;tag_name={$request_parameters.tag}{/if}
+            // {if $request_parameters.hash}#{$request_parameters.hash}{/if}
 		    
 		    if($page->getDraftTemplate() && is_file(SM_ROOT_DIR.'Presentation/Masters/'.$page->getDraftTemplate())){
 		    
 		        if($page->getType() == 'NORMAL'){
 		            
-		            if($page->getId() == $this->getSite()->getTagPageId()){
+                    if($page->getId() == $this->getSite()->getTagPageId()){
+                        
+                        $this->send(true, 'is_special_page');
                         
                         if($this->getRequestParameter('tag')){
                             $tag = new SmartestTag;
@@ -854,11 +870,16 @@ class Pages extends SmartestSystemApplication{
                                 $this->send(false, 'show_publish_item_option');
                                 $this->send(false, 'show_item_list');
                                 $this->send(false, 'show_tag_list');
+                                $this->send(false, 'show_search_box');
+                                $this->send(false, 'show_author_list');
+                                $preview_url .= '&amp;tag_name='.$tag->getName();
                             }else{
                                 // tag does not exist - require tag select
                                 $this->send('The selected tag does not exists. Please choose another tag to preview on this page.', 'chooser_message');
                                 $this->send(false, 'show_item_list');
                                 $this->send(true, 'show_tag_list');
+                                $this->send(false, 'show_search_box');
+                                $this->send(false, 'show_author_list');
                                 $this->send('websitemanager/preview', 'continue_action');
                                 $du  = new SmartestDataUtility;
                 	            $tags = $du->getTags();
@@ -869,15 +890,101 @@ class Pages extends SmartestSystemApplication{
                             $this->send('Please choose a tag to preview on this page.', 'chooser_message');
                             $this->send(false, 'show_item_list');
                             $this->send(true, 'show_tag_list');
+                            $this->send(false, 'show_search_box');
+                            $this->send(false, 'show_author_list');
                             $this->send('websitemanager/preview', 'continue_action');
                             $du  = new SmartestDataUtility;
             	            $tags = $du->getTags();
             	            $this->send($tags, 'tags');
                         }
+                    
+                    }elseif($page->getId() == $this->getSite()->getUserPageId()){
+                        
+                        $this->send(true, 'is_special_page');
+                        
+                        if($this->getRequestParameter('author_id')){
+                            
+                            $author = new SmartestSystemUser;
+                            
+                            if($author->find($this->getRequestParameter('author_id'))){
+                                $this->send(true, 'show_iframe');
+                		        $this->send($domain, 'site_domain');
+                		        $this->setTitle('Page Preview | Author | '.$author->getFullName());
+                		        $this->send(false, 'show_edit_item_option');
+                                $this->send(false, 'show_publish_item_option');
+                                $this->send(false, 'show_item_list');
+                                $this->send(false, 'show_tag_list');
+                                $this->send(false, 'show_search_box');
+                                $preview_url .= '&amp;author_id='.$author->getId();
+                            }else{
+                                // tag does not exist - require tag select
+                                $this->send('The selected user does not exist. Please choose another user to preview on this page.', 'chooser_message');
+                                $this->send(false, 'show_item_list');
+                                $this->send(true, 'show_author_list');
+                                $this->send(false, 'show_tag_list');
+                                $this->send(false, 'show_search_box');
+                                $this->send('websitemanager/preview', 'continue_action');
+                                $uhelper = new SmartestUsersHelper;
+                                $this->send($uhelper->getCreditableUsersOnSite($this->getSite()->getId()), 'authors');
+                            }
+                            
+                        }else{
+                            
+                            // require author select
+                            $this->send('Please choose a user to preview this page.', 'chooser_message');
+                            $this->send(false, 'show_item_list');
+                            $this->send(false, 'show_tag_list');
+                            $this->send(false, 'show_search_box');
+                            $this->send(true, 'show_author_list');
+                            $this->send('websitemanager/preview', 'continue_action');
+                            $uhelper = new SmartestUsersHelper;
+                            $this->send($uhelper->getCreditableUsersOnSite($this->getSite()->getId()), 'authors');
+                            
+                        }
+                        
+                    }elseif($page->getId() == $this->getSite()->getSearchPageId()){
+                        
+                        $this->send(true, 'is_special_page');
+                        
+                        if($this->getRequestParameter('search_query')){
+                            
+                            $this->send(true, 'show_iframe');
+                		    $this->send($domain, 'site_domain');
+                		    $this->setTitle('Page Preview | Search | '.$this->getRequestParameter('search_query'));
+                		    $this->send(false, 'show_edit_item_option');
+                            $this->send(false, 'show_publish_item_option');
+                            $this->send(false, 'show_item_list');
+                            $this->send(false, 'show_tag_list');
+                            $this->send(false, 'show_search_box');
+                            $preview_url .= '&amp;q='.urlencode($this->getRequestParameter('search_query'));
+                            
+                        }else{
+                            
+                            // require search input
+                            $this->send('Please submit a search query to preview this page.', 'chooser_message');
+                            $this->send(false, 'show_iframe');
+                            $this->send(false, 'show_item_list');
+                            $this->send(false, 'show_tag_list');
+                            $this->send(false, 'show_author_list');
+                            $this->send(true, 'show_search_box');
+                            $this->send('websitemanager/preview', 'continue_action');
+                            
+                        }
                         
         		    }else{
         		        
-        		        $this->send(true, 'show_iframe');
+                        if($page->getId() == $this->getSite()->getHoldingPageId()){
+                            $this->send(true, 'is_special_page');
+                        }
+                        
+                        if($page->isErrorPage()){
+                            $this->send(true, 'is_special_page');
+                            if($this->getRequestParameter('requested_page')){
+                                $preview_url .= '&amp;request='.urlencode($this->getRequestParameter('requested_page'));
+                            }
+                        }
+                        
+                        $this->send(true, 'show_iframe');
         		        $this->send($domain, 'site_domain');
         		        $this->setTitle('Page Preview | '.$page->getTitle());
         		        $this->send(false, 'show_edit_item_option');
@@ -917,6 +1024,8 @@ class Pages extends SmartestSystemApplication{
                     	    }else{
                     	        $this->send(true, 'show_false_item_option');
                     	    }
+                            
+                            $preview_url .= '&amp;item_id='.$item->getId();
     		                
     		            }else{
 		                    
@@ -1008,6 +1117,13 @@ class Pages extends SmartestSystemApplication{
 		    $this->addUserMessage("The page ID was not recognized.", SmartestUserMessage::ERROR);
 		    $this->send(false, 'show_iframe');
 		}
+        
+        if(isset($preview_url)){
+            if($this->getRequestParameter('hash')){
+                $preview_url .= '#'.$this->getRequestParameter('hash');
+            }
+            $this->send($preview_url, 'preview_url');
+        }
 		
 		/* if($content["page"] = $this->manager->getPage($page_id)){
 			return $content;
@@ -1098,6 +1214,30 @@ class Pages extends SmartestSystemApplication{
 	    $this->send($recent, 'recent_pages');
 		    
 	}
+    
+    public function siteSpecialPages(){
+        
+        if($this->getSite() instanceof SmartestSite){
+            
+            $du = new SmartestDataUtility;
+            $this->send($this->getSite(), 'site');
+		    $pages = $this->getSite()->getPagesList();
+            $this->send($pages, 'pages');
+            $this->send(SmartestStringHelper::random(8).'.html', 'unknown_url');
+            $this->send($this->getSite(), 'site');
+            $this->send($du->getTags(), 'tags');
+            $uhelper = new SmartestUsersHelper;
+            $this->send($uhelper->getCreditableUsersOnSite($this->getSite()->getId()), 'authors');
+            
+            $this->send($this->getSite()->getErrorPage(), 'error_page');
+            $this->send($this->getSite()->getHoldingPage(), 'holding_page');
+            $this->send($this->getSite()->getSearchPage(), 'search_page');
+            $this->send($this->getSite()->getTagPage(), 'tag_page');
+            $this->send($this->getSite()->getUserPage(), 'author_page');
+            
+        }
+        
+    }
 	
 	public function releaseCurrentUserHeldPages(){
 	    
@@ -1513,25 +1653,35 @@ class Pages extends SmartestSystemApplication{
                 $page->setName(SmartestStringHelper::toSlug($this->getRequestParameter('page_name')));
             }
             
-            $page->setParent($this->getRequestParameter('page_parent'));
-            $page->setForceStaticTitle(($this->getRequestParameter('page_force_static_title') && ($this->getRequestParameter('page_force_static_title') == 'true')) ? 1 : 0);
-            $page->setIsSection(($this->getRequestParameter('page_is_section') && ($this->getRequestParameter('page_is_section') == 'true')) ? 1 : 0);
-            $page->setCacheAsHtml($this->getRequestParameter('page_cache_as_html'));
-            $page->setCacheInterval($this->getRequestParameter('page_cache_interval'));
-            $page->setIconImage($this->getRequestParameter('page_icon_image'));
+            if($this->getSite()->pageIdIsSpecial($page->getId())){
+                $page->setParent($this->getRequestParameter('page_parent'));
+                $page->setIsSection(($this->getRequestParameter('page_is_section') && ($this->getRequestParameter('page_is_section') == 'true')) ? 1 : 0);
+                $page->setCacheAsHtml($this->getRequestParameter('page_cache_as_html'));
+                $page->setCacheInterval($this->getRequestParameter('page_cache_interval'));
+                $page->setIconImage($this->getRequestParameter('page_icon_image'));
+            }
+            
             $page->setLastModified(time());
             
             if($page->getType() == 'NORMAL'){
-                $page->setSearchField(strip_tags($this->getRequestParameter('page_search_field')));
-                $page->setKeywords(strip_tags($this->getRequestParameter('page_keywords')));
-                $page->setDescription(strip_tags($this->getRequestParameter('page_description')));
-                $page->setMetaDescription(strip_tags($this->getRequestParameter('page_meta_description')));
+                if($this->getSite()->pageIdIsSpecial($page->getId())){
+                    $page->setSearchField(strip_tags($this->getRequestParameter('page_search_field')));
+                    $page->setKeywords(strip_tags($this->getRequestParameter('page_keywords')));
+                    $page->setDescription(strip_tags($this->getRequestParameter('page_description')));
+                    $page->setMetaDescription(strip_tags($this->getRequestParameter('page_meta_description')));
+                }else if($page->getId() == $this->getSite()->getErrorPageId()){
+                    $page->setMetaDescription(strip_tags($this->getRequestParameter('page_meta_description')));
+                }
             }
             
             if($page->getType() == 'ITEMCLASS'){
+                
+                $page->setForceStaticTitle(($this->getRequestParameter('page_force_static_title') && ($this->getRequestParameter('page_force_static_title') == 'true')) ? 1 : 0);
+                
                 if($this->getRequestParameter('page_parent_data_source') && strlen($this->getRequestParameter('page_parent_data_source'))){
                     $page->setParentMetaPageReferringPropertyId($this->getRequestParameter('page_parent_data_source'));
                 }
+                
             }
             
             $page->save();
@@ -1565,13 +1715,13 @@ class Pages extends SmartestSystemApplication{
     		    $page = new SmartestPage;
     		}
     		
-    		// echo $page_webid;
-    		
     		if($page->hydrate($page_webid)){
 	            
 	            if($page->getDeleted() == 'TRUE'){
 	                $this->send(true, 'show_deleted_warning');
 	            }
+                
+                $this->send($this->getSite()->pageIdIsSpecial($page->getId()), 'is_special_page');
 	            
 	            $editable = $page->isEditableByUserId($this->getUser()->getId());
         		$this->send($editable, 'page_is_editable');

@@ -286,6 +286,12 @@ class Users extends SmartestSystemApplication{
     		        $helper = new SmartestAssetsLibraryHelper;
             	    $this->send($helper->getAttachableFiles($this->getSite()->getId()), 'assets');
     		    }
+                
+                if(!is_file(SM_ROOT_DIR.'Public/Resources/Images/default_user_profile_pic.jpg')){
+                    if(is_writable(SM_ROOT_DIR.'Public/Resources/Images/')){
+                        SmartestFileSystemHelper::copy(SM_ROOT_DIR.'System/Install/Samples/default_user_profile_pic.jpg', SM_ROOT_DIR.'Public/Resources/Images/default_user_profile_pic.jpg');
+                    }
+                }
     		    
             }else{
                 $this->addUserMessageToNextRequest("The user ID was not recognised.", SmartestUserMessage::ERROR);

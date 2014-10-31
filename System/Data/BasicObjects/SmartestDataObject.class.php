@@ -776,11 +776,11 @@ class SmartestDataObject implements ArrayAccess{
 	
 	public function getCurrentSiteId(){
 	    
-	    if($this->getRequest()->getModule() == 'website'){
+        if(isset($GLOBALS['_site']) && is_object($GLOBALS['_site'])){
+            $site_id = $GLOBALS['_site']->getId();
+        }else if($this->getRequest()->getModule() == 'website'){
 	        // This is mostly for when objects are used on web pages
             $site_id = constant('SM_CMS_PAGE_SITE_ID');
-        }else if(isset($GLOBALS['_site']) && is_object($GLOBALS['_site'])){
-            $site_id = $GLOBALS['_site']->getId();
         }else if(is_object(SmartestSession::get('current_open_project'))){
             // This is mostly for when objects are used within the Smartest backend
             // make sure the site object exists

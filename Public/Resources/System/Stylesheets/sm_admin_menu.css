@@ -24,6 +24,10 @@
 	margin-right:8px;
 }
 
+#admin-menu ul li a i.fa{
+    font-size:1.3em;
+}
+
 #admin-menu ul li.off a{
 	color: #333;
 }

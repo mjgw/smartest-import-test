@@ -1,9 +1,13 @@
 help:
   highslide:
     title: Using Highslide
-    keywords: categorisation, organisation
+    keywords: [categorisation, organisation]
     content: highslide.tpl
   textile:
     title: Easy texts
-    keywords: formatting, text
+    keywords: [formatting, text]
     content: textile.tpl
+  attachments:
+    title: File attachments
+    keywords: [formatting, text, images]
+    content: attachments.tpl

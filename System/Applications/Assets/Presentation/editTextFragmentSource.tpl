@@ -14,7 +14,9 @@
       </div>
       {/foreach}
 
-      <div class="special-box">Name of the Asset: <strong>{$asset.url}</strong></div>
+      <div class="instruction">File you are editing: <strong>{$asset.label}</strong></div>
+      
+      <div class="special-box">Are you trying to include images in this text as attachments? {help id="assets:attachments"}read this guide{/help}</div>
       
       <div class="textarea-holder" style="width:100%">
           <textarea name="asset_content" id="tpl_textArea" wrap="virtual" style="width:100%;padding:0">{$textfragment_content}</textarea>

@@ -14,12 +14,12 @@ class SmartestSite extends SmartestBaseSite{
     
     public static $special_page_ids = array();
     
-	protected function __objectConstruct(){
-		
-		$this->_table_prefix = 'site_';
-		$this->_table_name = 'Sites';
-		
-	}
+	// protected function __objectConstruct(){
+	// 	
+	// 	// $this->_table_prefix = 'site_';
+	// 	// $this->_table_name = 'Sites';
+	// 	
+	// }
 	
 	public function getHomePage($draft_mode=false){
 	    
@@ -36,11 +36,11 @@ class SmartestSite extends SmartestBaseSite{
 	
 	public function getPagesTree($draft_mode=true, $normal_pages_only=false){
 	    
-	    if(SmartestCache::hasData('site_pages_tree_'.$this->getId(), true)){
+	    /* if(SmartestCache::hasData('site_pages_tree_'.$this->getId(), true)){
 			
 			$tree = SmartestCache::load('site_pages_tree_'.$this->getId(), true);
 			
-		}else{
+		}else{ */
 		
 			$home_page = $this->getHomePage();
 		    
@@ -48,18 +48,33 @@ class SmartestSite extends SmartestBaseSite{
 		    
 		    $tree = array();
 			$tree[0]["info"] = $home_page->__toArray();
+            // $tree[0]["info"] = $home_page;
 			$tree[0]["treeLevel"] = 0;
 			$tree[0]["children"] = $home_page->getPagesSubTree(1);
 			
-			$tree[0]["child_items"] = array();
-			
-			SmartestCache::save('site_pages_tree_'.$this->getId(), $tree, -1, true);
+            // echo count($tree[0]["children"]);
+            
+			// SmartestCache::save('site_pages_tree_'.$this->getId(), $tree, -1, true);
 		
-		}
+        // }
 		
 		return $tree;
 	    
 	}
+    
+    public function getPagesTreeWithSpecialPages($draft_mode=true){
+        
+        $home_page = $this->getHomePage($draft_mode);
+	    $home_page->setDraftMode($draft_mode);
+	    
+	    $tree = array();
+		$tree[0]["info"] = $home_page;
+		$tree[0]["treeLevel"] = 0;
+        $tree[0]["children"] = $home_page->getPagesSubTreeWithSpecialPages(1);
+        
+        return $tree;
+        
+    }
 	
 	public function getPagesList($draft_mode=false, $normal_pages_only=false){
 	    
@@ -69,6 +84,15 @@ class SmartestSite extends SmartestBaseSite{
 	    return $list;
 	    
 	}
+    
+    public function getPagesListWithSpecialPages($draft_mode=false){
+        
+	    $this->displayPages = array();
+	    $this->displayPagesIndex = 0;
+	    $list = $this->getSerializedPageTree($this->getPagesTreeWithSpecialPages($draft_mode, true));
+	    return $list;
+        
+    }
 	
 	public function getSerializedPageTree($tree){
 		
@@ -104,10 +128,15 @@ class SmartestSite extends SmartestBaseSite{
             $ids->setParameter('user_page_id', $this->getUserPageId());
             $ids->setParameter('error_page_id', $this->getErrorPageId());
             $ids->setParameter('search_page_id', $this->getSearchPageId());
+            $ids->setParameter('holding_page_id', $this->getHoldingPageId());
             self::$special_page_ids = $ids;
             return $ids;
         }
         
+    }
+    
+    public function pageIdIsSpecial($page_id){
+        return in_array($page_id, $this->getSpecialPageIds()->getParameters());
     }
 	
 	public function getNormalPagesList($draft_mode=false, $return_plain_objects=false){
@@ -126,8 +155,6 @@ class SmartestSite extends SmartestBaseSite{
     	        }
     	    }
     	    
-    	    // var_dump(gettype($list));
-	    
     	    return array_values($list);
 	    
         }
@@ -497,6 +524,9 @@ class SmartestSite extends SmartestBaseSite{
             case "search_page_id":
             return $this->getSearchPageId();
             
+            case "holding_page_id":
+            return $this->getHoldingPageId();
+            
             case "logo":
             return $this->getLogoAsset();
             
@@ -576,6 +606,13 @@ class SmartestSite extends SmartestBaseSite{
         return $ph->setGlobalPreference('site_search_page_id', $id, null, $this->getId());
     }
     
+    public function getSearchPage(){
+        $pid = $this->getSearchPageId();
+        $p = new SmartestPage;
+        $p->find($pid);
+        return $p;
+    }
+    
     /** Error Page **/
     
     public function getErrorPageId(){
@@ -593,6 +630,36 @@ class SmartestSite extends SmartestBaseSite{
     public function setErrorPageId($id){
         $ph = new SmartestPreferencesHelper;
         return $ph->setGlobalPreference('site_error_page_id', $id, null, $this->getId());
+    }
+    
+    public function getErrorPage(){
+        $pid = $this->getErrorPageId();
+        $p = new SmartestPage;
+        $p->find($pid);
+        return $p;
+    }
+    
+    /** Holding Page **/
+    
+    public function getHoldingPageId(){
+        $ph = new SmartestPreferencesHelper;
+        if($ph->getGlobalPreference('site_holding_page_id', null, $this->getId(), true)){
+            return $ph->getGlobalPreference('site_holding_page_id', null, $this->getId());
+        }else{
+            return null;
+        }
+    }
+    
+    public function setHoldingPageId($id){
+        $ph = new SmartestPreferencesHelper;
+        return $ph->setGlobalPreference('site_holding_page_id', $id, null, $this->getId());
+    }
+    
+    public function getHoldingPage(){
+        $pid = $this->getHoldingPageId();
+        $p = new SmartestPage;
+        $p->find($pid);
+        return $p;
     }
 	
 }

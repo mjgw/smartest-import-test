@@ -345,7 +345,7 @@ class SmartestImage extends SmartestFile{
         
         $url = 'Resources/System/Cache/Images/'.$this->getSquarePreviewForUIFilename();
         $full_path = SM_ROOT_DIR.'Public/'.$url;
-        $side = 73;
+        $side = 200;
         
         if(file_exists($full_path)){
             
@@ -757,9 +757,11 @@ class SmartestImage extends SmartestFile{
 	        return $this->restrictToWidth($m[1]);
 	    }elseif(preg_match('/height_(\d+)/', $offset, $m)){
 	        return $this->restrictToHeight($m[1]);
-	    }elseif(preg_match('/constrain_(\d+)x(\d+)/', $offset, $m)){
-	        return $this->getConstrainedVersionWithin($m[1], $m[2]);
-	    }elseif(preg_match('/stretch_(\d+)x(\d+)/', $offset, $m)){
+	    }elseif(preg_match('/constrain_(\d+)/', $offset, $m)){
+	        return $this->getConstrainedVersionWithin($m[1], $m[1]);
+        }elseif(preg_match('/constrain_(\d+)x(\d+)/', $offset, $m)){
+            return $this->getConstrainedVersionWithin($m[1], $m[2]);
+        }elseif(preg_match('/stretch_(\d+)x(\d+)/', $offset, $m)){
             return $this->getResizedVersionNoScale($m[1], $m[2]);
         }
 	    

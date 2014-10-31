@@ -204,6 +204,12 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
         
             case "is_item":
             return $this->isItem();
+            
+            case "is_404":
+            return $this->_page instanceof SmartestNotFoundPage;
+            
+            case "is_503":
+            return $this->_page->isHoldingPage();
         
             case "has_item":
             return $this->getPrincipalItem() instanceof SmartestCmsItem;

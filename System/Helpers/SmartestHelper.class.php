@@ -2,6 +2,8 @@
 
 class SmartestHelper{
 	
+    public static $load_later_files = array();
+    
 	static function register($helper_name){
 	
 		// echo 'Registering Helper: '.$helper_name.'<br />';
@@ -49,8 +51,16 @@ class SmartestHelper{
 			}
 		} */
 	}
+    
+    public static function loadAllLaterFiles(){
+        
+		foreach(self::$load_later_files as $file){
+	        include $file;
+	    }
+        
+    }
 	
-	static function loadAll(){
+	public static function loadAll(){
 		
 		$singlefile = '';
 		
@@ -115,6 +125,7 @@ class SmartestHelper{
 			    
 			    foreach($matches as $m){
 			        switch($m[1]){
+                        
 			            case 'load':
 			            if(is_file(SM_ROOT_DIR.$h['dir'].$m[2])){
 			                $later_autoloads[] = $h['dir'].$m[2];
@@ -122,6 +133,14 @@ class SmartestHelper{
 			                throw new SmartestException('Failed opening autoloaded resource: '.$h['dir'].$m[2].'.');
 			            }
 			            break;
+                        
+                        case 'loadlater':
+                        if(is_file(SM_ROOT_DIR.$h['dir'].$m[2])){
+			                self::$load_later_files[] = SM_ROOT_DIR.$h['dir'].$m[2];
+			            }else{
+			                throw new SmartestException('Failed queuing non-existent helper dataobject: '.$h['dir'].$m[2].'.');
+			            }
+                        
 			        }
 			    }
 			    

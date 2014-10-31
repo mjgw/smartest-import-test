@@ -132,7 +132,7 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
             // return $this->getMemberships();
         }
         
-        if(!is_numeric($site_id == 'AUTO')){
+        if(!is_numeric($site_id)){
             $site_id = $this->getCurrentSiteId();
         }
         
@@ -154,7 +154,7 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
     
     public function getMemberships($mode=1, $site_id='', $refresh=false, $approved_only=false, $numeric_indices=true){
         
-        if(!is_numeric($site_id == 'AUTO')){
+        if(!is_numeric($site_id)){
             $site_id = $this->getCurrentSiteId();
         }
         

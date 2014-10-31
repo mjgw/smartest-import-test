@@ -159,7 +159,7 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 	
 	public function getUserIsLoggedIn(){
 		
-		if(SmartestSession::get('user:isAuthenticated')){
+        if(SmartestSession::get('user:isAuthenticated')){
 			return true;
 		}else{
 			return false;
