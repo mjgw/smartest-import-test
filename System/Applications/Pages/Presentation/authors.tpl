@@ -25,7 +25,7 @@
         <li>
           <input type="checkbox" name="users[{$user.id}]" id="author-{$user.id}-checkbox"{if in_array($user.id, $author_ids)} checked="checked"{/if} />
           <a href="#toggle-user-{$user.username}" id="author-{$user.id}"{if in_array($user.id, $author_ids)} class="selected"{/if}>
-            {if $user.profile_pic.id > 1 && $user.profile_pic.id != "default_user_profile_pic.jpg"}
+            {if $user.profile_pic.id > 1 && $user.profile_pic.url != "default_user_profile_pic.jpg"}
             <div class="user-avatar-holder" style="background-image:url({$user.profile_pic.image.60x60.web_path})"></div>
             {else}
             {getsystemcolor assign="usercolor"}
