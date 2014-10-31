@@ -11,13 +11,16 @@ function smartest_filter_preview($html, $filter){
         if($request_data->getParameter('request_parameters')->hasParameter('search_query')) $preview_url .= '&amp;q='.$request_data->getParameter('request_parameters')->getParameter('search_query');
         if($request_data->getParameter('request_parameters')->hasParameter('author_id')) $preview_url .= '&amp;author_id='.$request_data->getParameter('request_parameters')->getParameter('author_id');
         if($request_data->getParameter('request_parameters')->hasParameter('tag_name')) $preview_url .= '&amp;tag_name='.$request_data->getParameter('request_parameters')->getParameter('tag_name');
+        if($request_data->getParameter('request_parameters')->hasParameter('q')) $preview_url .= '&amp;q='.$request_data->getParameter('request_parameters')->getParameter('q');
+        if($request_data->getParameter('request_parameters')->hasParameter('request')) $preview_url .= '&amp;request='.$request_data->getParameter('request_parameters')->getParameter('request');
         
         $smartest_preview_url = '/websitemanager/preview?page_id='.$request_data->getParameter('request_parameters')->getParameter('page_id');
         if($request_data->getParameter('request_parameters')->hasParameter('item_id')) $smartest_preview_url .= '&amp;item_id='.$request_data->getParameter('request_parameters')->getParameter('item_id');
-        if($request_data->getParameter('request_parameters')->hasParameter('search_query')) $smartest_preview_url .= '&amp;q='.$request_data->getParameter('request_parameters')->getParameter('search_query');
+        if($request_data->getParameter('request_parameters')->hasParameter('q')) $smartest_preview_url .= '&amp;search_query='.$request_data->getParameter('q')->getParameter('search_query');
         if($request_data->getParameter('request_parameters')->hasParameter('author_id')) $smartest_preview_url .= '&amp;author_id='.$request_data->getParameter('request_parameters')->getParameter('author_id');
         if($request_data->getParameter('request_parameters')->hasParameter('tag_name')) $smartest_preview_url .= '&amp;tag='.$request_data->getParameter('request_parameters')->getParameter('tag_name');
-        
+        if($request_data->getParameter('request_parameters')->hasParameter('request')) $smartest_preview_url .= '&amp;requested_page='.$request_data->getParameter('request_parameters')->getParameter('request');
+
         $sm = new SmartyManager('BasicRenderer');
         $r = $sm->initialize('preview_bar_html');
         $r->setDraftMode(true);

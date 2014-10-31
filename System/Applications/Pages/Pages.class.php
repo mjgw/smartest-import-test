@@ -3594,6 +3594,7 @@ class Pages extends SmartestSystemApplication{
 		if($page->hydrate($page_webid)){
 		    
 		    $this->send($this->getSite()->getIsEnabled(), 'site_enabled');
+            $this->send(!($this->getSite()->getIsEnabled() || $page->getId() == $this->getSite()->getHoldingPageId()), 'show_site_disabled_warning');
 		    
 		    if($page->getType() == 'ITEMCLASS'){
                 if($this->getRequestParameter('item_id') && $item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){

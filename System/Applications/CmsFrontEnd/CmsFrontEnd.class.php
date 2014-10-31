@@ -176,7 +176,6 @@ class CmsFrontEnd extends SmartestSystemApplication{
                         // Search page
                         $p = $this->_page->copy('SmartestSearchPage');
                         $p->setSearchQuery($this->getRequestParameter('q'));
-                        echo $this->getRequestParameter('q');
                         $this->_page = $p;
                     }
                     
@@ -390,9 +389,9 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	
 	private function renderPage($draft_mode=false){
 	    
-	    if($draft_mode || (is_object($this->_site) && (bool) $this->_site->getIsEnabled()) || ($this->_page->getId() == $this->_site->getHoldingPageId())){
+        if($draft_mode || (is_object($this->_site) && (bool) $this->_site->getIsEnabled()) || ($this->_page->getId() == $this->_site->getHoldingPageId())){
 	        
-	        $ph = new SmartestWebPagePreparationHelper($this->_page);
+            $ph = new SmartestWebPagePreparationHelper($this->_page);
 	    
     	    $overhead_finish_time = microtime(true);
     	    $overhead_time_taken = number_format(($overhead_finish_time - SmartestPersistentObject::get('timing_data')->getParameter('start_time'))*1000, 2, ".", "");
@@ -477,13 +476,12 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	}
     
     protected function renderNotAvailablePage(){
-        
-	    // if($this->lookupSiteDomain()){
+            
+        // if($this->lookupSiteDomain()){
 	        
             header("HTTP/1.1 503 Service Unavailable");
             
-	        $draft_mode = ($this->getRequest()->getAction() == 'renderEditableDraftPage');
-	        
+            $draft_mode = ($this->getRequest()->getAction() == 'renderEditableDraftPage');
 	        $error_page_id = $this->_site->getHoldingPageId();
             
             if($error_page_id){
@@ -499,6 +497,9 @@ class CmsFrontEnd extends SmartestSystemApplication{
                     exit;
     	        }
     	        
+            }else{
+	            echo "Site not enabled.";
+                exit;
             }
 	        
             /* }else{

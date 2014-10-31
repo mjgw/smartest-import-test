@@ -2,7 +2,7 @@
 
 <h3>Publish {if $item}Meta-{/if}Page</h3>
 
-{if $site_enabled != '1'}
+{if $show_site_disabled_warning}
 
 <div class="warning"><strong>Warning</strong>: This site is not currently enabled. You can give this page the 'published' status, but it will not be available until the site is enabled.</div>
 

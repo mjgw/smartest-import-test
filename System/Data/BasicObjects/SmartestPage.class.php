@@ -911,7 +911,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             if(!$include_special_pages){
                 $special_page_ids = array_values($this->getParentSite()->getSpecialPageIds()->getParameters());
                 // print_r($special_page_ids);
-                $sql .= " AND page_id NOT IN (".implode(',', $special_page_ids).")";
+                $sql .= " AND page_id NOT IN ('".implode("','", $special_page_ids)."')";
             }
 		
     		if($sections_only){
