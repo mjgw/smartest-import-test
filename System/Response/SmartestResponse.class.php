@@ -393,6 +393,20 @@ class SmartestResponse{
                 SmartestSession::start();
             }
         }else if($this->isSystemClass()){
+            
+            if(is_file(SM_ROOT_DIR.'Configuration/admin_domains.yml')){
+                $rd = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'Configuration/admin_domains.yml');
+                
+                if(isset($rd['domains']) && is_array($rd['domains'])){
+                    if(!in_array($_SERVER['HTTP_HOST'], $rd['domains'])){
+                        include SM_ROOT_DIR.'System/Response/ErrorPages/admindomainnotpermitted.php';
+                        exit;
+                    }
+                }else{
+                    // The file is there, but is incorrectly formatted
+                }
+            }
+            
             // The session is always started for anything where you have to log in to Smartest
             SmartestSession::start();
         }else{
