@@ -42,9 +42,17 @@
     if($('{$_input_data.id}-input').value == 'TRUE'){ldelim}
       $('{$_input_data.id}-input').value = 'FALSE';
       $('{$_input_data.id}-img').src = '{$domain}Resources/System/Images/bool-switch-off.png';
+      {if $_input_data.change_js}{$_input_data.change_js}{/if}
+{if $_input_data.change_hook}{$_input_data.change_hook}false, '{$_input_data.id}');
+{/if}
+      
     {rdelim}else{ldelim}
       $('{$_input_data.id}-input').value = 'TRUE';
       $('{$_input_data.id}-img').src = '{$domain}Resources/System/Images/bool-switch-on.png';
+      {if $_input_data.change_js}{$_input_data.change_js}{/if}
+{if $_input_data.change_hook}{$_input_data.change_hook}true, '{$_input_data.id}');
+{/if}
+
     {rdelim};
   {rdelim});
 </script>

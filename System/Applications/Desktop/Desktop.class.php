@@ -8,7 +8,9 @@ class Desktop extends SmartestSystemApplication{
         
         if($this->getSite() instanceof SmartestSite){
             
-            $this->forward('websitemanager', 'sitePages');
+            // $this->forward('websitemanager', 'sitePages');
+            
+            $this->forward('desktop', 'siteHome');
             
             $this->setFormReturnUri();
             
@@ -42,6 +44,12 @@ class Desktop extends SmartestSystemApplication{
 		    }
     		
         }
+        
+    }
+    
+    public function siteHome(){
+        
+        
         
     }
     

@@ -1,5 +1,6 @@
 strings:
   main_nav:
+    home: Home
     pages: Pages
     items: Items
     files: Media library

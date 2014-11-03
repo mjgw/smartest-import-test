@@ -32,8 +32,8 @@ div.v-spacer{
     position:absolute;
     /* top:0px;
     left:0px; */
-	height:48px;
-	border:0px;
+	height:45px;
+	/* border:0px; */
 	padding-left:5px;
 	z-index:20;
 	width:100%;
@@ -566,6 +566,7 @@ ul.apps li a.icon{
     display:inline-block;
     text-align:center;
     margin-bottom:15px;
+    position:relative;
 }
 
 ul.apps li a.icon:hover{
@@ -573,6 +574,21 @@ ul.apps li a.icon:hover{
     width:126px;
     height:126px;
     margin-bottom:10px;
+}
+
+ul.apps li a.icon i{
+    display:inline-block;
+    margin-top:29px;
+    font-size:4.5em;
+    color:#fff;
+}
+
+ul.apps li a.icon i.fa{
+    padding-top:3px;
+}
+
+ul.apps li a.icon:hover i{
+    margin-top:32px;
 }
 
 ul.apps li a.label{
