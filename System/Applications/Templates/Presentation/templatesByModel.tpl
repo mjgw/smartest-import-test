@@ -12,9 +12,9 @@
 {if count($locations)}
   <div class="warning">
       <p>For smooth operation of the templates repository, the following locations need to be made writable:</p>
-      <ul>
+      <ul class="location-list">
 {foreach from=$locations item="l"}
-        <li><code>{$l}</code></li>
+        <li><i class="fa fa-folder"></i> <code>{$l}</code></li>
 {/foreach}        
       </ul>
   </div>
@@ -28,9 +28,9 @@
 {if count($locations)}
   <div class="warning">
       <p>For smooth operation of the templates repository, the following locations need to be made writable:</p>
-      <ul>
+      <ul class="location-list">
 {foreach from=$locations item="l"}
-        <li><code>{$l}</code></li>
+        <li><i class="fa fa-folder"></i> <code>{$l}</code></li>
 {/foreach}        
       </ul>
   </div>

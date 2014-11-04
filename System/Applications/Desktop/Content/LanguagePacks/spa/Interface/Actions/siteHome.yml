@@ -1,0 +1,11 @@
+strings:
+  greeting: Hola
+  welcome: y bienvenido a Smartest
+  labels:
+    preview: Prever proyecto
+    pages: Crear y editar páginas
+    items: Editar tus dados
+    files: Organizar tus archivos
+    templates: Repositorio de plantillas
+    users: Usarios
+    settings: Editar ajustes

@@ -5,9 +5,9 @@
 {if count($locations)}
 <div class="warning">
     <p>{$_l10n_strings.warnings.storage_locations_unwriteable}</p>
-    <ul>
+    <ul class="location-list">
 {foreach from=$locations item="l"}
-      <li><code>{$l}</code></li>
+      <li><i class="fa fa-folder"></i> <code>{$l}</code></li>
 {/foreach}        
     </ul>
 </div>

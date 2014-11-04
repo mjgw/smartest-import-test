@@ -37,6 +37,7 @@
 <div class="edit-form-row">
   <div class="form-section-label">Temporarily disable site?</div>
   {boolean name="site_is_disabled" id="site-disabled" value=$site_disabled red="true"}
+  <div class="form-hint">Temporarily takes your website offline and shows your 503 Not Available page, if you have one, or 'Site not enabled.' if you don't.</div>
 </div>
 
 <div class="edit-form-row">
@@ -97,7 +98,7 @@
 <div class="edit-form-row">
   <div class="form-section-label">EU cookie law compliance</div>
   {boolean name="site_eu_cookie_compliance" id="site-eu-cookie-compliance" value=$eu_cookie_compliance}
-  <div class="form-hint">Provides easy compliance with EU Directive 2009/136/EC. Will take effect immediately</div>
+  <div class="form-hint">Provides easy compliance with EU Directive 2002/58/EC. Will take effect immediately</div>
 </div>
 
 <div class="breaker"></div>

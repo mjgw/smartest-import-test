@@ -5,9 +5,9 @@
 {if count($locations)}
   <div class="warning">
       <p>For smooth operation of the templates repository, the following locations need to be made writable:</p>
-      <ul>
+      <ul class="location-list">
 {foreach from=$locations item="l"}
-        <li><code>{$l}</code></li>
+        <li><i class="fa fa-folder"></i> <code>{$l}</code></li>
 {/foreach}        
       </ul>
   </div>
@@ -19,7 +19,7 @@
   <input type="hidden" id="item_id_input" name="type" value="" />
 </form>
 
-<div class="instruction">There are five different kinds of template. Please select which type you'd like to work with.</div>
+<div class="form-section-label-full">There are five different kinds of template.</div>
 
 <ul class="options-grid-no-scroll" style="margin-top:0px">
   {foreach from=$types item="assetType"}

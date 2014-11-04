@@ -11,7 +11,7 @@
   </form>
 
 {if empty($groups)}
-<div class="special-box">There are no {$type.label|lower} groups yet. <a href="{$domain}{$section}/newAssetGroup?filter_type={$type_code}">Click here</a> to add one.</div>
+<div class="special-box">There are no {$type.label|lower} groups yet. <a href="{$domain}{$section}/newAssetGroup?filter_type={$type_code}" class="button">Click here</a> to add one.</div>
 {else}
   <ul class="{if count($groups) > 10}options-list{else}options-grid{/if}" id="{if count($groups) > 10}options_list{else}options_grid{/if}">
   {foreach from=$groups key="key" item="group"}

@@ -1,0 +1,11 @@
+strings:
+  greeting: Hi
+  welcome: welcome to Smartest
+  labels:
+    preview: Preview site
+    pages: Build and edit pages
+    items: Edit your items
+    files: Media library
+    templates: Templates repository
+    users: Manage users
+    settings: Site settings

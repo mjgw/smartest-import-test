@@ -14,7 +14,7 @@
 </form>
 
 {if $num_assets < 1 && $mode != 2}
-<div class="special-box">There are no {$type_label|strtolower} files yet. <a href="{$domain}{$section}/addAsset?asset_type={$type_code}">Click here</a> to add one.</div>
+<div class="special-box">There are no {$type_label|strtolower} files yet. <a href="{$domain}{$section}/addAsset?asset_type={$type_code}" class="button">Click here</a> to add one.</div>
 {else}
 <div class="special-box">
 {if $type.editable && $type.storage.type == "database"}

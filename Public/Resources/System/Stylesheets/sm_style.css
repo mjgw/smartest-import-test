@@ -408,9 +408,15 @@ div.instruction{
 	font-size:12px;
 }
 
-div.form-section-label, div.form-section-label-full{
+div.form-section-label{
 	font-size:1.0em;
 	color:#333;
+}
+
+div.form-section-label-full{
+    font-family: "source-sans";
+	font-size:1.8em;
+	color:#68849E;
 }
 
 .form-hint{
@@ -563,6 +569,12 @@ div.special-box input[type="text"].search{
 	font-size:18px;
 }
 
+div.special-box ul.location-list i.fa{
+    font-size:1.2em;
+    display:inline-block;
+    color:#666;
+}
+
 div.warning{
     font-size:12px;
     /* border:3px solid #EB9A38; */
@@ -578,6 +590,12 @@ div.warning a{
 
 div.warning a:hover{
     text-decoration:none;
+}
+
+div.warning ul.location-list i.fa{
+    font-size:1.2em;
+    display:inline-block;
+    color:#EB9A38;
 }
 
 div.error{
@@ -847,54 +865,8 @@ ul.apps li a.icon.dark-purple{
     background-color:rgb(96,53,165);
 }
 
-ul.modal-options-grid{
-    list-style-type:none;
-}
-
-ul.modal-options-grid li{
-    text-align:center;
-    background-repeat:no-repeat;
-    background-position:50% 25%;
-}
-
-ul.modal-options-grid li a{
-    color:#666;
-}
-
-ul.modal-options-grid li.create-modal-item{
-    background-image:url(../Images/create-new-item.png);
-}
-
-ul.modal-options-grid li#create-modal-option-page{
-    background-image:url(../Images/create-new-page.png);
-}
-
-ul.modal-options-grid li#create-modal-option-file{
-    background-image:url(../Images/create-new-file.png);
-}
-
-ul.modal-options-grid li#create-modal-option-filegroup{
-    background-image:url(../Images/create-new-filegroup.png);
-}
-
-ul.modal-options-grid li#create-modal-option-template{
-    background-image:url(../Images/create-new-template.png);
-}
-
-ul.modal-options-grid li#create-modal-option-model{
-    background-image:url(../Images/create-new-model.png);
-}
-
-ul.modal-options-grid li#create-modal-option-set{
-    background-image:url(../Images/create-new-dataset.png);
-}
-
-ul.modal-options-grid li#create-modal-option-user{
-    background-image:url(../Images/create-new-user.png);
-}
-
-ul.modal-options-grid li#create-modal-option-site{
-    background-image:url(../Images/create-new-site.png);
+ul.apps li a.icon.gold{
+    background-color:rgb(252,187,53);
 }
 
 #html-preview{

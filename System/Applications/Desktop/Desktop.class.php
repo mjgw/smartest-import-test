@@ -15,9 +15,8 @@ class Desktop extends SmartestSystemApplication{
             $this->setFormReturnUri();
             
             // code to assemble the desktop goes here
-            $this->setTitle('Start Page');
-            $this->send('desktop', 'display');
-            $this->send($this->getSite(), 'site');
+            /* $this->send('desktop', 'display');
+            $this->send($this->getSite(), 'site'); */
             
         }else{
             
@@ -49,7 +48,10 @@ class Desktop extends SmartestSystemApplication{
     
     public function siteHome(){
         
-        
+        $this->requireOpenProject();
+        $this->setTitle('Your Smartest start page');
+        $this->send($this->getSite(), 'site');
+        $this->send($this->getSite()->getHomePage(true), "home_page");
         
     }
     

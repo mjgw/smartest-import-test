@@ -318,8 +318,8 @@ div.form-section-label{
 
 div.form-section-label-full{
 	margin:0px;
-	margin-bottom:8px;
-	padding:5px;
+	margin-bottom:4px;
+	padding:5px 0;
 	clear:both;
 }
 
@@ -501,6 +501,15 @@ div.warning ul{
     padding:0 0 0 20px;
 }
 
+div.warning ul.location-list, div.special-box ul.location-list{
+    list-style-type:none;
+    padding:0px;
+}
+
+div.warning ul.location-list i.fa, div.special-box ul.location-list i.fa{
+    margin:0 3px 4px 0;
+}
+
 form.float{
     float:left;
     display:inline;
@@ -596,27 +605,6 @@ ul.apps li a.label{
     left:0px;
     top:140px;
     width:100%;
-}
-
-/** When options are shown in a grid via a modal, such as in the "Create" dialog **/
-
-ul.modal-options-grid{
-    margin:0px!important;
-    padding:0px!important;
-}
-
-ul.modal-options-grid li{
-    width:120px;
-    height:120px;
-    float:left;
-    margin:0 0 3px 3px;
-}
-
-ul.modal-options-grid li a{
-    width:120px;
-    height:20px;
-    display:block;
-    padding-top:100px;
 }
 
 /*** Asset preview ***/

@@ -677,7 +677,7 @@ Smartest.AjaxModalViewer = Class.create({
     
     showNew: function(){
         if(!this.isVisible){
-            $('modal-outer').appear({duration: 0.4, to: 0.9});
+            $('modal-outer').appear({duration: 0.4, to: 0.95});
             this.isVisible = true;
             if(HELP.isVisible){
                 HELP.hideViewer();

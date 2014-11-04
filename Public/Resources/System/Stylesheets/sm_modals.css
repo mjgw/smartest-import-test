@@ -184,6 +184,69 @@ ul.modal-basic-list{
     margin:5px 5px 5px 0;
 }
 
+/** When options are shown in a grid via a modal, such as in the "Create" dialog **/
+
+ul.modal-options-grid{
+    list-style-type:none;
+    margin:0px!important;
+    padding:0px!important;
+}
+
+ul.modal-options-grid li{
+    width:120px;
+    height:120px;
+    float:left;
+    margin:0 0 3px 3px;
+    text-align:center;
+    background-repeat:no-repeat;
+    background-position:50% 25%;
+    color:#666;
+}
+
+ul.modal-options-grid li a{
+    width:120px;
+    height:20px;
+    display:block;
+    padding-top:100px;
+    color:#666;
+}
+
+ul.modal-options-grid li.create-modal-item{
+    background-image:url(../Images/create-new-item.png);
+}
+
+ul.modal-options-grid li#create-modal-option-page{
+    background-image:url(../Images/create-new-page.png);
+}
+
+ul.modal-options-grid li#create-modal-option-file{
+    background-image:url(../Images/create-new-file.png);
+}
+
+ul.modal-options-grid li#create-modal-option-filegroup{
+    background-image:url(../Images/create-new-filegroup.png);
+}
+
+ul.modal-options-grid li#create-modal-option-template{
+    background-image:url(../Images/create-new-template.png);
+}
+
+ul.modal-options-grid li#create-modal-option-model{
+    background-image:url(../Images/create-new-model.png);
+}
+
+ul.modal-options-grid li#create-modal-option-set{
+    background-image:url(../Images/create-new-dataset.png);
+}
+
+ul.modal-options-grid li#create-modal-option-user{
+    background-image:url(../Images/create-new-user.png);
+}
+
+ul.modal-options-grid li#create-modal-option-site{
+    background-image:url(../Images/create-new-site.png);
+}
+
 /*** Retina display stuff ***/
 
 @media
