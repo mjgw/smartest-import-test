@@ -591,6 +591,15 @@ class SmartestStringHelper extends SmartestHelper{
 	    return $string;
 	    
 	}
+    
+    public static function sanitizeLookupValue($string){
+        
+        $string = self::sanitize($string);
+        $string = addslashes($string);
+        
+        return $string;
+        
+    }
 	
 	public static function toSensibleFileName($string){
 	    $suffix = self::getDotSuffix($string);

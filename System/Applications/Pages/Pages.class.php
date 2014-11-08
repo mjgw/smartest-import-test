@@ -106,7 +106,7 @@ class Pages extends SmartestSystemApplication{
 	            }
 		        
 		    }else{
-		        $this->redirect('/smartest');
+                $this->redirect('/smartest');
 		    }
 		}
 	}
@@ -255,7 +255,7 @@ class Pages extends SmartestSystemApplication{
 		    $page = new SmartestPage;
 		}
 		
-		if($page->hydrate($page_webid)){
+		if($page->smartFind($page_webid)){
     	    
     	    if($page->getDeleted() == 'TRUE'){
                 $this->send(true, 'show_deleted_warning');
@@ -464,7 +464,7 @@ class Pages extends SmartestSystemApplication{
         	}
 	    
         }else{
-            $this->addUserMessageToNextRequest('The page ID was not recognized.', SmartestUserMessage::ERROR);
+            $this->addUserMessageToNextRequest('The page ID was not recognized.', SmartestUserMessage::ERROR, true);
             $this->redirect("/smartest/pages");
         }
 		
@@ -475,7 +475,7 @@ class Pages extends SmartestSystemApplication{
 	    $page_webid = $this->getRequestParameter('page_id');
         $page = new SmartestPage;
         
-        if($page->hydrate($page_webid)){
+        if($page->smartFind($page_webid)){
 	    
 	        if($this->getUser()->hasToken('approve_page_changes')){
 	        
@@ -831,7 +831,7 @@ class Pages extends SmartestSystemApplication{
         $page_webid = $this->getRequestParameter('page_id');
 		$page = new SmartestPage;
 		
-		if($page->hydrate($page_webid)){
+		if($page->smartFind($page_webid)){
 		    
 		    $page->setDraftMode(true);
 		    $this->send($page, 'page');
@@ -1196,11 +1196,14 @@ class Pages extends SmartestSystemApplication{
 
         $site_id = $this->getSite()->getId();
         
-        $pagesTree = $this->getSite()->getPagesTree(true);
+        $site = new SmartestSite;
+        $site->find($site_id);
         
         if($this->getRequestParameter('refresh') == 1){
             SmartestCache::clear('site_pages_tree_'.$site_id, true);
         }
+        
+        $pagesTree = $this->getSite()->getPagesTree(true);
         
         $this->setTitle($this->getSite()->getInternalLabel()." | Site Tree");
         
@@ -1645,7 +1648,7 @@ class Pages extends SmartestSystemApplication{
         
         $page = new SmartestPage;
         
-        if($page->hydrate($this->getRequestParameter('page_id'))){
+        if($page->smartFind($this->getRequestParameter('page_id'))){
             
             $page->setTitle($this->getRequestParameter('page_title'));
             
@@ -1653,7 +1656,7 @@ class Pages extends SmartestSystemApplication{
                 $page->setName(SmartestStringHelper::toSlug($this->getRequestParameter('page_name')));
             }
             
-            if($this->getSite()->pageIdIsSpecial($page->getId())){
+            if(!$this->getSite()->pageIdIsSpecial($page->getId())){
                 $page->setParent($this->getRequestParameter('page_parent'));
                 $page->setIsSection(($this->getRequestParameter('page_is_section') && ($this->getRequestParameter('page_is_section') == 'true')) ? 1 : 0);
                 $page->setCacheAsHtml($this->getRequestParameter('page_cache_as_html'));
@@ -1664,7 +1667,7 @@ class Pages extends SmartestSystemApplication{
             $page->setLastModified(time());
             
             if($page->getType() == 'NORMAL'){
-                if($this->getSite()->pageIdIsSpecial($page->getId())){
+                if(!$this->getSite()->pageIdIsSpecial($page->getId())){
                     $page->setSearchField(strip_tags($this->getRequestParameter('page_search_field')));
                     $page->setKeywords(strip_tags($this->getRequestParameter('page_keywords')));
                     $page->setDescription(strip_tags($this->getRequestParameter('page_description')));
@@ -1715,7 +1718,7 @@ class Pages extends SmartestSystemApplication{
     		    $page = new SmartestPage;
     		}
     		
-    		if($page->hydrate($page_webid)){
+    		if($page->smartFind($page_webid)){
 	            
 	            if($page->getDeleted() == 'TRUE'){
 	                $this->send(true, 'show_deleted_warning');
@@ -1858,7 +1861,7 @@ class Pages extends SmartestSystemApplication{
     		    $page = new SmartestPage;
     		}
     		
-    		if($page->hydrate($page_webid)){
+    		if($page->smartFind($page_webid)){
     		    $this->send($page, "page");
     		    $this->addUserMessage('You don\'t have permission to modify page elements.', SmartestUserMessage::ACCESS_DENIED);
     		    $this->send(true, 'allow_edit');
@@ -1997,7 +2000,7 @@ class Pages extends SmartestSystemApplication{
 	    $page->setDraftMode(true);
 	    $page_webid = $this->getRequestParameter('page_id');
 	    
-	    if($page->hydrate($page_webid)){
+	    if($page->smartFind($page_webid)){
 	        
 	        $this->setFormReturnUri();
 	        
@@ -2052,7 +2055,7 @@ class Pages extends SmartestSystemApplication{
 	    $page->setDraftMode(true);
 	    $page_webid = $this->getRequestParameter('page_id');
 	    
-	    if($page->hydrate($page_webid)){
+	    if($page->smartFind($page_webid)){
 	        
 	        if($this->getRequestParameter('model_id')){
 	            
@@ -2103,7 +2106,7 @@ class Pages extends SmartestSystemApplication{
 	    
 	    // print_r($this->getRequestParameter('pages'));
 	    
-	    if($page->hydrate($page_webid)){
+	    if($page->smartFind($page_webid)){
 	        
 	        if($this->getRequestParameter('pages') && is_array($this->getRequestParameter('pages'))){
 	            
@@ -2157,7 +2160,7 @@ class Pages extends SmartestSystemApplication{
         
         if($model->find($this->getRequestParameter('model_id'))){
 	    
-    	    if($page->hydrate($page_webid)){
+    	    if($page->smartFind($page_webid)){
 	        
     	        if($this->getRequestParameter('items') && is_array($this->getRequestParameter('items'))){
 	            
@@ -2215,7 +2218,7 @@ class Pages extends SmartestSystemApplication{
 	    $page = new SmartestPage;
 	    $page->setDraftMode(true);
 	    
-	    if($page->hydrate($page_webid)){
+	    if($page->smartFind($page_webid)){
 	        
             $editable = $page->isEditableByUserId($this->getUser()->getId());
     		$this->send($editable, 'page_is_editable');
@@ -2342,7 +2345,7 @@ class Pages extends SmartestSystemApplication{
 		    $page = new SmartestPage;
 		}
 		
-		if($page->hydrate($page_webid)){
+		if($page->smartFind($page_webid)){
 		    
 		    if($page->getType() == 'ITEMCLASS'){
 	            if($this->getRequestParameter('item_id') && $item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
@@ -3591,7 +3594,7 @@ class Pages extends SmartestSystemApplication{
 		    $page = new SmartestPage;
 		}
 		
-		if($page->hydrate($page_webid)){
+		if($page->smartFind($page_webid)){
 		    
 		    $this->send($this->getSite()->getIsEnabled(), 'site_enabled');
             $this->send(!($this->getSite()->getIsEnabled() || $page->getId() == $this->getSite()->getHoldingPageId()), 'show_site_disabled_warning');
@@ -3652,7 +3655,7 @@ class Pages extends SmartestSystemApplication{
 	    $page_webid = $this->getRequestParameter('page_id');
 	    if($this->getRequestParameter('item_id')){$item_id = $this->getRequestParameter('item_id');}else{$item_id = false;}
 	    
-	    if($page->hydrate($page_webid)){
+	    if($page->smartFind($page_webid)){
 	        
 	        $page->setDraftMode(true);
 	        
@@ -3704,10 +3707,11 @@ class Pages extends SmartestSystemApplication{
 	    $page_webid = $this->getRequestParameter('page_id');
 		$page = new SmartestPage;
 		
-		if($page->hydrate($page_webid)){
+		if($page->smartFind($page_webid)){
 		    
 		    $page->setDraftMode(true);
 		    $page->unpublish();
+            SmartestCache::clear('site_pages_tree_'.$page->getSiteId(), true);
 		    
 		    SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} un-published page: {$page->getTitle()}.", SmartestLog::USER_ACTION);
 		    
@@ -3742,7 +3746,7 @@ class Pages extends SmartestSystemApplication{
         
         $page = new SmartestPage;
         
-        if($page->hydrate($page_webid)){
+        if($page->smartFind($page_webid)){
             
             $page->setDraftMode(true);
             
@@ -4085,7 +4089,7 @@ class Pages extends SmartestSystemApplication{
 	    $page = new SmartestPage;
 	    $page_webid = $this->getRequestParameter('page_id');
 	    
-	    if($page->hydrate($page_webid)){
+	    if($page->smartFind($page_webid)){
 	        
 	        $page->setDraftMode(true);
 	        
@@ -4231,7 +4235,7 @@ class Pages extends SmartestSystemApplication{
 	    
 	    $page = new SmartestPage;
 	    
-	    if($page->hydrate($page_webid)){
+	    if($page->smartFind($page_webid)){
 		    
 		    $page->setDraftMode(true);
 		    

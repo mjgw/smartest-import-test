@@ -36,6 +36,37 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	
 	const HIERARCHY_DEPTH_LIMIT = 32;
 	
+    public function smartFind($id){
+        
+	    $this->_save_url = false;
+	    
+	    if(is_numeric($id)){
+			// numeric_id
+			$field = 'id';
+		}else if(preg_match('/[a-zA-Z0-9\$-]{32}/', $id)){
+			// 'webid'
+			$field = 'webid';
+		}else if(preg_match('/[a-zA-Z0-9_-]+/', $id)){
+			// name
+			$field = 'name';
+		}
+        
+		if($field && $id){
+	        
+            if($field == 'id'){
+                return parent::find($id);
+            }else{
+                return parent::findBy($field, $id);
+            }
+    		
+	    }else{
+	        
+	        return false;
+	        
+	    }
+        
+    }
+    
 	public function hydrate($id){
 		// determine what kind of identification is being used
 		
@@ -59,7 +90,9 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
     		}
     		
     		if($field && $id){
-		    
+		        
+                $id = SmartestStringHelper::sanitizeLookupValue($id);
+                
     		    $sql = "SELECT * FROM Pages WHERE $field='$id'";
 		
         		$result = $this->database->queryToArray($sql);
