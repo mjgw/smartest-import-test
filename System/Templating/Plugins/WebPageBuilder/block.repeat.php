@@ -13,8 +13,10 @@ function smarty_block_repeat($params, $content, &$smartest_engine, &$repeat){
 	if(is_string($params['from'])){
 	    if($params['from'] == '_authors'){
             $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "author";
-        }else if($params['from'] instanceof SmartestPageGroup || substr($params['from'], 0, 6) == 'pagegr' || substr($params['from'], 0, 6) == 'page_g'){
+        }else if(substr($params['from'], 0, 6) == 'pagegr' || substr($params['from'], 0, 6) == 'page_g'){
             $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_page";
+        }else if(substr($params['from'], 0, 7) == 'gallery'){
+            $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_asset";
         }else{
 	        $item_name = (isset($params['item']) && strlen($params['item'])) ? SmartestStringHelper::toVarName($params['item']) : "repeated_item";
         }

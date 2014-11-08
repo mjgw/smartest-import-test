@@ -181,9 +181,17 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 
                 $container_def = $this->getPage()->getContainerDefinition($container_name, $this->getDraftMode());
                 
+                if($this->getDraftMode()){
+                    echo "<!--Smartest: Begin container template ".$container_def->getTemplateFilePathInSmartest()." -->\n";
+                }
+                
                 $this->_tpl_vars['this'] = new SmartestPageRenderingDataRequestHandler($this->page);
                 $this->_tpl_vars['sm_draft_mode'] = $this->getDraftMode();
                 $this->run($container_def->getTemplateFilePath(), array());
+                
+                if($this->getDraftMode()){
+                    echo "\n<!--Smartest: End container template ".$container_def->getTemplateFilePathInSmartest()." -->\n";
+                }
                 
                 if($this->_request_data->g('action') == "renderEditableDraftPage"){
 		            
@@ -560,10 +568,21 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             	        $item = $def->getItem(false, $this->getDraftMode());
             	        $item->setDraftMode($this->getDraftMode());
             	        $child->assign($item_name, $item); // set above
-            	        $content = '<!--rendering itemspace: '.$itemspace_name."-->\n\n";
+            	        
+                        if($this->getDraftMode()){
+                            $content = "<!--Smartest: Begin Itemspace template ".$template->getFilePathInSmartest()." -->\n";
+                        }else{
+                            $content = '';
+                        }
+                        
             	        $content .= $child->fetch($template_path);
             	        $content .= $this->renderItemEditButton($item->getId());
             	        $content .= $this->renderItemSpaceDefineButton($itemspace_name);
+                        
+                        if($this->getDraftMode()){
+                            $content .= "<!--Smartest: Begin Itemspace template ".$template->getFilePathInSmartest()." -->\n";
+                        }
+                        
             	        $this->killChildProcess($child->getProcessId());
             	        
             	        return $content;
@@ -778,8 +797,20 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         	            $child->setContext(SM_CONTEXT_COMPLEX_ELEMENT);
         	            $child->setDraftMode($this->getDraftMode());
         	            $child->caching = false;
-        	            $content = $child->fetch($list->getRepeatingTemplate($this->getDraftMode()));
+                        
+                        if($this->getDraftMode()){
+                            $content = "<!--Smartest: Begin list template ".$list->getRepeatingTemplateInSmartest($this->getDraftMode())." -->\n";
+                        }else{
+                            $content = '';
+                        }
+                        
+        	            $content .= $child->fetch($list->getRepeatingTemplate($this->getDraftMode()));
         	            $this->killChildProcess($child->getProcessId());
+                        
+                        if($this->getDraftMode()){
+                            $content .= "<!--Smartest: End list template ".$list->getRepeatingTemplateInSmartest($this->getDraftMode())." -->\n";
+                        }
+                        
     	            }
                     
                 }
@@ -787,7 +818,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             } // end if: the list has repeating template
             
             if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
-			    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definitions for embedded list: ".$list->getName()."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineList?assetclass_id=".$list->getName()."&amp;page_id=".$this->getPage()->getWebid()."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_blue.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this list--></a>";
+			    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definitions for embedded list: ".$list->getName()."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineList?assetclass_id=".$list->getName()."&amp;page_id=".$this->getPage()->getWebid()."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_blue.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this list--></a>\n\n";
 		    }else{
 			    $edit_link = "<!--edit link-->";
 		    }

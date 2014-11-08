@@ -51,6 +51,14 @@ class SmartestTemplateAsset extends SmartestAsset{
         
     }
     
+    public function getFilePath(){
+        return $this->getFile()->getPath();
+    }
+    
+    public function getFilePathInSmartest(){
+        return $this->getFile()->getSmartestPath();
+    }
+    
     public function find($id){
         
         if(parent::find($id)){

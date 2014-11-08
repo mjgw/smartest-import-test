@@ -99,6 +99,12 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
 	
 	public function getRepeatingTemplate($draft=false){
 	    
+	    return SM_ROOT_DIR.$this->getRepeatingTemplateInSmartest($draft);
+        
+	}
+    
+    public function getRepeatingTemplateInSmartest($draft=false){
+        
 	    if($draft){
 	        $repeating_template_file_name = $this->getDraftTemplateFile();
 	    }else{
@@ -107,15 +113,15 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
 	    
 	    if($this->getType() == 'SM_LIST_SIMPLE'){
             if(is_file(SM_ROOT_DIR.'Presentation/Layouts/'.$repeating_template_file_name)){
-                return SM_ROOT_DIR.'Presentation/Layouts/'.$repeating_template_file_name;
+                return 'Presentation/Layouts/'.$repeating_template_file_name;
             }else if(is_file(SM_ROOT_DIR.'Presentation/ListItems/'.$repeating_template_file_name)){
-                return SM_ROOT_DIR.'Presentation/ListItems/'.$repeating_template_file_name;
+                return 'Presentation/ListItems/'.$repeating_template_file_name;
             }
         }else{
-            return SM_ROOT_DIR.'Presentation/ListItems/'.$repeating_template_file_name;
+            return 'Presentation/ListItems/'.$repeating_template_file_name;
         }
         
-	}
+    }
 	
 	public function getHeaderTemplate($draft=false){
 	    

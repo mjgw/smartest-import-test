@@ -160,6 +160,16 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
         }
     }
     
+    public function getTemplateFilePathInSmartest(){
+        
+        if($this->_template->getFile()->exists()){
+            // var_dump($this->_template->getFile()->getPath());
+            return $this->_template->getFile()->getSmartestPath();
+        }else{
+            return null;
+        }
+    }
+    
     public function getTemplate(){
         /* if($this->_template->getFile()->exists()){
             // var_dump($this->_template->getFile()->getPath());

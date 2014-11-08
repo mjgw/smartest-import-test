@@ -28,12 +28,12 @@ function smarty_function_byline($params, &$smartest_engine){
             if($links_possible){
                 if($smartest_engine->getDraftMode()){
                     if(isset($_GET['hide_newwin_link']) && SmartestStringHelper::toRealBool($_GET['hide_newwin_link'])){
-                        $byline .= '<a href="'.$request_data->getParameter('domain').'website/renderEditableDraftPage?page_id='.$user_page->getWebId().'&amp;author_id='.$authors[$i]['id'].'&amp;hide_newwin_link=true" target="_top" class="smartest-byline-link">'.$authors[$i]['full_name'].'</a>';
+                        $byline .= '<a rel="author" href="'.$request_data->getParameter('domain').'website/renderEditableDraftPage?page_id='.$user_page->getWebId().'&amp;author_id='.$authors[$i]['id'].'&amp;hide_newwin_link=true" target="_top" class="sm-link-internal sm-link-byline">'.$authors[$i]['full_name'].'</a>';
                     }else{
-                        $byline .= '<a href="'.$request_data->getParameter('domain').'websitemanager/preview?page_id='.$user_page->getWebId().'&amp;author_id='.$authors[$i]['id'].'" target="_top" class="smartest-byline-link">'.$authors[$i]['full_name'].'</a>';
+                        $byline .= '<a rel="author" href="'.$request_data->getParameter('domain').'websitemanager/preview?page_id='.$user_page->getWebId().'&amp;author_id='.$authors[$i]['id'].'" target="_top" class="sm-link-internal sm-link-byline">'.$authors[$i]['full_name'].'</a>';
                     }
                 }else{
-                    $byline .= '<a href="'.$request_data->getParameter('domain').'author/'.$authors[$i]['username'].'" class="smartest-byline-link">'.$authors[$i]['full_name'].'</a>';
+                    $byline .= '<a rel="author" href="'.$request_data->getParameter('domain').'author/'.$authors[$i]['username'].'" class="sm-link-internal sm-link-byline">'.$authors[$i]['full_name'].'</a>';
                 }
             }else{
                 $byline .= $authors[$i]['full_name'];
