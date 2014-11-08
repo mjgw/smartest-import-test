@@ -290,31 +290,31 @@ type:
     suffix:
       - {mime: text/css, _content: css}
 
-  SM_ASSETTYPE_DYNAMIC_CSS:
-    id: SM_ASSETTYPE_DYNAMIC_CSS
-    category: browser_instructions
-    label: Sass Dynamic CSS Stylesheet
-    description: Dynamic CSS Stylesheet in the Sass (Syntactically Awesome Stylesheets) metalanguage
-    class: SmartestTextAsset
-    editable: true
-    parsable: true
-    convert_to_smarty: false
-    show_preview_edit_link: false
-    icon: style.png
-    input_options:
-      - SM_ASSETINPUTTYPE_DIRECT_INPUT
-    input_panel: add.stylesheet.tpl
-    render:
-      template: System/Presentation/WebPageBuilder/display.sass.tpl
-      preview_template: System/Presentation/WebPageBuilder/preview.sass.tpl
-    param:
-      - {name: use_style_tag, label: "Use &lt;style&gt; tag and @import", type: SM_DATATYPE_BOOLEAN, required: false}
-      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false}
-    storage:
-      type: database
-    suffix:
-      - {mime: text/css, _content: scss}
-      - {mime: text/css, _content: sass}
+#  SM_ASSETTYPE_DYNAMIC_CSS:
+#    id: SM_ASSETTYPE_DYNAMIC_CSS
+#    category: browser_instructions
+#    label: Sass Dynamic CSS Stylesheet
+#    description: Dynamic CSS Stylesheet in the Sass (Syntactically Awesome Stylesheets) metalanguage
+#    class: SmartestTextAsset
+#    editable: true
+#    parsable: true
+#    convert_to_smarty: false
+#    show_preview_edit_link: false
+#    icon: style.png
+#    input_options:
+#      - SM_ASSETINPUTTYPE_DIRECT_INPUT
+#    input_panel: add.stylesheet.tpl
+#    render:
+#      template: System/Presentation/WebPageBuilder/display.sass.tpl
+#      preview_template: System/Presentation/WebPageBuilder/preview.sass.tpl
+#    param:
+#      - {name: use_style_tag, label: "Use &lt;style&gt; tag and @import", type: SM_DATATYPE_BOOLEAN, required: false}
+#      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false}
+#    storage:
+#      type: database
+#    suffix:
+#      - {mime: text/css, _content: scss}
+#      - {mime: text/css, _content: sass}
 
   SM_ASSETTYPE_CUFON_FONT:
     id: SM_ASSETTYPE_CUFON_FONT

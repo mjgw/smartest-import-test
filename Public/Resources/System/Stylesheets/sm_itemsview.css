@@ -189,9 +189,17 @@ ul.options-grid.images li{
 }
 
 ul.options-grid.images li a{
+    box-sizing:content-box;
   -moz-box-shadow:    2px 2px 4px 0px rgba(0,0,0,0.4);
   -webkit-box-shadow: 2px 2px 4px 0px rgba(0,0,0,0.4);
   box-shadow:         2px 2px 4px 0px rgba(0,0,0,0.4);
+  border-radius:3px;
+  -moz-border-radius:3px;
+  -webkit-border-radius:3px;
+}
+
+ul.options-grid.images li a span{
+    display:none;
 }
 
 ul.options-grid.images li a i.fa, ul.options-grid.images li a i.flaticon{

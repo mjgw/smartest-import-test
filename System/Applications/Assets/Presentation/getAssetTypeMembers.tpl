@@ -89,7 +89,15 @@
   {/if}
 {/if}
 
-<img border="0" src="{$asset.small_icon}" class="list" />
+{if in_array($type_code, array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE'))}
+    <img border="0" src="{$asset.image.16x16.web_path}" class="list" />
+{else}
+  {if $asset.small_icon}
+    <img border="0" src="{$asset.small_icon}" class="list" />
+  {else}
+    <img border="0" src="{$domain}Resources/Icons/blank_page.png" class="list" />
+  {/if}
+{/if}
 
 <span class="asset label">{$asset.label}</span></a>
 
