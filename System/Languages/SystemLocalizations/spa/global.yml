@@ -10,6 +10,7 @@ strings:
     settings: "Ajustes"
     websites: Sus proyectos
     about: Sobre Smartest
+    user_profile: "Su perfil"
     sign_out: Salir
   top_bar:
     signed_in_before_site_name: "Sesión iniciada en proyecto "
