@@ -341,31 +341,76 @@ type:
       - {mime: text/javascript, _content: js}
       - {mime: text/javascript, _content: font.js}
 
-# Embedded files
-  SM_ASSETTYPE_QUICKTIME_MOVIE:
-    id: SM_ASSETTYPE_QUICKTIME_MOVIE
-    category: embedded
-    label: Quicktime Movie
-    description: A movie saved in any of Apple's proprietary QuickTime formats
+  SM_ASSETTYPE_CUFON_FONT:
+    id: SM_ASSETTYPE_CUFON_FONT
+    category: browser_instructions
+    label: Cufón font
+    description: A font converted to javascript for use with Cufón
+    editable: false
     class: SmartestAsset
+    icon: script.png
     parsable: false
+    show_preview_edit_link: false
     input_options:
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
+      - SM_ASSETINPUTTYPE_FTP_UPLOAD
+    input_panel: System/Applications/Assets/Presentation/add.javascript.tpl
+    storage:
+      type: file
+      location: Public/Resources/Fonts/
+      system_location: Public/Resources/System/Fonts/
+    render:
+      template: System/Presentation/WebPageBuilder/display.javascript.tpl
+      preview_template: System/Presentation/WebPageBuilder/preview.cufon.tpl
+    suffix:
+      - {mime: text/javascript, _content: js}
+      - {mime: text/javascript, _content: font.js}
+
+  SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT:
+    id: SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT
+    category: browser_instructions
+    label: Web Open Font Format
+    description: A font in Web Open Font Format (WOFF)
+    editable: false
+    class: SmartestAsset
+    icon: script.png
+    parsable: false
+    show_preview_edit_link: false
+    input_options:
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
     storage:
       type: file
-      location: Public/Resources/Assets/
-      system_location: Public/Resources/System/Assets/
+      location: Public/Resources/Fonts/
+      system_location: Public/Resources/System/Fonts/
     render:
-      template: System/Presentation/WebPageBuilder/display.quicktime.tpl
+      template: System/Presentation/WebPageBuilder/display.woff.tpl
     suffix:
-      - {mime: video/quicktime, _content: mov}
-      - {mime: video/quicktime, _content: qt}
-    param:
-      - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 480}
-      - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 360}
-      - {name: auto_start, label: "Auto start", type: SM_DATATYPE_BOOLEAN, required: false}
-      - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, required: false}
+      - {mime: application/font-woff, _content: woff}
 
+  SM_ASSETTYPE_EOT_FONT_FORMAT:
+    id: SM_ASSETTYPE_EOT_FONT_FORMAT
+    category: browser_instructions
+    label: Embedded OpenType Font Format
+    description: A font in Embedded OpenType font format (EOT)
+    editable: false
+    class: SmartestAsset
+    icon: script.png
+    parsable: false
+    show_preview_edit_link: false
+    input_options:
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
+      - SM_ASSETINPUTTYPE_FTP_UPLOAD
+    storage:
+      type: file
+      location: Public/Resources/Fonts/
+      system_location: Public/Resources/System/Fonts/
+    render:
+      template: System/Presentation/WebPageBuilder/display.eot.tpl
+    suffix:
+      - {mime: application/vnd.ms-fontobject, _content: eot}
+
+# Embedded files
   SM_ASSETTYPE_MP3:
     id: SM_ASSETTYPE_MP3
     category: embedded
