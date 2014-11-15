@@ -1,5 +1,5 @@
 <script type="text/javascript" src="<?sm:$domain:?>Resources/System/Javascript/cufon/cufon-yui.js"></script>
-<script type="text/javascript" src="<?sm:$domain:?>Resources/Javascript/<?sm:$asset_info.url:?>"></script>
+<script type="text/javascript" src="<?sm:$domain:?>Resources/Fonts/<?sm:$asset_info.url:?>"></script>
 <style type="text/css">
   #cufon-preview p{
       font-size:3.2em;

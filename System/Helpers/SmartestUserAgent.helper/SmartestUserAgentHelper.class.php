@@ -270,28 +270,6 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
                 
             }
             
-	        // set engine
-            /* if (stripos($this->_userAgent, 'Gecko')) { // rendering engines
-                
-                if (stripos($this->_userAgent, 'KHTML') === FALSE) {
-                    $this->_browser['engine'] = 'Gecko';
-                }else{
-                    if(stripos($this->_userAgent, 'AppleWebKit') === FALSE){
-                        $this->_browser['engine'] = 'KHTML';
-                    }else{
-                        $this->_browser['engine'] = 'AppleWebKit';
-                    }
-                }
-                
-            }else{
-                if($this->isExplorer()){
-                    if($this->isMacintosh()){
-                        $this->_browser['engine'] = 'MSIE for MAC';
-                    }else{
-                        $this->_browser['engine'] = 'MSIE';
-                    }
-                }
-            } */
         }
         
         return $this->_browser['engine'];
@@ -426,6 +404,3 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
     }
 
 }
-
-// Safari: Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/418.8 (KHTML, like Gecko) Safari/419.3
-// full list of user agents at: http://www.pgts.com.au/pgtsj/pgtsj0208c.html

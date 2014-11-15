@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 696
+    revision: 698
     minimum_php_version: 5.3
     minimum_database_version: 21
     default_timezone: Europe/London
@@ -86,6 +86,7 @@ system:
       - Public/Resources/Assets/
       - Public/Resources/Stylesheets/
       - Public/Resources/Javascript/
+      - Public/Resources/Fonts/
       - System/Temporary/
     templates_repo:
       - Presentation/Masters/

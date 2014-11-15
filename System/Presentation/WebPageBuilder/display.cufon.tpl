@@ -1,0 +1,1 @@
+<script type="text/javascript" src="<?sm:$domain:?>Resources/Fonts/<?sm:$asset_info.url:?>"></script>

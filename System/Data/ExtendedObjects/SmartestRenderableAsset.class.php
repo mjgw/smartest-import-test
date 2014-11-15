@@ -132,6 +132,7 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	        $sm = new SmartyManager('BasicRenderer');
             $r = $sm->initialize($this->getStringId());
             $r->assignAsset($this);
+            $r->assign('sm_user_agent', $ua);
             $r->setDraftMode($draft_mode);
     	    $content = $r->renderAsset($this->_render_data);
     	    
@@ -156,10 +157,13 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
     	    if(!($this->_render_data->hasParameter('html_id') && strlen($this->_render_data->getParameter('html_id')))){
     	        $this->_render_data->setParameter('html_id', SmartestStringHelper::toSlug($this->_type_info['label']).'-'.substr($this->getWebId(), 0, 8));
     	    }
-	        
+            
+            $ua = SmartestPersistentObject::get('userAgent');
+            
 	        $sm = new SmartyManager('BasicRenderer');
             $r = $sm->initialize($this->getStringId());
             $r->assign('preview_mode', true);
+            $r->assign('sm_user_agent', $ua);
             $r->assignAsset($this);
             $r->setDraftMode(true);
     	    $content = $r->renderAsset($this->_render_data, null, true);

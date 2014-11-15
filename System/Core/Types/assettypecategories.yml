@@ -15,7 +15,7 @@ categories:
   embedded:
     id: SM_ASSETTYPECAT_EMBEDDED_MEDIA
     short_name: embedded
-    label: "Movies and stuff"
+    label: "Movies and embedded media"
     has_system_files: true
     importable: true
     gallery: true

@@ -316,56 +316,6 @@ type:
 #      - {mime: text/css, _content: scss}
 #      - {mime: text/css, _content: sass}
 
-  SM_ASSETTYPE_CUFON_FONT:
-    id: SM_ASSETTYPE_CUFON_FONT
-    category: browser_instructions
-    label: Cufón font
-    description: A font converted to javascript for use with Cufón
-    editable: false
-    class: SmartestAsset
-    icon: script.png
-    parsable: false
-    show_preview_edit_link: false
-    input_options:
-      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
-      - SM_ASSETINPUTTYPE_FTP_UPLOAD
-    input_panel: System/Applications/Assets/Presentation/add.javascript.tpl
-    storage:
-      type: file
-      location: Public/Resources/Javascript/
-      system_location: Public/Resources/System/Javascript/
-    render:
-      template: System/Presentation/WebPageBuilder/display.javascript.tpl
-      preview_template: System/Presentation/WebPageBuilder/preview.cufon.tpl
-    suffix:
-      - {mime: text/javascript, _content: js}
-      - {mime: text/javascript, _content: font.js}
-
-  SM_ASSETTYPE_CUFON_FONT:
-    id: SM_ASSETTYPE_CUFON_FONT
-    category: browser_instructions
-    label: Cufón font
-    description: A font converted to javascript for use with Cufón
-    editable: false
-    class: SmartestAsset
-    icon: script.png
-    parsable: false
-    show_preview_edit_link: false
-    input_options:
-      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
-      - SM_ASSETINPUTTYPE_FTP_UPLOAD
-    input_panel: System/Applications/Assets/Presentation/add.javascript.tpl
-    storage:
-      type: file
-      location: Public/Resources/Fonts/
-      system_location: Public/Resources/System/Fonts/
-    render:
-      template: System/Presentation/WebPageBuilder/display.javascript.tpl
-      preview_template: System/Presentation/WebPageBuilder/preview.cufon.tpl
-    suffix:
-      - {mime: text/javascript, _content: js}
-      - {mime: text/javascript, _content: font.js}
-
   SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT:
     id: SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT
     category: browser_instructions
@@ -385,7 +335,12 @@ type:
       system_location: Public/Resources/System/Fonts/
     render:
       template: System/Presentation/WebPageBuilder/display.woff.tpl
+      preview_template: System/Presentation/WebPageBuilder/preview.woff.tpl
+    param:
+      - {name: font_weight, label: "Font weight", type: SM_DATATYPE_SL_TEXT, required: false, options: {normal: Normal, bold: Bold, 100: 100, 200: 200, 300: 300, 400: 400, 500: 500, 600: 600, 700: 700, 800: 800, 900: 900, bolder: Bolder, lighter: Lighter}}
+      - {name: is_italic, label: "Is italic variant?", type: SM_DATATYPE_BOOLEAN, required: false, default: false}
     suffix:
+      - {mime: application/font-woff, _content: otf.woff}
       - {mime: application/font-woff, _content: woff}
 
   SM_ASSETTYPE_EOT_FONT_FORMAT:
@@ -405,10 +360,39 @@ type:
       type: file
       location: Public/Resources/Fonts/
       system_location: Public/Resources/System/Fonts/
+    param:
+      - {name: font_weight, label: "Font weight", type: SM_DATATYPE_SL_TEXT, required: false, options: {normal: Normal, bold: Bold, 100: 100, 200: 200, 300: 300, 400: 400, 500: 500, 600: 600, 700: 700, 800: 800, 900: 900, bolder: Bolder, lighter: Lighter}}
+      - {name: is_italic, label: "Is italic variant?", type: SM_DATATYPE_BOOLEAN, required: false, default: false}
     render:
       template: System/Presentation/WebPageBuilder/display.eot.tpl
+      preview_template: System/Presentation/WebPageBuilder/preview.eot.tpl
     suffix:
       - {mime: application/vnd.ms-fontobject, _content: eot}
+
+  SM_ASSETTYPE_CUFON_FONT:
+    id: SM_ASSETTYPE_CUFON_FONT
+    category: browser_instructions
+    label: Cufón font
+    description: A font converted to javascript for use with Cufón
+    editable: false
+    class: SmartestAsset
+    icon: script.png
+    parsable: false
+    show_preview_edit_link: false
+    input_options:
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
+      - SM_ASSETINPUTTYPE_FTP_UPLOAD
+    input_panel: System/Applications/Assets/Presentation/add.javascript.tpl
+    storage:
+      type: file
+      location: Public/Resources/Fonts/
+      system_location: Public/Resources/System/Fonts/
+    render:
+      template: System/Presentation/WebPageBuilder/display.javascript.tpl
+      preview_template: System/Presentation/WebPageBuilder/preview.cufon.tpl
+    suffix:
+      - {mime: text/javascript, _content: js}
+      - {mime: text/javascript, _content: font.js}
 
 # Embedded files
   SM_ASSETTYPE_MP3:
