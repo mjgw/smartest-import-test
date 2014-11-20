@@ -111,7 +111,7 @@ function openPage(pageAction){
 {else}
   
   <div class="special-box">
-      There are no {$model.plural_name|lower} yet. {if $allow_create_new}<a href="{$domain}{$section}/addItem?class_id={$model.id}">Click here</a> to create one.{else}Your user account does not have permission to create them.{/if}
+      There are no {$model.plural_name|lower} yet. {if $allow_create_new}<a href="{$domain}{$section}/addItem?class_id={$model.id}" class="button">Click here</a> to create one.{else}Your user account does not have permission to create them.{/if}
   </div>
   
 {/if}

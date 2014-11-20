@@ -12,5 +12,5 @@
   <input type="submit" value="Continue" />
 </form>
 {else}
-<p>There are no {$model.plural_name|lower} yet. <a href="{$domain}datamanager/addItem?class_id={$model.id}">Click here</a> to create one.</p>
+<p>There are no {$model.plural_name|lower} yet. <a href="{$domain}datamanager/addItem?class_id={$model.id}" class="button">Click here</a> to create one.</p>
 {/if}

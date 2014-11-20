@@ -25,7 +25,7 @@
 {else}
 
 <div class="special-box">
-    There are no sets of {$model.plural_name|lower} yet. <a href="{$domain}{$section}/addSet?class_id={$model.id}">Click here</a> to create one.
+    There are no sets of {$model.plural_name|lower} yet. <a href="{$domain}{$section}/addSet?class_id={$model.id}" class="button">Click here</a> to create one.
 </div>
 
 {/if}

@@ -6,6 +6,8 @@
 
 <div class="instruction">Use sets to organize and group your items into more meaningful collections that belong together. {help id="datamanager:sets"}What are sets?{/help}</div>
 
+{if count($sets)}
+
 <form id="pageViewForm" method="get" action="">
   <input type="hidden" name="set_id" id="item_id_input" value="" />
 </form>
@@ -20,6 +22,15 @@
 			  {$set.name} ({$set.type|lower})</a></li>
 {/foreach}
 </ul>
+
+{else}
+
+  <div class="special-box">
+      There are no sets yet. <a href="{$domain}{$section}/addSet" class="button">Click here</a> to create one.
+  </div>
+
+{/if}
+
 </div>
 
 <div id="actions-area">
