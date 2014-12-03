@@ -757,18 +757,18 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    return $url;
 	}
 	
-	public function getFallbackUrl(){
+	public function getFallbackUrl($force=false){
 	    
-	    /* if($this->isHomePage()){
+	    if($this->isHomePage() && !$force){
             // Return "/"
             $url = '';
-        }else{ */
+        }else{
             // Return a dynamic one.
             $url = 'website/renderPageFromId?page_id='.$this->getWebid();
-            if($this->getType() == 'ITEMCLASS'){
-                $url .= '&amp;item_id=:long_id';
+            if($this->getType() == 'ITEMCLASS' && $this->_simple_item){
+                $url .= '&amp;item_id='.$this->_simple_item->getWebid();
             }
-        // }
+        }
         
         return $url;
 	    
@@ -817,14 +817,22 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    return $urls_array;
 	    
 	}
+    
+    public function hasParentPage(){
+        return (bool) $this->getParent();
+    }
 	
 	public function getParentPage($get_item_page=true, $draft_mode='AUTO'){
 	    
+        if(!$this->getParent()){
+            return null;
+        }
+        
 	    if($this->isHomePage()){
 	        throw new SmartestException("Tried to get Parent of the top (home) page.");
 	    }
 	    
-	    if(!$this->_parent_page || $get_item_page){
+        if($this->getSiteId() && (!$this->_parent_page || $get_item_page)){
 	        
 	        $helper = new SmartestPageManagementHelper;
     		$type_index = $helper->getPageTypesIndex($this->getParentSite()->getId());
@@ -1332,10 +1340,16 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	}
 	
 	public function isHomePage(){
-	    if($this->_is_home_page === null){
-	        $this->_is_home_page = $this->getParentSite()->getTopPageId() == $this->_properties['id'];
-	    }
-	    return $this->_is_home_page;
+        
+        if($this->getSiteId()){
+    	    if($this->_is_home_page === null){
+    	        $this->_is_home_page = $this->getParentSite()->getTopPageId() == $this->_properties['id'];
+    	    }
+    	    return $this->_is_home_page;
+        }else{
+            return null;
+        }
+	    
 	}
 	
 	public function isApproved(){
@@ -1464,6 +1478,9 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        
 	        case "fallback_url":
 	        return $this->getFallbackUrl();
+            
+	        case "forced_fallback_url":
+	        return $this->getFallbackUrl(true);
             
             case "preview_safe_url":
             if($this->getDraftMode()){
@@ -2374,29 +2391,34 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	
 	public function getSectionPage(){
 	    
-	    if(SmartestStringHelper::isFalse($this->getIsSection()) && !$this->isHomePage()){
+	    if(SmartestStringHelper::isFalse($this->getIsSection()) && !$this->isHomePage() && $this->hasParentPage()){
 	        
 	        if(!$this->_section_page){
 	            
 	            $page = $this->getParentPage();
+                
+                if($page->getSiteId()){
 	            
 	            $limit = self::HIERARCHY_DEPTH_LIMIT;
 	            
 	            while($limit > 0){
-	                // cho $page->getTitle();
-	                if(SmartestStringHelper::toRealBool($page->isHomePage()) || SmartestStringHelper::toRealBool($page->getIsSection())){
+	                
+                    if(SmartestStringHelper::toRealBool($page->isHomePage()) || SmartestStringHelper::toRealBool($page->getIsSection())){
 	                    $section_page = $page;
 	                    break;
 	                }else{
 	                    $page = $page->getParentPage();
 	                }
-	                
-	                $limit--;
+                    
+                    $limit--;
+                    
 	            }
 	            
 	            $section_page->setDraftMode($this->getDraftMode());
 	            $this->_section_page = $section_page;
 	            return $section_page;
+                
+                }
 	            
 	        }else{
 	            return $this->_section_page;
@@ -2427,8 +2449,8 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    /* if(SmartestPersistentObject::get('__current_host_site')){
 	        return SmartestPersistentObject::get('__current_host_site');
 	    } */
-	    
-	    if(!$this->_parent_site){
+            
+        if(!is_object($this->_parent_site)){
 	        // echo "Searched for parent site";
 	        $sql = "SELECT * FROM Sites WHERE Sites.site_id='".$this->getSiteId()."'";
 	        $result = $this->database->queryToArray($sql);
@@ -2440,6 +2462,8 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
                 $this->_parent_site = $s;
             }
         }
+        
+        // var_dump($this->_parent_site);
         
         return $this->_parent_site;
         

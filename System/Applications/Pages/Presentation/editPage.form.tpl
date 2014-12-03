@@ -185,7 +185,7 @@
     	  <tr style="background-color:#{cycle values="ddd,fff"};height:20px">
             <td colspan="2">
               <div style="display:inline" id="siteDomainField">
-              {if $page.is_published == "TRUE" && $site.is_enabled == 1}<a href="http://{$site.domain}{$domain}{$page.fallback_url}" target="_blank">http://{$site.domain}{$domain}{$page.fallback_url|truncate:50:"..."}</a>{else}http://{$site.domain}{$domain}{$page.fallback_url|truncate:100:"..."}{/if}</div></td>
+              {if $page.is_published == "TRUE" && $site.is_enabled == 1}<a href="http://{$site.domain}{$domain}{$page.forced_fallback_url}" target="_blank">http://{$site.domain}{$domain}{$page.forced_fallback_url|truncate:50:"..."}</a>{else}http://{$site.domain}{$domain}{$page.forced_fallback_url|truncate:100:"..."}{/if}</div></td>
       	  </tr>
 
     	</table>

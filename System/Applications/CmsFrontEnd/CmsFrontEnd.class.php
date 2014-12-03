@@ -40,13 +40,13 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	public function renderPageFromUrl(){
 		
 		define('SM_AJAX_CALL', false);
-		
-		if($this->lookupSiteDomain()){
+        
+        if($this->lookupSiteDomain()){
 		    
             define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
 		    define('SM_CMS_PAGE_SITE_UNIQUE_ID', $this->_site->getUniqueId());
 		    
-		    if(strlen($this->getRequest()->getRequestString())){
+            if(strlen($this->getRequest()->getRequestString())){
 		        
 		        try{
 		        
@@ -54,14 +54,17 @@ class CmsFrontEnd extends SmartestSystemApplication{
 
         		        // we are viewing a static page
         		        $this->renderPage();
+                        return true;
 
         		    }else if($this->_page = $this->manager->getItemClassPageByUrl($this->getRequest()->getRequestString(), $this->_site->getId())){
 
         		        $this->renderPage();
+                        return true;
 
         		    }else{
 
             		    $this->renderNotFoundPage();
+                        return false;
 
             	    }
             	
@@ -78,6 +81,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 		        $this->_page->find($this->_site->getTopPageId());
 		        
 		        $this->renderPage();
+                return true;
 		        
 		    }
 		    
@@ -93,8 +97,8 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	public function renderPageFromId($get){
 		
 		define('SM_AJAX_CALL', false);
-		
-		if($this->lookupSiteDomain()){
+        
+        if($this->lookupSiteDomain()){
 		    
 		    define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
 		    define('SM_CMS_PAGE_SITE_UNIQUE_ID', $this->_site->getUniqueId());
@@ -575,7 +579,12 @@ class CmsFrontEnd extends SmartestSystemApplication{
                 }
 	        }else{
 	            // User not recognised
-	            $this->renderNotFoundPage();
+                if($this->renderPageFromUrl()){
+                    
+                }else{
+                    $this->renderNotFoundPage();
+                }
+	            
 	        }
         }
 	}
