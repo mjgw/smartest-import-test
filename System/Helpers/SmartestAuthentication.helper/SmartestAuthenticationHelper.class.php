@@ -52,6 +52,7 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 	    
 	    if(strpos($username, ' ') !== false){
 	        // there is a space in the username, which Smartest never allows, so this can't be a username. return false for added security
+            SmartestLog::getInstance('auth')->log('Attempted login failed for username \''.$username.'\' because it contained a space.');
 	        return false;
 	    }
 	    
@@ -59,6 +60,7 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 		if($userObj->findBy($findby_field, $username)){
 			
 			if($require_smartest && $userObj->getType() != 'SM_USERTYPE_SYSTEM_USER'){
+                SmartestLog::getInstance('auth')->log('Attempted login failed for username \''.$username.'\' because it is not a system user account and does not have permission to access the Smartest backend.');
 			    return false;
 			}
 			
@@ -82,11 +84,13 @@ class SmartestAuthenticationHelper extends SmartestHelper{
     			        $userObj->setPasswordWithSalt($password, SmartestStringHelper::random(40), true);
     			        $userObj->setLastVisit(time());
     			        $userObj->save();
+                        SmartestLog::getInstance('auth')->log('User \''.$username.'\' authenticated successfully.');
 		
         			    return $userObj;
     			    
 			        }else{
 			            
+                        SmartestLog::getInstance('auth')->log('Attempted login failed for username \''.$username.'\' because the password supplied was incorrect.');
 			            return false;
 			            
 			        }
@@ -99,6 +103,8 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 			            $userObj->setPasswordWithSalt($password, SmartestStringHelper::random(40), true);
 			            $userObj->setLastVisit(time());
 			            $userObj->save();
+                        
+                        SmartestLog::getInstance('auth')->log('User \''.$username.'\' authenticated successfully. Their password was not salted, but a salt has now been added.');
 			            
                         SmartestSession::start();
                         
@@ -122,11 +128,17 @@ class SmartestAuthenticationHelper extends SmartestHelper{
 		    }else{
 	            
 	            // The user is not activated
+                SmartestLog::getInstance('auth')->log('Attempted login failed for username \''.$username.'\' because that user account is not activated.');
 		        return false;
 	        
 		    }
 			
 		}else{
+            if($findby_field == 'email'){
+                SmartestLog::getInstance('auth')->log('Attempted login failed using email address \''.$username.'\' because no account with that email address could be found.');
+            }else{
+                SmartestLog::getInstance('auth')->log('Attempted login failed for username \''.$username.'\' because no account with that username could be found.');
+            }
 			return false;
 		}
 	}

@@ -16,6 +16,13 @@
     <format>%TIMESTAMP%: (%LEVEL%) %MESSAGE% (%FILE%:%LINE% %CLASS%%CALLTYPE%%FUNCTION%())</format>
   </log>
   
+  <log id="SM_LOG_AUTH">
+    <name>auth</name>
+    <description>All authentication attempts, successful and failed</description>
+    <file>System/Logs/authentication.log</file>
+    <format>%TIMESTAMP%: %MESSAGE%</format>
+  </log>
+  
   <log id="SM_LOG_SITE_ACTIONS">
     <name>site</name>
     <description>Per-site User Actions Log</description>
