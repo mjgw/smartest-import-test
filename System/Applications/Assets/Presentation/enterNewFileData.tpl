@@ -1,15 +1,15 @@
 <div id="work-area">
   <h3>New Uploads</h3>
   <form action="{$domain}{$section}/createAssetsFromNewUploads" method="post">
-  <ul style="padding:0px;margin:0px;list-style-type:none">
+  <ul class="objects-list">
   {foreach from=$files item="file" name="files"}
-    <li style="padding:10px;background-color:#{cycle values="fff,ddd"}">
+    <li class="{cycle values="odd,even"}">
       
       {if $file.is_image}
-      <a href="#preview" class="image-thumb-preview" data-file="{$file.current_directory}{$file.filename}"><img src="{$file.image.constrain_150x100.web_path}" alt="" style="float:right;display:block" /></a>
+      <a href="#preview" class="image-thumb-preview" data-file="{$file.current_directory}{$file.filename}"><img src="{$file.image.constrain_300x200.web_path}" alt="" style="width:{$file.image.constrain_150x100.width}px;height:{$file.image.constrain_150x100.height}px;float:right;display:block" /></a>
       {/if}
       
-      <b>Title</b>: <input type="text" name="new_files[{$smarty.foreach.files.index}][name]" value="{$file.suggested_name}" style="width:300px" /><br />
+      <b>Label</b>: <input type="text" name="new_files[{$smarty.foreach.files.index}][name]" value="{$file.suggested_name}" /><br />
       <b>File Path</b>: <code>{$file.current_directory}{$file.filename}</code><input type="hidden" name="new_files[{$smarty.foreach.files.index}][filename]" value="{$file.current_directory}{$file.filename}" /><br />
       <b>Import as</b>:
       
@@ -28,13 +28,15 @@
       <b>Archive</b>: <input type="checkbox" id="archive_{$smarty.foreach.files.index}" name="new_files[{$smarty.foreach.files.index}][archive]" value="1" /><label for="archive_{$smarty.foreach.files.index}">Check here to archive this file straight away</label><br />
       {if !$file.suffix_recognized}<div class="warning">The suffix of this file (.{$file.actual_suffix}) has not been recognized.</div>{/if}
       
-      {if count($file.possible_groups)}<b>Add to group</b>:
-      <select name="new_files[{$smarty.foreach.files.index}][group]">
-        <option value="">None</option>
+      {* {if count($file.possible_groups) && count($file.possible_types) == 1}
+      <strong>Add to group</strong>:
+      <div style="display:inline-block" id="groups-container-{$smarty.foreach.files.index}">
 {foreach from=$file.possible_groups item="group"}
-        <option value="{$group.id}">{$group.label}</option>
+        <input type="checkbox" style="display:none" name="new_files[{$smarty.foreach.files.index}][groups][]" id="new-file-{$smarty.foreach.files.index}-group-{$group.id}"> <label for="new-file-{$smarty.foreach.files.index}-group-{$group.id}" class="checkbox-array">{$group.label}</label>
 {/foreach}
-      </select><br />{/if}
+      </div>
+      <div class="breaker"></div>
+      {/if} *}
       
     </li>
   {/foreach}

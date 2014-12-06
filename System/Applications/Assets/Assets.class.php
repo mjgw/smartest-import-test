@@ -241,9 +241,10 @@ class Assets extends SmartestSystemApplication{
 	        
 	        $alh = new SmartestAssetsLibraryHelper;
 	        
-	        /* if(count($types)){
+	        if(count($types)){
 	            $files_array[$i]['possible_groups'] = $alh->getAssetGroupsThatAcceptType($types[0]['type']['id']);
-            } */
+            }
+            
 	        $files_array[$i]['size'] = SmartestFileSystemHelper::getFileSizeFormatted(SM_ROOT_DIR.$f);
 	        // $files_array[$i]['correct_directory'] = $type['storage']['location'];
 	        $i++;
