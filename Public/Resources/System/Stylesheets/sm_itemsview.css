@@ -71,6 +71,11 @@ ul.options-grid li{
     overflow:hidden;
 }
 
+ul.options-grid li a, ul.options-grid-no-scroll li a{
+    -webkit-transition: border,background-color 0.25s; /* For Safari 3.1 to 6.0 */
+    transition: border,background-color 0.25s;
+}
+
 ul.options-grid li a.option{
 	
     display:block;
