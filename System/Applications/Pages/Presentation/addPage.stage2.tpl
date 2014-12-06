@@ -15,7 +15,7 @@
   	    http://{$siteInfo.domain}{$domain}<input type="text" name="page_url" id="page_url" style="width:420px" value="{if $suggested_url}{$suggested_url}{else}{$newPage.url}{/if}" />
   	    {if $newPage.type == "ITEMCLASS"}<input type="button" value="&lt;&lt; Item URL Name" onclick="addField('page_url', 'name');" />{/if}
   	    {if $newPage.type == "ITEMCLASS"}<input type="button" value="&lt;&lt; Item Short ID" onclick="addField('page_url', 'id');" />{/if}
-  	    <br /><span class="form-hint">You will be able to change this and add more URLs later</span>
+  	    <div class="form-hint">You will be able to change this and add more URLs later</div>
   	  </div>
   	
   	{if $newPage.type == "TAG"}
@@ -33,8 +33,7 @@
   	
   	<div class="edit-form-row">
       <div class="form-section-label">Cache as Static HTML</div>
-      <input type="radio" name="page_cache_as_html" id="page_cache_as_html_on" value="TRUE"{if $newPage.cache_as_html == 'TRUE'} checked="checked"{/if} />&nbsp;<label for="page_cache_as_html_on">Yes please</label>
-      <input type="radio" name="page_cache_as_html" id="page_cache_as_html_off" value="FALSE"{if $newPage.cache_as_html == 'FALSE'} checked="checked"{/if} />&nbsp;<label for="page_cache_as_html_off">No, thanks</label>
+      {boolean name="page_cache_as_html" id="page_cache_as_html" value=$newPage.cache_as_html}
     </div>
   	
     <div class="edit-form-row">

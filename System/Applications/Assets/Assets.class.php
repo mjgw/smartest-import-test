@@ -178,6 +178,21 @@ class Assets extends SmartestSystemApplication{
         $this->send($new_files, 'new_files');
         
 	}
+    
+    public function previewUnimportedImageFile(){
+        
+        $base_file_path = 'Public/Resources/Images/';
+        
+        if(SmartestFileSystemHelper::isSafeFileName($this->getRequestParameter('file_path'), $base_file_path) && is_file(SM_ROOT_DIR.$this->getRequestParameter('file_path'))){
+            $image = new SmartestImage;
+            $image->loadFile(SM_ROOT_DIR.$this->getRequestParameter('file_path'));
+            $this->send(true, 'found_image');
+            $this->send($image, 'image');
+        }else{
+            $this->send(false, 'found_image');
+        }
+        
+    }
 	
 	public function enterNewFileData($get, $post){
 	    
@@ -204,6 +219,14 @@ class Assets extends SmartestSystemApplication{
 	        $files_array[$i]['suggested_name'] = SmartestStringHelper::toTitleCaseFromFileName(SmartestStringHelper::removeDotSuffix($files_array[$i]['filename']));
 	        $files_array[$i]['current_directory'] = dirname($f).'/';
 	        
+            if(in_array(strtolower(SmartestStringHelper::getDotSuffix($f)), array('jpeg', 'jpg', 'png', 'gif'))){
+                $files_array[$i]['image'] = new SmartestImage;
+                $files_array[$i]['image']->loadFile($f);
+                $files_array[$i]['is_image'] = true;
+            }else{
+                $files_array[$i]['is_image'] = false;
+            }
+            
 	        if(count($types)){
 	            $files_array[$i]['possible_types'] = $types;
 	            $files_array[$i]['suffix_recognized'] = true;

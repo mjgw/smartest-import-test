@@ -751,17 +751,17 @@ class SmartestImage extends SmartestFile{
 	    
 	    if(preg_match('/^(\d+)x(\d+)/', $offset, $m)){
 	        return $this->resizeAndCrop($m[1], $m[2]);
-	    }elseif(preg_match('/square_(\d+)/', $offset, $m)){
+	    }elseif(preg_match('/^square_(\d+)/', $offset, $m)){
 	        return $this->getSquareVersion($m[1]);
-	    }elseif(preg_match('/width_(\d+)/', $offset, $m)){
+	    }elseif(preg_match('/^width_(\d+)/', $offset, $m)){
 	        return $this->restrictToWidth($m[1]);
-	    }elseif(preg_match('/height_(\d+)/', $offset, $m)){
+	    }elseif(preg_match('/^height_(\d+)/', $offset, $m)){
 	        return $this->restrictToHeight($m[1]);
-	    }elseif(preg_match('/constrain_(\d+)/', $offset, $m)){
+	    }elseif(preg_match('/^constrain_(\d+)$/', $offset, $m)){
 	        return $this->getConstrainedVersionWithin($m[1], $m[1]);
-        }elseif(preg_match('/constrain_(\d+)x(\d+)/', $offset, $m)){
+        }elseif(preg_match('/^constrain_(\d+)x(\d+)$/', $offset, $m)){
             return $this->getConstrainedVersionWithin($m[1], $m[2]);
-        }elseif(preg_match('/stretch_(\d+)x(\d+)/', $offset, $m)){
+        }elseif(preg_match('/^stretch_(\d+)x(\d+)$/', $offset, $m)){
             return $this->getResizedVersionNoScale($m[1], $m[2]);
         }
 	    

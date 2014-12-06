@@ -14,7 +14,7 @@
     <ul style="list-style-type:none;margin-top:8px">
       {foreach from=$files_of_this_type item="file"}
         {capture name="full_path" assign="full_path"}{$path}{$file}{/capture}
-        <li><input type="checkbox" name="new_files[]" value="{$full_path}" id="file_{$full_path|varname}" class="checkbox-{$path|varname}" />&nbsp;<label for="file_{$full_path|varname}"><code>{$full_path}</code></label></li>
+        <li><input type="checkbox" name="new_files[]" value="{$full_path}" id="file_{$full_path|varname}" class="checkbox-{$path|varname}" />&nbsp;<label for="file_{$full_path|varname}"><code>{$full_path}</code></label> {if $path == 'Public/Resources/Images/'}<a href="#preview" class="image-import-previewer button small" data-file="{$full_path}">Preview</a>{/if}</li>
         {foreachelse}
         <li style="list-style-type:none;color:#999"><i>No new files in this location.</i></li>
       {/foreach}
@@ -24,3 +24,14 @@
   </form>
   
 </div>
+
+<script type="text/javascript">
+{literal}
+$$('a.image-import-previewer').each(function(ipl){
+  ipl.observe('click', function(e){
+    e.stop();
+    MODALS.load('assets/previewUnimportedImageFile?file_path='+ipl.readAttribute('data-file'), 'Unimported image preview');
+  });
+});
+{/literal}
+</script>

@@ -1203,14 +1203,14 @@ class Pages extends SmartestSystemApplication{
             SmartestCache::clear('site_pages_tree_'.$site_id, true);
         }
         
-        $pagesTree = $this->getSite()->getPagesTree(true);
+        $pagesTree = $site->getPagesTree(true);
         
         $this->setTitle($this->getSite()->getInternalLabel()." | Site Tree");
         
         $this->send($pagesTree, "tree");
         $this->send($site_id, "site_id");
-        $this->send($this->getSite(), "site");
-        $this->send($this->getSite()->getHomePage(true), "home_page");
+        $this->send($site, "site");
+        $this->send($site->getHomePage(true), "home_page");
         $this->send(true, "site_recognised");
         
         $recent = $this->getUser()->getRecentlyEditedPages($this->getSite()->getId());
