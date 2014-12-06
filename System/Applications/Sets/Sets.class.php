@@ -747,6 +747,19 @@ class Sets extends SmartestSystemApplication{
 			}
 		}
 	}
+    
+    public function syndicateSet(){
+        
+	    $set_id = $this->getRequestParameter('set_id');
+	    $set = new SmartestCmsItemSet;
+	    
+	    if($set->find($set_id)){
+	        
+            $this->send($set, 'set');
+            
+	    }
+        
+    }
 	
 	public function setExternalFeedAggregator(){
 	    

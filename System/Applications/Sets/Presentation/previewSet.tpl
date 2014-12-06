@@ -6,7 +6,7 @@ var itemList = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'item'
 
 {load_interface file="edit_set_tabs.tpl"}
 
-<h3>Browse set <span class="light">"{$set.label}"</span></h3>
+<h3>Browse set <span class="light">&ldquo;{$set.label}&rdquo;</span></h3>
 
 <form id="pageViewForm" method="get" action="">
   <input type="hidden" name="set_id"  value="{$set.id}" />
