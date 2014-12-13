@@ -205,8 +205,8 @@ class SmartestInstallationStatusHelper{
                         $hostname = SmartestStringHelper::sanitize($_POST['site_host']);
                         $template = ($_POST['site_initial_tpl'] == '_DEFAULT') ? SmartestStringHelper::toVarName($_POST['site_name'], true).'.tpl' : SmartestStringHelper::sanitize($_POST['site_initial_tpl']);
                         
-                        // SIte creation SQL
-                        // Todo: This should be replaced with a call to SmartestSIteCreationHelper
+                        // Site creation SQL
+                        // Todo: This should be replaced with a call to SmartestSiteCreationHelper
                         $sql = file_get_contents(SM_ROOT_DIR.'System/Install/SqlScripts/create_site.sql.txt');
                         $sql = str_replace('%NOW%', time(), $sql);
                         $sql = str_replace('%TEMPLATE%', $template, $sql);

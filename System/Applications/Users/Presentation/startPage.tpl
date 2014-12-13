@@ -24,7 +24,7 @@
   <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/editUser?user_id={$user.id}'">
     <a href="#" class="option" id="item_{$user.id}" onclick="setSelectedItem('{$user.id}'); return false;" >
       {if $user.profile_pic.id > 1 && $user.profile_pic.id != $default_user_profile_pic_id}
-      <div class="user-avatar-holder" style="background-image:url({$user.profile_pic.image.75x75.web_path})"></div>
+      <div class="user-avatar-holder" style="{if $sm_user_agent.is_supported_browser}background-image:url({$user.profile_pic.image.150x150.web_path});background-size:75px 75px;{else}background-image:url({$user.profile_pic.image.75x75.web_path}){/if}"></div>
       {else}
       {getsystemcolor assign="usercolor"}
       <div class="user-avatar-holder" style="background-color:#{$usercolor.hex};color:{if $usercolor.text_white}#fff{else}#000{/if}">{$user.profile_initials}</div>

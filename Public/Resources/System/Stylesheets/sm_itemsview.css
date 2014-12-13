@@ -88,9 +88,9 @@ ul.options-grid li a.option{
 	border:1px solid #fff;
 	color:#333;
 	
-    border-radius:6px;
-    -moz-border-radius:6px;
-    -webkit-border-radius:6px;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
     
     box-sizing:border-box;
     -moz-box-sizing:border-box;
@@ -115,9 +115,9 @@ ul.options-grid li a.selected-option{
 	border:1px solid rgba(104,132,158,0.8);
 	color:#333;
     
-    border-radius:6px;
-    -moz-border-radius:6px;
-    -webkit-border-radius:6px;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
     
     box-sizing:border-box;
     -moz-box-sizing:border-box;
@@ -294,9 +294,9 @@ ul.options-grid-no-scroll li a.option{
 	border:1px solid #fff;
 	color:#333;
     
-    border-radius:6px;
-    -moz-border-radius:6px;
-    -webkit-border-radius:6px;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
     
     box-sizing:border-box;
     -moz-box-sizing:border-box;
@@ -322,9 +322,9 @@ ul.options-grid-no-scroll li a.selected-option{
 	border:1px solid rgba(104,132,158,0.8);
 	color:#333;
     
-    border-radius:6px;
-    -moz-border-radius:6px;
-    -webkit-border-radius:6px;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
     
     box-sizing:border-box;
     -moz-box-sizing:border-box;

@@ -64,6 +64,18 @@ a.button{
     transition: all 0.2s;
 }
 
+a.button i:first-child{
+    display:inline-block;
+    margin-left:-4px!important;
+    margin-right:4px;
+}
+
+/* a.button i:last-child{
+    display:inline-block;
+    margin-right:-4px!important;
+    margin-left:4px;
+} */
+
 a.button:hover{
     text-decoration:none;
     /* border-color:#ccc; */
@@ -781,11 +793,17 @@ ul.apps li a.icon{
     opacity:0.9;
     -moz-opacity:0.9;
     /* border:1px solid #aaa; */
-    background-color:#333;
+    background-color:#68849E;
     background-repeat:no-repeat;
     background-position: 50% 50%;
     -webkit-transition: all 0.1s linear;
     transition: all 0.1s linear;
+}
+
+ul.apps.small li a.icon{
+    border-radius:40px;
+    -webkit-border-radius:40px;
+    -moz-border-radius:40px;
 }
 
 ul.apps.sites li a.icon{
@@ -804,6 +822,12 @@ ul.apps li a.icon:hover{
     border-radius:63px;
     -webkit-border-radius:63px;
     -moz-border-radius:63px;
+}
+
+ul.apps.small li a.icon:hover{
+    border-radius:43px;
+    -webkit-border-radius:43px;
+    -moz-border-radius:43px;
 }
 
 ul.apps li a.label{
@@ -942,6 +966,11 @@ only screen and (                min-resolution: 2dppx) {
     input[type="text"].search{
         background-image:url(../Images/search-bg-2x.png);
         background-size:31px 31px;
+    }
+    
+    ul.apps.sites li a.icon{
+        background-image:url(../Images/site-default-icon-2x.png);
+        background-size:130px 130px;
     }
     
 }

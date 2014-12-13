@@ -13,6 +13,20 @@
 
 class Settings extends SmartestSystemApplication{
     
+	public function startPage(){
+		
+        
+        
+	}
+    
+    public function getPreferencePanels(){
+        
+        // $c = SmartestPersistentObject::get('controller');
+        // print_r($c->getAllModulesById());
+        // print_r(SmartestSystemHelper::getSystemApplicationDirectories());
+        
+    }
+    
     public function editSite(){
 	    
         $this->requireOpenProject();
@@ -263,19 +277,156 @@ class Settings extends SmartestSystemApplication{
         
     }
     
-    public function getPreferencePanels(){
-        
-        // $c = SmartestPersistentObject::get('controller');
-        // print_r($c->getAllModulesById());
-        // print_r(SmartestSystemHelper::getSystemApplicationDirectories());
-        
-    }
+    public function listTags(){
+	    
+	    $this->setFormReturnUri();
+	    $du = new SmartestDataUtility;
+	    $tags = $du->getTagsAsArrays();
+	    $this->send($tags, 'tags');
+	    
+	}
     
-	/* function startPage(){
-		
+	public function addTag(){
+	    
+	    if(is_numeric($this->getRequestParameter('item_id'))){
+	        $item = new SmartestItem;
+	        if($item->find($this->getRequestParameter('item_id'))){
+	            $this->send($item, 'item');
+	            if($this->getRequestParameter('page_webid')){
+	                $this->send($this->getRequestParameter('page_webid'), 'page_webid');
+	            }
+	        }
+	    }
+	    
+	    if(is_numeric($this->getRequestParameter('page_id'))){
+	        $page = new SmartestPage;
+	        if($page->find($this->getRequestParameter('page_id'))){
+	            $this->send($page, 'page');
+	        }
+	    }
+	    
+	    if(is_numeric($this->getRequestParameter('asset_id'))){
+	        $asset = new SmartestAsset;
+	        if($asset->find($this->getRequestParameter('asset_id'))){
+	            $this->send($asset, 'asset');
+	        }
+	    }
+	    
 	}
 	
-	function checkForUpdates(){
+	public function insertTag(){
+	    
+	    $proposed_tags = SmartestStringHelper::fromSeparatedStringList($this->getRequestParameter('tag_label')); // Separates by commas or semicolons
+	    
+	    $num_new_tags = 0;
+	    $tag_item = false;
+	    
+	    if($this->getRequestParameter('tag_item') && is_numeric($this->getRequestParameter('item_id'))){
+	        $item = new SmartestItem;
+	        if($item->find($this->getRequestParameter('item_id'))){
+	            $tag_item = true;
+	        }
+	    }
+	    
+	    if($this->getRequestParameter('tag_page') && is_numeric($this->getRequestParameter('page_id'))){
+	        $page = new SmartestPage;
+	        if($page->find($this->getRequestParameter('page_id'))){
+	            $tag_page = true;
+	        }
+	    }
+	    
+	    if($this->getRequestParameter('tag_asset') && is_numeric($this->getRequestParameter('asset_id'))){
+	        $asset = new SmartestAsset;
+	        if($asset->find($this->getRequestParameter('asset_id'))){
+	            $tag_asset = true;
+	        }
+	    }
+	    
+	    foreach($proposed_tags as $tag_label){
+	        
+	        $tag_name = SmartestStringHelper::toSlug($tag_label, true);
+	        
+	        if(strlen($tag_label) && strlen($tag_name)){
+	        
+        	    $tag = new SmartestTag;
+        	    $existing_tags = array();
+	    
+        	    if($tag->hydrateBy('name', $tag_name)){
+        	        // $this->addUserMessageToNextRequest("A tag with that name already exists.", SmartestUserMessage::WARNING);
+        	        $existing_tags[] = "'".$tag_label."'";
+        	    }else{
+        	        $tag->setName($tag_name);
+        	        $tag->setLabel(SmartestStringHelper::toTitleCase($tag_label)); // Capitalises first letter of words for neatness
+        	        $tag->save();
+        	        
+        	        if($tag_item){
+        	            $item->tag($tag->getId());
+        	        }
+        	        if($tag_page){
+        	            $page->tag($tag->getId());
+        	        }
+        	        if($tag_asset){
+        	            $asset->tag($tag->getId());
+        	        }
+        	        $num_new_tags++;
+        	    }
+    	    
+	        }
+	    
+        }
+        
+        $message = $num_new_tags.' tag successfully added.';
+        
+        if(count($existing_tags)){
+            $message .= ' Tags '.SmartestStringHelper::toCommaSeparatedList($existing_tags).' already existed.';
+            $type = SmartestUserMessage::INFO;
+        }else{
+            $type = SmartestUserMessage::SUCCESS;
+        }
+        
+        $this->addUserMessageToNextRequest($message, $type);
+        
+        if($tag_item){
+            $url = '/datamanager/itemTags?item_id='.$item->getId();
+            if($this->getRequestParameter('page_webid')){
+                $url .= '&page_id='.$this->getRequestParameter('page_webid');
+            }
+            $this->redirect($url);
+        }
+        
+        if($tag_page){
+            // $page->tag($tag->getId());
+            $this->redirect('/websitemanager/pageTags?page_id='.$page->getWebId());
+        }
+        
+        if($tag_asset){
+            // $asset->tag($tag->getId());
+            $this->redirect('/assets/assetTags?asset_id='.$asset->getId());
+        }
+        
+        $this->formForward();
+	    
+	}
+	
+	public function getTaggedObjects(){
+	    
+	    $tag_identifier = SmartestStringHelper::toSlug($this->getRequestParameter('tag'));
+	    $tag = new SmartestTag;
+	    
+	    if($tag->findBy('name', $tag_identifier)){
+	        $this->send($tag, 'tag');
+	        // $objects = $tag->getObjectsOnSite($this->getSite()->getId(), true);
+	        $this->send(new SmartestArray($tag->getSimpleItems($this->getSite()->getId(), true)), 'items');
+	        $this->send(new SmartestArray($tag->getPages($this->getSite()->getId())), 'pages');
+	        $this->send(new SmartestArray($tag->getAssets($this->getSite()->getId())), 'assets');
+	    }else{
+	        $objects = array();
+	        $this->addUserMessage("This tag does not exist.", SmartestUserMessage::WARNING);
+	    }
+	    
+	}
+	
+	/* function checkForUpdates(){
 		
 		// latest
 		$contents = file_get_contents("http://update.visudo.net/smartest");

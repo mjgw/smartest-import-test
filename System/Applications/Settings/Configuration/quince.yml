@@ -3,8 +3,16 @@ module:
   shortname: settings
   identifier: com.smartest.Settings
   longname: Settings
-  default_action: editSite
+  default_action: startPage
   aliases:
-    - {url: /smartest/settings, action: editSite}
+    - {url: /smartest/settings, action: startPage}
+    - {url: /smartest/sitesettings, action: editSite}
+  routes:
+    tags:
+      action: listTags
+      url: /smartest/tags
+    tagged_objects:
+      action: getTaggedObjects
+      url: /smartest/tagged/:tag
   meta:
     system: true

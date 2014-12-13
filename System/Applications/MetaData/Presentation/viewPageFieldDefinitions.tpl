@@ -1,5 +1,5 @@
 <div id="work-area">
-  <h3>Definitions of page field: {$field.label} ({$field.name})</h3>
+  <h3>Definitions of page field &lsquo;<span class="light">{$field.label}</span>&rsquo;</h3>
   {if count($definitions)}
   <ul class="basic-list">
     {foreach from=$definitions item="def"}

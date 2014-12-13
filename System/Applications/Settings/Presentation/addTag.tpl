@@ -1,5 +1,5 @@
 <div id="work-area">
-<h3>Add Tag</h3>
+<h3>Add a tag</h3>
 
 <div class="instruction">Enter one or more tags. Separate multiple tags with commas.</div>
 

@@ -1,6 +1,6 @@
 <div id="work-area">
 
-<h3 id="siteName">Edit Site Parameters</h3>
+<h3 id="siteName">Edit site settings</h3>
 
 {* <div style="height:100px;border-radius:10px;-moz-border-radius:10px;background-color:#222;overflow:hidden">
   {foreach from=$site_images item="asset"}

@@ -29,6 +29,11 @@ class Login extends SmartestSystemApplication{
 		if($this->getUser() && $this->getUser()->isAuthenticated() && $this->_auth->getSystemUserIsLoggedIn()){
 		    $this->redirect('/smartest');
 		}
+        
+        $colours = array('blue', 'magenta', 'orange', 'red');
+        $colour_index = mt_rand (0, 3);
+        $this->send($colour_index, 'colour_index');
+        $this->send($colours[$colour_index], 'start_colour');
 		
 		/*if(isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) && $this->requestParameterIsSet('from')){
 		    

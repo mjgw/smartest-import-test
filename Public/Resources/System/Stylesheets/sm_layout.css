@@ -567,6 +567,12 @@ ul.apps li{
     min-height:170px;
 }
 
+ul.apps.small li{
+    width:150px;
+    min-height:125px!important;
+    margin-bottom:15px;
+}
+
 ul.apps li a.icon{
     margin-top:5px!important;
     width:120px;
@@ -578,6 +584,11 @@ ul.apps li a.icon{
     position:relative;
 }
 
+ul.apps.small li a.icon{
+    width:80px;
+    height:80px;
+}
+
 ul.apps li a.icon:hover{
     margin-top:2px!important;
     width:126px;
@@ -585,10 +596,23 @@ ul.apps li a.icon:hover{
     margin-bottom:10px;
 }
 
+ul.apps.small li a.icon:hover{
+    margin-top:2px!important;
+    width:86px;
+    height:86px;
+}
+
 ul.apps li a.icon i{
     display:inline-block;
     margin-top:29px;
     font-size:4.5em;
+    color:#fff;
+}
+
+ul.apps.small li a.icon i{
+    display:inline-block;
+    margin-top:17px;
+    font-size:3.5em;
     color:#fff;
 }
 
@@ -600,10 +624,21 @@ ul.apps li a.icon:hover i{
     margin-top:32px;
 }
 
+ul.apps.small li a.icon:hover i{
+    margin-top:20px;
+}
+
 ul.apps li a.label{
     position:absolute;
     left:0px;
     top:140px;
+    width:100%;
+}
+
+ul.apps.small li a.label{
+    position:absolute;
+    left:0px;
+    top:100px;
     width:100%;
 }
 
@@ -654,6 +689,7 @@ ul.basic-list{
     margin:15px;
     margin-top:5px;
     padding-top:0px;
+    margin-left:40px!important;
 }
 
 ul.basic-list li{

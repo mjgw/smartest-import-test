@@ -1,26 +1,11 @@
-<div id="work-area">
+<div id="work-area-full">
 
-<h3>Settings</h3>
+  <h3>Settings</h3>
 
-{*<table border="0" cellspacing="0" cellpadding="0" style="width:850px">
-<tr>
-<td>
-{if $release != false}
-<div class="notify-failure">
-New version of Smartest is available. Upgrade? 
-</div>
-{elseif $release == "downgrade"}
-<div class="notify-failure">
-Cannot downgrade
-</div>
-{/if}
-</td>
-</tr>
-</table>*}
-
-<ul class="basic-list">
-  <li><a href="{$domain}{$section}/systemSettings">System Settings</a></li>
-  <li><a href="{$domain}smartest/users">Users &amp; Permissions</a></li>
-</ul>
+  <ul class="apps small">
+    <li><a class="icon" href="{$domain}smartest/sitesettings"><i class="fa fa-cog"></i></a><a class="label" href="{$domain}smartest/sitesettings">Edit site settings</a></li>
+    <li><a class="icon" href="{$domain}smartest/dropdowns"><i class="fa fa-list-alt"></i></a><a class="label" href="{$domain}smartest/dropdowns">Create and edit dropdown menus</a></li>
+    <li><a class="icon" href="{$domain}smartest/tags"><i class="flaticon solid tag-1"></i></a><a class="label" href="{$domain}smartest/tags">Create and edit tags for your data</a></li>
+  </ul>
 
 </div>
