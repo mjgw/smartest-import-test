@@ -59,6 +59,13 @@ class Settings extends SmartestSystemApplication{
                 $ga_id = $this->getGlobalPreference('google_analytics_id');
                 $this->send($ga_id, 'site_ga_id');
                 
+                $default_suffix = $this->getGlobalPreference('default_url_suffix', 'html');
+                if($default_suffix{0} == '.'){
+                    $default_suffix = substr($default_suffix, 1);
+                }
+                $this->send($default_suffix, 'site_pageurl_default_suffix');
+                $this->send(!in_array($default_suffix, array('html', 'php', 'shtml', '_NONE')), 'site_pageurl_default_suffix_custom');
+                
                 $this->send(!(bool) $this->getSite()->getIsEnabled(), 'site_disabled');
                 
                 // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
@@ -107,30 +114,40 @@ class Settings extends SmartestSystemApplication{
     	        $site->setInternalLabel($this->getRequestParameter('site_internal_label'));
     	        $site->setTitleFormat($this->getRequestParameter('site_title_format'));
     	        $site->setDomain(SmartestStringHelper::toValidDomain(preg_replace('/^https?:\/\//i', '', $this->getRequestParameter('site_domain'))));
-    	        // $site->setTagPageId($this->getRequestParameter('site_tag_page'));
-    	        // $site->setSearchPageId($this->getRequestParameter('site_search_page'));
-    	        // $site->setErrorPageId($this->getRequestParameter('site_error_page'));
     	        $site->setAdminEmail($this->getRequestParameter('site_admin_email'));
+                $site->setLanguageCode($this->getRequestParameter('site_language'));
     	        $this->addUserMessageToNextRequest('Your site settings have been updated.', SmartestUserMessage::SUCCESS);
     	        $site->save();
+                
+                if($this->requestParameterIsSet('site_responsive_mode')){
+                    $this->setGlobalPreference('site_responsive_distinguish_mobile', ($this->requestParameterIsSet('site_responsive_distinguish_mobile') ? 1 : 0));
+                    $this->setGlobalPreference('site_responsive_distinguish_tablet', ($this->requestParameterIsSet('site_responsive_distinguish_tablet') ? 1 : 0));
+                    $this->setGlobalPreference('site_responsive_distinguish_oldpcs', ($this->requestParameterIsSet('site_responsive_distinguish_oldpcs') ? 1 : 0));
+                }
+                
+                $this->setGlobalPreference('google_analytics_id', $this->getRequestParameter('site_ga_id'));
+                $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
+                $this->setGlobalPreference('enable_site_responsive_mode', ($this->requestParameterIsSet('site_responsive_mode') ? 1 : 0));
+    	        
+                $suff = $this->getRequestParameter('site_default_url_suffix');
+                
+                if($suff == '_CUSTOM'){
+                    $custom_suffix = $this->getRequestParameter('site_default_url_suffix_custom');
+                    if($custom_suffix{0} == '.'){
+                        $custom_suffix = substr($custom_suffix, 1);
+                    }
+                    $this->setGlobalPreference('default_url_suffix', $custom_suffix);
+                }else{
+                    $this->setGlobalPreference('default_url_suffix', $suff);
+                }
 	        
             }else{
                 
                 $this->addUserMessageToNextRequest('You don\'t have permission to edit site settings', SmartestUserMessage::ACCESS_DENIED);
                 
             }
-	        
-	        $site->setLanguageCode($this->getRequestParameter('site_language'));
             
-            $this->setGlobalPreference('google_analytics_id', $this->getRequestParameter('site_ga_id'));
-            $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
-            $this->setGlobalPreference('enable_site_responsive_mode', ($this->requestParameterIsSet('site_responsive_mode') ? 1 : 0));
             
-            if($this->requestParameterIsSet('site_responsive_mode')){
-                $this->setGlobalPreference('site_responsive_distinguish_mobile', ($this->requestParameterIsSet('site_responsive_distinguish_mobile') ? 1 : 0));
-                $this->setGlobalPreference('site_responsive_distinguish_tablet', ($this->requestParameterIsSet('site_responsive_distinguish_tablet') ? 1 : 0));
-                $this->setGlobalPreference('site_responsive_distinguish_oldpcs', ($this->requestParameterIsSet('site_responsive_distinguish_oldpcs') ? 1 : 0));
-            }
 	        
 	        if($site->getIsEnabled() == '1' && SmartestStringHelper::toRealBool($this->getRequestParameter('site_is_disabled'))){
 	            if($this->getUser()->hasToken('disable_site')){

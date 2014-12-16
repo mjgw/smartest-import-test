@@ -2456,8 +2456,17 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		
 		krsort($bits);
 		$result = array_values($bits);
+        
+        $s = $this->getGlobalPreference('default_url_suffix', 'html');
+        
+        if(strlen($s) && $s != '_NONE'){
+            $suffix = $s;
+            $dotsuffix = '.'.$suffix;
+        }else{
+            $dotsuffix = '';
+        }
 	    
-	    return implode('/', $bits).'.html';
+	    return implode('/', $bits).$dotsuffix;
 	    
 	}
 	

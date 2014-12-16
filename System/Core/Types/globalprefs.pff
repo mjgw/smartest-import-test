@@ -22,3 +22,4 @@ enable_site_responsive_mode:1:0:Serve different resources to different platforms
 site_responsive_distinguish_mobile:1:0:Distinguish small mobile devices (phones)
 site_responsive_distinguish_tablet:1:0:Distinguish larger mobile devices (tablets)
 site_responsive_distinguish_oldpcs:1:0:Distinguish desktops with older browsers
+default_url_suffix:1:0:The suffix appended when new page URLs are suggested

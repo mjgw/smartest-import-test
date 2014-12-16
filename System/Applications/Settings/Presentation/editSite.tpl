@@ -50,6 +50,30 @@
   </select><br />
 </div>
 
+    <div class="edit-form-row">
+      <div class="form-section-label">Default URL suffix for new pages</div>
+      <select name="site_default_url_suffix" id="default-page-suffix-changer">
+        <option{if $site_pageurl_default_suffix == "html"} selected="selected"{/if} value="html">.html</option>
+        <option{if $site_pageurl_default_suffix == "php"} selected="selected"{/if} value="php">.php</option>
+        <option{if $site_pageurl_default_suffix == "shtml"} selected="selected"{/if} value="shtml">.shtml</option>
+        <option{if $site_pageurl_default_suffix == "_NONE"} selected="selected"{/if} value="_NONE">No suffix</option>
+        <option{if $site_pageurl_default_suffix_custom} selected="selected"{/if} value="_CUSTOM">Custom (advanced)</option>
+      </select>
+      <input type="text" name="site_default_url_suffix_custom" value="{if $site_pageurl_default_suffix_custom}{$site_pageurl_default_suffix}{/if}" id="default-page-suffix-custom" style="display:{if $site_pageurl_default_suffix_custom}inline{else}none{/if}" />
+      <div class="form-hint">Does not affect pages already created</div>
+      <script type="text/javascript">
+      {literal}
+      $('default-page-suffix-changer').observe('change', function(){
+          if($('default-page-suffix-changer').value == '_CUSTOM'){
+              $('default-page-suffix-custom').show();
+          }else{
+              $('default-page-suffix-custom').hide();
+          }
+      });
+      {/literal}
+      </script>
+    </div>
+
 <div class="edit-form-row">
   <div class="form-section-label"></div>
   <input type="file" name="site_logo" />

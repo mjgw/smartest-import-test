@@ -827,16 +827,25 @@ class SmartestDataObject implements ArrayAccess{
         }
     }
     
-	protected function getGlobalPreference($preference_name){
+	protected function getGlobalPreference($preference_name, $default=null){
         
         $name = SmartestStringHelper::toVarName($preference_name);
         
         if($this->_cached_global_preferences->hasParameter($name)){
-            return $this->_cached_global_preferences->getParameter($name);
+            $v = $this->_cached_global_preferences->getParameter($name);
+            if(is_null($v) && $default){
+                return $default;
+            }else{
+                return $v;
+            }
         }else{
             $value = $this->_preferences_helper->getGlobalPreference($name, $this->getUserIdOrZero(), $this->getSiteIdOrZero());
-            $this->_cached_global_preferences->setParameter($name, $value);
-            return $value;
+            if(is_null($value) && $default){
+                return $default;
+            }else{
+                $this->_cached_global_preferences->setParameter($name, $value);
+                return $value;
+            }
         }
         
     }
