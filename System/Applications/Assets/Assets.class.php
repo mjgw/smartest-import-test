@@ -2672,6 +2672,20 @@ class Assets extends SmartestSystemApplication{
 	    
 	} */
 	
+    public function assetUsage(){
+        
+        $asset = new SmartestAsset;
+        
+        if($asset->find($this->getRequestParameter('asset_id'))){
+            
+            $this->send($asset, 'asset');
+            $usages = $asset->getUsage($this->getSite()->getId());
+            $this->send($usages, 'usages');
+            
+        }
+        
+    }
+    
 	public function useAsset(){
 	    
 	    

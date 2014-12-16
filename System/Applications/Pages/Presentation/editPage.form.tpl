@@ -199,11 +199,11 @@
   </div>
   
   <div class="edit-form-row">
-    <div class="form-section-label">Page Icon</div>
-    <select name="page_icon_image">
+    <div class="form-section-label">Page Thumbnail Image</div>
+    <select name="page_icon_image_id">
       <option value="">None</option>
       {foreach from=$available_icons item="icon"}
-      <option value="{$icon}"{if $page.icon_image == $icon} selected="selected"{/if}>{$icon}</option>
+      <option value="{$icon.id}"{if $page.thumbnail_image.id == $icon.id} selected="selected"{/if}>{$icon.label} ({$icon.url})</option>
       {/foreach}
     </select>
     <div class="form-hint">This image can be used when referring to a page from another page.</div>

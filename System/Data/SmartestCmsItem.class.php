@@ -261,6 +261,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            case 'num_comments':
 	            return $this->getItem()->getNumApprovedPublicComments();
 	            
+                case 'action_url':
+                return $this->getItem()->getActionUrl();
+                
 	            case '_php_class':
 	            return get_class($this);
 	            

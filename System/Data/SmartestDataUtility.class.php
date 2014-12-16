@@ -1075,5 +1075,77 @@ class SmartestDataUtility{
 	    }
 	    
 	}
+    
+    public function getPlaceholders($site_id=null){
+        
+	    $sql = "SELECT * FROM AssetClasses WHERE assetclass_type NOT IN ('SM_ASSETCLASS_CONTAINER', 'SM_ASSETCLASS_ITEM_SPACE')";
+        
+        if(is_numeric($site_id)){
+            $sql .= " AND (assetclass_site_id='".$site_id."' OR assetclass_shared='1')";
+        }
+        
+        $sql .= " ORDER BY assetclass_name ASC";
+        
+	    $result = $this->database->queryToArray($sql);
+	    
+	    $placeholders = array();
+	    
+	    foreach($result as $r){
+	        $p = new SmartestPlaceholder;
+	        $p->hydrate($r);
+	        $placeholders[] = $p;
+	    }
+	    
+	    return $placeholders;
+        
+    }
+    
+    public function getPlaceholderIds($site_id=null){
+        
+        $ids = array();
+        $placeholders = $this->getPlaceholders();
+        
+        foreach($placeholders as $p){
+            $ids[] = $p->getId();
+        }
+        
+        return $ids;
+        
+    }
+    
+    public function getAssetItemProperties($site_id=null){
+        
+        if(is_numeric($site_id)){
+            $sql = "SELECT ItemProperties.* FROM `ItemProperties`, `ItemClasses` WHERE itemproperty_datatype='SM_DATATYPE_ASSET' AND ItemProperties.itemproperty_itemclass_id=ItemClasses.itemclass_id AND (ItemClasses.itemclass_site_id='".$site_id."' OR ItemClasses.itemclass_shared=1) ORDER BY itemproperty_varname ASC";
+        }else{
+            $sql = "SELECT * FROM `ItemProperties` WHERE itemproperty_datatype='SM_DATATYPE_ASSET' ORDER BY itemproperty_varname ASC";
+        }
+        
+        $result = $this->database->queryToArray($sql);
+        
+        $properties = array();
+        
+        foreach($result as $r){
+            $p = new SmartestItemProperty;
+            $p->hydrate($r);
+            $properties[] = $p;
+        }
+        
+        return $properties;
+        
+    }
+    
+    public function getAssetItemPropertyIds($site_id=null){
+        
+        $ids = array();
+        $properties = $this->getAssetItemProperties();
+        
+        foreach($properties as $p){
+            $ids[] = $p->getId();
+        }
+        
+        return $ids;
+        
+    }
 	
 }

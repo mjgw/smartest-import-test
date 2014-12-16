@@ -706,6 +706,76 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    
 	    return $filenames;
 	}
+    
+    public function getAvailableThumbnailImages(){
+        
+        $alh = new SmartestAssetsLibraryHelper;
+        return $alh->getAssetsByTypeCode(array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE'), $this->getSite()->getId(), 1);
+        
+    }
+    
+    public function getIconImage(){
+        
+        if($this->_thumbnail_image_asset){
+            // Stay consistent with old API and return a filename
+            return $this->_thumbnail_image_asset->getUrl();
+        }else{
+            
+            $asset = new SmartestAsset;
+        
+            if($this->getIconImageId()){
+                // Stay consistent with old API and return a filename
+                return $this->getThumbnailImage()->getUrl();
+            }elseif(strlen(parent::getIconImage())){
+                $url = parent::getIconImage();
+                if($asset->findBy('url', $url)){
+                    $this->setIconImageId($asset->getId());
+                    parent::setIconImage('');
+                    // Update the storage so that an asset ID is saved
+                    $this->save();
+                    // Stay consistent with old API and return a filename
+                    return $asset->getUrl();
+                }else{
+                    // The filename that had been saved here under the old system does not exist in the database anymore
+                }
+            }
+        }
+    }
+    
+    public function getThumbnailImage(){
+        
+        if($this->_thumbnail_image_asset){
+            return $this->_thumbnail_image_asset;
+        }else{
+            if($this->getIconImageId()){
+                $asset = new SmartestAsset;
+                if($asset->find($this->getIconImageId())){
+                    $this->_thumbnail_image_asset = $asset;
+                    return $this->_thumbnail_image_asset;
+                }else{
+                    // The file ID that had been saved does not exist anymore
+                    return null;
+                }
+            }elseif(strlen(parent::getIconImage())){
+                $asset = new SmartestAsset;
+                $url = parent::getIconImage();
+                if($asset->findBy('url', $url)){
+                    $this->setIconImageId($asset->getId());
+                    parent::setIconImage('');
+                    // Update the storage so that an asset ID is saved
+                    $this->save();
+                    $this->_thumbnail_image_asset = $asset;
+                    return $this->_thumbnail_image_asset;
+                }else{
+                    return null;
+                }
+            }else{
+                return null;
+            }
+            
+        }
+        
+    }
 	
 	public function getSlug(){
 	    return $this->getName();
@@ -1547,6 +1617,12 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        
 	        case "cache_file":
 	        return $this->getCacheFileName();
+            
+            case "icon_image":
+            return $this->getIconImage();
+            
+            case "thumbnail_image":
+            return $this->getThumbnailImage();
 	        
 	        case "small_icon":
             return $this->getSmallIcon();

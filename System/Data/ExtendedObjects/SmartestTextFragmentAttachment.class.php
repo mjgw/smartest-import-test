@@ -229,6 +229,10 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
         return $this->_asset;
     }
     
+    public function setAsset(SmartestAsset $asset){
+        return $this->_asset = $asset;
+    }
+    
     public function getThumbnailImage(){
         if($this->_asset->isImage()){
             $percentage = $this->getThumbnailRelativeSize() > 1 ? $this->getThumbnailRelativeSize() : 10;

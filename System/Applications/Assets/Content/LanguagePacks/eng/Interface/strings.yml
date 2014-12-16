@@ -40,5 +40,6 @@ strings:
     file_attachments: Attachments
     file_preview: Preview
     file_tags: Tags
+    file_usage: Usage
   warnings:
     storage_locations_unwriteable: "For smooth operation of the media library, the following locations need to be made writable:"

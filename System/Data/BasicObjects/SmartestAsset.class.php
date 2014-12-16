@@ -1419,5 +1419,197 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    return true;
 	    
 	}
+    
+    public function getPlaceholderUsages($site_id=null){
+        
+        $du = new SmartestDataUtility;
+        $placeholder_ids = $du->getPlaceholderIds($site_id);
+        $placeholder_sql = "SELECT AssetIdentifiers.*, AssetClasses.*, Pages.* FROM AssetIdentifiers, AssetClasses, Pages WHERE (assetidentifier_assetclass_id IN ('".implode("','", $placeholder_ids)."') AND (assetidentifier_draft_asset_id='".$this->getId()."' OR assetidentifier_live_asset_id='".$this->getId()."')) AND assetidentifier_assetclass_id=AssetClasses.assetclass_id AND assetidentifier_page_id=Pages.page_id";
+        
+        if(is_numeric($site_id)){
+            $placeholder_sql .= " AND page_site_id='".$site_id."'";
+        }
+        
+        $placeholder_result = $this->database->queryToArray($placeholder_sql);
+        
+        if(count($placeholder_result)){
+            
+            $usages = array();
+            
+            foreach($placeholder_result as $p){
+                
+                $def = new SmartestPlaceholderDefinition;
+                $def->hydrateFromGiantArray($p);
+                
+                $u = new SmartestAssetUsageInstance;
+                $u->setType('SM_ASSETUSAGETYPE_PLACEHOLDER');
+                $u->setAssetId($this->getId());
+                $u->setPlaceholder($def->getPlaceholder());
+                $u->setPage($def->getPage());
+                $u->setDefinition($def);
+                $usages[$def->getPlaceholder()->getId().$def->getPage()->getId().'ph'] = $u;
+                
+            }
+            
+            return $usages;
+            
+        }else{
+            return array();
+        }
+        
+    }
+    
+    public function getItemPropertyUsages($site_id=null){
+        
+        $du = new SmartestDataUtility;
+        $file_property_ids = $du->getAssetItemPropertyIds($site_id);
+        $ipv_sql = "SELECT Items.*, ItemProperties.*, ItemPropertyValues.* FROM ItemPropertyValues, Items, ItemProperties WHERE (itempropertyvalue_property_id IN ('".implode("','", $file_property_ids)."') AND (itempropertyvalue_draft_content='".$this->getId()."' OR itempropertyvalue_content='".$this->getId()."')) AND ItemPropertyValues.itempropertyvalue_property_id=ItemProperties.itemproperty_id AND ItemPropertyValues.itempropertyvalue_item_id=Items.item_id AND Items.item_deleted !=1";
+        
+        if(is_numeric($site_id)){
+            $ipv_sql .= " AND item_site_id='".$site_id."'";
+        }
+        
+        $ipv_result = $this->database->queryToArray($ipv_sql);
+        
+        if(count($ipv_result)){
+            
+            $usages = array();
+            
+            foreach($ipv_result as $r){
+                
+                $property = new SmartestItemProperty;
+                $property->hydrate($r);
+                
+                $value = new SmartestItemPropertyValue;
+                $value->hydrate($r);
+                
+                $item = SmartestCmsItem::retrieveByPk($r['item_id']);
+                
+                $u = new SmartestAssetUsageInstance;
+                $u->setType('SM_ASSETUSAGETYPE_ITEMPROPERTY');
+                $u->setAssetId($this->getId());
+                $u->setItemProperty($property);
+                $u->setItem($item);
+                $u->setItemPropertyValue($value);
+                
+                $usages[$property->getId().$item->getId().'ipv'] = $u;
+                
+            }
+            
+            return $usages;
+            
+        }else{
+            return array();
+        }
+        
+    }
+    
+    public function getAttachmentsWhereUsed($site_id=null){
+        
+        if($this->isImage()){
+            
+            $q = new SmartestManyToManyQuery('SM_MTMLOOKUP_TEXTFRAGMENT_ATTACHMENTS');
+            $q->setTargetEntityByIndex(1);
+            $q->addQualifyingEntityByIndex(2, $this->getId());
+        
+            $attachments = $q->retrieve();
+            
+            $asset_ids = array();
+            
+            foreach($attachments as $key=>$att){
+                $asset_ids[] = $att->getTextFragment()->getAssetId();
+            }
+            
+            // This step eliminates the need for a call to the database for each asset where the file is used, and also ensures that usages on other sites are not shown.
+            if(count($asset_ids)){
+                
+                $sql = "SELECT * FROM Assets WHERE Assets.asset_deleted !=1 AND asset_id IN ('".implode("','", $asset_ids)."')";
+                
+                if(is_numeric($site_id)){
+                    $sql .= " AND (asset_site_id='".$site_id."' OR asset_shared=1)";
+                }
+                
+                $result = $this->database->queryToArray($sql);
+                
+                if(count($result)){
+                    
+                    $assets = array();
+                    
+                    foreach($result as $r){
+                        $a = new SmartestAsset;
+                        $a->hydrate($r);
+                        $assets[$a->getId()] = $a;
+                    }
+                    
+                    foreach($attachments as $k=>$att){
+                        if(array_key_exists($att->getTextFragment()->getAssetId(), $assets)){
+                            $attachments[$k]->setAttachmentName($k);
+                            $attachments[$k]->setAsset($assets[$att->getTextFragment()->getAssetId()]);
+                        }else{
+                            unset($attachments[$k]);
+                        }
+                    }
+                    
+                    return $attachments;
+                    
+                }else{
+                    return array();
+                }
+                
+            }else{
+                return array();
+            }
+            
+        }
+        
+    }
+    
+    public function getAttachmentUsages($site_id=null){
+        
+        $attachments_where_used = $this->getAttachmentsWhereUsed($site_id);
+        
+        $usages = array();
+        
+        foreach($attachments_where_used as $att){
+            
+            /* $property = new SmartestItemProperty;
+            $property->hydrate($r);
+            
+            $value = new SmartestItemPropertyValue;
+            $value->hydrate($r);
+            
+            $item = SmartestCmsItem::retrieveByPk($r['item_id']); */
+            
+            $u = new SmartestAssetUsageInstance;
+            $u->setType('SM_ASSETUSAGETYPE_ATTACHMENT');
+            $u->setAssetId($this->getId());
+            $u->setAttachment($att);
+            
+            $usages[$att->getId().'att'] = $u;
+            
+        }
+        
+        return $usages;
+        
+    }
+    
+    public function getUsage($site_id=null){
+        
+        $placeholders_usages = $this->getPlaceholderUsages($site_id);
+        
+        $ipv_usages = $this->getItemPropertyUsages($site_id);
+        
+        if($this->isImage()){
+            $attachment_usages = $this->getAttachmentUsages($site_id);
+        }else{
+            $attachment_usages = array();
+        }
+        
+        $all = array_merge($placeholders_usages, $ipv_usages, $attachment_usages);
+        ksort($all);
+        
+        return $all;
+        
+    }
 
 }

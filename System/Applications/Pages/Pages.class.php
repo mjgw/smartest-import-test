@@ -322,7 +322,7 @@ class Pages extends SmartestSystemApplication{
             		$editable = $page->isEditableByUserId($this->getUser()->getId());
             		$this->send($editable, 'page_is_editable');
 		            
-    		        $available_icons = $page->getAvailableIconImageFilenames();
+    		        $available_icons = $page->getAvailableThumbnailImages();
     		        
     		        $this->send($available_icons, 'available_icons');
 		        
@@ -1661,7 +1661,6 @@ class Pages extends SmartestSystemApplication{
                 $page->setIsSection(($this->getRequestParameter('page_is_section') && ($this->getRequestParameter('page_is_section') == 'true')) ? 1 : 0);
                 $page->setCacheAsHtml($this->getRequestParameter('page_cache_as_html'));
                 $page->setCacheInterval($this->getRequestParameter('page_cache_interval'));
-                $page->setIconImage($this->getRequestParameter('page_icon_image'));
             }
             
             $page->setLastModified(time());
@@ -1672,6 +1671,7 @@ class Pages extends SmartestSystemApplication{
                     $page->setKeywords(strip_tags($this->getRequestParameter('page_keywords')));
                     $page->setDescription(strip_tags($this->getRequestParameter('page_description')));
                     $page->setMetaDescription(strip_tags($this->getRequestParameter('page_meta_description')));
+                    $page->setIconImageId($this->getRequestParameter('page_icon_image_id'));
                 }else if($page->getId() == $this->getSite()->getErrorPageId()){
                     $page->setMetaDescription(strip_tags($this->getRequestParameter('page_meta_description')));
                 }
