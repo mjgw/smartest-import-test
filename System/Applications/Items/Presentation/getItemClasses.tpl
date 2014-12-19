@@ -7,7 +7,7 @@
 <h3>Items</h3>
 
 {if empty($models)}
-  <div class="special-box">No models yet. Click <a href="{$domain}{$section}/addItemClass?createmetapage=true">here</a> to create one. {help id="datamanager:models"}What are models?{/help}</div>
+  <div class="special-box">No models yet. {if $allow_create_models}Click <a href="{$domain}{$section}/addItemClass?createmetapage=true">here</a> to create one. {/if}{help id="datamanager:models"}What are models?{/help}</div>
 {else}
   
   {load_interface file="items_front_tabs.tpl"}
@@ -19,6 +19,9 @@
 </form>
 
 <ul class="options-grid" id="options_grid">
+  {if $allow_create_models}<li class="add">
+    <a href="{$domain}smartest/model/new" class="add"><i>+</i>Build a new model</a>
+  </li>{/if}
 {foreach from=$models key="key" item="itemClass"}
   <li ondblclick="window.location='{$domain}smartest/items/{$itemClass.varname}'">
     <a id="model_{$itemClass.id}" class="option" href="{dud_link}" onclick="modelList.setSelectedItem('{$itemClass.id}', 'model', {literal}{{/literal}updateFields: {literal}{{/literal}'model_name_field': '{$itemClass.name|summary:"29"|escape:quotes}', 'model_plural_name_field': '{$itemClass.plural_name|summary:"29"|escape:quotes}'{literal}}{/literal}{literal}}{/literal});">

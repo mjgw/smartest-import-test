@@ -131,10 +131,18 @@ class Login extends SmartestSystemApplication{
 	}
 	
 	public function doLogOut(){
-	    $this->clearCookie('SMARTEST_RET');
+	    
+        $this->clearCookie('SMARTEST_RET');
 	    $this->clearCookie('SMARTEST_LPID');
+        
+        if($this->getUser() instanceof SmartestSystemUser){
+            $this->getUser()->releaseItems();
+            $this->getUser()->releasePages();
+        }
+        
 		$this->_auth->logout();
 		$this->redirect("/smartest/login#logout");
+        
 	}
 	
 }

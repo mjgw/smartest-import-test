@@ -20,6 +20,9 @@
 </form>
 
 <ul class="options-grid" id="options_list">
+  <li class="add">
+    <a href="{$domain}smartest/users/add" class="add"><i>+</i>Add a user</a>
+  </li>
 {foreach from=$users key=key item=user}
   <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/editUser?user_id={$user.id}'">
     <a href="#" class="option" id="item_{$user.id}" onclick="setSelectedItem('{$user.id}'); return false;" >

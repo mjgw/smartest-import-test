@@ -22,6 +22,9 @@
   </form>
 
   <ul class="{if count($groups) > 10}options-list{else}options-grid{/if}" id="{if count($groups) > 10}options_list{else}options_grid{/if}">
+    <li class="add">
+      <a href="{$domain}{$section}/newAssetGroup" class="add"><i>+</i>{$_l10n_strings.sidebar_options.create_file_group}</a>
+    </li>
   {foreach from=$groups key="key" item="group"}
     <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/browseAssetGroup?group_id={$group.id}'">
   			<a class="option" id="item_{$group.id}" onclick="setSelectedItem('{$group.id}', 'fff');" >
@@ -35,7 +38,7 @@
 <div id="actions-area">
   <ul class="actions-list" id="item-specific-actions" style="display:none">
     <li><b>{$_l10n_action_strings.sidebar_options.selected_group_heading}</b></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('addAsset');}{/literal}"><img src="{$domain}Resources/Icons/add.png" border="0" alt="" /> Add a new file to this file</a></li>
+    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('addAsset');}{/literal}"><img src="{$domain}Resources/Icons/add.png" border="0" alt="" /> Add a new file to this group</a></li>
     <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editAssetGroup');}{/literal}"><img border="0" src="{$domain}Resources/Icons/information.png"> {$_l10n_action_strings.sidebar_options.selected_group_info}</a></li>
     <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editAssetGroupContents');}{/literal}"><img border="0" src="{$domain}Resources/Icons/folder_edit.png"> {$_l10n_action_strings.sidebar_options.selected_group_edit_contents}</a></li>
     <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('browseAssetGroup');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_magnify.png"> {$_l10n_action_strings.sidebar_options.selected_group_contents}</a></li>

@@ -36,11 +36,14 @@
 </div>
 
 <ul class="options-{$list_style}" style="margin-top:0px" id="options_grid">
+  <li class="add">
+    <a href="{$domain}{$section}/addTemplate?type={$type.id}" class="add"><i>+</i>Add a new {$type.label|lower}</a>
+  </li>
 {foreach from=$templates item="template"}
-<li>
-  <a href="#" class="option" id="{if $template.status == 'imported'}imported-template{else}unimported-template{/if}_{if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}" onclick="return templates.setSelectedItem('{if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}', '{if $template.status == 'imported'}imported-template{else}unimported-template{/if}');" ondblclick="window.location='{$domain}{$section}/editTemplate?asset_type={$template.type}&amp;template={if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}'">
-    <i class="fa fa-file-code-o list"></i><img border="0" src="{$domain}Resources/System/Images/{if $template.status == 'imported'}template{else}mystery_page{/if}.png" class="grid" /><span class="label">{$template.url}</span></a>
-</li>
+  <li>
+    <a href="#" class="option" id="{if $template.status == 'imported'}imported-template{else}unimported-template{/if}_{if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}" onclick="return templates.setSelectedItem('{if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}', '{if $template.status == 'imported'}imported-template{else}unimported-template{/if}');" ondblclick="window.location='{$domain}{$section}/editTemplate?asset_type={$template.type}&amp;template={if $template.status == 'imported'}{$template.id}{else}{$template.url}{/if}'">
+      <i class="fa fa-file-code-o list"></i><img border="0" src="{$domain}Resources/System/Images/{if $template.status == 'imported'}template{else}mystery_page{/if}.png" class="grid" /><span class="label">{$template.url}</span></a>
+  </li>
 {/foreach}
 </ul>
 

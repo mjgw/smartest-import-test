@@ -511,15 +511,19 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
 	    return $this->database->howMany($sql);
 	}
 	
-	public function releaseItems($model_id, $site_id=''){
+	public function releaseItems($model_id='', $site_id=''){
 	    
-	    $sql = "UPDATE Items SET item_is_held=0, item_held_by=0 WHERE item_itemclass_id='".$model_id."' AND item_is_held=1 AND item_held_by='".$this->getId()."'";
+	    $sql = "UPDATE Items SET item_is_held=0, item_held_by=0 WHERE item_is_held=1 AND item_held_by='".$this->getId()."'";
 	    
-	    if(is_numeric($site_id)){
+	    if(is_numeric($model_id)){
+	        $sql .= " AND item_itemclass_id='".$model_id."'";
+	    }
+        
+        if(is_numeric($site_id)){
 	        $sql .= " AND item_site_id = '".$site_id."'";
 	    }
-	    
-	    $this->database->rawQuery($sql);
+        
+        $this->database->rawQuery($sql);
 	    
 	    $sql = "UPDATE TodoItems SET todoitem_is_complete='1', todoitem_time_completed='".time()."' WHERE todoitem_type='SM_TODOITEMTYPE_RELEASE_ITEM' AND todoitem_receiving_user_id='".$this->_properties['id']."'";
 	    

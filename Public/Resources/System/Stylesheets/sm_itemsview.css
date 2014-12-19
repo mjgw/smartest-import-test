@@ -131,6 +131,44 @@ ul.options-grid li a.selected-option:hover{
 	padding:0px;
 }
 
+ul.options-grid li.add a{
+    color:#444;
+    width:100px!important;
+    height:100px!important;
+    box-sizing:border-box;
+    padding-top:18px;
+    display:block;
+}
+
+ul.options-grid li.add a:hover{
+    text-decoration:none;
+}
+
+ul.options-grid li.add a i{
+    color:#fff;
+    background-color:#bbb;
+    display:block;
+    width:46px;
+    height:46px;
+    box-sizing:border-box;
+    padding-top:0px;
+    margin-bottom:8px;
+    font-size:3.5em;
+    border-radius:23px;
+    -webkit-border-radius:23px;
+    -moz-border-radius:23px;
+	margin-left:auto;
+	margin-right:auto;
+    clear:both;
+    font-style:normal;
+    font-family:"source-sans";
+    -webkit-transition: all 0.2s;
+}
+
+ul.options-grid li.add a:hover i{
+    background-color:#68849E;
+}
+
 ul.options-grid li a img{
 	display:block;
 	margin-top:4px;
@@ -173,6 +211,7 @@ ul.options-grid li a div.user-avatar-holder{
     font-family:"source-sans";
     text-align:center;
     padding-top:10px;
+    background-color:#68849E;
 }
 
 /** New options grid for Images **/
@@ -447,6 +486,10 @@ ul.options-list li a.selected-option:hover{
 
 ul.options-list li a.selected-option i.fa, ul.options-list li a.selected-option i.flaticon{
 	color:#222;
+}
+
+ul.options-list li.add{
+    display:none;
 }
 
 ul.options-list li a img{

@@ -19,6 +19,9 @@
 {else}
 
   <ul class="{if count($groups) > 10}options-list{else}options-grid{/if}" id="options_grid">
+    <li class="add">
+      <a href="{$domain}smartest/pagegroup/new" class="add"><i>+</i>Add a new page group</a>
+    </li>
 {foreach from=$groups item="group"}
     <li ondblclick="window.location='{$domain}{$section}/editPageGroup?group_id={$group.id}'">
       <a href="#" class="option" id="group_{$group.id}" onclick="return groups.setSelectedItem('{$group.id}', 'group');" >
