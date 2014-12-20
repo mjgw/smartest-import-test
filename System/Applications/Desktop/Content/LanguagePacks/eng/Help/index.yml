@@ -7,3 +7,7 @@ help:
     title: Free &amp; open source software
     keywords: licensing, philosophy
     content: free_software.tpl
+  permissions:
+    title: Server permissions
+    keywords: [server, permissions, storage, configuration]
+    content: permissions.tpl

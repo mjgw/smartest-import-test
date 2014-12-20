@@ -1774,8 +1774,8 @@ class Pages extends SmartestSystemApplication{
         	                }else{
         	                    $this->send(false, 'show_metapage_warning');
         	                }
-        	                
-        	                $this->send((bool) count($metapages), 'show_metapages');
+                            
+                		    $this->send((bool) count($metapages), 'show_metapages');
         	                $this->send($metapages, 'metapages');
         	                $this->send($recent_items, 'recent_items');
         	                $this->send($model, 'model');
@@ -1791,9 +1791,11 @@ class Pages extends SmartestSystemApplication{
             		$field = ($version == "live") ? "page_live_template" : "page_draft_template";
 		            
 		            if($page->getType() == 'ITEMCLASS'){
-        		        $assetClasses = $this->manager->getPageTemplateAssetClasses($this->getRequestParameter('page_id'), $version, $item->getId());
+            		    $assetClasses = $this->manager->getPageTemplateAssetClasses($this->getRequestParameter('page_id'), $version, $item->getId());
+                        $assetClasseslist = $this->manager->getSerialisedAssetClassTree($assetClasses['tree']);
     		        }else{
     		            $assetClasses = $this->manager->getPageTemplateAssetClasses($this->getRequestParameter('page_id'), $version);
+                        $assetClasseslist = $this->manager->getSerialisedAssetClassTree($assetClasses['tree']);
     		        }
             		
             		$site_id = $this->getSite()->getId();
@@ -1820,13 +1822,18 @@ class Pages extends SmartestSystemApplication{
     		
             		$this->send($allow_release, 'allow_release');
 		
-            		$mode = 'advanced';
-    		
-            		$sub_template = "getPageAssets.advanced.tpl";
+            		$mode = 'basic';
+                    
+                    if($mode == 'basic'){
+                        $sub_template = "getPageAssets.basic.tpl";
+                    }else{
+                        $sub_template = "getPageAssets.advanced.tpl";
+                    }
             		
             		$this->send($page->isEditableByUserId($this->getUser()->getId()), 'page_is_editable');
-            		$this->send($assetClasses["tree"], "assets");
-            		$this->send($definedAssets, "definedAssets");
+            		$this->send($assetClasses["tree"], "elements_tree");
+                    $this->send($assetClasseslist, "elements_list");
+                    $this->send($definedAssets, "definedAssets");
             		$this->send($page, "page");
             		$this->send($template_object, "page_template");
             		$this->send($templates, "templates");

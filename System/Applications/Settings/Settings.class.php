@@ -213,7 +213,9 @@ class Settings extends SmartestSystemApplication{
 	        
 	        SmartestCache::clear('site_pages_tree_'.$site->getId(), true);
 	        
-		    $this->formForward();
+            $this->redirect('/smartest/sitesettings');
+            
+		    // $this->formForward();
 	    }
 	}
     
@@ -291,6 +293,18 @@ class Settings extends SmartestSystemApplication{
             }
         
         }
+        
+    }
+    
+    public function editCustomizationSettings(){
+        
+        
+        
+    }
+    
+    public function updateCustomizationSettings(){
+        
+        
         
     }
     

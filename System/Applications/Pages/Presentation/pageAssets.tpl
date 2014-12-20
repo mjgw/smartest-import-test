@@ -36,6 +36,77 @@ function viewLivePage(parameters){
     {load_interface file="choose_item.tpl"}
   {else}
     <h3>Elements used on page: {if $page.type == 'ITEMCLASS'}{$page.static_title} <span class="light">({$page.title})</span>{else}<span class="light">{$page.title}</span>{/if}</h3>
+    {if $version == "draft"}
+    <div class="instruction">Structure of elements as they are being rendered on the draft version of this page. {help id="websitemanager:page_elements_tree"}What is this?{/help}</div>
+    {else}
+    <div class="instruction">Structure of elements as they are being rendered on the live version of this page. {help id="websitemanager:page_elements_tree"}What is this?{/help}</div>
+    {/if}
+
+    <form id="pageViewForm" method="get" action="">
+      <input type="hidden" name="assetclass_id" id="item_id_input" value="" />
+      <input type="hidden" name="page_id" value="{$page.webid}" />
+      {if $item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+    </form>
+
+    <script type="text/javascript">
+    var elementTree = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'page-element');
+    </script>
+
+    {if $show_deleted_warning}
+      <div class="warning">Warning: This page is currently in the trash.</div>
+    {/if}
+
+    {if $show_metapage_warning}
+      <div class="warning">Warning: the meta-page you are editing is not the default meta-page for this item. Most automatically generated links will not link to this page. <a href="{$domain}{$section}/pageAssets?page_id={$default_metapage_webid}&amp;item_id={$item.id}"></a></div>
+    {/if}
+
+    <div class="special-box">
+      <form id="viewSelect" action="{$domain}{$section}/pageAssets" method="get" style="margin:0px">
+    
+        <input type="hidden" name="page_id" value="{$page.webid}" />
+        <input type="hidden" name="site_id" value="{$site_id}" />
+        <input type="hidden" name="version" value="{$version}" />
+        {if $page.type == 'ITEMCLASS' && $item.id}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+    
+        <div class="special-box-key">Viewing mode:</div>
+    
+        <select name="version" onchange="document.getElementById('viewSelect').submit();">
+          <option value="draft"{if $version == "draft"} selected="selected"{/if}>Draft</option>
+          <option value="live"{if $version == "live"} selected="selected"{/if}>Live</option>
+        </select>
+    
+        {*action_button text="Switch to live mode"}{$domain}websitemanager/pageAssets?page_id=jl02c1D042YTWF6w85TO9j808iW7wNjQ&amp;version=live{/action_button*}
+        {*action_button text="Switch to draft mode"}{$domain}websitemanager/pageAssets?page_id=jl02c1D042YTWF6w85TO9j808iW7wNjQ&amp;version=draft{/action_button*}
+
+      </form>
+
+      <form id="templateSelect" action="{$domain}{$section}/setPageTemplate" method="get" style="margin:0px">
+
+        <input type="hidden" name="page_id" value="{$page.webid}" />
+        <input type="hidden" name="site_id" value="{$site_id}" />
+        <input type="hidden" name="version" value="{$version}" />
+  	  
+    {if $version == "draft"}
+        <span>
+          <div class="special-box-key">Page Template:</div>
+          <select name="template_name" onchange="$('templateSelect').submit();">
+            <option value="">Not Selected</option>
+    {foreach from=$templates item="t"}
+            <option value="{$t.url}"{if $templateMenuField == $t.url} selected{/if}>{$t.url}</option>
+    {/foreach}
+          </select>
+          {if (($page_template.status == "imported" && $page_template.filename) || strlen($page_template)) && $version == "draft"}<a href="{$domain}templates/editTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={if $page_template.status == "imported"}{$page_template.id}{else}{$page_template.url}{/if}" class="button">Edit</a>{/if}
+        </span>
+    {else}
+        <div class="special-box-key">Page template: </div>{if strlen($templateMenuField)}<strong>{$templateMenuField}</strong>{else}<em style="color:#666">None yet specified</em>{/if}</span>
+    {/if}
+
+      </form>
+    </div>
+
+    {if $show_template_warning}
+      <div class="warning">Warning: the page template you are currently using is not yet in the templates repository. <a href="{$domain}templates/importSingleTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={$templateMenuField}" class="button">Click here to import it</a></div>
+    {/if}
     {load_interface file=$sub_template}
   {/if}
 

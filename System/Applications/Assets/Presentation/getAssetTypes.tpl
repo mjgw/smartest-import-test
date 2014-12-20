@@ -10,6 +10,7 @@
       <li><i class="fa fa-folder"></i> <code>{$l}</code></li>
 {/foreach}        
     </ul>
+    {help id="desktop:permissions"}Tell me more{/help}
 </div>
 {/if}
 

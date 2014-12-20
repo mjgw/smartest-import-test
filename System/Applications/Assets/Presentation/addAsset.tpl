@@ -245,7 +245,7 @@ function validateUploadSuffix(){
     {else}
   
   <div class="warning">
-    The directory <strong><code>{$path}</code></strong> is not writable by the web server, so <strong>{$new_asset_type_info.label}</strong> files cannot currently be created or uploaded via Smartest.
+    The directory <strong><code>{$path}</code></strong> is not writable by the web server, so <strong>{$new_asset_type_info.label}</strong> files cannot currently be created or uploaded via Smartest. {help id="desktop:permissions"}Tell me more{/help}
   </div>
   
   <div class="buttons-bar">

@@ -25,11 +25,12 @@ function turnOffAutoPlural(){
 {if $permissions_issue}
 <div class="warning">
   <p>The following directories need to be writeable before you can save models.</p>
-  <ul>
-{if !$site_om_dir_is_writable}<li><code>{$site_om_dir}</code></li>{/if}
-{if !$central_om_dir_is_writable}<li><code>{$central_om_dir}</code></li>{/if}
-{if !$cache_om_dir_is_writable}<li><code>{$cache_om_dir}</code></li>{/if}
+  <ul class="location-list">
+{if !$site_om_dir_is_writable}<li><i class="fa fa-folder"></i> <code>{$site_om_dir}</code></li>{/if}
+{if !$central_om_dir_is_writable}<li><i class="fa fa-folder"></i> <code>{$central_om_dir}</code></li>{/if}
+{if !$cache_om_dir_is_writable}<li><i class="fa fa-folder"></i> <code>{$cache_om_dir}</code></li>{/if}
   </ul>
+  {help id="desktop:permissions"}Tell me more{/help}
 </div>
 {/if}
 
@@ -53,10 +54,17 @@ function turnOffAutoPlural(){
   <input id="name-field-visible" type="checkbox" name="itemclass_name_field_visible" checked="checked" value="1" /><label for="name-field-visible">Give this model a built-in "name" field</label><span class="form-hint">Leave this as it is if you are unsure. You can rename this field later.</span>
 </div> *}
 
+{if $central_om_dir_is_writable}
 <div class="edit-form-row">
   <div class="form-section-label">Shared</div>
-  <input id="shared" type="checkbox" name="itemclass_shared" checked="checked" value="1" /><label for="shared">Make this model available to all sites</label> {help id="desktop:multisite"}What does this mean?{/help}
+  <input id="shared" type="checkbox" name="itemclass_shared" checked="checked" value="1"{if !$site_om_dir_is_writable} disabled="disabled"{/if} /><label for="shared">Make this model available to all sites</label> {help id="desktop:multisite"}What does this mean?{/help}
 </div>
+{elseif $site_om_dir_is_writable && !$central_om_dir_is_writable}
+<div class="edit-form-row">
+  <div class="form-section-label">Shared</div>
+  <input id="shared" type="checkbox" name="itemclass_shared" value="1" disabled="disabled" /><label for="shared">Make this model available to all sites</label> {help id="desktop:multisite"}What does this mean?{/help}
+</div>
+{/if}
 
 <div class="special-box">
   
