@@ -1822,7 +1822,7 @@ class Pages extends SmartestSystemApplication{
     		
             		$this->send($allow_release, 'allow_release');
 		
-            		$mode = 'basic';
+            		$mode = 'advanced';
                     
                     if($mode == 'basic'){
                         $sub_template = "getPageAssets.basic.tpl";
