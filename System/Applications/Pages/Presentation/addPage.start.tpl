@@ -1,10 +1,11 @@
-  <h3>Create a New Page</h3>
+  <h3>Add a new page</h3>
   
   <div class="instruction">Step 1: Choose which type of page you're going to make</div>
   <form action="{$domain}smartest/page/new" method="post">
     
     {if $parent_page}<input type="hidden" name="page_parent" value="{$parent_page.id}" />{/if}
     <input type="hidden" name="stage" value="2">
+    <input type="hidden" name="form_submitted" value="1" />
     
     <div class="edit-form-row">
       <div class="form-section-label">Title</div>

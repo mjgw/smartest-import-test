@@ -37,11 +37,11 @@
       {/if}
       <tr>
         <td style="background-color:#fff" valign="top">Layout Preset:</td>
-        <td style="background-color:#fff" valign="top">{if $newPage.preset}{$newPage.preset_label}{else}<i>NONE</i>{/if}</td>
+        <td style="background-color:#fff" valign="top">{if $newPage.preset}{$newPage.preset_label}{else}<em style="color:#999">NONE</em>{/if}</td>
       </tr>
       <tr>
         <td style="background-color:#fff" valign="top">Main Template:</td>
-        <td style="background-color:#fff" valign="top">{$newPage.draft_template}</td>
+        <td style="background-color:#fff" valign="top">{if strlen($newPage.draft_template)}{$newPage.draft_template}{else}<em style="color:#999">NONE</em>{/if}</td>
       </tr>
   	{if $newPage.type == 'NORMAL'}
       <tr>

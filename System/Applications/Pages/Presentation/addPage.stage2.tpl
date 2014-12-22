@@ -6,7 +6,6 @@
   
     <input type="hidden" name="page_parent" value="{$page_parent}" />
     <input type="hidden" name="stage" value="3">
-    <input type="hidden" name="page_type" value="NORMAL">
     
     <div id="edit-form-layout">
         
@@ -38,7 +37,7 @@
   	
     <div class="edit-form-row">
       <div class="form-section-label">Cache How Often?</div>
-      <select name="page_cache_interval" style="width:300px">
+      <select name="page_cache_interval">
         <option value="PERMANENT"{if $newPage.cache_interval == 'PERMANENT'} selected="selected"{/if}>Stay Cached Until Re-Published</option>
         <option value="MONTHLY"{if $newPage.cache_interval == 'MONTHLY'} selected="selected"{/if}>Every Month</option>
         <option value="DAILY"{if $newPage.cache_interval == 'DAILY'} selected="selected"{/if}>Every Day</option>
@@ -62,11 +61,16 @@
   	
   	  <div class="edit-form-row">
   	    <div class="form-section-label">Main Template</div>
+        {if count($templates)}
   	    <select name="page_draft_template" id="page_draft_template"{if $disable_template_dropdown} disabled="true"{/if}>
   	      {foreach from=$templates item="template"}
   	      <option value="{$template.url}"{if $newPage.draft_template == $template.url} selected="selected"{/if}>{$template.url}</option>
   	      {/foreach}
   	    </select>
+        {else}
+        <em style="color:#999">There are no available page master templates. To populate this list, add files to Presentation/Masters/</em>
+        <input type="hidden" name="page_draft_template" value="" />
+        {/if}
   	  </div>
   	
   	{if $newPage.type == 'NORMAL'}
@@ -92,7 +96,10 @@
     {/if}
     
       <div class="edit-form-row">
-        <div class="buttons-bar"><input type="submit" value="Next &gt;&gt;" /></div>
+        <div class="buttons-bar">
+          <input type="button" value="Start over" onclick="window.location='{$domain}websitemanager/addPage?page_id={$newPage.parent.webid}'" />
+          <input type="submit" value="Next &gt;&gt;" />
+        </div>
       </div>
       
     </div>

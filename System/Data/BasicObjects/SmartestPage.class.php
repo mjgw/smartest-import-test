@@ -213,6 +213,15 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        $this->_new_urls[] = $url_string;
 	    }
 	}
+    
+    
+    public function clearUnsavedUrls(){
+        $this->_new_urls = array();
+    }
+    
+    public function getUnsavedUrls(){
+        return is_array($this->_new_urls) ? $this->_new_urls : array();
+    }
 	
 	public function clearDefaultUrl(){
 	    $sql = "UPDATE PageUrls SET pageurl_is_default='0' WHERE pageurl_page_id='".$this->_properties['id']."'";
@@ -264,6 +273,40 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	            return true;
 	        }
 	    }
+	}
+    
+	public function getUrls(){
+		
+		if(!count($this->_urls)){
+		
+		    $sql = "SELECT * FROM PageUrls WHERE pageurl_page_id ='".$this->_properties['id']."' AND pageurl_type IN ('SM_PAGEURL_NORMAL', 'SM_PAGEURL_INTERNAL_FORWARD')";
+		    $pageUrls = $this->database->queryToArray($sql);
+		
+		    foreach($pageUrls as $key => $url){
+		        
+		        $urlObj = new SmartestPageUrl;
+		        $urlObj->hydrate($url);
+		        $this->_urls[$key] = $urlObj;
+		        
+		    }
+		
+	    }
+	    
+	    return $this->_urls;
+
+	}
+	
+	public function getUrlsAsArrays(){
+	    
+	    $urls = $this->getUrls();
+	    $urls_array = array();
+	    
+	    foreach($urls as $u){
+	        $urls_array[] = $u->__toArray();
+	    }
+	    
+	    return $urls_array;
+	    
 	}
 	
 	public function getAssetIdentifiers($item_id=false, $item_only=false){
@@ -851,40 +894,6 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         }else{
             return $this->_request->getDomain().'ajax:website/pageInfo?page_id='.$this->getWebId();
         }
-	    
-	}
-	
-	public function getUrls(){
-		
-		if(!count($this->_urls)){
-		
-		    $sql = "SELECT * FROM PageUrls WHERE pageurl_page_id ='".$this->_properties['id']."' AND pageurl_type IN ('SM_PAGEURL_NORMAL', 'SM_PAGEURL_INTERNAL_FORWARD')";
-		    $pageUrls = $this->database->queryToArray($sql);
-		
-		    foreach($pageUrls as $key => $url){
-		        
-		        $urlObj = new SmartestPageUrl;
-		        $urlObj->hydrate($url);
-		        $this->_urls[$key] = $urlObj;
-		        
-		    }
-		
-	    }
-	    
-	    return $this->_urls;
-
-	}
-	
-	public function getUrlsAsArrays(){
-	    
-	    $urls = $this->getUrls();
-	    $urls_array = array();
-	    
-	    foreach($urls as $u){
-	        $urls_array[] = $u->__toArray();
-	    }
-	    
-	    return $urls_array;
 	    
 	}
     
@@ -2435,9 +2444,9 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		    
 		}
 		
-		while($limit > 0){
+		while($limit > 0 && $pp = $page->getParentPage()){
 		    
-		    $pp = $page->getParentPage();
+		    // $pp = $page->getParentPage();
 		    $bits[] = SmartestStringHelper::toSlug($page->getTitleForStrictUrl());
 		    
 		    if($pp->getId() != $home_page->getId()){

@@ -39,9 +39,9 @@ class SmartestImage extends SmartestFile{
     }
     
     public function getWebPath(){
-        if($this->isPublic()){
+        // if($this->isPublic()){
             return $this->_request_data->g('domain').substr($this->getFullPath(), strlen(SM_ROOT_DIR.'Public/'));
-        }
+        // }
     }
     
     public function isPublic(){
