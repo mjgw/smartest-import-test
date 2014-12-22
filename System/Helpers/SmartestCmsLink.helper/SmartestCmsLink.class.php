@@ -212,9 +212,9 @@ class SmartestCmsLink extends SmartestHelper{
             }else if(in_array($name, $allowed_attributes)){
                 // Make sure attributed supplied for display are XML friendly
                 $html_attributes_array[$name] = SmartestStringHelper::toXmlEntities($value);
-            }else if(substr($name, 0, 5) == 'data-'){
+            }else if(substr($name, 0, 5) == 'data_'){
                 // Custom non-visible HTML5 attributes
-                $html_attributes_array[$name] = SmartestStringHelper::toXmlEntities($value);
+                $html_attributes_array['data-'.substr($name, 5)] = SmartestStringHelper::toXmlEntitiesSmart($value);
             }else{
                 $other_attributes_array[$name] = $value;
             }

@@ -803,12 +803,28 @@ class SmartestStringHelper extends SmartestHelper{
     	return htmlentities($string, ENT_QUOTES, 'UTF-8') ;
     }
     
+    public static function toHtmlEntitiesSmart($string){
+        if(self::containsEscapedEntities($string)){
+            return $string;
+        }else{
+            return self::toHtmlEntities($string);
+        }
+    }
+    
     public static function removeHtmlEntities($string){
         return html_entity_decode($string, ENT_COMPAT, 'UTF-8');
     }
     
     public static function toXmlEntities($string){
     	return htmlspecialchars($string, ENT_QUOTES, 'UTF-8') ;
+    }
+    
+    public static function toXmlEntitiesSmart($string){
+        if(self::containsEscapedEntities($string)){
+            return $string;
+        }else{
+            return self::toXmlEntities($string);
+        }
     }
     
     public static function protectSmartestTags($string){
