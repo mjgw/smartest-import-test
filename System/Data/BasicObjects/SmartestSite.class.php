@@ -434,7 +434,7 @@ class SmartestSite extends SmartestBaseSite{
     
     public function getUsersThatHaveAccess(){
         
-        $sql = "SELECT Users.* FROM Users, UsersTokensLookup WHERE UsersTokensLookup.utlookup_token_id='21' AND UsersTokensLookup.utlookup_user_id=Users.user_id AND (UsersTokensLookup.utlookup_site_id='".$this->getId()."' OR UsersTokensLookup.utlookup_is_global=1) ORDER BY Users.user_firstname";
+        $sql = "SELECT DISTINCT Users.* FROM Users, UsersTokensLookup WHERE UsersTokensLookup.utlookup_token_id='21' AND UsersTokensLookup.utlookup_user_id=Users.user_id AND (UsersTokensLookup.utlookup_site_id='".$this->getId()."' OR UsersTokensLookup.utlookup_is_global=1) ORDER BY Users.user_lastname";
         $result = $this->database->queryToArray($sql);
         $users = array();
         

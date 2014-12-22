@@ -399,6 +399,7 @@ class SmartestResponse{
                 
                 if(isset($rd['domains']) && is_array($rd['domains'])){
                     if(!in_array($_SERVER['HTTP_HOST'], $rd['domains'])){
+                        SmartestLog::getInstance('auth')->log('Attempted access to Smartest via hostname \''.$_SERVER['HTTP_HOST'].'\' from IP address '.$_SERVER['REMOTE_ADDR'].' was prevented because of backend hostname restrictions in Configuration/admin_domains.yml.');
                         include SM_ROOT_DIR.'System/Response/ErrorPages/admindomainnotpermitted.php';
                         exit;
                     }
