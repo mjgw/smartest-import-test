@@ -14,8 +14,9 @@
       {else}
       {if $parameter.has_options}
       <select name="params[{$parameter_name}]">
+        {if !$parameter.required}<option value=""></option>{/if}
       {foreach from=$parameter.options item="opt" key="key"}
-      <option value="{$key}"{if $parameter.value == $key} selected="selected"{/if}>{$opt}</option>
+        <option value="{$key}"{if $parameter.value == $key} selected="selected"{/if}>{$opt}</option>
       {/foreach}
       </select>
       {else}

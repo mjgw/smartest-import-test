@@ -1077,3 +1077,7 @@ class SmartestStringHelper extends SmartestHelper{
 	}
 
 }
+
+function _b($v){
+    return SmartestStringHelper::toRealBool($v);
+}

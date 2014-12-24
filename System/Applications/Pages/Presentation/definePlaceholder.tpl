@@ -111,15 +111,56 @@ function toggleParamsHolder(){
 
 <div class="special-box">
     
-    <div class="heading">Instance parameters (<a id="params-holder-toggle-link" href="javascript:toggleParamsHolder()">show</a>)</div>
+    <div class="heading">Instance parameters <a id="params-holder-toggle-link" href="javascript:toggleParamsHolder()" class="button">show</a></div>
     
     <div id="params-holder" style="display:none">
     {foreach from=$params key="parameter_name" item="parameter"}
       <div class="edit-form-row">
-        <div class="form-section-label">{$parameter_name}</div>
-        <input type="text" name="params[{$parameter_name}]" style="width:250px" value="{$parameter.value}" id="render_parameter_{$parameter_name}" /> Default: {$asset_params[$parameter_name]}
+        <div class="form-section-label">{$asset_params[$parameter_name].label}</div>
+        {if $asset_params[$parameter_name].datatype == 'SM_DATATYPE_BOOLEAN'}
+          {capture name="name" assign="name"}params[{$parameter_name}]{/capture}
+          {capture name="param_id" assign="param_id"}asset-parameter-{$parameter_name}{/capture}
+          {boolean name=$name id=$param_id value=$parameter.value}
+        {else}
+          {if $asset_params[$parameter_name].has_options}
+          <select name="params[{$parameter_name}]" id="render_parameter_{$parameter_name}">
+            {if !$asset_params[$parameter_name].required}<option value=""></option>{/if}
+          {foreach from=$asset_params[$parameter_name].options item="opt" key="key"}
+            <option value="{$key}"{if $parameter.value == $key} selected="selected"{/if}>{$opt}</option>
+          {/foreach}
+          </select>
+          {else}
+          <input type="text" name="params[{$parameter_name}]" value="{$parameter.value}" style="width:250px" id="render_parameter_{$parameter_name}" />
+          {/if}
+        {/if}
+        {if strlen($asset_params[$parameter_name].value) && $asset_params[$parameter_name].datatype != 'SM_DATATYPE_BOOLEAN' && !count($asset_params[$parameter_name].options)}
+          Default: '<span id="param_{$parameter_name}_default_value">{$asset_params[$parameter_name].value}</span>' <a href="#apply" class="button applybutton" data-parameter="{$parameter_name}">Apply</a>
+        {elseif strlen($asset_params[$parameter_name].value) && $asset_params[$parameter_name].has_options}
+          Default: '<span id="param_{$parameter_name}_default_value">{$asset_params[$parameter_name].value}</span>' <a href="#apply" class="button applyselectvalue" data-parameter="{$parameter_name}" id="applyselectvalue_{$parameter_name}">Apply</a>
+        {/if}
       </div>
     {/foreach}
+    <div class="breaker"></div>
+    <script type="text/javascript">
+    {literal}
+    
+    $$('a.applybutton').each(function(btn){
+      btn.observe('click', function(e){
+        e.stop();
+        $('render_parameter_'+btn.readAttribute('data-parameter')).value = $('param_'+btn.readAttribute('data-parameter')+'_default_value').innerHTML;
+      });
+    });
+    
+    $$('a.applyselectvalue').each(function(btn){
+      btn.observe('click', function(e){
+        e.stop();
+        var v = new Smartest.UI.SelectMenu('render_parameter_'+btn.readAttribute('data-parameter'));
+        v.setValue($('param_'+btn.readAttribute('data-parameter')+'_default_value').innerHTML);
+      });
+    });
+    
+    {/literal}
+    </script>
     </div>
 
 </div>
@@ -129,8 +170,8 @@ function toggleParamsHolder(){
   
   <div class="edit-form-row">
     <div class="buttons-bar">
-      {if $valid_definition}<input type="submit" value="Save Changes" />{/if}
       <input type="button" onclick="cancelForm();" value="Cancel" />
+      {if $valid_definition}<input type="submit" value="Save Changes" />{/if}
     </div>
   </div>
   

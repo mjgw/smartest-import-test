@@ -702,16 +702,18 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	        
 	        foreach($raw_xml_params as $rxp){
                 
-                if(isset($rxp['editable']) && !$rxp['editable']){
+                if(isset($rxp['editable']) && !SmartestStringHelper::toRealBool($rxp['editable'])){
                 }else{
                     
                     $params[$rxp['name']]['datatype'] = $rxp['type'];
-                
+                    
                     if(isset($rxp['default'])){
     	                $sv = $rxp['default'];
                     }else{
                         $sv = '';
                     }
+                    
+                    $params[$rxp['name']]['required'] = isset($rxp['required']) && SmartestStringHelper::toRealBool($rxp['required']);
                 
                     $params[$rxp['name']]['value'] = SmartestDataUtility::objectize($sv, $rxp['type']);
                 
@@ -728,6 +730,8 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
                         $params[$rxp['name']]['has_options'] = false;
                     }
                     
+                    // print_r($params[$rxp['name']]);
+                    
                 }
                 
                 // TODO: Insert L10N stuff here
@@ -741,7 +745,19 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	            
 	                // data found. loop through params from xml, replacing values with those from asset
     	            foreach($asset_params as $key => $value){
-    	                if(isset($params[$key]) && $params[$key] !== null){
+                        if(isset($params[$key]) && $params[$key]['has_options']){
+                            if(in_array($value, $params[$rxp['name']]['options']->getKeys())){
+                                // A value that is one of the offered options has already been selected for this asset. Pass the value on to the form.
+                                $params[$key]['value'] = $value;
+                            }elseif(strlen($value) == 0){
+                                // A blank value has been entered. If the property is not required, use the blank value, otherwise the default value will still be used
+                                if(!$params[$key]['required']){
+                                    $params[$key]['value'] = $value;
+                                }
+                            }else{
+                                // A value other than the available options is saved. Revert to the default by not adding the value here (the default is already in use).
+                            }
+                        }elseif(isset($params[$key]) && $params[$key] !== null){
                             $value_obj = SmartestDataUtility::objectize($value, $params[$key]['datatype']);
                             $params[$key]['value'] = $value;
                         }
@@ -757,6 +773,16 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    
 	    return $params;
 	    
+	}
+    
+	public function getDefaultParameterValues(){
+	    if($data = @unserialize($this->getParameterDefaults())){
+            return $data;
+	    }else{
+            /* var_dump($this->getParameterDefaults());
+	        return $this->getParameterDefaults(); */
+            return array();
+	    }
 	}
 	
 	public function getDescription(){
@@ -1179,14 +1205,6 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	
 	public function getIsDraft(){
 	    return $this->_draft_mode;
-	}
-	
-	public function getDefaultParameterValues(){
-	    if($data = @unserialize($this->getParameterDefaults())){
-	        return $data;
-	    }else{
-	        return $this->getParameterDefaults();
-	    }
 	}
 	
 	public function getPossibleOwners(){

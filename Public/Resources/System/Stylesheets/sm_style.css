@@ -477,7 +477,7 @@ div.special-box .heading{
 
 div.special-box div.form-section-label{
     border:0px;
-    background-color:#ddd;
+    padding-top:5px;
 }
 
 div.special-box input[type="text"].search{

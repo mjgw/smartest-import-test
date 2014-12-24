@@ -108,7 +108,8 @@ class SmartestBasicRenderer extends SmartestEngine{
             $render_template = SM_ROOT_DIR.$asset_type_info['render']['template'];
         }
         
-        if(!is_array($render_data) && !($render_data instanceof SmartestParameterHolder)){
+        if(is_array($render_data) || $render_data instanceof SmartestParameterHolder){
+        }else{
             $render_data = array();
         }
         

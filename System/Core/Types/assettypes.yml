@@ -283,7 +283,7 @@ type:
       system_location: Public/Resources/System/Stylesheets/
     param:
       - {name: use_style_tag, label: "Use &lt;style&gt; tag and @import", type: SM_DATATYPE_BOOLEAN, required: false, default: false}
-      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false, default: screen}
+      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false, default: screen, options: {all: all, aural: aural, braille: braille, embossed: embossed, handheld: handheld, print: print, projection: projection, screen: screen, tty: tty, tv: tv}}
     render:
       template: System/Presentation/WebPageBuilder/display.stylesheet.tpl
       preview_template: System/Presentation/WebPageBuilder/preview.stylesheet.tpl
@@ -574,7 +574,7 @@ type:
     param:
       - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true}
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true}
-      - {name: quality, label: "Quality", type: SM_DATATYPE_SL_TEXT, required: false, default: high, options: {high: "High", medium: "Medium", low: "Low"}}
+      - {name: quality, label: "Quality", type: SM_DATATYPE_SL_TEXT, required: true, default: medium, options: {high: "High", medium: "Medium", low: "Low"}}
       
   SM_ASSETTYPE_WMV:
     id: SM_ASSETTYPE_WMV

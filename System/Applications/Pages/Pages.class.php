@@ -2843,6 +2843,8 @@ class Pages extends SmartestSystemApplication{
     	                            }
     	                        }
                             }
+                        }else{
+                            $existing_render_data = array();
                         }
 	                
     	                $this->send($page_definition->getDraftAssetId(), 'draft_asset_id');
@@ -2857,7 +2859,7 @@ class Pages extends SmartestSystemApplication{
 	            
     	            $this->send($item_uses_default, 'item_uses_default');
     	            $this->send($is_defined, 'is_defined');
-                
+                    
                     $asset = new SmartestAsset;
                 
                     if($this->getRequestParameter('chosen_asset_id')){
@@ -2901,10 +2903,10 @@ class Pages extends SmartestSystemApplication{
                 	        foreach($raw_xml_params as $rxp){
             	            
                 	            if(isset($rxp['default'])){
-                	                $params[$rxp['name']]['xml_default'] = $rxp['default'];
+                	                $params[$rxp['name']]['yml_default'] = $rxp['default'];
                 	                $params[$rxp['name']]['value'] = $rxp['default'];
                                 }else{
-                                    $params[$rxp['name']]['xml_default'] = '';
+                                    $params[$rxp['name']]['yml_default'] = '';
                                     $params[$rxp['name']]['value'] = '';
                                 }
                             
@@ -2917,27 +2919,26 @@ class Pages extends SmartestSystemApplication{
                 	    }else{
                 	        $params = array();
                 	    }
-            	    
-                	    $asset_params = $asset->getDefaultParameterValues();
-            	        
-            	        // print_r($asset_params);
-            	        
-                	    $this->send($asset_params, 'asset_params');
-            	    
-                	    foreach($params as $key=>$p){
+                        
+                        $asset_params = $asset->getEditorParams();
+                        
+                        foreach($params as $key=>$p){
                 	        // default values from xml are set above.
             	        
                 	        // next, set values from asset
-                	        if(isset($asset_params[$key]) && strlen($asset_params[$key])){
+                	        if(isset($asset_params[$key]) && strlen($asset_params[$key]['value'])){
                 	            // $params[$key]['value'] = $asset_params[$key];
                 	            // $params[$key]['asset_default'] = $asset_params[$key];
                 	        }
             	        
                 	        // then, override any values that already exist
-                	        if(isset($existing_render_data[$key]) && strlen($existing_render_data[$key])){
+                	        if(isset($existing_render_data[$key])){
                 	            $params[$key]['value'] = $existing_render_data[$key];
                 	        }
+                                
             	        }
+                        
+                        $this->send($asset_params, 'asset_params');
         	        
                 	    $this->send(true, 'valid_definition');
             	    
@@ -3076,8 +3077,8 @@ class Pages extends SmartestSystemApplication{
 	                    $log_message = $this->getUser()->__toString()." defined placeholder '".$placeholder->getName()."' on page '".$page->getTitle(true)."' with asset ID ".$asset_id.".";
 	                
 	                }
-	            
-	                if(is_array($this->getRequestParameter('params'))){
+                    
+                    if(is_array($this->getRequestParameter('params'))){
 	                    $definition->setDraftRenderData(serialize($this->getRequestParameter('params')));
 	                }
 	                

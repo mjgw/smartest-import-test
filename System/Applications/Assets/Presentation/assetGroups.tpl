@@ -46,14 +46,7 @@
     <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('deleteAssetGroupConfirm');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_delete.png"> {$_l10n_action_strings.sidebar_options.selected_group_delete}</a></li>
   </ul>
   
-  <ul class="actions-list" id="non-specific-actions">
-    <li><b>{$_l10n_strings.general.general_options_label}</b></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/addAsset'" class="right-nav-link"><img src="{$domain}Resources/Icons/add.png" border="0" alt="" /> {$_l10n_strings.sidebar_options.create_file}</a></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}assets/detectNewUploads'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_magnify.png" border="0" alt="" /> {$_l10n_strings.sidebar_options.detect_uploads}</a></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/newAssetGroup'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_add.png" border="0" alt="" /> {$_l10n_strings.sidebar_options.create_file_group}</a></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}assets/newAssetGroup?is_gallery=true&amp;asset_type=SM_ASSETCLASS_STATIC_IMAGE&amp;group_label={$_l10n_strings.general.new_image_gallery_name}'" class="right-nav-link"><img src="{$domain}Resources/Icons/photos.png" border="0" alt="" /> {$_l10n_strings.sidebar_options.create_image_gallery}</a></li>
-  	<li class="permanent-action"><a href="#" onclick="window.location='{$domain}smartest/files/types'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_old.png" border="0" alt="" style="width:16px;height:16px" /> {$_l10n_strings.sidebar_options.view_by_type}</a></li>
-  </ul>
+  {load_interface file="assets_front_sidebar.tpl"}
   
   <ul class="actions-list" id="non-specific-actions">
     <li><span style="color:#999">{$_l10n_strings.general.recently_edited_label}</span></li>

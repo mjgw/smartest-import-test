@@ -274,6 +274,53 @@ Smartest.UI.Menu = Class.create({
     
 });
 
+Smartest.UI.SelectMenu = Class.create({
+    
+    selectID: null,
+    options: {},
+    
+    initialize: function(ID){
+        
+        this.selectID = ID;
+        
+        if($(ID) && $(ID).tagName.toLowerCase() == 'select'){
+            
+            this.buildOptionsMap();
+            
+        }
+        
+    },
+    
+    buildOptionsMap: function(){
+        
+        $$('select#'+this.selectID+' option').each(function(opt, key){
+            
+            if(opt.value.charAt(0)){
+                this.options[opt.value] = key;
+            }else{
+                this.options['___BLANK___'] = key;
+            }
+            
+        }, this);
+        
+    },
+    
+    setValue: function(value){
+        
+        if(this.options.hasOwnProperty(value)){
+            if(value.charAt(0)){
+                $(this.selectID).selectedIndex = this.options[value];
+            }else{
+                $(this.selectID).selectedIndex = this.options['___BLANK___'];
+            }
+        }else{
+            console.log('ERROR: select \''+this.selectID+'\' does not have value \''+value+'\'.');
+        }
+        
+    }
+    
+});
+
 Smartest.UI.OptionSet = Class.create({
     
     initialize: function(formId, inputId, optionClass, listId){

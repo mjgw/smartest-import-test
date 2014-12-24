@@ -393,7 +393,15 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                     
                     }else if($display == 'size'){
                         
-                        return $asset->getSize();
+                        if($asset->usesLocalFile()){
+                            
+                            return $asset->getSize();
+                            
+                        }else{
+                            
+                            return $this->raiseError('display="size" used on asset type that does not have a local file: '.$asset->getType());
+                            
+                        }
                     
                     }else{
                         
@@ -403,7 +411,8 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                             $transform_param_values = SmartestStringHelper::parseNameValueString($params['transform']);
                             // TODO: Allow inline transformations on certain asset types - resize, (rotate?)
                         }
-                    
+                        
+                        // apply render data from the placeholder definition
                         if($this->getDraftMode()){
                             $rd = $placeholder->getDraftRenderData();
                         }else{
@@ -416,11 +425,12 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                         }else{
                             $external_render_data = array();
                         }
-                    
+                        
                         foreach($external_render_data as $key => $value){
                             $render_data[$key] = $value;
                         }
                         
+                        // Lastly, apply any render data from the template
                         foreach($params as $key => $value){
                             if($key != 'name'){
         	                    if(isset($params[$key])){
@@ -432,8 +442,10 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 	            }
             	            }
         	            }
-        	            
-        	            $asset->setAdditionalRenderData($render_data, true);
+                        
+                        // Second parameter here is for whether blank values should be skipped when passing render data. As of revision 716, blank values entered on the define placeholder creen DO override other values, including asset and type defaults
+                        // $asset->setAdditionalRenderData($render_data, true);
+                        $asset->setAdditionalRenderData($render_data);
         	            
         	            $html = $asset->render($this->getDraftMode());
         	            

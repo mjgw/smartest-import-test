@@ -74,6 +74,10 @@ class SmartestFixedOptionsList implements ArrayAccess, IteratorAggregate, Counta
         return new ArrayIterator($this->_options->getArray());
     }
     
+    public function getKeys(){
+        return array_keys($this->_options->getArray());
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){
