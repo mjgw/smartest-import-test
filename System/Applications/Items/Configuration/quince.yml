@@ -31,6 +31,9 @@ module:
     edit_item:
       action: editItem
       url: /smartest/item/edit/:item_id
+    publish_item:
+      action: publishItem
+      url: /smartest/item/publish/:item_id
   meta:
     system: true
   namespaces:

@@ -91,7 +91,6 @@ system:
     templates_repo:
       - Presentation/Masters/
       - Presentation/Layouts/
-      - Presentation/ListItems/
       - Presentation/SingleItem/
       - System/Temporary/
       - Documents/Deleted/

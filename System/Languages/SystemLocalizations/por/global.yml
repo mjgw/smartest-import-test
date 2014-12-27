@@ -9,6 +9,7 @@ strings:
     metadata: "Meta-dados"
     settings: "Configuração"
     websites: Seus sites
+    user_profile: Perfil
     about: Sobre a Smartest
     sign_out: Saír
   top_bar:
@@ -18,5 +19,6 @@ strings:
   system_wide_buttons:
     save: Salvar
     save_and_return: Salvar e voltar a 
+    save_and_publish: Salvar e publicar
     cancel: Cancelar
     done: Acabei

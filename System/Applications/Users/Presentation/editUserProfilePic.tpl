@@ -7,7 +7,11 @@
 <form action="{$domain}users/saveUserProfilePic" method="post" enctype="multipart/form-data">
   <input type="hidden" name="user_id" value="{$user.id}" />
   <div style="width:180px;padding:10px;float:left;">
+    {if $sm_user_agent.is_supported_browser}
+    <div id="user-profile-pic-holder-big" style="background-image:url({$user.profile_pic.image.square_360.web_path}); background-size: 180px 180px"></div>
+    {else}
     <div id="user-profile-pic-holder-big" style="background-image:url({$user.profile_pic.image.square_180.web_path});"></div>
+    {/if}
   </div>
   <div style="float:left">
     <div class="edit-form-row">Choose a picture

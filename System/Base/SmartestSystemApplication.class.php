@@ -344,6 +344,8 @@ class SmartestSystemApplication extends SmartestBaseApplication{
 	    
 	    if($this->getRequestParameter('_submit_action') == "continue" && $this->getRequestParameter('_referring_action')){
 	        $this->redirect($this->getRequestParameter('_referring_action'));
+        }elseif($this->getRequestParameter('_submit_action') == "publish" && $this->getRequestParameter('_publish_action')){
+            $this->redirect($this->getRequestParameter('_publish_action'));
 	    }else{
 	        $this->formForward();
 	    }

@@ -393,6 +393,11 @@ class SmartestStringHelper extends SmartestHelper{
         $non_capitalised_words = array('to', 'the', 'and', 'in', 'of', 'with', 'a', 'an', 'at');
         $words = explode(' ', $string);
         
+        $acronyms = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Languages/acronyms.yml');
+        $acronyms = $acronyms['acronyms'];
+        
+        // print_r($acronyms);
+        
         $new_string = '';
         $modified_words = array();
         
@@ -406,6 +411,8 @@ class SmartestStringHelper extends SmartestHelper{
             
             if(in_array($word, $non_capitalised_words) && $k!=0){
                 $modified_words[] = $word;
+            }elseif(in_array(strtoupper($word), $acronyms)){
+                $modified_words[] = strtoupper($word);
             }else{
                 $modified_words[] = self::capitalizeFirstLetter($word);
             }

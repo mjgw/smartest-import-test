@@ -101,7 +101,7 @@
       <div style="display:inline" class="text">
       {if $page.is_published == "TRUE"}
     	  <strong>Live</strong> - Last published: {convert_timestamp format="h:i a, l jS F, Y" time=$page.last_published}{if $page.last_built}; Last built: {convert_timestamp format="h:i a, l jS F, Y" time=$page.last_built}{/if}
-    	  <a class="button" href="{$domain}{$section}/unPublishPage?page_id={$page.webid}">Un-Publish</a>
+    	  <a class="button" href="{$domain}{$section}/unPublishPage?page_id={$page.webid}">Un-publish</a>
     	{else}
     	  {if $page.last_published == 0 }
     	  	<strong>Never Published</strong>
@@ -146,7 +146,7 @@
   {if $page.id > 0}
   <div class="edit-form-row">
     
-		<div class="instruction">Page URL(s)</div>
+		<div class="form-section-label-full" id="urls">Page URL(s)</div>
 		
 		<div class="special-box">
 		
@@ -192,6 +192,7 @@
     	
   	</div>
   	
+    <div class="v-spacer"></div>
   	<a href="{$domain}{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&amp;item_id={$item.id}{/if}" class="button">{if count($page.urls) || $ishomepage == "true"}Add another url{else}Give this page a nicer URL{/if}</a><br />
   	
   	</div>
@@ -283,8 +284,8 @@
   {/if}{* if the page is not a special page *}
     
     <div class="buttons-bar">
-      <input type="button" value="Cancel" onclick="cancelForm();" />
-      <input type="submit" name="action" value="Save Changes" />
+      {url_for assign="publish_action"}@publish_page?page_id={$page.webid}{if $item}item_id={$item.id}{/if}{/url_for}
+      {save_buttons publish_action=$publish_action}
     </div>
   
 </div>

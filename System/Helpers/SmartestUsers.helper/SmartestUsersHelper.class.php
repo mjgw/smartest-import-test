@@ -352,7 +352,7 @@ class SmartestUsersHelper extends SmartestHelper{
     
     public function getUserProfilePicsGroup(){
         
-        $g = new SmartestAssetGroup;
+        $g = new SmartestUserProfilePicsGroup;
         
         if($g->find($this->getUserProfilePicsGroupId())){
             return $g;

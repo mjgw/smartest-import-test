@@ -204,7 +204,7 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
         
             $ids = array();
         
-            foreach($this->getMemberShips($mode) as $m){
+            foreach($this->getMemberShips($mode, $site_id, $refresh) as $m){
                 $ids[] = $m->getAssetId();
             }
             
@@ -422,6 +422,7 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
     }
     
     public function hasAssetId($asset_id){
+        print_r($this->getMemberIds());
         return in_array($asset_id, $this->getMemberIds());
     }
     

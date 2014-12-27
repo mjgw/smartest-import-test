@@ -74,11 +74,9 @@
 </div>
 
 <ul class="options-{$list_view}{if $contact_sheet_view} images{/if}" style="margin-top:0px" id="options_grid">
-  {if !$contact_sheet_view}
   <li class="add">
     <a href="{$domain}{$section}/addAsset?asset_type={$type_code}" class="add"><i>+</i>Add a new file of this type</a>
   </li>
-  {/if}
 {foreach from=$assets item="asset"}
 <li>
     <a href="#select-file" class="option" id="{$sidebartype}_{$asset.id}" onclick="return assets.setSelectedItem('{$asset.id}', '{$sidebartype}');" ondblclick="assets.workWithItem('editAsset');">

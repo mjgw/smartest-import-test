@@ -19,5 +19,6 @@ strings:
   system_wide_buttons:
     save: Salvar
     save_and_return: Salvar y volver a 
+    save_and_publish: Salvar y publicar
     cancel: Cancelar
     done: He acabado

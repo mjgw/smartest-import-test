@@ -34,6 +34,9 @@ module:
     new_pagegroup:
       action: addPageGroup
       url: /smartest/pagegroup/new
+    publish_page:
+      action: publishPageConfirm
+      url: /smartest/page/:page_id/publish
   meta:
     system: true
     author: Marcus Gilroy-Ware

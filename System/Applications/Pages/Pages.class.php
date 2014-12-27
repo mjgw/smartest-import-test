@@ -237,7 +237,7 @@ class Pages extends SmartestSystemApplication{
 		// $this->addUserMessage('You are on thin ice, Mr. Gilroy-Ware.');
 		
 		if(!$this->requestParameterIsSet('from')){
-		    $this->setFormReturnUri();
+		    // $this->setFormReturnUri();
 		}
 		
 		$page_webid = $this->getRequestParameter('page_id');
@@ -1693,7 +1693,8 @@ class Pages extends SmartestSystemApplication{
             $this->addUserMessageToNextRequest('There was an error updating page ID '.$this->getRequestParameter('page_id').'.', SmartestUserMessage::ERROR);
         }
         
-		$this->formForward();
+		// $this->formForward();
+        $this->handleSaveAction();
 
 	}
 
@@ -3079,6 +3080,7 @@ class Pages extends SmartestSystemApplication{
 	                }
                     
                     if(is_array($this->getRequestParameter('params'))){
+                        // TODO: Go through these parameters, eliminating illegal values such as blanks where a value is required
 	                    $definition->setDraftRenderData(serialize($this->getRequestParameter('params')));
 	                }
 	                
@@ -3116,6 +3118,7 @@ class Pages extends SmartestSystemApplication{
 	                            
 	                            if($has_params && ($default_def_params_hash != $this_item_params_hash)){
 	                                // don't delete, because display params are different to default.
+                                    // TODO: Go through these parameters, eliminating illegal values such as blanks where a value is required
 	                                $item_def->setDraftRenderData(serialize($this->getRequestParameter('params')));
 	                                $item_def->save();
 	                            }else{
@@ -3129,6 +3132,7 @@ class Pages extends SmartestSystemApplication{
         	                        $item_def->setItemId($this->getRequestParameter('item_id'));
         	                        $item_def->setInstanceName('default');
         	                        $item_def->setPageId($page->getId());
+                                    // TODO: Go through these parameters, eliminating illegal values such as blanks where a value is required
 	                                $item_def->setDraftRenderData(serialize($this->getRequestParameter('params')));
                                     $item_def->save();
                                 }
@@ -3153,6 +3157,7 @@ class Pages extends SmartestSystemApplication{
 	                        }
 	                        
 	                        if(is_array($this->getRequestParameter('params'))){
+                                // TODO: Go through these parameters, eliminating illegal values such as blanks where a value is required
         	                    $item_def->setDraftRenderData(serialize($this->getRequestParameter('params')));
         	                }
         	                

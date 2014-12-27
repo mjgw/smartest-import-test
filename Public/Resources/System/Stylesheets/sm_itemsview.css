@@ -242,6 +242,27 @@ ul.options-grid.images li a{
   -webkit-border-radius:3px;
 }
 
+ul.options-grid.images li.add a{
+    -moz-box-shadow:    none;
+    -webkit-box-shadow: none;
+    box-shadow:         none;
+    color:#fff;
+}
+
+ul.options-grid.images li.add a i{
+    color:#666;
+    background-color:#fff;
+    width:46px;
+    height:46px;
+    box-sizing:border-box;
+    padding-top:0px;
+    margin-bottom:8px;
+    font-size:3.5em;
+    border-radius:23px;
+    -webkit-border-radius:23px;
+    -moz-border-radius:23px;
+}
+
 ul.options-grid.images li a span{
     display:none;
 }

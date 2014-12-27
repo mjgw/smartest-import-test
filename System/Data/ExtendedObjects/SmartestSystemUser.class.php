@@ -535,7 +535,9 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
         $uh = new SmartestUsersHelper;
 	    
 	    if($g = $uh->getUserProfilePicsGroup()){
-	        $this->send($g->getMembers(1, $this->getSite()), 'assets');
+	        return $g->getMembersForUser($this->getId(), $this->getCurrentSiteId());
+	    }else{
+	        return array();
 	    }
         
     }

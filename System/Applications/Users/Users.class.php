@@ -281,7 +281,7 @@ class Users extends SmartestSystemApplication{
     		    $uh = new SmartestUsersHelper;
     		    
     		    if($g = $uh->getUserProfilePicsGroup()){
-    		        $this->send($g->getMembers(1, $this->getSite()), 'assets');
+    		        $this->send($g->getMembersForUser($user->getId(), $this->getSite()->getId()), 'assets');
     		    }else{
     		        $helper = new SmartestAssetsLibraryHelper;
             	    $this->send($helper->getAttachableFiles($this->getSite()->getId()), 'assets');
@@ -344,7 +344,7 @@ class Users extends SmartestSystemApplication{
 
             		    if($g = $uh->getUserProfilePicsGroup()){
 
-                            $g->addAssetById($file->getId());    
+                            $g->addAssetById($file->getId(), false);    
                         
                         }
                         
@@ -359,8 +359,10 @@ class Users extends SmartestSystemApplication{
     		        if($a->find($this->getRequestParameter('profile_pic_asset_id'))){
     		            $user->setProfilePicAssetId($this->getRequestParameter('profile_pic_asset_id'));
     		            $user->save();
+                        $this->addUserMessageToNextRequest('Your profile picture has been successfully changed.', SmartestUserMessage::SUCCESS);
     		            $this->formForward();
     		        }else{
+                        $this->addUserMessageToNextRequest('The file you selected could not be found.', SmartestUserMessage::WARNING);
     		            $this->formForward();
     		        }
 		        }else{

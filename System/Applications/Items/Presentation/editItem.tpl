@@ -36,7 +36,7 @@
   The primary web address for this {$item._model.name|strtolower} is <a href="{$item.absolute_url}" target="_blank">{$item.absolute_url}</a>
   {else}
   The primary web address for this {$item._model.name|strtolower} will be <strong>{$item.absolute_url}</strong>
-  {/if}
+  {/if} <a href="{$domain}websitemanager/editPage?page_id={$item._meta_page.webid}&amp;item_id={$item.id}#urls" class="button small">Edit</a>
   
 </div>
 
@@ -75,9 +75,9 @@
 <div class="edit-form-row">
   <div class="form-section-label">Current status</div>
   {if $item.public == "TRUE"}
-    Live {* <input type="button" value="Re-Publish" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}'" />&nbsp;<input type="button" value="Un-Publish" onclick="window.location='{$domain}{$section}/unpublishItem?item_id={$item.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}'" /> *}
+    Live <a class="button" href="#publish" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}';return false;">Re-Publish</a>&nbsp;<a class="button" href="#un-publish" onclick="window.location='{$domain}{$section}/unpublishItem?item_id={$item.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}';return false;">Un-publish</a>
   {else}
-    Not live {* <input type="button" value="Publish" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}'" /> *}
+    Not live <a class="button" href="#publish" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}';return false;">Publish</a>
   {/if}
 </div>
 
@@ -118,7 +118,8 @@
 
 <div class="edit-form-row">
   <div class="buttons-bar">
-    {save_buttons}
+    {url_for assign="publish_action"}@publish_item?item_id={$item.id}{/url_for}
+    {save_buttons publish_action=$publish_action}
   </div>
 </div>
 
