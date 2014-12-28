@@ -422,7 +422,6 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
     }
     
     public function hasAssetId($asset_id){
-        print_r($this->getMemberIds());
         return in_array($asset_id, $this->getMemberIds());
     }
     
