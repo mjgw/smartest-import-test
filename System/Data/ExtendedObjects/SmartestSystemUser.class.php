@@ -5,6 +5,7 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
     protected $_tokens;
     protected $_token_codes;
     protected $_num_allowed_sites = 0;
+    protected $_temporary_colour;
     
     public function getPermissionEditableSites(){
 	    
@@ -842,11 +843,74 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
 	        
 	        case "ui_language":
 	        return $this->getPreferredUiLanguage();
+            
+	        case "temporary_colour":
+            case "temporary_color":
+	        return $this->getTemporaryColour();
 	        
 	    }
 	    
 	    return parent::offsetGet($offset);
 	    
 	}
+    
+    public function getTemporaryColour(){
+        
+        if(!is_object($this->_temporary_colour)){
+            
+            if(isset($GLOBALS['_request_user_colors'])){
+                if(isset($GLOBALS['_request_user_colors'][$this->getId()])){
+                    $this->_temporary_colour = $GLOBALS['_request_user_colors'][$this->getId()];
+                }else{
+                    $yamldata = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Core/Info/colours.yml');
+                    $colors = $yamldata['colours'];
+                    $num_colors = count($colors);
+    
+                    if(isset($GLOBALS['_last_system_color_index'])){
+                        $lastcolorindex = $GLOBALS['_last_system_color_index'];
+                        if($lastcolorindex >= $num_colors){
+                            $nextcolorindex = 0;
+                        }else{
+                            $nextcolorindex = $lastcolorindex+1;
+                        }
+                    }else{
+                        $nextcolorindex = mt_rand(0,$num_colors-1);
+                    }
+    
+                    $colour = new SmartestRgbColor($colors[$nextcolorindex]);
+                    $GLOBALS['_request_user_colors'][$this->getId()] = $colour;
+                    $this->_temporary_colour = $colour;
+    
+                    $GLOBALS['_last_system_color_index'] = $nextcolorindex;
+                }
+            }else{
+                $GLOBALS['_request_user_colors'] = array();
+                $yamldata = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Core/Info/colours.yml');
+                $colors = $yamldata['colours'];
+                $num_colors = count($colors);
+
+                if(isset($GLOBALS['_last_system_color_index'])){
+                    $lastcolorindex = $GLOBALS['_last_system_color_index'];
+                    if($lastcolorindex >= $num_colors){
+                        $nextcolorindex = 0;
+                    }else{
+                        $nextcolorindex = $lastcolorindex+1;
+                    }
+                }else{
+                    $nextcolorindex = mt_rand(0,$num_colors-1);
+                }
+
+                $colour = new SmartestRgbColor($colors[$nextcolorindex]);
+                $GLOBALS['_request_user_colors'][$this->getId()] = $colour;
+                $this->_temporary_colour = $colour;
+
+                $GLOBALS['_last_system_color_index'] = $nextcolorindex;
+            }
+            
+        }
+        
+        return $this->_temporary_colour;
+        
+    }
 
 }

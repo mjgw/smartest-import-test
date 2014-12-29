@@ -9,7 +9,7 @@ class SmartestAssetComment extends SmartestComment{
         parent::hydrate($array);
         
         if(isset($array['user_id']) && is_numeric($array['user_id'])){
-            $u = new SmartestUser;
+            $u = new SmartestSystemUser;
             $u->hydrate($array);
             $this->_user = $u;
         }

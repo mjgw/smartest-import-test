@@ -784,6 +784,41 @@ ul.authors-list li a div.user-name-holder-inner{
     font-family:"source-sans";
 }
 
+/*** Comments list ***/
+
+#comments-list{
+    padding:0px;
+    margin:0px;
+    list-style-type:none;
+}
+
+#comments-list li{
+    padding:5px;
+    box-sizing:border-box;
+}
+
+#comments-list li div.comment-user-avatar{
+    box-sizing:border-box;
+    width:40px;
+    height:40px;
+    background-repeat:no-repeat;
+    float:left;
+    border-radius:20px;
+    -webkit-border-radius:20px;
+    -moz-border-radius:20px;
+    text-align:center;
+    font-family:"source-sans";
+    font-size:2em;
+    padding-top:3px;
+    background-size:40px 40px;
+}
+
+#comments-list li div.comment-content{
+    float:left;
+    width:calc(100% - 45px);
+    margin-left:5px;
+}
+
 /*** Favourites bar ***/
 
 #smartest-favourites.open{

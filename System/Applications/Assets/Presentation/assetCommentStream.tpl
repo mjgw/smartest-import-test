@@ -16,14 +16,15 @@
     <form action="{$domain}ajax:{$section}/submitAssetComment" method="post" id="asset-comment-form">
       <input type="hidden" name="asset_id" value="{$asset.id}" />
       <textarea name="comment_content" style="width:500px;height:50px" id="comment-content"> </textarea><br />
-      <input type="button" value="Save" id="comment-submit-button" />
+      <a href="#save-comment" class="button" id="comment-submit-button">Save</a>
     </form>
   </div>
   
   <script type="text/javascript">
   // <![CDATA[
     {literal}
-    $('comment-submit-button').observe('click', function(){
+    $('comment-submit-button').observe('click', function(e){
+      e.stop();
       if(($('comment-content').value.length) > 1){
         $('asset-comment-form').request({
           onComplete: function(){

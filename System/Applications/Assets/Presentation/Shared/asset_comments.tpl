@@ -32,12 +32,18 @@
   // ]]>
 </script>
 
-    <ul style="padding:0px;margin:0px;list-style-type:none" id="comments-list">
+    <ul id="comments-list">
 {foreach from=$comments item="comment"}
-      <li style="padding:5px;" id="comment-{$comment.id}">
-        <p><b>{$comment.user.full_name}</b>, {$comment.posted_at}</p>
-        <p>{$comment.content}</p>
-        {if $_user.id == $comment.user.id}<p class="small" style="font-size:10px"><a href="#delete-comment-{$comment.id}" id="delete-comment-link-{$comment.id}">Delete</a></p>{/if}
+      <li id="comment-{$comment.id}">
+        <div class="comment-user-avatar" style="{if $comment.user.profile_pic.id && $comment.user.profile_pic.url != 'default_user_profile_pic.jpg'}background-image:url({if $sm_user_agent.is_supported_browser}{$comment.user.profile_pic.image.80x80.web_path}{else}{$comment.user.profile_pic.image.40x40.web_path}{/if}){else}background-color:#{$comment.user.temporary_colour.hex};color:{if $comment.user.temporary_colour.text_white}#fff{else}#000{/if}{/if}">
+          {if !$comment.user.profile_pic.id || $comment.user.profile_pic.url == 'default_user_profile_pic.jpg'}{$comment.user.profile_initials}{/if}
+        </div>
+        <div class="comment-content">
+          <p><b>{$comment.user.full_name}</b>, {$comment.posted_at}</p>
+          <p>{$comment.content}</p>
+          {if $_user.id == $comment.user.id}<p style="font-size:10px"><a href="#delete-comment-{$comment.id}" id="delete-comment-link-{$comment.id}" class="comment-delete button small" data-commentid="{$comment.id}">Delete</a></p>{/if}
+        </div>
+        <div class="breaker"></div>
       </li>
 {foreachelse}
       <li style="padding:5px;" id="none-yet"><div class="instruction">No notes yet</div></li>
@@ -45,7 +51,10 @@
     </ul>
     
 <script type="text/javascript">
-  {foreach from=$comments item="comment"}
-  {if $_user.id == $comment.user.id}$('delete-comment-link-{$comment.id}').observe('click', function(e){ldelim}Smartest.AjaxModalViewer.variables.deleteAssetComment('{$comment.id}');e.stop();{rdelim});{/if}
-  {/foreach}
+    $$('a.comment-delete').each(function(cdl){ldelim}
+        cdl.observe('click', function(e){ldelim}
+          Smartest.AjaxModalViewer.variables.deleteAssetComment(cdl.readAttribute('data-commentid'));
+          e.stop();
+        {rdelim});
+    {rdelim});
 </script>
