@@ -13,7 +13,7 @@
     
     <div class="instruction">Check the boxes next to the users you'd like to link to this page as authors.</div>
     
-    <div class="special-box">Are people missing from this list? Users must have the 'author_credit' {help id="users:tokens"}token{/help} to be credited as the author of a page.{if $provide_tokens_link} <a href="{$domain}smartest/users">Click here</a> to edit user tokens.{/if}</div>
+    <div class="special-box">Are people missing from this list? Users must have the 'author_credit' {help id="users:tokens"}token{/help} to be credited as the author of a page.{if $provide_tokens_link} <a href="{$domain}smartest/users" class="button">Click here</a> to edit user tokens.{/if}</div>
     
     <form action="{$domain}{$section}/updateAuthors" method="post">
     
@@ -26,7 +26,7 @@
           <input type="checkbox" name="users[{$user.id}]" id="author-{$user.id}-checkbox"{if in_array($user.id, $author_ids)} checked="checked"{/if} />
           <a href="#toggle-user-{$user.username}" id="author-{$user.id}"{if in_array($user.id, $author_ids)} class="selected"{/if}>
             {if $user.profile_pic.id > 1 && $user.profile_pic.url != "default_user_profile_pic.jpg"}
-            <div class="user-avatar-holder" style="background-image:url({$user.profile_pic.image.60x60.web_path})"></div>
+            <div class="user-avatar-holder" style="{if $sm_user_agent.is_supported_browser}background-image:url({$user.profile_pic.image.120x120.web_path});background-size:60px 60px{else}background-image:url({$user.profile_pic.image.60x60.web_path}){/if}"></div>
             {else}
             {getsystemcolor assign="usercolor"}
             <div class="user-avatar-holder" style="background-color:#{$usercolor.hex};color:{if $usercolor.text_white}#fff{else}#000{/if}">{$user.profile_initials}</div>

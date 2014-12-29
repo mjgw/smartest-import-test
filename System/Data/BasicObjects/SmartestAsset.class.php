@@ -843,10 +843,6 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             $this->setParentId(0);
         }
         
-        if(!isset($this->_modified_properties['variant_id'])){
-            $this->setVariantId(0);
-        }
-        
         if(!isset($this->_modified_properties['model_id'])){
             $this->setModelId(0);
         }
