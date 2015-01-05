@@ -468,10 +468,10 @@ class CmsFrontEnd extends SmartestSystemApplication{
                 $this->_page->setRequestedUrl($this->getRequestParameter('request'));
             }else{
                 // echo $_SERVER['REQUEST_URI'];
-                $this->_page->setRequestedUrl($_SERVER['REQUEST_URI']);
+                $this->_page->setRequestedUrl(substr($_SERVER['REQUEST_URI'], 1));
             }
         }else{
-            $this->_page->setRequestedUrl($_SERVER['REQUEST_URI']);
+            $this->_page->setRequestedUrl(substr($_SERVER['REQUEST_URI'], 1));
         }
         
         header("HTTP/1.1 404 Not Found");

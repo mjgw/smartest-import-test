@@ -2585,7 +2585,7 @@ class Pages extends SmartestSystemApplication{
 		    $page = new SmartestPage;
 		}
 	    
-	    if($page->hydrate($page_id)){
+	    if($page->smartFind($page_id)){
 	        
 	        $page->setDraftMode(true);
 	        
@@ -2650,7 +2650,7 @@ class Pages extends SmartestSystemApplication{
 	                    
 	                    $item_def = new SmartestContainerDefinition;
 	                    
-	                    // item chosen is same as all-items definition
+	                    // template chosen is same as all-items definition
 	                    if($definition->getDraftAssetId() == $asset_id){ 
 	                        
 	                        // if there is already a per-item definitions for this item

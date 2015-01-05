@@ -693,11 +693,24 @@ class Templates extends SmartestSystemApplication{
 	    
 	}
 	
-	public function finishNewTemplateImportToContainerDefinition(){
+    public function finishNewTemplateImportToContainerDefinition(){
 	    
 	    if($this->getRequestParameter('container_id') && $this->getRequestParameter('page_id')){
             
-            $page = new SmartestPage;
+  	        $helper = new SmartestPageManagementHelper;
+        	$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
+            
+            $page_id = $this->getRequestParameter('page_id');
+		
+        	if(isset($type_index[$page_id])){
+        	    if($type_index[$page_id] == 'ITEMCLASS' && $this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
+        		    $page = new SmartestItemPage;
+        		}else{
+        		    $page = new SmartestPage;
+        		}
+        	}else{
+        	    $page = new SmartestPage;
+        	}
             
             if($page->find($this->getRequestParameter('page_id'))){
             
@@ -715,12 +728,77 @@ class Templates extends SmartestSystemApplication{
                     $template->setType('SM_ASSETTYPE_CONTAINER_TEMPLATE');
                     $template->setSiteId($this->getSite()->getId());
                     $template->setCreated(time());
+                    $template->setWebId(SmartestStringHelper::random(32));
                     $template->save();
                     
                     // Next create Container definition
                     
-                    $def = new SmartestContainerDefinition;
-                    $def->setPageId($page->getId());
+                    $definition = new SmartestContainerDefinition;
+                    
+                    if($type_index[$page_id] == 'NORMAL' || ($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id')) && $this->getRequestParameter('definition_scope') != 'THIS')){
+	                
+    	                if($definition->loadForUpdate($container->getName(), $page, true)){
+    	                    
+                            $definition->setDraftAssetId($template->getId());
+                            $log_message = $this->getUser()->__toString()." defined container '".$container->getName()."' on page '".$page->getTitle(true)."' with newly imported template ".$template->getUrl().".";
+                            
+                        }else{
+	                    
+    	                    // wasn't already defined
+    	                    $definition->setDraftAssetId($template->getId());
+    	                    $definition->setAssetclassId($container->getId());
+    	                    $definition->setInstanceName('default');
+    	                    $definition->setPageId($page->getId());
+    	                    $log_message = $this->getUser()->__toString()." defined container '".$container->getName()."' on page '".$page->getTitle(true)."' with newly imported template ".$template->getUrl().".";
+	                
+    	                }
+	            
+    	                if($this->getRequestParameter('definition_scope') == 'ALL'){
+	                    
+    	                    // DELETE ALL PER-ITEM DEFINITIONS
+    	                    $pmh = new SmartestPageManagementHelper;
+    	                    $pmh->removePerItemDefinitions($page->getId(), $container->getId());
+	                    
+    	                }
+	                
+    	                $definition->save();
+	            
+                    }else if($type_index[$page_id] == 'ITEMCLASS' && ($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id')) && $this->getRequestParameter('definition_scope') == 'THIS')){
+                        
+                        // If this is an item meta-page the user has opted to use this definition only for the current item
+                        if($definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'))){
+	                    
+    	                    // all-items definition doesn't exist but per-item for this item does
+    	                    $definition->setDraftAssetId($template->getId());
+    
+    	                    if(is_array($this->getRequestParameter('params'))){
+        	                    $definition->setDraftRenderData(serialize($this->getRequestParameter('params')));
+        	                }
+    
+        	                $definition->save();
+        	                $log_message = $this->getUser()->__toString()." updated container '".$container->getName()."' on meta-page '".$page->getTitle(true)."' to use asset ID ".$template->getId()." when displaying item ID ".$this->getRequestParameter('item_id').".";
+    
+    	                }else{
+    
+    	                    // wasn't already defined for any items at all. Define for this item
+    	                    $definition->setDraftAssetId($template->getId());
+    	                    $definition->setAssetclassId($container->getId());
+    	                    $definition->setItemId($this->getRequestParameter('item_id'));
+    	                    $definition->setInstanceName('default');
+    	                    $definition->setPageId($page->getId());
+    
+    	                    if(is_array($this->getRequestParameter('params'))){
+        	                    $definition->setDraftRenderData(serialize($this->getRequestParameter('params')));
+        	                }
+    
+        	                $definition->save();
+        	                $log_message = $this->getUser()->__toString()." defined container '".$container->getName()."' on meta-page '".$page->getTitle(true)."' to use asset ID ".$template->getId()." when displaying item ID ".$this->getRequestParameter('item_id').".";
+    
+    	                }
+                        
+                    }
+                    
+                    /* $def->setPageId($page->getId());
                     $def->setAssetClassId($container->getId());
                     $def->setDraftAssetId($template->getId());
                         
@@ -729,30 +807,19 @@ class Templates extends SmartestSystemApplication{
                         $def->setItemId($this->getRequestParameter('item_id'));
                     }
                     
-                    $def->save();
+                    $def->save(); */
                     
                     // TODO: Add the template to a group if the container is limited to one.
                     
-                    $this->formForward();
-                        
-                    // print_r($potential_templates);
-                        
-                    /* if(!$this->getRequestParameter('asset_type')){
-                        
-                        $types = $placeholder->getPossibleFileTypes();
-                        $this->send($types, 'types');
-                        
-                        if(count($types) == 1){
-                            $url = '/smartest/file/new?for=placeholder&asset_type='.$types[0]['id'].'&placeholder_id='.$placeholder->getId().'&page_id='.$page->getId();
-                        }else{
-                            $url = '/smartest/file/new?for=placeholder&placeholder_id='.$placeholder->getId().'&page_id='.$page->getId();
+                    if($container->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_TEMPLATEGROUP'){
+                        $template_group_id = $container->getFilterValue();
+                        $group = new SmartestTemplateGroup;
+                        if($group->find($template_group_id)){
+                            $group->addTemplateById($template->getId(), false);
                         }
-                        
-                        if($this->getRequestParameter('item_id')) $url .= '&item_id='.$this->getRequestParameter('item_id');
-                        
-                        $this->redirect($url);
-                        
-                    } */
+                    }
+                    
+                    $this->formForward();
                     
                 }else{
                     $this->addUserMessageToNextRequest("The placeholder ID was not recognised.", SmartestUserMessage::ERROR);

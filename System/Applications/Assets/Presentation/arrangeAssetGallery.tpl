@@ -3,7 +3,9 @@
   {load_interface file="edit_filegroup_tabs.tpl"}
     
   <h3>Arrange file gallery contents</h3>
-  
+
+{if count($assets)}
+
   <ul id="sortable-gallery-members" style="margin:0px;padding:0px;list-style-type:none">
   
 {foreach from=$assets item="membership"}
@@ -104,6 +106,14 @@ var itemsList = Sortable.create('sortable-gallery-members', {
   });
 {/literal}
 </script>
+  
+  {else}
+  
+  <div class="special-box">
+    There are no files in this gallery yet. <a href="{$domain}assets/editAssetGroupContents?group_id={$group.id}" class="button">Add files</a>
+  </div>
+  
+  {/if}
   
 </div>
 
