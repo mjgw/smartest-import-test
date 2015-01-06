@@ -40,7 +40,7 @@
   		{elseif $assetclass.info.type == 'item'}
     		<img src="{$domain}Resources/Icons/package_small.png" style="border:0px;width:16px;height:16px" />
       {else}
-		  <img border="0" style="width:16px;height:16px;" src="{$domain}Resources/System/Images/published_{$assetclass.info.type|lower}.gif" />
+		  <img border="0" style="width:16px;height:16px;" src="{$domain}Resources/System/Images/published_{$assetclass.info.type|lower}.png" />
 		  {/if}
 		{elseif  $assetclass.info.defined == "DRAFT"}
 		  {if $version == "draft"}
@@ -67,7 +67,7 @@
 	{if $assetclass.info.type == "list"}
 	<img border="0" style="width:16px;height:16px;" src="{$domain}Resources/System/Images/notexist_list.png" />
 	{elseif $assetclass.info.type == "field"}
-	<img border="0" style="width:16px;height:16px;" src="{$domain}Resources/Icons/notexist_field.gif" />
+	<img border="0" style="width:16px;height:16px;" src="{$domain}Resources/System/Images/notexist_field.png" />
 	{elseif $assetclass.info.type == "placeholder"}
 	<img border="0" style="width:16px;height:16px;" src="{$domain}Resources/System/Images/notexist_placeholder.png" />
 	{elseif $assetclass.info.type == "container"}
