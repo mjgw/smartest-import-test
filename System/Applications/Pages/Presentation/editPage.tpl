@@ -12,7 +12,10 @@
         onComplete: function(){ldelim}
           // $('page-urls').update('');
           new Ajax.Updater('page-urls', '{$domain}ajax:websitemanager/pageUrls', {ldelim}
-            parameters: {ldelim}page_id: '{$page.webid}'{if $item.id}, item_id: {$item.id}{/if}, responseTableLinks: {$link_urls.truefalse}{rdelim}
+            parameters: {ldelim}page_id: '{$page.webid}'{if $item.id}, item_id: {$item.id}{/if}, responseTableLinks: {$link_urls.truefalse}{rdelim},
+            onSuccess: function(response) {ldelim}
+              setTimeout(addListeners, 30);
+            {rdelim}
           {rdelim});
           MODALS.hideViewer();
         {rdelim}
@@ -30,7 +33,31 @@
         onComplete: function(){ldelim}
           // $('page-urls').update('');
           new Ajax.Updater('page-urls', '{$domain}ajax:websitemanager/pageUrls', {ldelim}
-            parameters: {ldelim}page_id: '{$page.webid}'{if $item.id}, item_id: {$item.id}{/if}, responseTableLinks: {$link_urls.truefalse}{rdelim}
+            parameters: {ldelim}page_id: '{$page.webid}'{if $item.id}, item_id: {$item.id}{/if}, responseTableLinks: {$link_urls.truefalse}{rdelim},
+            onSuccess: function(response) {ldelim}
+              setTimeout(addListeners, 30);
+            {rdelim}
+          {rdelim});
+          MODALS.hideViewer();
+        {rdelim}
+      {rdelim});
+
+      return true;
+
+    {rdelim}
+    
+    var saveNewPageUrl = function(){ldelim}
+
+      $('saver-gif').show();
+
+      $('addUrl').request({ldelim}
+        onComplete: function(){ldelim}
+          // $('page-urls').update('');
+          new Ajax.Updater('page-urls', '{$domain}ajax:websitemanager/pageUrls', {ldelim}
+            parameters: {ldelim}page_id: '{$page.webid}'{if $item.id}, item_id: {$item.id}{/if}, responseTableLinks: {$link_urls.truefalse}{rdelim},
+            onSuccess: function(response) {ldelim}
+              setTimeout(addListeners, 30);
+            {rdelim}
           {rdelim});
           MODALS.hideViewer();
         {rdelim}

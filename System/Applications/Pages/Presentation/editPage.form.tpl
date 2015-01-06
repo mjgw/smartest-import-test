@@ -152,7 +152,7 @@
 		
 		<div id="page-urls">
 		  
-  	  <table width="100%" style="border:1px solid #ccc;padding:2px;" cellpadding="0" cellspacing="0">
+  	  <!--<table width="100%" style="border:1px solid #ccc;padding:2px;" cellpadding="0" cellspacing="0">
   	  
     	  {if $ishomepage == "true"}
       	<tr style="background-color:#{cycle values="ddd,fff"};height:20px">
@@ -171,11 +171,11 @@
     	    <td>
     		    <div style="display:inline" id="siteDomainField_{$pageurl.id}">
     		      {if $pageurl.is_default == 1}<strong>{/if}{if $page.is_published == "TRUE" && ($page.type == 'NORMAL' || ($page.type == 'ITEMCLASS' && $item.public == 'TRUE')) && $site.is_enabled == 1}<a href="{$pageUrl}" target="_blank">{$pageUrl|truncate:100:"..."}</a>{else}{$pageUrl|truncate:100:"..."}{/if}{if $pageurl.is_default == 1}</strong> (default){/if}</div></td>
-    	    <td style="width:32%">
-    		    <input type="button" name="edit" value="Edit" onclick="MODALS.load('{$section}/editPageUrl?url_id={$pageurl.id}', 'Edit page URL');" />
-    		    {if $ishomepage != "true"}<input type="button" name="mkdefault" value="Make Default" onclick="window.location='{$domain}{$section}/setPageDefaultUrl?page_id={$page.webid}&amp;url={$pageurl.id}'"{if $pageurl.is_default == 1 || $pageurl.type == 'SM_PAGEURL_INTERNAL_FORWARD' || $pageurl.type == 'SM_PAGEURL_ITEM_FORWARD'} disabled="disabled"{/if} />{/if}
-    		    <input type="button" name="edit" value="Transfer" onclick="MODALS.load('{$section}/transferPageUrl?url_id={$pageurl.id}', 'Transfer page URL');" />
-    		    <input type="button" name="delete" value="Delete" onclick="if(confirm('Are you sure you want to delete this URL?')) window.location='{$domain}{$section}/deletePageUrl?page_id={$page.webid}&amp;url={$pageurl.id}&amp;ishomepage={$ishomepage};'"/></td></tr> 
+    	    <td style="width:32%;text-align:right;padding:3px">
+    		    <a class="button small" href="#edit-url" data-urlid="{$pageurl.id}" onclick="MODALS.load('{$section}/editPageUrl?url_id={$pageurl.id}', 'Edit page URL');return false;">Edit</a>
+    		    {if !_b($ishomepage) && $pageurl.is_default != 1 && $pageurl.type != 'SM_PAGEURL_INTERNAL_FORWARD' && $pageurl.type != 'SM_PAGEURL_ITEM_FORWARD'}<a class="button small make_url_default" href="#make-default" data-urlid="{$pageurl.id}">Make default</a>{/if}
+    		    <a class="button small" href="#transfer-url" onclick="MODALS.load('{$section}/transferPageUrl?url_id={$pageurl.id}', 'Transfer page URL');return false;">Transfer</a>
+    		    <a class="button small delete_url" href="#delete-url" data-urlid="{$pageurl.id}" />Delete</a></td></tr> 
         {/foreach}
       
   	    {else}
@@ -188,13 +188,106 @@
               {if $page.is_published == "TRUE" && $site.is_enabled == 1}<a href="http://{$site.domain}{$domain}{$page.forced_fallback_url}" target="_blank">http://{$site.domain}{$domain}{$page.forced_fallback_url|truncate:50:"..."}</a>{else}http://{$site.domain}{$domain}{$page.forced_fallback_url|truncate:100:"..."}{/if}</div></td>
       	  </tr>
 
-    	</table>
+    	</table>-->
+        
+      {load_interface file="Ajax/pageUrls.tpl"}
     	
   	</div>
   	
-    <div class="v-spacer"></div>
-  	<a href="{$domain}{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&amp;item_id={$item.id}{/if}" class="button">{if count($page.urls) || $ishomepage == "true"}Add another url{else}Give this page a nicer URL{/if}</a><br />
+    <script type="text/javascript">
+      
+    var pageId = {$page.id};
+    var pageWebId = '{$page.webid}';
+    {if $item.id}var itemId = {$item.id};{/if}
+    var deleteUrl = '{$domain}{$section}/deletePageUrl';
+    var makeDefaultUrl = '{$domain}{$section}/setPageDefaultUrl';
+    var updaterUrl = '{$domain}ajax:websitemanager/pageUrls';
+    
+    {literal}
+    
+    var addListeners = function(){
+      
+      // alert('adding listeners');
+      
+      console.log($$('a.make_url_default').length);
+      
+      $$('a.delete_url').each(function(el){
+        el.observe('click', function(e){
+          e.stop();
+          if(confirm('Are you sure you want to delete this URL?')){
+            var urlId = el.readAttribute('data-urlid');
+            $('urls-updating-gif').show();
+            new Ajax.Request(deleteUrl, {
+              parameters: {
+                page_id: pageWebId,
+                url: urlId
+              },
+              onComplete: function(){
+                new Ajax.Updater('page-urls', updaterUrl, {
+                  parameters: {page_id: pageId{/literal}{if $item.id}, item_id: itemId{/if}, responseTableLinks: {$link_urls.truefalse}{literal}},
+                  onSuccess: function(response) {
+                    setTimeout(addListeners, 30);
+                  }
+                });
+                $('urls-updating-gif').hide();
+              }
+            });
+          }
+        });
+      });
+    
+      $$('a.make_url_default').each(function(el){
+        console.log($(el));
+        $(el).observe('click', function(e){
+          console.log('clicked');
+          e.stop();
+          // if(confirm('Are you sure you want to delete this URL?')){
+            var urlId = el.readAttribute('data-urlid');
+            $('urls-updating-gif').show();
+            new Ajax.Request(makeDefaultUrl, {
+              parameters: {
+                page_id: pageWebId,
+                url: urlId
+              },
+              onComplete: function(){
+                new Ajax.Updater('page-urls', updaterUrl, {
+                  parameters: {page_id: pageId{/literal}{if $item.id}, item_id: itemId{/if}, responseTableLinks: {$link_urls.truefalse}{literal}},
+                  onSuccess: function(response) {
+                    setTimeout(addListeners, 50);
+                  }
+                });
+                $('urls-updating-gif').hide();
+              }
+            });
+          // }
+        });
+      });
+    
+    }
+    
+    {/literal}
+    
+    addListeners();
+      
+    </script>
+    
+    <div class="v-spacer" style="height:10px"></div>
+    <img src="{$domain}Resources/System/Images/ajax-loader.gif" style="display:none;float:right" id="urls-updating-gif" alt="" />
+  	<a href="#add-url" class="button" id="new-url-button">{if count($page.urls) || $ishomepage == "true"}Add another url{else}Give this page a nicer URL{/if}</a><br />
   	
+    <script type="text/javascript">
+    
+    var newUrlUrl = '{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&amp;item_id={$item.id}{/if}';
+    
+    {literal}
+    $('new-url-button').observe('click', function(e){
+      e.stop();
+      MODALS.load(newUrlUrl, 'Add page URL');
+    });
+    {/literal}
+    
+    </script>
+    
   	</div>
 	
   </div>

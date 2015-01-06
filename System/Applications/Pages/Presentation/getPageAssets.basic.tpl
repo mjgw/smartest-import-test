@@ -12,7 +12,7 @@
   	        {elseif $assetclass.info.asset_type == "SM_ASSETTYPE_PLAIN_TEXT"}
   	          <img src="{$domain}Resources/Icons/page_white_text.png" alt="" />
   	        {elseif $assetclass.info.asset_type == "SM_ASSETTYPE_RICH_TEXT"}
-  	          <img src="{$domain}Resources/Icons/style.png" alt="" />
+  	          <img src="{$domain}Resources/System/Images/rich_text_file.png" alt="" />
   	        {else}
   	          <img src="{$domain}Resources/Icons/page_white.png" alt="" />
   	        {/if}
@@ -21,16 +21,16 @@
     	  	{elseif $assetclass.info.type == 'item'}
         		<img src="{$domain}Resources/Icons/package_small.png" alt="" />
           {else}
-  		    <img src="{$domain}Resources/Icons/published_{$assetclass.info.type|lower}.gif" alt="" />
+  		    <img src="{$domain}Resources/System/Images/published_{$assetclass.info.type|lower}.png" alt="" />
   		    {/if}
   		  {elseif  $assetclass.info.defined == "DRAFT"}
   		    {if $version == "draft"}
-  		      <img title="This {$assetclass.info.type} is only defined in the draft version of the page" src="{$domain}Resources/Icons/draftonly_{$assetclass.info.type|lower}.gif" alt="" />
+  		      <img title="This {$assetclass.info.type} is only defined in the draft version of the page" src="{$domain}Resources/System/Images/draftonly_{$assetclass.info.type|lower}.png" alt="" />
   		    {else}
-  		      <img title="This {$assetclass.info.type} is only defined in the draft version of the page" src="{$domain}Resources/Icons/undefined_{$assetclass.info.type|lower}.gif" alt="" />
+  		      <img title="This {$assetclass.info.type} is only defined in the draft version of the page" src="{$domain}Resources/System/Images/undefined_{$assetclass.info.type|lower}.png" alt="" />
   		    {/if}
   		  {else}
-  		    <img title="This {$assetclass.info.type} has not yet been defined" src="{$domain}Resources/Icons/undefined_{$assetclass.info.type|lower}.gif" alt="" />
+  		    <img title="This {$assetclass.info.type} has not yet been defined" src="{$domain}Resources/System/Images/undefined_{$assetclass.info.type|lower}.png" alt="" />
   		  {/if}
   	    {if $assetclass.info.type == 'asset' && $assetclass.info.type == 'template'}
   	    {$assetclass.info.filename}
@@ -48,6 +48,12 @@
      	  <img src="{$domain}Resources/Icons/notexist_list.gif" alt="" />
      	  {elseif $assetclass.info.type == "field"}
      	  <img src="{$domain}Resources/Icons/notexist_field.gif" alt="" />
+      	{elseif $assetclass.info.type == "placeholder"}
+      	<img src="{$domain}Resources/System/Images/notexist_placeholder.png" alt="" />
+      	{elseif $assetclass.info.type == "container"}
+      	<img src="{$domain}Resources/System/Images/notexist_container.png" alt="" />
+      	{elseif $assetclass.info.type == "itemspace"}
+      	<img src="{$domain}Resources/System/Images/notexist_itemspace.png" alt="" />
      	  {elseif $assetclass.info.type == "attachment"}
      	  <img src="{$domain}Resources/Icons/attach.png" alt="" />
      	  {else}

@@ -13,7 +13,7 @@
 {foreach from=$placeholders item="placeholder"}
     <li>
       <a id="item_{$placeholder.id}" class="option" href="javascript:nothing()" onclick="setSelectedItem('{$placeholder.id}', '');" ondblclick="window.location='{$domain}{$section}/editPlaceholder?placeholder_id={$placeholder.id}'">
-        <img src="{$domain}Resources/Icons/published_placeholder.gif" alt="" />{$placeholder.name} ({$placeholder.type})</a></li>
+        <img src="{$domain}Resources/System/Images/published_placeholder.png" alt="" />{$placeholder.name} ({$placeholder.type})</a></li>
 {/foreach}
   </ul>
 </div>

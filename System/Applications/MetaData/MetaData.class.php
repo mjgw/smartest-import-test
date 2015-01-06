@@ -157,8 +157,13 @@ class MetaData extends SmartestSystemApplication{
 		
         	    }else{
     	        
-        	        $this->addUserMessageToNextRequest('The specified field doesn\'t exist', SmartestUserMessage::INFO);
-        	        $this->formForward();
+                    if($lookup_field == 'pageproperty_name'){
+                        $this->addUserMessageToNextRequest('The specified field doesn\'t exist. You will need to create it first.', SmartestUserMessage::INFO);
+                        $this->redirect('/metadata/addPageProperty?name='.$value);
+                    }else{
+            	        $this->addUserMessageToNextRequest('The specified field doesn\'t exist', SmartestUserMessage::INFO);
+                        $this->formForward();
+                    }
     	        
         	    }
 	    

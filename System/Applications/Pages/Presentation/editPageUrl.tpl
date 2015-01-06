@@ -10,10 +10,16 @@
     {if $pageInfo.type == "ITEMCLASS" && ($url.type == "SM_PAGEURL_INTERNAL_FORWARD" || $url.type == "SM_PAGEURL_NORMAL")}<div class="warning">Editing this URL will affect all {$model.plural_name|lower}.</div>{/if}
   
     <div class="edit-form-row">
-      <div class="form-section-label-full">URL:</div>
-        http://{$site.domain}{$domain}<input type="text" name="page_url" value="{$url.url}" style="width:250px" />
-        <br />{if !$url.is_default}<input type="checkbox" name="forward_to_default" id="forward_to_default" value="1"{if $url.type == "SM_PAGEURL_INTERNAL_FORWARD" || $url.type == 'SM_PAGEURL_ITEM_FORWARD'} checked="checked"{/if} onchange="toggleFormAreaVisibilityBasedOnCheckbox('forward_to_default', 'show-redirect-type');" /><label for="forward_to_default">Forward to default URL</label>{/if}
+      <div class="form-section-label">URL string not including leading '/'</div>
+      <input type="text" name="page_url" value="{$url.url}" style="width:250px" />
     </div>
+    
+    {if !$url.is_default}
+    <div class="edit-form-row">
+      <div class="form-section-label"><label for="forward_to_default">Forward to default URL</label></div>
+      <input type="checkbox" name="forward_to_default" id="forward_to_default" value="1"{if $url.type == "SM_PAGEURL_INTERNAL_FORWARD" || $url.type == 'SM_PAGEURL_ITEM_FORWARD'} checked="checked"{/if} onchange="toggleFormAreaVisibilityBasedOnCheckbox('forward_to_default', 'show-redirect-type');" />
+    </div>
+    {/if}
   
     <div class="edit-form-row" style="display:{if $url.type == "SM_PAGEURL_INTERNAL_FORWARD" || $url.type == "SM_PAGEURL_ITEM_FORWARD"}block{else}none{/if}" id="show-redirect-type">
       <div class="form-section-label">Redirect type</div>

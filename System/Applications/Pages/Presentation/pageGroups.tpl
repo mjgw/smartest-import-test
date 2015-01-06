@@ -14,7 +14,7 @@
   
 {if empty($groups)}
   
-  <div class="special-box">There are currently no page groups in use on this website. <a href="{$domain}smartest/pagegroup/new">Click here</a> to create one.</div>
+  <div class="special-box">There are currently no page groups in use on this website. <a href="{$domain}smartest/pagegroup/new" class="button">Click here</a> to create one.</div>
   
 {else}
 

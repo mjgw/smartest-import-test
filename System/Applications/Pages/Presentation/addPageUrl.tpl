@@ -11,12 +11,16 @@
   <div id="edit-form-layout">
 
     <div class="edit-form-row">
-      <div class="form-section-label-full">URL</div>
-      http://{$site.domain}{$domain}<input type="text" name="page_url" value="" />
-      <input type="checkbox" name="forward_to_default" id="forward_to_default" value="1" onchange="toggleFormAreaVisibilityBasedOnCheckbox('forward_to_default', 'show-redirect-type');" /><label for="forward_to_default">Forward to default URL</label>
+      <div class="form-section-label">New URL, not including leading '/'</div>
+      <input type="text" name="page_url" value="" />
     </div>
     
-    <div style="display:none" id="show-redirect-type">
+    <div class="edit-form-row">
+      <div class="form-section-label"><label for="forward_to_default">Redirect to default URL</label></div>
+      <input type="checkbox" name="forward_to_default" id="forward_to_default" value="1" onchange="toggleFormAreaVisibilityBasedOnCheckbox('forward_to_default', 'show-redirect-type');" />
+    </div>
+    
+    <div style="display:none;width:100%;clear:both;padding:0px" id="show-redirect-type">
       <div class="edit-form-row">
         <div class="form-section-label">Redirect type</div>
         <select name="url_redirect_type">
@@ -40,8 +44,9 @@
 
     <div class="edit-form-row">
       <div class="buttons-bar">
-      	<input type="button" value="Cancel" onclick="cancelForm();" />
-      	<input type="submit" name="action" value="Save" />
+        <img src="{$domain}Resources/System/Images/ajax-loader.gif" style="display:none" id="saver-gif" alt="" />
+      	<input type="button" value="Cancel" onclick="MODALS.hideViewer();" />
+      	<input type="button" name="action" onclick="return saveNewPageUrl();" value="Save" />
       </div>
     </div>
 

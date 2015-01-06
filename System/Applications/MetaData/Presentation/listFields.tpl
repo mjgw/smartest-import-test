@@ -26,7 +26,7 @@
 
 {else}
 
-<div class="special-box">There are no page fields set up on this site yet. <a href="{$domain}{$section}/addPageProperty?site_id={$site_id}">Click here</a> to add one.</div>
+<div class="special-box">There are no page fields set up on this site yet. <a href="{$domain}{$section}/addPageProperty?site_id={$site_id}" class="button">Click here</a> to add one.</div>
 
 {/if}
 

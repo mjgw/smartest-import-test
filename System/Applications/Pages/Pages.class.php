@@ -2556,6 +2556,11 @@ class Pages extends SmartestSystemApplication{
 	            $this->send($page, 'page');
 	            $this->send($container, 'container');
 	            
+	        }else{
+	            
+                $this->addUserMessageToNextRequest('Smartest needs to know more about the container \''.$container_name.'\' before you can define it.', SmartestUserMessage::INFO);
+                $this->redirect('/websitemanager/addContainer?name='.$container_name.'&continueTo=define');
+                
 	        }
 	    
         }else{
@@ -2957,6 +2962,11 @@ class Pages extends SmartestSystemApplication{
     	            $this->send($page, 'page');
     	            $this->send($placeholder, 'placeholder');
 	            
+    	        }else{
+    	            
+                    $this->addUserMessageToNextRequest('Smartest needs to know more about the placeholder \''.$placeholder_name.'\' before you can define it.', SmartestUserMessage::INFO);
+                    $this->redirect('/websitemanager/addPlaceholder?placeholder_name='.$placeholder_name.'&continueTo=define');
+                    
     	        }
 	    
             }else{
@@ -4347,6 +4357,10 @@ class Pages extends SmartestSystemApplication{
 		            
 		            $url->setUrl(SmartestStringHelper::sanitize($this->getRequestParameter('page_url')));
 		            $url->setType($this->getRequestParameter('forward_to_default') ? 'SM_PAGEURL_INTERNAL_FORWARD' : 'SM_PAGEURL_NORMAL');
+                    
+                    if($this->getRequestParameter('forward_to_default') && $this->getRequestParameter('forward_to_default') == '1'){
+                        $url->setRedirectType($this->getRequestParameter('url_redirect_type'));
+                    }
 		        
 	            }
 	            
@@ -4481,8 +4495,8 @@ class Pages extends SmartestSystemApplication{
      		        $model->find($page->getDatasetId());
      		        $this->send($model, "model");
      		    }else{
-     		        $pages = $site->getPagesList();
-     		        $this->send($pages, 'pages');
+     		        $pages = $site->getPagesList(true);
+                    $this->send($pages, 'pages');
      		    }
      		    
      		    $this->send($site, 'site');
