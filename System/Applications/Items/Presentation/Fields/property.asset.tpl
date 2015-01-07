@@ -1,7 +1,40 @@
 {capture name="name" assign="name"}item[{$property.id}]{/capture}
 {capture name="input_id" assign="input_id"}item_property_{$property.id}{/capture}
 
-{asset_select id=$input_id name=$name value=$value options=$property._options required=$property.required}
+{if $property.is_image_property && $sm_user_agent.is_supported_browser}
+  {image_select id=$input_id name=$name value=$value for="ipv" property=$property item_id=$item.id}
+
+    <ul class="item_property_actions">
+      
+      {if is_array($value.type_info)}
+        <li><a href="javascript:;" id="edit-asset-button-{$property.id}" title="Edit this file"><i class="fa fa-pencil"></i></a>
+        <script type="text/javascript">
+        $('edit-asset-button-{$property.id}').observe('click', function(){literal}{{/literal}window.location='{$domain}assets/editAsset?from=item_edit&asset_id='+$('{$input_id}').value+'&item_id={$item.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}'{literal}}{/literal});
+        $('edit-asset-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit the selected file');{literal}}{/literal});
+        $('edit-asset-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
+        </script></li>
+      {/if}
+    
+      {if is_array($value.type_info) && count($value.type_info.param)}
+        <li><a href="#edit-file-params" id="edit-params-button-{$property.id}" title="Edit display parameters for this instance of this file"><i class="fa fa-sliders"></i></a>
+          <script type="text/javascript">
+          $('edit-params-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit display parameters for this instance');{literal}}{/literal});
+          $('edit-params-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
+          $('edit-params-button-{$property.id}').observe('click', function(e){ldelim}e.stop();MODALS.load('{$section}/editAssetData?item_id={$item.id}&property_id={$property.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}', 'Contextual file display parameters'){rdelim});
+          </script></li>
+      {/if}
+    
+      <li><a href="#file-notes" id="edit-file-notes-button-{$property.id}" title="View and make notes this file"><i class="fa fa-comments"></i></a>
+        <script type="text/javascript">
+        $('edit-file-notes-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('View and make notes this file');{literal}}{/literal});
+        $('edit-file-notes-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
+        $('edit-file-notes-button-{$property.id}').observe('click', function(e){literal}{{/literal}MODALS.load('assets/assetCommentStream?asset_id='+$('{$input_id}').value, 'Notes on file '+$('{$_input_data.id}-thumbnail').alt); e.stop();{literal}}{/literal});
+        </script></li>
+        
+    </ul>
+{else}
+  {asset_select id=$input_id name=$name value=$value options=$property._options required=$property.required}
+
 {if strlen($property.hint)}<div class="form-hint">{$property.hint}</div>{/if}
 
   <ul class="item_property_actions">
@@ -34,10 +67,11 @@
     {/if}
     
     {if $value.id && is_array($value.type_info) && count($value.type_info.param)}
-      <li><a href="{$domain}ipv:{$section}/editAssetData?item_id={$item.id}&amp;property_id={$property.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}" id="edit-params-button-{$property.id}" title="Edit display parameters for this instance of this file"><i class="fa fa-sliders"></i></a>
+      <li><a href="#edit-file-params" id="edit-params-button-{$property.id}" title="Edit display parameters for this instance of this file"><i class="fa fa-sliders"></i></a>
         <script type="text/javascript">
         $('edit-params-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit display parameters for this instance');{literal}}{/literal});
         $('edit-params-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
+        $('edit-params-button-{$property.id}').observe('click', function(e){ldelim}e.stop();MODALS.load('{$section}/editAssetData?item_id={$item.id}&property_id={$property.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}', 'Contextual file display parameters'){rdelim});
         </script></li>
     {/if}
     
@@ -53,3 +87,5 @@
     <li style="padding-top:6px"><span class="form-hint" id="file-property-tooltip-{$property.id}"></span></li>
     
   </ul>
+
+{/if}

@@ -35,6 +35,7 @@ strings:
     file_types: Files by type
     file_groups: Organise
     edit_file: Edit file
+    edit_file_parameters: Parameters
     edit_file_source: Edit file source
     file_info: File info
     file_attachments: Attachments

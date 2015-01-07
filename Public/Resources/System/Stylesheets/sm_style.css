@@ -267,6 +267,27 @@ textarea#tpl_textArea{
 	background-color:#fff;
 }
 
+/** Progress bars **/
+
+div.progress-bar-outer{
+    border:2px solid #999;
+    height:15px;
+    box-sizing:border-box;
+    border-radius:8px;
+    -webkit-border-radius:8px;
+    -moz-border-radius:8px;
+}
+
+div.progress-bar-inner{
+    border:1px solid #fff;
+    height:100%;
+    background-color:#68849E;
+    box-sizing:border-box;
+    border-radius:8px;
+    -webkit-border-radius:8px;
+    -moz-border-radius:8px;
+}
+
 /** Global style stuff **/
 
 div#main-interface-container{
@@ -873,6 +894,14 @@ ul.apps li a.icon.gold{
     border-radius:5px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
+}
+
+div.image-picker-caption{
+    margin:5px 0 5px 0;
+    color:#999;
+    font-size:11px;
+    font-style:italic;
+    max-width:400px;
 }
 
 /*** Favourites bar ***/

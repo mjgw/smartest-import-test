@@ -1,7 +1,9 @@
 strings:
   main_h3:
     before_filename: "Edit file:"
-    after_filename: 
+    after_filename:
+    before_filename_edit_parameters: "Edit file display parameters:"
+    after_filename_edit_parameters: 
   you_are_editing:
     before_file: You are editing
     after_file: 

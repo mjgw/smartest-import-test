@@ -347,4 +347,118 @@ class AssetsAjax extends SmartestSystemApplication{
         
     }
     
+    public function getReplacementThumbnailForMiniImageBrowser(){
+        
+        $asset = new SmartestAsset;
+        
+        if($this->requestParameterIsSet('asset_id')){
+            
+            if($asset->find($this->getRequestParameter('asset_id'))){
+                
+                $this->send(true, 'found_asset');
+                $this->send($asset, 'asset');
+                
+            }else{
+                $this->send(false, 'found_asset');
+            }
+            
+        }else{
+            $this->send(false, 'found_asset');
+        }
+        
+        if($this->requestParameterIsSet('input_id')){
+            $this->send(strip_tags($this->getRequestParameter('input_id')), 'input_id');
+        }else{
+            $this->send(SmartestStringHelper::randomFromFormat('LlLlLlLl'), 'input_id');
+        }
+        
+    }
+    
+    public function uploadNewImageFromMiniImageBrowser(){
+        
+        if(SmartestUploadHelper::uploadExists('asset_file')){
+            
+            if($this->getUser()->hasToken('create_assets')){
+                
+                $suffix = SmartestUploadHelper::getUnsavedUploadDotSuffix('asset_file');
+                $alh = new SmartestAssetsLibraryHelper();
+                
+                if($asset_type = $alh->getTypeCodeBySuffix($suffix)){
+                    
+                    $ach = new SmartestAssetCreationHelper($asset_type);
+                
+    	            $upload = new SmartestUploadHelper('asset_file');
+                    $upload->setUploadDirectory(SM_ROOT_DIR.'System/Temporary/');
+                    // creates a new unsaved asset from the file upload
+                    $ach->createNewAssetFromFileUpload($upload, $this->getRequestParameter('asset_label'));
+                    $asset = $ach->finish();
+                    
+                    $assetSimpleObj = new stdClass;
+                    $assetSimpleObj->asset_id = $asset->getId();
+                    $assetSimpleObj->asset_webid = $asset->getWebId();
+                    $assetSimpleObj->asset_label = $asset->getLabel();
+                    $assetSimpleObj->asset_url = $asset->getUrl();
+                    
+                }
+                
+                if($this->requestParameterIsSet('for')){
+                    
+                    $assetSimpleObj->for = $this->getRequestParameter('for');
+                    
+                    switch($this->getRequestParameter('for')){
+                        
+                        case 'ipv':
+                        
+                        if($property_id = $this->getRequestParameter('property_id')){
+                            
+                            $assetSimpleObj->property_id = $this->getRequestParameter('property_id');
+                            
+                            $property = new SmartestItemProperty;
+                            if($property->find($property_id)){
+                                // Property exists, so that's good
+                                if($property->getOptionSetType() == 'SM_PROPERTY_FILTERTYPE_ASSETGROUP'){
+                                    $group = new SmartestAssetGroup;
+                                    if($group->find($property->getOptionSetId())){
+                                        $group->addAssetById($asset->getId(), false);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        break;
+                        
+                        case 'placeholder':
+                        
+                        if($placeholder_id = $this->getRequestParameter('placeholder_id')){
+                            
+                            $assetSimpleObj->placeholder_id = $this->getRequestParameter('placeholder_id');
+                            
+                            $placeholder = new SmartestPlaceholder;
+                            if($placeholder->find($placeholder_id)){
+                                // Property exists, so that's good
+                                /* if($placeholder->getOptionSetType() == 'SM_PROPERTY_FILTERTYPE_ASSETGROUP'){
+                                    $group = new SmartestAssetGroup;
+                                    if($group->find($property->getOptionSetId())){
+                                        $group->addAssetById($asset->getId(), false);
+                                    }
+                                } */
+                            }
+                        }
+                        
+                        break;
+                        
+                    }
+                    
+                }
+                
+                header('Content-type: application/javascript');
+                echo json_encode($assetSimpleObj);
+                exit;
+                
+            }
+            
+        }
+        
+    }
+    
 }

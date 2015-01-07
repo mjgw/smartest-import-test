@@ -47,5 +47,8 @@ module:
       meta:
         presentation_subfolder: ItemPropertyValueEditorUtil/
         template: _default.tpl
+    modal:
+      class: ItemsModals
     test:
       class: ItemsFunctionalityTest
+      

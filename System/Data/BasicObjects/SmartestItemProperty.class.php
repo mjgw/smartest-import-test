@@ -157,6 +157,18 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	    $info = $this->getTypeInfo();
 	    return $info['valuetype'] == 'manytomany';
 	}
+    
+    public function isImageProperty(){
+        if($this->getDatatype() == "SM_DATATYPE_ASSET"){
+            if(in_array($this->getForeignKeyFilter(), array('SM_ASSETCLASS_STATIC_IMAGE', 'SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE'))){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
 	
 	public function getDraftValues($site_id, $raw=false, $unique=true){
 	    
@@ -767,6 +779,9 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	        case "is_many_to_many":
 	        case "is_m2m":
 	        return $this->isManyToMany();
+            
+            case "is_image_property":
+            return $this->isImageProperty();
 	        
 	    }
 	    

@@ -796,73 +796,6 @@ class Items extends SmartestSystemApplication{
 	    
 	}
 	
-	public function editRelatedContent($get){
-	    
-	    $item = new SmartestItem;
-	    $item_id = $this->getRequestParameter('item_id');
-	    
-	    if($item->hydrate($item_id)){
-	        
-	        if($this->getRequestParameter('model_id')){
-	            
-	            $model_id = (int) $this->getRequestParameter('model_id');
-	            $model = new SmartestModel;
-	            
-	            if($model->find($model_id)){
-	                $mode = 'items';
-	            }else{
-	                $mode = 'pages';
-	            }
-            }
-	        
-	        $this->send($mode, 'mode');
-	        
-	        if($mode == 'items'){
-	            
-	            $this->setTitle($item->getName()." | Related ".$model->getPluralName());
-	            $this->send($item, 'item');
-	            $this->send($model, 'model');
-	            
-	            if($model->getId() == $item->getModelId()){
-	                $related_ids = $item->getRelatedItemIds(true, $model->getId());
-                }else{
-                    $related_ids = $item->getRelatedForeignItemIds(true, $model->getId());
-                }
-                
-	            $all_items  = $model->getSimpleItems($this->getSite()->getId());
-	            
-	            if($item->getModelId() == $this->getRequestParameter('model_id')){
-	                foreach($all_items as $k=>$i){
-	                    if($item_id == $i->getId()){
-	                        unset($all_items[$k]);
-	                    }
-	                }
-                }
-	            
-	            $this->send($all_items, 'items');
-	            $this->send($related_ids, 'related_ids');
-	            
-            }else{
-                
-                $this->setTitle($item->getName()." | Related pages");
-    	        $this->send($item, 'item');
-    	        $related_ids = $item->getRelatedPageIds(true);
-    	        $helper = new SmartestPageManagementHelper;
-    	        $pages = $helper->getPagesList($this->getSite()->getId());
-    	        $this->send($pages, 'pages');
-    	        $this->send($related_ids, 'related_ids');
-    	        
-            }
-	        
-	        // $related_pages = $page->getRelatedPagesAsArrays(true);
-    	    
-	    }else{
-	        $this->addUserMessageToNextRequest('The item ID was not recognized', SmartestUserMessage::ERROR);
-	        $this->redirect('/smartest/models');
-	    }
-	    
-	}
-	
 	public function updateRelatedItemConnections($get, $post){
 	    
 	    $item = new SmartestItem;
@@ -981,8 +914,8 @@ class Items extends SmartestSystemApplication{
         $this->formForward();
 	    
 	}
-	
-	public function authors($get){
+    
+    public function authors($get){
 	    
 	    if(!$this->getRequestParameter('from')){
 	        $this->setFormReturnUri();
@@ -1270,81 +1203,6 @@ class Items extends SmartestSystemApplication{
 	    
 	}
 	
-	public function modelInfo($get){
-	    
-	    $model_id = (int) $this->getRequestParameter('class_id');
-	    $model = new SmartestModel();
-	    
-	    if($model->find($model_id)){
-	        
-	        $this->send($model, 'model');
-	        $this->send($model->getMetaPages(), 'metapages');
-	        
-	        $num_items_on_site = count($model->getSimpleItems($this->getSite()->getId()));
-	        $num_items_all_sites = count($model->getSimpleItems());
-	        
-	        $file_path = substr($model->getClassFilePath(), strlen(SM_ROOT_DIR));
-	        $this->send($file_path, 'class_file');
-	        
-	        $this->send(($num_items_on_site > 0) ? number_format($num_items_on_site) : 'none', 'num_items_on_site');
-	        $this->send(number_format($num_items_all_sites), 'num_items_all_sites');
-	        $this->send($this->getUser()->hasToken('edit_model_plural_name'), 'allow_plural_name_edit');
-	        $this->send($this->getUser()->hasToken('edit_model'), 'allow_infn_edit');
-	        
-	        $sites_where_used = $model->getSitesWhereUsed();
-	        $multiple_sites = (count($sites_where_used) > 1);
-	        
-	        $site_ids = array();
-	        foreach($sites_where_used as $s){
-	            $site_ids[] = $s->getId();
-	        }
-	        
-	        $shared = ($model->isShared() || $multiple_sites);
-	        $this->send($shared, 'shared');
-	        
-	        $this->send(SmartestFileSystemHelper::getFileSizeFormatted($model->getClassFilePath()), 'class_file_size');
-	        
-	        $is_movable = $model->isMovable();
-	        
-	        if($shared){
-	            $ast = (!$multiple_sites && $model->getSiteId() == $this->getSite()->getId() && $is_movable);
-            }else{
-                $ast = ($model->hasSameNameAsModelOnOtherSite() || !$is_movable) ? false : true;
-            }
-            
-            $this->send($ast, 'allow_sharing_toggle');
-            $this->send($is_movable, 'is_movable');
-            
-            if(!$is_movable){
-                $this->send($model->getFilesThatMustBeWrtableForSharingToggleButAreNot(), 'unwritable_files');
-            }
-            
-	        $this->send($this->getSite()->getId(), 'current_site_id');
-	        
-	        if($model->getSiteId() == '0'){
-	            $this->send('Not set', 'main_site_name');
-            }else{
-                $this->send(new SmartestString($model->getMainSite()->getName()), 'main_site_name');
-            }
-	        
-	        $this->send($model->getAvailableDescriptionProperties(), 'description_properties');
-	        $this->send($model->getAvailableSortProperties(), 'sort_properties');
-	        $this->send($model->getAvailableThumbnailProperties(), 'thumbnail_properties');
-	        
-	        $recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), $model_id);
-  	        $this->send($recent, 'recent_items');
-  	        
-  	        $allow_create_new = $this->getUser()->hasToken('add_items');
-  	        $this->send($allow_create_new, 'allow_create_new');
-  	        
-  	        $this->send($model->getAvailablePrimaryProperties(), 'available_primary_properties');
-	        
-	    }else{
-	        
-	    }
-	    
-	}
-	
 	public function updateModel($get, $post){
 	    
 	    if($this->getUser()->hasToken('edit_model')){
@@ -1507,70 +1365,6 @@ class Items extends SmartestSystemApplication{
             $this->handleSaveAction();
     	    
 	    }
-	}
-	
-	public function itemInfo($get){
-	    
-	    $item_id = (int) $this->getRequestParameter('item_id');
-	    
-	    $item = SmartestCmsItem::retrieveByPk($item_id);
-	    
-	    if(is_object($item)){
-	        
-	        $this->setFormReturnUri();
-	        
-	        $this->send($item->getModel()->getMetaPages(), 'metapages');
-	        $this->send(($this->getUser()->hasToken('modify_items') && $this->getRequestParameter('enable_ajax')), 'user_can_modify_items');
-	        $this->send(($this->getUser()->hasToken('edit_item_name') && $this->getRequestParameter('enable_ajax')), 'user_can_modify_item_slugs');
-		    
-		    $authors = $item->getItem()->getAuthors();
-		    
-		    $num_authors = count($authors);
-            $byline = '';
-
-            if($num_authors){
-                
-                for($i=0;$i<$num_authors;$i++){
-
-                    $byline .= $authors[$i]['full_name'];
-
-                    if(isset($authors[$i+2])){
-                        $byline .= ', ';
-                    }else if(isset($authors[$i+1])){
-                        $byline .= ' and ';
-                    }
-
-                }
-
-                $this->send($byline, 'byline');
-            }else{
-                $this->send('No Authors', 'byline');
-            }
-		    
-		    if($page = $item->getMetaPage()){
-		        $this->send(true, 'has_page');
-		        $this->send($page, 'page');
-		    }
-		    
-		    $sets = $item->getItem()->getCurrentStaticSets();
-		    $this->send($sets, 'sets');
-		    
-		    $possible_sets = $item->getItem()->getPossibleSets();
-		    $this->send($possible_sets, 'possible_sets');
-		    
-		    $this->setTitle($item->getModel()->getName().' Information | '.$item->getName());
-		    $this->send($item, 'item');
-		    
-		    $recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), $item->getItem()->getItemclassId());
-		    $this->send($recent, 'recent_items');
-	        
-	    }else{
-	        
-	        $this->addUserMessageToNextRequest("The item ID was not recognized.", SmartestUserMessage::ERROR);
-	        $this->formForward();
-	        
-	    }
-	    
 	}
 	
 	public function toggleItemArchived($get){

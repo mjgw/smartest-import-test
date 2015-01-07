@@ -741,11 +741,15 @@ Smartest.AjaxModalViewer = Class.create({
         
         new Ajax.Updater($('modal-updater'), url, {evalScripts: true, onComplete: function(){
             Smartest.AjaxModalScroller = new Control.ScrollBar('modal-updater', 'modal-scrollbar-track');
-            var t = setTimeout(function(){Smartest.AjaxModalScroller = new Control.ScrollBar('modal-updater', 'modal-scrollbar-track');}, 50);
+            this.updateScroller();
             $('modal-loader').hide();
         }});
         
         $('modal-updater').appear({duration: 0.4});
+    },
+    
+    updateScroller: function(){
+        var t = setTimeout(function(){Smartest.AjaxModalScroller = new Control.ScrollBar('modal-updater', 'modal-scrollbar-track');}, 50);
     },
     
     hideViewer: function(){

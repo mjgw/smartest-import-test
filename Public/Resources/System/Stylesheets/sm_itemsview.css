@@ -136,7 +136,7 @@ ul.options-grid li.add a{
     width:100px!important;
     height:100px!important;
     box-sizing:border-box;
-    padding-top:18px;
+    padding-top:10px;
     display:block;
 }
 
@@ -152,7 +152,7 @@ ul.options-grid li.add a i{
     height:46px;
     box-sizing:border-box;
     padding-top:0px;
-    margin-bottom:8px;
+    margin-bottom:4px;
     font-size:3.5em;
     border-radius:23px;
     -webkit-border-radius:23px;

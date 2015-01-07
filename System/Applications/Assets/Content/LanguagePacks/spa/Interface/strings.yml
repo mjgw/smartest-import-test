@@ -29,16 +29,19 @@ strings:
     file_info: Sobre este archivo
   file_groups_box:
     label: Grupos de archivos
-    none: eliminar
+    remove: eliminar
     none: Archivo no agrupado
   tabs:
     file_types: Tipo de archivos
     file_groups: Organizar
     edit_file: Editar archivo
+    edit_file_parameters: Parámetros
     edit_file_source: Editar código fuente
     file_info: Información archivo
     file_attachments: Archivos adjuntos
     file_preview: Prever archivo
     file_tags: Etiquetas
+    file_usage: Utilización
   warnings:
-    storage_locations_unwriteable: "Para facilitar el comportamiento del almacenamiento de archivos, las siguientes carpetas necesitan poder ser editadas:"
+    storage_locations_unwriteable: "Para facilitar el buen funcionamiento de la mediateca, los siguientes lugares deben ser grabables:"
+    

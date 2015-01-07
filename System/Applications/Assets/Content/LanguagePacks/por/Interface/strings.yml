@@ -28,16 +28,18 @@ strings:
     file_info: Sobre este arquivo
   file_groups_box:
     label: Grupos de arquivos
-    none: eliminar
+    remove: eliminar
     none: Sem grupo
   tabs:
     file_types: Arquivos por tipo
     file_groups: Organizar
     edit_file: Editar arquivo
+    edit_file_parameters: Parâmetros
     edit_file_source: Editar fonte do arquivo
     file_info: Informação sobre o arquivo
     file_attachments: Arquivos em anexo
     file_preview: Pré-visualização
     file_tags: Etiquetas
+    file_usage: Utilização
   warnings:
-    storage_locations_unwriteable: "For smooth operation of the files repository, the following locations need to be made writable:"
+    storage_locations_unwriteable: "Para facilitar o bom funcionamento da biblioteca de mídia, os seguintes locais precisam ser graváveis:"

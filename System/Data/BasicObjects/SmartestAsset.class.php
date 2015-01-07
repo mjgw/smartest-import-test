@@ -135,6 +135,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             return ($this->isExternal() || $this->isWebAccessible());
             
             case "image":
+            case "img":
             return $this->isImage() ? $this->getImage() : null;
             
             case "width":

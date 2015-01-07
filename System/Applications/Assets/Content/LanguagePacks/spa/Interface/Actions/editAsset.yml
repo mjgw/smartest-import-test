@@ -1,0 +1,13 @@
+strings:
+  main_h3:
+    before_filename: "Editar archivo:"
+    after_filename:
+    before_filename_edit_parameters: "Parámetros de visualización:"
+    after_filename_edit_parameters: 
+  you_are_editing:
+    before_file: Está editando
+    after_file: 
+  in_trash_warning:
+    before_filetype: "Aviso: Este "
+    after_filetype: " se encuentra en la papelera."
+  

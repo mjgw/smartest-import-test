@@ -2,6 +2,10 @@
   <h3>Your profile</h3>
   <form action="{$domain}users/updateMyProfile" method="post">
     <div class="edit-form-row">
+      <div class="form-section-label">Profile picture</div>
+      {image_select for="user_profile_pic" user=$user id="profile-pic-selector" name="profile_pic_asset_id" value=$user.profile_pic}
+    </div>
+    <div class="edit-form-row">
       <div class="form-section-label">Username</div>
       {if $allow_username_change}<input type="text" name="username" value="{$user.username}" />{else}{$user.username}{/if}
     </div>

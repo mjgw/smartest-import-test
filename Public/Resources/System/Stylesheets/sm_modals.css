@@ -251,6 +251,99 @@ ul.modal-options-grid li#create-modal-option-site{
     background-image:url(../Images/create-new-site.png);
 }
 
+ul.file-thumbnails{
+    margin:0px;
+    padding:0px;
+    list-style-type:none;
+}
+
+ul.file-thumbnails li{
+    float:left;
+    width:100px;
+    height:100px;
+    margin:0 5px 5px 0;
+    background-size:100px 100px;
+    overflow:hidden;
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+}
+
+ul.file-thumbnails li a{
+    display:block;
+    width:100px;
+    height:100px;
+    border-radius:4px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    text-decoration:none;
+    box-sizing:border-box;
+}
+
+ul.file-thumbnails li a.selected{
+    border:3px solid #f90;
+}
+
+ul.file-thumbnails li a span.image-info{
+    -webkit-transition: all 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: opacity 0.3s, filter 0.3s;
+    opacity: 0.0;
+    filter: alpha(opacity=0);
+    display:block;
+    width:100px;
+    height:100px;
+    box-sizing:border-box;
+    background-color:#fff;
+    color:#333;
+    padding:10px;
+    border-radius:1px;
+    -webkit-border-radius:1px;
+    -moz-border-radius:1px;
+}
+
+ul.file-thumbnails li a.selected span.image-info{
+    padding:7px;
+    width:94px;
+    height:94px;
+}
+
+ul.file-thumbnails li a:hover span.image-info{
+    opacity: 0.75;
+    filter: alpha(opacity=75);
+}
+
+ul.file-thumbnails li.add a{
+    color:#444;
+    box-sizing:border-box;
+    padding-top:18px;
+    text-align:center;
+}
+
+ul.file-thumbnails li.add a:hover{
+    text-decoration:none;
+}
+
+ul.file-thumbnails li.add a i{
+    color:#fff;
+    background-color:#bbb;
+    display:block;
+    width:36px;
+    height:36px;
+    box-sizing:border-box;
+    padding-top:0px;
+    margin-bottom:8px;
+    font-size:2.3em;
+    border-radius:23px;
+    -webkit-border-radius:23px;
+    -moz-border-radius:23px;
+	margin-left:auto;
+	margin-right:auto;
+    clear:both;
+    font-style:normal;
+    font-family:"source-sans";
+    -webkit-transition: all 0.2s;
+}
+
 /*** Retina display stuff ***/
 
 @media

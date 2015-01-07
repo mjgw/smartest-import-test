@@ -2691,5 +2691,109 @@ class Assets extends SmartestSystemApplication{
 	    
 	    
 	}
+    
+    /** Mini image browser **/
+    
+    public function miniImageBrowser(){
+        
+        if($this->requestParameterIsSet('current_selection_id')){
+            $current_asset = new SmartestAsset;
+            if($current_asset->find($this->getRequestParameter('current_selection_id'))){
+                $this->send($current_asset->getId(), 'current_asset_id');
+            }else{
+                $this->send(null, 'current_asset_id');
+            }
+        }else{
+            $this->send(null, 'current_asset_id');
+        }
+        
+        if(!$this->requestParameterIsSet('input_id')){
+            echo "Input ID missing";
+            return;
+        }else{
+            $this->send($this->getRequestParameter('input_id'), 'input_id');
+        }
+        
+        if($this->requestParameterIsSet('for')){
+            
+            if($this->getRequestParameter('for') == 'ipv'){
+                
+                if($this->getRequestParameter('property_id')){
+                    
+                    $property = new SmartestItemProperty;
+                    
+                    if($property->find($this->getRequestParameter('property_id'))){
+                        $assets = $property->getPossibleValues();
+                        $this->send($this->getRequestParameter('for'), 'for');
+                        $this->send($this->getRequestParameter('property_id'), 'property_id');
+                        
+                        if($this->requestParameterIsSet('item_id')){
+                            $item = new SmartestItem;
+                            if($item->find($this->getRequestParameter('item_id'))){
+                                $this->send($item->getId(), 'item_id');
+                            }
+                        }
+                        
+                    }
+                    
+                }
+                
+            }else if($this->getRequestParameter('for') == 'placeholder'){
+                
+                if($this->getRequestParameter('placeholder_id')){
+                    
+                    $placeholder = new SmartestPlaceholder;
+                    
+                    if($placeholder->find($this->getRequestParameter('placeholder_id'))){
+                        $assets = $property->getPossibleAssets();
+                        $this->send($this->getRequestParameter('for'), 'for');
+                        $this->send($this->getRequestParameter('placeholder_id'), 'placeholder_id');
+                    }
+                    
+                }
+                
+            }else if($this->getRequestParameter('for') == 'user_profile_pic'){
+                
+                if($this->getRequestParameter('user_id')){
+                    
+                    $user = new SmartestSystemUser;
+                    
+                    if($user->find($this->getRequestParameter('user_id'))){
+                        $uh = new SmartestUsersHelper;
+                        if($g = $uh->getUserProfilePicsGroup()){
+                            $assets = $g->getMembersForUser($user->getId(), $this->getSite()->getId());
+                            $this->send($this->getRequestParameter('for'), 'for');
+                            $this->send($this->getRequestParameter('user_id'), 'user_id');
+                        }
+                    }
+                    
+                }
+                
+            }else{
+                
+                $alh = new SmartestAssetsLibraryHelper;
+                $assets =  $alh->getAssetsByTypeCode(array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE'), $this->getSite()->getId(), 1);
+                
+            }
+            
+        }else{
+            // the selection is not for anything specific
+            if($this->requestParameterIsSet('group_id')){
+                $g = new SmartestAssetGroup;
+                if($g->find($this->getRequestParameter('group_id')) && $g->isBinaryImagesOnly()){
+                    $assets =  $g->getMembers(1, $this->getSite()->getId());
+                }else{
+                    $assets =  array();
+                }
+            }else{
+                $alh = new SmartestAssetsLibraryHelper;
+                $assets =  $alh->getAssetsByTypeCode(array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE'), $this->getSite()->getId(), 1);
+            }
+            
+        }
+        
+        $this->send($assets, 'assets');
+        
+    }
 		
 }

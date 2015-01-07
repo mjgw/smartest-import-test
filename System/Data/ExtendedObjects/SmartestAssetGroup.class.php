@@ -451,6 +451,10 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
         return ($this->getFilterType() == 'SM_SET_FILTERTYPE_ASSETTYPE');
     }
     
+    public function isBinaryImagesOnly(){
+        return ($this->getFilterType() == 'SM_SET_FILTERTYPE_ASSETCLASS' && $this->getFilterValue() == 'SM_ASSETCLASS_STATIC_IMAGE') || ($this->getFilterType() == 'SM_SET_FILTERTYPE_ASSETTYPE' && in_array($this->getFilterValue(), array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE')));
+    }
+    
     public function getPlaceholdersWhereUsed(){
         
         $sql = "SELECT * FROM AssetClasses WHERE AssetClasses.assetclass_type='SM_ASSETCLASS_PLACEHOLDER' AND AssetClasses.assetclass_filter_type='SM_ASSETCLASS_FILTERTYPE_ASSETGROUP' AND AssetClasses.assetclass_filter_value='".$this->getId()."'";
