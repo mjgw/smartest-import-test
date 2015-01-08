@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 724
+    revision: 725
     minimum_php_version: 5.3
     minimum_database_version: 21
     default_timezone: Europe/London
@@ -43,7 +43,6 @@ system:
   content_interaction_methods:
     - website/renderPageFromUrl
     - website/renderPageFromId
-#    - website/renderEditableDraftPage
     - website/searchDomain
     - website/renderSiteTagSimpleRssFeed
     - website/downloadAsset
@@ -78,6 +77,7 @@ system:
       - System/Cache/TextFragments/Previews/
       - System/Cache/TextFragments/Live/
       - System/Logs/
+      - System/Temporary/
       - Public/Resources/System/Cache/Images/
       - Logs/
     files_repo:
@@ -87,12 +87,10 @@ system:
       - Public/Resources/Stylesheets/
       - Public/Resources/Javascript/
       - Public/Resources/Fonts/
-      - System/Temporary/
     templates_repo:
       - Presentation/Masters/
       - Presentation/Layouts/
       - Presentation/SingleItem/
-      - System/Temporary/
       - Documents/Deleted/
     installation:
       - Public/
@@ -101,6 +99,7 @@ system:
       - Presentation/Masters/
       - Public/Resources/Stylesheets/
       - Public/Resources/Images/
+      - Applications/
   regularizable_types:
     - SM_DATATYPE_DROPDOWN_MENU
     - SM_DATATYPE_DATE
