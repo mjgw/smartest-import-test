@@ -679,6 +679,19 @@ class SmartestDataUtility{
 	    return $types;
 	}
 	
+    public static function getAssetTypeCodes(){
+        
+        $types = self::getAssetTypes();
+        $codes = array();
+        
+        foreach($types as $id=>$type){
+            $codes[] = $id;
+        }
+        
+        return $codes;
+        
+    }
+    
 	/* static function getAssetTypes_old(){
 	    
 	    $data = self::getAssetTypesXmlData();

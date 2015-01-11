@@ -27,6 +27,12 @@ document.observe('dom:loaded', function(){
         }
     });
     
+    $('new-asset-name').observe('keydown', function(){
+        if($('new-asset-name').hasClassName('error')){
+            $('new-asset-name').removeClassName('error');
+        }
+    });
+    
     $('new-asset-form').observe('submit', function(e){
         
         if(($('new-asset-name').getValue() == itemNameFieldDefaultValue) || $('new-asset-name').getValue() == ''){
@@ -113,17 +119,17 @@ function validateUploadSuffix(){
       
     {if $for}
       {if $for=='placeholder'}
-        <input type="hidden" name="for" value="placeholder" />
-        <input type="hidden" name="placeholder_id" value="{$placeholder.id}" />
-        <input type="hidden" name="page_id" value="{$page.id}" />
-        {if $item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+        <input type="hidden" name="for" value="placeholder" class="purpose_inputs" />
+        <input type="hidden" name="placeholder_id" value="{$placeholder.id}" class="purpose_inputs" />
+        <input type="hidden" name="page_id" value="{$page.id}" class="purpose_inputs" />
+        {if $item}<input type="hidden" name="item_id" value="{$item.id}" class="purpose_inputs" />{/if}
       {elseif $for=='ipv'}
-        <input type="hidden" name="for" value="ipv" />
-        <input type="hidden" name="property_id" value="{$property.id}" />
-        {if $item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+        <input type="hidden" name="for" value="ipv" class="purpose_inputs" />
+        <input type="hidden" name="property_id" value="{$property.id}" class="purpose_inputs" />
+        {if $item}<input type="hidden" name="item_id" value="{$item.id}" class="purpose_inputs" />{/if}
       {elseif $for=='filegroup'}
-        <input type="hidden" name="for" value="filegroup" />
-        <input type="hidden" name="group_id" value="{$group.id}" />
+        <input type="hidden" name="for" value="filegroup" class="purpose_inputs" />
+        <input type="hidden" name="group_id" value="{$group.id}" class="purpose_inputs" />
       {/if}
     {/if}
     
@@ -140,19 +146,19 @@ function validateUploadSuffix(){
     <form action="{$domain}smartest/file/new/save" method="post" enctype="multipart/form-data" id="new-asset-form">  
     
       {if $for=='placeholder'}
-        <input type="hidden" name="for" value="placeholder" />
-        <input type="hidden" name="placeholder_id" value="{$placeholder.id}" />
-        <input type="hidden" name="page_id" value="{$page.id}" />
+        <input type="hidden" name="for" value="placeholder" class="purpose_inputs" />
+        <input type="hidden" name="placeholder_id" value="{$placeholder.id}" class="purpose_inputs" />
+        <input type="hidden" name="page_id" value="{$page.id}" class="purpose_inputs" />
       {elseif $for=='ipv'}
-        <input type="hidden" name="for" value="ipv" />
-        <input type="hidden" name="property_id" value="{$property.id}" />
+        <input type="hidden" name="for" value="ipv" class="purpose_inputs" />
+        <input type="hidden" name="property_id" value="{$property.id}" class="purpose_inputs" />
       {elseif $for=='filegroup'}
-        <input type="hidden" name="for" value="filegroup" />
-        <input type="hidden" name="group_id" value="{$group.id}" />
+        <input type="hidden" name="for" value="filegroup" class="purpose_inputs" />
+        <input type="hidden" name="group_id" value="{$group.id}" class="purpose_inputs" />
       {/if}
       
       <input type="hidden" name="input_method" value="{$input_method}">
-      <input type="hidden" name="asset_type" value="{$new_asset_type_info.id}">
+      <input type="hidden" name="asset_type" value="{$new_asset_type_info.id}" class="purpose_inputs">
       
 {if count($input_methods) > 1}
     <ul class="tabset">
@@ -167,7 +173,7 @@ function validateUploadSuffix(){
 
         <div>
           Add this file to group:
-            <select name="initial_group_id"{if $lock_group_dropdown} disabled="disabled"{/if}>
+            <select name="initial_group_id"{if $lock_group_dropdown} disabled="disabled"{/if} class="purpose_inputs">
               <option value="">None</option>
 {foreach from=$possible_groups item="possible_group"}
               <option value="{$possible_group.id}"{if $group_id && $possible_group.id == $group_id} selected="selected"{/if}>{$possible_group.label}</option>
@@ -199,11 +205,11 @@ function validateUploadSuffix(){
         {if $item}
         <div class="edit-form-row">
           <div class="form-section-label">Scope</div>
-          <select name="item_id" id="item-id">
+          <select name="item_id" id="item-id" class="purpose_inputs">
             <option value="{$item.id}">Use only when viewing {$item._model.name|lower} {$item.name}</option>
             <option value="ALL">Use on this meta-page for all {$item._model.plural_name|lower}.</option>
           </select>
-          <input type="hidden" name="continue_item_id" value="{$item.id}" />
+          <input type="hidden" name="continue_item_id" value="{$item.id}" class="purpose_inputs" />
         </div>
         <script type="text/javascript">
           {literal}
@@ -218,14 +224,14 @@ function validateUploadSuffix(){
         </script>
         {/if}
       {elseif $for=='ipv'}
-        {if $item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+        {if $item}<input type="hidden" name="item_id" value="{$item.id}" class="purpose_inputs" />{/if}
       {/if}
       
     {load_interface file="$interface_file"}
     
     <div class="edit-form-row">
       <div class="form-section-label">Language</div>
-      <select name="asset_language">
+      <select name="asset_language" class="purpose_inputs">
 {foreach from=$_languages item="lang" key="langcode"}
         <option value="{$langcode}"{if $langcode == $site_language} selected="selected"{/if}>{$lang.label}</option>
 {/foreach}
@@ -234,12 +240,15 @@ function validateUploadSuffix(){
 
     <div class="edit-form-row">
       <div class="form-section-label">Share this file?</div>
-      <input type="checkbox" name="asset_shared" id="asset_shared" /><label for="asset_shared">Check here to allow all your sites to use this file.</label>
+      <input type="checkbox" name="asset_shared" id="asset_shared" class="purpose_inputs" /><label for="asset_shared">Check here to allow all your sites to use this file.</label>
     </div>
 
-    <div class="buttons-bar">
-      <input type="button" value="Cancel" onclick="cancelForm()">
-      <input type="submit" value="Save">
+    <div class="buttons-bar" id="buttons-bar">
+      <input type="button" value="Cancel" id="cancel-asset-create" />
+      <input type="submit" value="Save new file" id="confirm-asset-create" />
+      <script type="text/javascript">
+        $('cancel-asset-create').observe('click', cancelForm);
+      </script>
     </div>
 </form>
     {else}

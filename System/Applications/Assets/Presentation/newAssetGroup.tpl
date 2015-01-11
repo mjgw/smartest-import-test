@@ -28,7 +28,8 @@
             $('file-gallery-select-holder').show();
             $('file-group-select-holder').hide();
             $('h3-group-type').update('gallery');
-            $('filegroup-type-hint').update('A gallery allows you to arrange certain files in order to display them together'); 
+            $('save-button').value = 'Save new gallery';
+            $('filegroup-type-hint').update('A gallery allows you to caption files, arrange them in order, and display them together'); 
 
             if($F('asset-group-label') == 'Unnamed file group'){
               $('asset-group-label').value = 'Unnamed gallery';
@@ -39,7 +40,8 @@
             $('file-gallery-select-holder').hide();
             $('file-group-select-holder').show();
             $('h3-group-type').update('file group');
-            $('filegroup-type-hint').update('An ordinary file group simply allows you to group a subset of your files together');
+            $('save-button').value = 'Save new group';
+            $('filegroup-type-hint').update('An ordinary file group allows you to group a subset of your files together for organisational purposes');
 
             if($F('asset-group-label') == 'Unnamed gallery'){
               $('asset-group-label').value = 'Unnamed file group';
@@ -93,7 +95,7 @@
           <option value="SM_SET_ASSETGROUP">Ordinary file group</option>
           <option value="SM_SET_ASSETGALLERY"{if $gallery_checked} selected="selected"{/if}>Gallery</option>
         </select>
-        <div class="form-hint" id="filegroup-type-hint">{if $gallery_checked}A file gallery allows you to order and caption certain files so they can be displayed together{else}An ordinary file group simply allows you to group a subset of your files together{/if}</div>
+        <div class="form-hint" id="filegroup-type-hint">{if $gallery_checked}A gallery allows you to caption files, arrange them in order, and display them together{else}An ordinary file group allows you to group a subset of your files together for organisational purposes{/if}</div>
       </div>
       
       <div class="edit-form-row">
@@ -147,8 +149,8 @@
       
       <div class="edit-form-row">
         <div class="buttons-bar">
-          <input type="submit" value="Save" />
           <input type="button" onclick="cancelForm();" value="Cancel" />
+          <input type="submit" value="Save new group" id="save-button" />
         </div>
       </div>
 

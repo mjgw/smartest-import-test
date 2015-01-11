@@ -81,6 +81,7 @@
       e.stop();
       $('image-list').hide();
       $('image-uploader').show();
+      $('asset-label').focus();
       MODALS.updateScroller();
     });
   }

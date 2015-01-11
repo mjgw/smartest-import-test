@@ -735,4 +735,18 @@ class ItemsModals extends SmartestSystemApplication{
 	    
 	}
     
+	public function editModelAutomaticSets(){
+	    
+	    $model = new SmartestModel;
+	    
+	    if($model->find($this->getRequestParameter('model_id'))){
+	        
+	        $this->send($model, 'model');
+	        $this->send($model->getAutomaticSetIdsForNewItem(), 'selected_set_ids');
+	        $this->send($model->getStaticSets($this->getSIte()->getId()), 'sets');
+	        
+	    }
+	    
+	}
+    
 }

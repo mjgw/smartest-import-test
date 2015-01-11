@@ -461,4 +461,32 @@ class AssetsAjax extends SmartestSystemApplication{
         
     }
     
+    public function uploadNewFileViaBrowserAjaxRequest(){
+        
+        if(SmartestUploadHelper::uploadExists('new_file')){
+            
+            if($this->getUser()->hasToken('create_assets')){
+                
+                $asset_type = $this->getRequestParameter('asset_type');
+                
+                if(in_array($asset_type, SmartestDataUtility::getAssetTypeCodes())){
+                    $ach = new SmartestAssetCreationHelper($asset_type);
+                    $upload = new SmartestUploadHelper('new_file');
+                    $upload->setUploadDirectory(SM_ROOT_DIR.'System/Temporary/');
+                    $ach->createNewAssetFromFileUpload($upload, $this->getRequestParameter('asset_label'));
+                    $asset = $ach->finish();
+                }else{
+                    // The requested asset type does not exist
+                }
+                
+            }else{
+                // User does not have permission to create new files
+            }
+            
+        }else{
+            // New file upload does not exist
+        }
+        
+    }
+    
 }

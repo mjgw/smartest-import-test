@@ -36,13 +36,13 @@
   The primary web address for this {$item._model.name|strtolower} is <a href="{$item.absolute_url}" target="_blank">{$item.absolute_url}</a>
   {else}
   The primary web address for this {$item._model.name|strtolower} will be <strong>{$item.absolute_url}</strong>
-  {/if} <a href="{$domain}websitemanager/editPage?page_id={$item._meta_page.webid}&amp;item_id={$item.id}#urls" class="button small">Edit</a>
+  {/if} <a href="{$domain}websitemanager/editPage?page_id={$item._meta_page.webid}&amp;item_id={$item.id}#urls" class="button small">Edit URL structure</a>
   
 </div>
 
 {/if}
 
-<form action="{$domain}{$section}/updateItem" enctype="multipart/form-data" method="post">
+<form action="{$domain}{$section}/updateItem" enctype="multipart/form-data" method="post" id="edit-item-form">
 
 <input type="hidden" name="class_id" value="{$item._model.id}" />
 <input type="hidden" name="item_id" value="{$item.id}" />
@@ -75,9 +75,9 @@
 <div class="edit-form-row">
   <div class="form-section-label">Current status</div>
   {if $item.public == "TRUE"}
-    Live <a class="button" href="#publish" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}';return false;">Re-Publish</a>&nbsp;<a class="button" href="#un-publish" onclick="window.location='{$domain}{$section}/unpublishItem?item_id={$item.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}';return false;">Un-publish</a>
+    Live <a class="button" href="#publish" onclick="$('sm-form-submit-action').value='publish';$('edit-item-form').submit();return false;">Re-Publish</a>&nbsp;<a class="button" href="#un-publish" onclick="saveItemData(function(){ldelim}window.location='{$domain}{$section}/unpublishItem?item_id={$item.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}';{rdelim});return false;">Un-publish</a>
   {else}
-    Not live <a class="button" href="#publish" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}';return false;">Publish</a>
+    Not live <a class="button" href="#publish" onclick="saveItemData(function(){ldelim}window.location='{$domain}{$section}/publishItem?item_id={$item.id}';{rdelim});return false;">Publish</a>
   {/if}
 </div>
 
@@ -118,6 +118,7 @@
 
 <div class="edit-form-row">
   <div class="buttons-bar">
+    <!--<a class="button" href="#save" onclick="saveItemData();return false;">Save</a>-->
     {url_for assign="publish_action"}@publish_item?item_id={$item.id}{/url_for}
     {save_buttons publish_action=$publish_action}
   </div>
@@ -125,12 +126,27 @@
 
 </form>
 
-<form id="item-autosave-form" method="post" action="{$domain}ajax:datamanager/autoSaveItem">
-  <input type="hidden" name="item_name" value="" />
-{foreach from=$item._editable_properties key="pid" item="property"}
-  
-{/foreach}
-</form>
+<script type="text/javascript">
+{literal}
+var saveItemData = function(callbackFunction){
+  $('primary-ajax-loader').show();
+  $('edit-item-form').request({
+    onSuccess: function(){
+      $('primary-ajax-loader').hide();
+      if(callbackFunction && typeof callbackFunction == 'function'){
+        callbackFunction();
+      }
+    }
+  });
+}
+
+$('form-save-button').observe('click', function(e){
+  e.stop();
+  saveItemData();
+});
+
+{/literal}
+</script>
 
 </div>
 

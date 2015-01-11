@@ -51,8 +51,8 @@
     {/if}
     
     <div class="buttons-bar">
-      <input type="submit" value="Publish" />
       <input type="button" value="Cancel" onclick="cancelForm()" />
+      <input type="submit" value="Publish" />
     </div>
     
   </form>

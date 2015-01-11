@@ -515,6 +515,7 @@ type:
     parsable: false
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
     storage:
       type: file
       location: Public/Resources/Assets/
@@ -524,11 +525,12 @@ type:
     suffix:
       - {mime: video/mpeg, _content: mpg}
       - {mime: video/mpeg, _content: mpeg}
+      - {mime: video/mp4, _content: mp4}
     param:
       - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 480}
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 360}
-      - {name: auto_start, label: "Auto start", type: SM_DATATYPE_BOOLEAN, required: false}
-      - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, required: false}
+      - {name: auto_start, label: "Auto start", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
+      - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
       
   SM_ASSETTYPE_FLASH_VIDEO:
     id: SM_ASSETTYPE_FLASH_VIDEO
@@ -540,6 +542,7 @@ type:
     icon: page_white_flash.png
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
     storage:
       type: file
       location: Public/Resources/Assets/
@@ -563,6 +566,7 @@ type:
     captionable: true
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
     storage: 
       type: file
       location: Public/Resources/Assets/
@@ -587,6 +591,7 @@ type:
     captionable: true
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
     storage: 
       type: file
       location: Public/Resources/Assets/
@@ -635,6 +640,7 @@ type:
     parsable: false
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
     storage: 
       type: file
       location: Documents/Downloads/

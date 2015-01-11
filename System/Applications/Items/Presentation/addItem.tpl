@@ -21,6 +21,16 @@
             }
         });
         
+        $('item-name').observe('keyup', function(){
+            if($('item-name').hasClassName('error')){
+                if($('item-name').getValue() == itemNameFieldDefaultValue || $('item-name').getValue() == ''){
+                    
+                }else{
+                    $('item-name').removeClassName('error');
+                }
+            }
+        });
+        
         $('new-item-form').observe('submit', function(e){
             
             document.fire('smartest:newItemFormSubmit');

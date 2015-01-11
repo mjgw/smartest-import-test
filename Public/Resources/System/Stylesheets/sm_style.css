@@ -49,7 +49,7 @@ a img{
     border:0px;
 }
 
-a.button{
+a.button, input[type="button"], input[type="submit"]{
     
     color:#fff!important;
     background-color:#68849E;
@@ -58,10 +58,14 @@ a.button{
     
     display:inline-block;
     padding:2px 9px;
-    border-radius:10px;
+    border-radius:15px;
     
     -webkit-transition: all 0.2s; /* For Safari 3.1 to 6.0 */
     transition: all 0.2s;
+    
+    font-size:12px;
+    
+    cursor:pointer;
 }
 
 a.button i:first-child{
@@ -76,7 +80,7 @@ a.button i:first-child{
     margin-left:4px;
 } */
 
-a.button:hover{
+a.button:hover, input[type="button"]:hover, input[type="submit"]:hover{
     text-decoration:none;
     /* border-color:#ccc; */
     
@@ -86,7 +90,7 @@ a.button:hover{
 
 a.button.small{
     padding:1px 6px;
-    font-size:11px
+    font-size:11px;
 }
 
 a.sm-help-link{
@@ -367,14 +371,7 @@ div.edit-form-row{
     
 }
 
-div.edit-form-row select{
-	width:380px;
-}
-
 div.edit-form-row input[type="text"], div.edit-form-row input[type="password"], div.special-box input[type="text"], table.info-table tr td input[type="text"]{
-	width:400px;
-	height:25px;
-	padding:3px;
 	font-size:18px;
 	color:#666;
 	border:1px solid #ccc;
@@ -901,7 +898,6 @@ div.image-picker-caption{
     color:#999;
     font-size:11px;
     font-style:italic;
-    max-width:400px;
 }
 
 /*** Favourites bar ***/

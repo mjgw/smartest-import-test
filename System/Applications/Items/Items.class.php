@@ -917,9 +917,9 @@ class Items extends SmartestSystemApplication{
     
     public function authors($get){
 	    
-	    if(!$this->getRequestParameter('from')){
+	    /* if(!$this->getRequestParameter('from')){
 	        $this->setFormReturnUri();
-	    }
+	    } */
 	    
 	    $item_id = $this->getRequestParameter('item_id');
 	    
@@ -1323,48 +1323,6 @@ class Items extends SmartestSystemApplication{
             
         }
 	    
-	}
-	
-	public function editModelAutomaticSets(){
-	    
-	    $model = new SmartestModel;
-	    
-	    if($model->find($this->getRequestParameter('model_id'))){
-	        
-	        $this->send($model, 'model');
-	        $this->send($model->getAutomaticSetIdsForNewItem(), 'selected_set_ids');
-	        $this->send($model->getStaticSets($this->getSIte()->getId()), 'sets');
-	        
-	    }
-	    
-	}
-	
-	public function updateModelAutomaticSets(){
-	    
-	    $model = new SmartestModel;
-	    
-	    if($model->find($this->getRequestParameter('model_id'))){
-    	    
-    	    if(is_array($this->getRequestParameter('sets'))){
-    	        $chosen_set_ids = array_keys($this->getRequestParameter('sets'));
-    	    }else{
-    	        $chosen_set_ids = array();
-    	    }
-    	        
-	        $existing_set_ids = $model->getAutomaticSetIdsForNewItem();
-	        
-	        foreach($model->getStaticSets($this->getSIte()->getId()) as $set){
-	            $set_id = $set->getId();
-	            if(in_array($set_id, $chosen_set_ids) && !in_array($set_id, $existing_set_ids)){
-	                $model->addAutomaticSetForNewItemById($set_id);
-	            }else if(!in_array($set_id, $chosen_set_ids) && in_array($set_id, $existing_set_ids)){
-	                $model->removeAutomaticSetForNewItemById($set_id);
-	            }
-	        }
-	        
-            $this->handleSaveAction();
-    	    
-	    }
 	}
 	
 	public function toggleItemArchived($get){

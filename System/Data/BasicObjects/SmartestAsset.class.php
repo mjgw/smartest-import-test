@@ -206,6 +206,9 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             case "is_too_large":
             return $this->isTooLarge();
             
+            case "mime_type":
+            return $this->getMimeType();
+            
         }
         
         return parent::offsetGet($offset);

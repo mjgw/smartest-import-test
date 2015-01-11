@@ -409,5 +409,33 @@ class ItemsAjax extends SmartestSystemApplication{
 	    }
 	    
 	}
+    
+    public function updateModelAutomaticSets(){
+	    
+	    $model = new SmartestModel;
+    
+	    if($model->find($this->getRequestParameter('model_id'))){
+	    
+    	    if(is_array($this->getRequestParameter('sets'))){
+    	        $chosen_set_ids = array_keys($this->getRequestParameter('sets'));
+    	    }else{
+    	        $chosen_set_ids = array();
+    	    }
+	        
+	        $existing_set_ids = $model->getAutomaticSetIdsForNewItem();
+        
+	        foreach($model->getStaticSets($this->getSIte()->getId()) as $set){
+	            $set_id = $set->getId();
+	            if(in_array($set_id, $chosen_set_ids) && !in_array($set_id, $existing_set_ids)){
+	                $model->addAutomaticSetForNewItemById($set_id);
+	            }else if(!in_array($set_id, $chosen_set_ids) && in_array($set_id, $existing_set_ids)){
+	                $model->removeAutomaticSetForNewItemById($set_id);
+	            }
+	        }
+        
+            $this->handleSaveAction();
+	    
+	    }
+	}
 
 }

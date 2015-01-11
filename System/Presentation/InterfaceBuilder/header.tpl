@@ -60,10 +60,27 @@
       var MODALS = new Smartest.AjaxModalViewer();
       Smartest.createNew = function(){MODALS.load('desktop/createDialog', 'Create something new');}
       
-      document.observe('scrolled:vertically', function(evt){
-        if(evt.memo.currentScrollTop > 50){
-          
+      document.observe('dom:loaded', function(){
+      
+        document.observe('scrolled:vertically', function(evt){
+          console.log(evt.memo.currentScrollTop);
+          if(evt.memo.currentScrollTop > 50){
+            if(!$('primary-ajax-loader').hasClassName('scrolled')){
+              $('primary-ajax-loader').addClassName('scrolled');
+            }
+          }else{
+            if($('primary-ajax-loader').hasClassName('scrolled')){
+              $('primary-ajax-loader').removeClassName('scrolled');
+            }
+          }
+        });
+      
+        console.log($('actions-area'));
+      
+        if(!$('actions-area')){
+          $('primary-ajax-loader').addClassName('fullwidth');
         }
+      
       });
       
       {/literal}

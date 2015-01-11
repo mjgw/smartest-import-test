@@ -330,7 +330,7 @@ class Assets extends SmartestSystemApplication{
 	
 	public function addAsset($get){
 		
-		$this->requireOpenProject();
+        $this->requireOpenProject();
 		$alh = new SmartestAssetsLibraryHelper;
 		
 		if($this->getRequestParameter('group_id') && !$this->getRequestParameter('for')){

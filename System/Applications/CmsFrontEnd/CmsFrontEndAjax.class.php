@@ -55,8 +55,10 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     		            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
     		                $item->setDraftMode($draft_mode);
     		                $page->setPrincipalItem($item);
-    		                header('Content-type: application/json');
-    		                echo $page->__toJson();
+                            $json = $page->__toJson();
+            		        header('Content-type: application/json');
+                            header("Content-Length: ".strlen($json));
+        	                echo $json;
     		                exit;
     		            }else{
     		                // item could not be found
@@ -72,8 +74,10 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     		        }
     		        
     		    }else{
+                    $json = $page->__toJson();
     		        header('Content-type: application/json');
-	                echo $page->__toJson();;
+                    header("Content-Length: ".strlen($json));
+	                echo $json;
 	                exit;
     		    }
     		    

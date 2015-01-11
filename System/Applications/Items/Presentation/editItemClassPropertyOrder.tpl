@@ -58,12 +58,14 @@
               
               $('submit-ajax').disabled = true;
               $('submit-ajax').value = 'Updating...';
+              $('primary-ajax-loader').show();
 
               new Ajax.Request(url, {
                   method: 'post',
                   parameters: {property_ids: IDs_string, class_id: modelId},
                   onSuccess: function(){
                       $('submit-ajax').value = 'Drag items to change order';
+                      $('primary-ajax-loader').hide();
                   }
               });
           });
