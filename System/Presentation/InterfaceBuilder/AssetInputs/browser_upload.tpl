@@ -1,10 +1,15 @@
 {if $sm_user_agent.is_supported_browser}
+
+{if $post_max_size_warning}
+<div class="warning">There is an issue in your PHP configration. Although upload_max_filesize has been configured to allow uploads of up to <strong>{$max_upload_size_in_megs} MB</strong>, the post_max_size directive in php.ini will still limit uploads to only <strong>{$post_max_size_in_megs} MB</strong>, and uploads will fail completely if they exceed this. To fix this, change the post_max_size directive to match upload_max_filesize.</div>
+{/if}
+
 <div class="error" style="display:none" id="upload-error">
   There was a problem with your file upload.
 </div>
 <div class="edit-form-row">
   <div class="form-section-label">Choose a file on your computer to upload</div>
-  <input type="file" name="new_file" id="asset-file" /><div class="form-hint">Please do not upload files larger than <strong>{$max_upload_size_in_megs} MB</strong></div>
+  <input type="file" name="new_file" id="asset-file" /><div class="form-hint">Please do not upload files larger than <strong>{if $post_max_size_warning}{$post_max_size_in_megs}{else}{$max_upload_size_in_megs}{/if} MB</strong></div>
 </div>
 <div class="edit-form-row" id="upload-progress-bar-holder" style="display:none">
   <div class="form-section-label"> </div>
@@ -92,7 +97,16 @@ document.observe('dom:loaded', function(){
 {/literal}
 </script>
 {else}
+
+{if $post_max_size_warning}
+<div class="warning">There is an issue in your PHP configration. Although upload_max_filesize has been configured to allow uploads of up to <strong>{$max_upload_size_in_megs} MB</strong>, the post_max_size directive in php.ini will still limit uploads to only <strong>{$post_max_size_in_megs} MB</strong>, and uploads will fail completely if they exceed this. To fix this, change the post_max_size directive to match upload_max_filesize.</div>
+{/if}
+
 <div style="margin-top:8px;margin-bottom:8px" id="uploader" class="special-box">
-  Upload file: <input type="file" name="new_file" /><div class="form-hint">Please do not upload files larger than <strong>{$max_upload_size_in_megs} MB</strong></div>
+  <div class="edit-form-row">
+    <div class="form-section-label">Choose a file on your computer to upload</div>
+    <input type="file" name="new_file" /><div class="form-hint">Please do not upload files larger than <strong>{if $post_max_size_warning}{$post_max_size_in_megs}{else}{$max_upload_size_in_megs}{/if} MB</strong></div>
+    <div class="breaker"></div>
+  </div>
 </div>
 {/if}

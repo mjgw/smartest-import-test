@@ -68,6 +68,7 @@
           input_id: inputId
         }
       });
+      $(inputId).fire('image:chosen');
       // Close modal
       MODALS.hideViewer();
     });

@@ -75,8 +75,6 @@
           }
         });
       
-        console.log($('actions-area'));
-      
         if(!$('actions-area')){
           $('primary-ajax-loader').addClassName('fullwidth');
         }

@@ -66,30 +66,35 @@
         <td>{$asset.modified|date_format:"%A %B %e, %Y, %l:%M%p"}</span></td>
       </tr>
       {/if}
-      {if !$asset.is_image}
+      {if $asset.is_image}
+      <tr>
+        <td style="width:150px;background-color:#fff" class="field-name">Preview</td>
+        <td>
+          <img src="{$asset.image.constrain_400x400.web_path}" alt="{$asset.label}" style="width:{$asset.image.constrain_200x200.width};height:{$asset.image.constrain_200x200.height}px" id="thumbnail-{$asset.id}">
+        </td>
+      </tr>
+      {else}
       <tr>
         <td style="width:150px;background-color:#fff" class="field-name">Thumbnail image file:</td>
         <td>
-          <select name="asset_thumbnail_image" style="width:300px" id="asset-thumbnail">
-            <option value="NONE">None</option>
-{foreach from=$thumbnail_files item="thumbnail_file"}
-            <option value="{$thumbnail_file.id}"{if $thumbnail_file.id == $asset.thumbnail_id} selected="selected"{/if}>{$thumbnail_file.label}</option>
-{/foreach}
-          </select>
+          {image_select for="asset_thumbnail" name="asset_thumbnail_image" id="asset-thumbnail" value=$asset.thumbnail_image changehook="updateThumbnailImage"}
           <br /><span class="form-hint">An image that is used to represent this file when a static image is necessary in templates.</span>
           <script type="text/javascript">
           {literal}
-          $('asset-thumbnail').observe('change', function(){
-            var url = sm_domain+'ajax:assets/setAssetThumbnailId';
-            $('primary-ajax-loader').show();
-            new Ajax.Request(url, {
-              method: 'post',
-              parameters: {'asset_id': asset_id, 'thumbnail_id': $('asset-thumbnail').value},
-              onSuccess: function(){
-                 $('primary-ajax-loader').hide();
-              }
-            });
-          });
+          var updateThumbnailImage = function(imageId){
+            
+              var url = sm_domain+'ajax:assets/setAssetThumbnailId';
+              $('primary-ajax-loader').show();
+              
+              new Ajax.Request(url, {
+                method: 'post',
+                parameters: {'asset_id': asset_id, 'thumbnail_id': imageId},
+                onSuccess: function(){
+                   $('primary-ajax-loader').hide();
+                }
+              });
+              
+          }
           {/literal}
           </script>
         </td>

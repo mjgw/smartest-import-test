@@ -27,6 +27,20 @@ function smarty_function_image_select($params, $smartest_engine){
             $asset->setParameter('required', false);
         }
         
+        if(isset($params['changehook'])){
+            $onchange = $params['changehook'].'(';
+            $asset->setParameter('change_hook', $onchange);
+        }elseif(isset($params['onchange'])){
+            $onchange = $params['onchange'];
+            if(substr($onchange, -1) != ';'){
+                $onchange.=';';
+            }
+            $onchange .= "\n";
+            $asset->setParameter('change_js', $onchange);
+        }else{
+            $asset->setParameter('change_js', false);
+        }
+        
         if(isset($params['for'])){
             
             $asset->setParameter('for', strtolower($params['for']));

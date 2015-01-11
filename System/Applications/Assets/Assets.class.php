@@ -339,8 +339,8 @@ class Assets extends SmartestSystemApplication{
 		        $this->send($group, 'group');
 		    }
 	    }
-	    
-	    $this->send($this->getSite()->getLanguageCode(), 'site_language');
+        
+        $this->send($this->getSite()->getLanguageCode(), 'site_language');
 	    
 	    if($this->getRequestParameter('asset_type')){
             
@@ -432,9 +432,32 @@ class Assets extends SmartestSystemApplication{
     		        break;
     		        
     		        case "SM_ASSETINPUTTYPE_BROWSER_UPLOAD":
-    		        $mr = ini_get('upload_max_filesize');
-            		preg_match('/(\d+)M$/', $mr, $m);
-            		$this->send(new SmartestNumeric($m[1]), 'max_upload_size_in_megs');
+    		        // $mr = ini_get('upload_max_filesize');
+            		// preg_match('/(\d+)M$/', $mr, $m);
+                    // 
+                    
+                    if(ini_get('post_max_size') != '0'){
+                    
+                        preg_match('/(\d+)M$/', ini_get('post_max_size'), $matches);
+                        $post_max_size = $matches[1]*1;
+                    
+                        preg_match('/(\d+)M$/', ini_get('upload_max_filesize'), $matches);
+                        $upload_max_filesize = $matches[1]*1;
+        
+                        if($post_max_size < $upload_max_filesize){
+                            $this->send(true, 'post_max_size_warning');
+                            $this->send(new SmartestNumeric($post_max_size), 'post_max_size_in_megs');
+                        }else{
+                            $this->send(false, 'post_max_size_warning');
+                        }
+                        
+                    }else{
+                        preg_match('/(\d+)M$/', ini_get('upload_max_filesize'), $matches);
+                        $upload_max_filesize = $matches[1]*1;
+                    }
+                    
+            		$this->send(new SmartestNumeric($upload_max_filesize), 'max_upload_size_in_megs');
+                    
     		        break;
     		        
     		        case "SM_ASSETINPUTTYPE_URL_INPUT":
@@ -711,6 +734,8 @@ class Assets extends SmartestSystemApplication{
 	public function saveNewAsset($get, $post){
 	    
 	    $this->requireOpenProject();
+        
+        // print_r($_POST);
 	    
 	    if(!strlen($this->getRequestParameter('asset_label'))){
 	        $this->addUserMessage("You must give the file a name", SmartestUserMessage::WARNING);
