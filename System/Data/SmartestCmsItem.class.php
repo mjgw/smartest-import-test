@@ -1253,6 +1253,8 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	
 	public function save(){
 		
+        $this->preSaveAction();
+        
 		$this->_save_errors = array();
 		
 		if(!$this->_came_from_database){
@@ -1328,6 +1330,8 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
             throw new SmartestException("Item saved without a name", SM_ERROR_USER);
         }
         
+        $this->postSaveAction();
+        
         if(count($this->_save_errors)){
             return false;
         }else{
@@ -1347,6 +1351,14 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    return $this->_save_errors;
 	}
 	
+    public function preSaveAction(){
+        // This function will be overridden. This definition is simply here to make sure it can always be called safely.
+    }
+    
+    public function postSaveAction(){
+        // This function will be overridden. This definition is simply here to make sure it can always be called safely.
+    }
+    
 	public function delete(){
 		// mark as deleted
 		if($this->_item instanceof SmartestItem && $this->_item->isHydrated()){

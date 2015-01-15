@@ -8,12 +8,26 @@ module:
     - {url: /tag/:tag_name/feed, action: renderSiteTagSimpleRssFeed}
     - {url: /tag/:tag_name, action: renderPageFromId, params: {tag: true}}
   routes:
-    tag_page:
+    tag_page_legacy:
       url: /tags/:tag_name.html
       action: renderPageFromId
       params:
         tag: true
+    tag_page:
+      url: /tagged/:tag_name
+      action: renderPageFromId
+      params:
+        tag: true
+    tag_single_model:
+      url: /:model_plural_name/tagged/:tag_name
+      action: renderPageFromId
+      params:
+        tag: true
+        model_specific: true
     tag_feed:
+      url: /tagged/:tag_name/feed
+      action: renderSiteTagSimpleRssFeed
+    tag_feed_legacy:
       url: /tags/:tag_name/feed
       action: renderSiteTagSimpleRssFeed
     search_all:

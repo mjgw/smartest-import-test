@@ -22,6 +22,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	protected $_containers = array();
 	protected $_placeholders;
 	protected $_itemspaces = array();
+    protected $_asset_class_definitions_retrieved = false;
 	
 	protected $_new_urls = array();
 	protected $displayPagesIndex = 0;
@@ -2124,8 +2125,20 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
                 $this->_placeholders->setParameter($def_array['assetclass_name'], $def);
             }
         }
+        
+        $this->_asset_class_definitions_retrieved = true;
 	    
 	}
+    
+    public function getPlaceholderDefinitions(){
+        
+        if(!$this->_asset_class_definitions_retrieved){
+            $this->loadAssetClassDefinitions();
+        }
+        
+        return $this->_placeholders;
+        
+    }
 	
 	public function loadItemSpaceDefinitions(){
 	    
@@ -2258,6 +2271,9 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	}
 	
 	public function getContainerDefinitions(){
+        if(!$this->_asset_class_definitions_retrieved){
+            $this->loadAssetClassDefinitions();
+        }
 	    return $this->_containers;
 	}
 	

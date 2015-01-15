@@ -633,8 +633,8 @@ type:
   SM_ASSETTYPE_ARCHIVE:
     id: SM_ASSETTYPE_ARCHIVE
     category: other
-    label: Archive
-    description: An archived folder or document
+    label: Archive or disk image
+    description: 'An archived folder or document, or disk image'
     class: SmartestAsset
     html_friendly: false
     parsable: false
@@ -649,6 +649,8 @@ type:
       - {mime: application/x-gzip, _content: gz}
       - {mime: application/x-tar, _content: tar}
       - {mime: application/x-zip-compressed, _content: zip}
+      - {mime: application/x-apple-diskimage, _content: dmg}
+      - {mime: application/x-iso9660-image, _content: iso}
     render:
       template: System/Presentation/WebPageBuilder/display.download.tpl
   

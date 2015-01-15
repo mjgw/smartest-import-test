@@ -155,6 +155,12 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
         
             case "fields":
             return $this->_page->getPageFieldDefinitions();
+            
+            case "placeholders":
+            return $this->_page->getPlaceholderDefinitions();
+            
+            case "containers":
+            return $this->_page->getContainerDefinitions();
         
             case "request":
             return SmartestPersistentObject::get('request_data');
