@@ -510,7 +510,7 @@ type:
     id: SM_ASSETTYPE_MPEG_MOVIE
     category: embedded
     label: MPEG Movie
-    description: A movie saved in any MPEG format
+    description: A movie saved in standard MPEG format
     class: SmartestAsset
     parsable: false
     input_options:
@@ -531,7 +531,34 @@ type:
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 360}
       - {name: auto_start, label: "Auto start", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
       - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
-      
+
+  SM_ASSETTYPE_QUICKTIME_MOVIE:
+    id: SM_ASSETTYPE_QUICKTIME_MOVIE
+    category: embedded
+    label: Quicktime Movie
+    description: A movie saved in any Quicktime format
+    class: SmartestAsset
+    parsable: false
+    input_options:
+      - SM_ASSETINPUTTYPE_FTP_UPLOAD
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
+    storage:
+      type: file
+      location: Public/Resources/Assets/
+      system_location: Public/Resources/System/Assets/
+    render:
+      template: System/Presentation/WebPageBuilder/display.mpeg.tpl
+    suffix:
+      - {mime: video/quicktime, _content: mov}
+      - {mime: video/x-m4v, _content: m4v}
+      - {mime: video/mp4, _content: mp4}
+    param:
+      - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 480}
+      - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 360}
+      - {name: auto_start, label: "Auto start", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
+      - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
+
+    
   SM_ASSETTYPE_FLASH_VIDEO:
     id: SM_ASSETTYPE_FLASH_VIDEO
     category: embedded

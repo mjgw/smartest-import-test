@@ -19,6 +19,8 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
     
     protected $_is_attached = false; // Used when building the tags screen
     
+    protected $_filters = array();
+    
     /* protected function __objectConstruct(){
         
         $this->_table_prefix = 'tag_';
@@ -32,6 +34,10 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
         if(!$site_id || !is_numeric($site_id)){
             $site_id = 'all';
+        }
+        
+        if(count($this->_filters) && isset($this->_filters['model_id']) && is_numeric($this->_filters['model_id'])){
+            return array();
         }
         
         if(!isset($this->_page_lookup_attempted[$site_id])){
@@ -99,6 +105,16 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             $site_id = 'all';
         }
         
+        if(count($this->_filters)){
+            
+            if(isset($this->_filters['model_id']) && is_numeric($this->_filters['model_id'])){
+                if(!is_numeric($model_id)){
+                    $model_id = $this->_filters['model_id'];
+                }
+            }
+            
+        }
+        
         if(!$this->_item_lookup_attempted[$site_id]){
         
             $sql = "SELECT * FROM TagsObjectsLookup, Items WHERE taglookup_tag_id='".$this->getId()."' AND taglookup_object_id=item_id AND taglookup_type='SM_ITEM_TAG_LINK' AND item_deleted = '0'";
@@ -137,6 +153,20 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
         return $this->_simple_items;
         
+    }
+    
+    public function addFilter($filter_name, $filter_value){
+        $this->_filters[$filter_name] = $filter_value;
+    }
+    
+    public function removeFilter($filter_name){
+        if(isset($this->_filters[$filter_name])){
+            unset($this->_filters[$filter_name]);
+        }
+    }
+    
+    public function clearFilters(){
+        $this->_filters = array();
     }
     
     public function getSimpleItemsAsArrays($site_id=false, $d='USE_DEFAULT', $model_id=false){
@@ -182,6 +212,16 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
     }
     
     protected function _getItems($site_id=null, $model_id=null, $metapage_models_only=false){
+        
+        if(count($this->_filters)){
+            
+            if(isset($this->_filters['model_id']) && is_numeric($this->_filters['model_id'])){
+                if(!is_numeric($model_id)){
+                    $model_id = $this->_filters['model_id'];
+                }
+            }
+            
+        }
         
         $sql = "SELECT Items.item_id FROM TagsObjectsLookup, Items WHERE taglookup_tag_id='".$this->getId()."' AND taglookup_object_id=item_id AND taglookup_type='SM_ITEM_TAG_LINK' AND Items.item_deleted='0'";
         

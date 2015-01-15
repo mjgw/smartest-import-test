@@ -620,7 +620,7 @@ class SmartestDataObject implements ArrayAccess{
             }
 	    }
 	    
-	    /* if(isset($this->_properties['deleted'])){
+        /* if(isset($this->_properties['deleted'])){
 	    
 	        if(!$include_trash_items){
 	            $sql .= ' AND '.$this->_table_prefix.'deleted != 1 AND '.$this->_table_prefix.'deleted != \'TRUE\''; 

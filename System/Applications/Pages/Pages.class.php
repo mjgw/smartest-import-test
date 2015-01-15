@@ -873,6 +873,9 @@ class Pages extends SmartestSystemApplication{
                                 $this->send(false, 'show_search_box');
                                 $this->send(false, 'show_author_list');
                                 $preview_url .= '&amp;tag_name='.$tag->getName();
+                                if($this->requestParameterIsSet('model_id')){
+                                    $preview_url .= '&amp;model_id='.$this->getRequestParameter('model_id');
+                                }
                             }else{
                                 // tag does not exist - require tag select
                                 $this->send('The selected tag does not exists. Please choose another tag to preview on this page.', 'chooser_message');

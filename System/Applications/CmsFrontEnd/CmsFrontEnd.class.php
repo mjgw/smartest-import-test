@@ -114,14 +114,61 @@ class CmsFrontEnd extends SmartestSystemApplication{
         	    
         	    if($tag->findBy('name', $tag_identifier)){
         	        
-        	        $tag_page_id = $this->_site->getTagPageId();
+                    $tag_page_id = $this->_site->getTagPageId();
         	        
                     $p = new SmartestTagPage;
                     $p->find($tag_page_id);
-                    $p->assignTag($tag);
                     
-                    $this->_page = $p;
-                    $this->renderPage();
+                    if($this->getRequestParameter('model_specific')){
+                        
+                        if($this->requestParameterIsSet('model_plural_name')){
+                            
+                            $varname = SmartestStringHelper::toVarName($this->getRequestParameter('model_plural_name'));
+                            $model = new SmartestModel;
+                        
+                            if($model->findBy('varname', $varname, $this->_site->getId())){
+                            
+                                $p->assignTag($tag);
+                                $p->assignModel($model);
+                            
+                                $this->_page = $p;
+                                $this->renderPage();
+                            
+                            }else{
+                                $this->renderNotFoundPage();
+                            }
+                            
+                        }elseif($this->requestParameterIsSet('model_id') && is_numeric($this->getRequestParameter('model_id'))){
+                            
+                            $model = new SmartestModel;
+                            
+                            if($model->find($this->getRequestParameter('model_id'))){
+                            
+                                $p->assignTag($tag);
+                                $p->assignModel($model);
+                            
+                                $this->_page = $p;
+                                $this->renderPage();
+                            
+                            }else{
+                                $this->renderNotFoundPage();
+                            }
+                            
+                        }else{
+                            $p->assignTag($tag);
+                    
+                            $this->_page = $p;
+                            $this->renderPage();
+                        }
+                        
+                    }else{
+                        
+                        $p->assignTag($tag);
+                    
+                        $this->_page = $p;
+                        $this->renderPage();
+                        
+                    }
 
         	    }else{
         	        $this->renderNotFoundPage();
@@ -189,10 +236,36 @@ class CmsFrontEnd extends SmartestSystemApplication{
                         $p = $this->_page->copy('SmartestTagPage');
                         $t = new SmartestTag;
                         
-                        if($t->hydrateBy('name', $this->getRequestParameter('tag_name'))){
-                            $p->assignTag($t);
-                            $p->setDraftMode(true);
-                            $this->_page = $p;
+                        if($this->requestParameterIsSet('model_id') && is_numeric($this->getRequestParameter('model_id'))){
+                            
+                            if($t->hydrateBy('name', $this->getRequestParameter('tag_name'))){
+                            
+                                $model = new SmartestModel;
+
+                                if($model->find($this->getRequestParameter('model_id'))){
+
+                                    $p->assignTag($t);
+                                    $p->assignModel($model);
+                                    $p->setDraftMode(true);
+
+                                    $this->_page = $p;
+
+                                }else{
+                                    $this->renderNotFoundPage();
+                                }
+                            
+                            }else{
+                                $this->renderNotFoundPage();
+                            }
+
+                        }else{
+                            
+                            if($t->hydrateBy('name', $this->getRequestParameter('tag_name'))){
+                                $p->assignTag($t);
+                                $p->setDraftMode(true);
+                                $this->_page = $p;
+                            }
+                            
                         }
                         
                     }

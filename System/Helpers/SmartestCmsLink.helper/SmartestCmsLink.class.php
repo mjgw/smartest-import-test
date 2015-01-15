@@ -14,6 +14,7 @@ class SmartestCmsLink extends SmartestHelper{
     protected $_render_data;
     protected $_request;
     protected $_hash = '';
+    protected $_model;
     
     const PAGE = 1;
     const METAPAGE = 2;
@@ -55,6 +56,12 @@ class SmartestCmsLink extends SmartestHelper{
         
         if($this->_render_data->hasParameter('hash')){
             $this->_hash = $this->_render_data->getParameter('hash');
+        }
+        
+        if($this->_destination_properties->hasParameter('model')){
+            $this->_model = $this->recognizeModel($this->_destination_properties->getParameter('model'));
+        }elseif($this->_render_data->hasParameter('model')){
+            $this->_model = $this->recognizeModel($this->_render_data->getParameter('model'));
         }
         
         /* if($this->_destination_properties->hasParameter('metapage')){
@@ -188,6 +195,24 @@ class SmartestCmsLink extends SmartestHelper{
             $this->error("Link could not be built. No destination given.");
             $this->setType(SM_LINK_TYPE_DUD);
             return false;
+        }
+        
+    }
+    
+    public function recognizeModel($m){
+        
+        $bm = new SmartestModel;
+        
+        if($m instanceof SmartestModel){
+            return $m;
+        }elseif(is_numeric($m) && $bm->find($m)){
+            return $bm;
+        }elseif($bm->findBy('varname', SmartestStringHelper::toVarName($m))){
+            return $bm;
+        }elseif($bm->findBy('name', $m) || $bm->findBy('plural_name', $m)){
+            return $bm;
+        }else{
+            return $this->error("A model was not found matching the value '".$m."'");
         }
         
     }
@@ -963,14 +988,28 @@ class SmartestCmsLink extends SmartestHelper{
             case SM_LINK_TYPE_TAG:
             
             if($draft_mode){
+                
                 if($this->_request->getRequestParameter('hide_newwin_link')){
-                    return $this->_request->getDomain().'website/renderEditableDraftPage?page_id='.$this->getSite()->getTagPage()->getWebId().'&amp;hide_newwin_link=true&amp;tag_name='.$this->_destination->getName();
+                    $url = $this->_request->getDomain().'website/renderEditableDraftPage?page_id='.$this->getSite()->getTagPage()->getWebId().'&amp;hide_newwin_link=true&amp;tag_name='.$this->_destination->getName();
                 }else{
-                    return $this->_request->getDomain().'websitemanager/preview?page_id='.$this->getSite()->getTagPage()->getWebId().'&amp;tag='.$this->_destination->getName();
+                    $url = $this->_request->getDomain().'websitemanager/preview?page_id='.$this->getSite()->getTagPage()->getWebId().'&amp;tag='.$this->_destination->getName();
                 }
+                
+                if(is_object($this->_model)){
+                    $url .= '&amp;model_id='.$this->_model->getId();
+                }
+                
+                return $url;
+                
             }else{
                 if($this->_destination){
-                    return $this->_request->getDomain().'tags/'.$this->_destination->getName().'.html';
+                    
+                    if(is_object($this->_model)){
+                        return $this->_request->getDomain().$this->_model->getVarName().'/tagged/'.$this->_destination->getName();
+                    }else{
+                        return $this->_request->getDomain().'tagged/'.$this->_destination->getName();
+                    }
+                    
                 }else{
                     return '#';
                 }
