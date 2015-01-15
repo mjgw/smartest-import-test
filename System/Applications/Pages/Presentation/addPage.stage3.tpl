@@ -11,7 +11,7 @@
       </tr>
       <tr>
         <td style="background-color:#fff" valign="top">URL:</td>
-        <td style="background-color:#fff" valign="top">{$domain}{$new_page_url}</td>
+        <td style="background-color:#fff" valign="top"><code>{$domain}{$new_page_url}</code></td>
       </tr>
       {if is_numeric($newPage.dataset_id) && $newPage.type == "ITEMCLASS"}
       <tr>
@@ -27,38 +27,38 @@
       {/if}
       <tr>
         <td style="background-color:#fff" valign="top">Cache as HTML:</td>
-        <td style="background-color:#fff" valign="top">{$newPage.cache_as_html}</td>
+        <td style="background-color:#fff" valign="top">{$newPage.cache_as_html|yesno}</td>
       </tr>
-      {if $newPage.cache_as_html=='TRUE'}
+      {if _b($newPage.cache_as_html)}
       <tr>
-        <td style="background-color:#fff" valign="top">Cache Interval:</td>
-        <td style="background-color:#fff" valign="top">{$newPage.cache_interval}</td>
+        <td style="background-color:#fff" valign="top">Cache interval:</td>
+        <td style="background-color:#fff" valign="top">{$newPage.cache_interval|titlecase}</td>
       </tr>
       {/if}
       <tr>
-        <td style="background-color:#fff" valign="top">Layout Preset:</td>
+        <td style="background-color:#fff" valign="top">Layout preset:</td>
         <td style="background-color:#fff" valign="top">{if $newPage.preset}{$newPage.preset_label}{else}<em style="color:#999">NONE</em>{/if}</td>
       </tr>
       <tr>
-        <td style="background-color:#fff" valign="top">Main Template:</td>
-        <td style="background-color:#fff" valign="top">{if strlen($newPage.draft_template)}{$newPage.draft_template}{else}<em style="color:#999">NONE</em>{/if}</td>
+        <td style="background-color:#fff" valign="top">Main template:</td>
+        <td style="background-color:#fff" valign="top">{if strlen($newPage.draft_template)}<code>Presentation/Masters/{$newPage.draft_template}</code>{else}<em style="color:#999">NONE</em>{/if}</td>
       </tr>
   	{if $newPage.type == 'NORMAL'}
       <tr>
         <td style="background-color:#fff" valign="top">Description:</td>
-        <td style="background-color:#fff" valign="top">{$newPage.description}</td>
+        <td style="background-color:#fff" valign="top">{if strlen($newPage.description)}{$newPage.description}{else}<em style="color:#999">NONE</em>{/if}</td>
       </tr>
       <tr>
-        <td style="background-color:#fff" valign="top">Search Keywords:</td>
-        <td style="background-color:#fff" valign="top">{$newPage.search_field}</td>
+        <td style="background-color:#fff" valign="top">Search keywords:</td>
+        <td style="background-color:#fff" valign="top">{if strlen($newPage.search_field)}{$newPage.search_field}{else}<em style="color:#999">NONE</em>{/if}</td>
       </tr>
       <tr>
-        <td style="background-color:#fff" valign="top">Meta Description:</td>
-        <td style="background-color:#fff" valign="top">{$newPage.meta_description}</td>
+        <td style="background-color:#fff" valign="top">Meta description:</td>
+        <td style="background-color:#fff" valign="top">{if strlen($newPage.meta_description)}{$newPage.meta_description}{else}<em style="color:#999">NONE</em>{/if}</td>
       </tr>
       <tr>
-        <td style="background-color:#fff" valign="top">Meta Keywords:</td>
-        <td style="background-color:#fff" valign="top">{$newPage.keywords}</td>
+        <td style="background-color:#fff" valign="top">Meta keywords:</td>
+        <td style="background-color:#fff" valign="top">{if strlen($newPage.keywords)}{$newPage.keywords}{else}<em style="color:#999">NONE</em>{/if}</td>
       </tr>
     {/if}
     </table>

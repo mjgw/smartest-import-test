@@ -21,9 +21,9 @@
           
           $(messageId).appear();
           
-          if(hash == 'badauth'){
-            new Effect.Shake('login', {delay: 0.25, duration:0.75});
-          }
+          /* if(hash == 'badauth'){
+            new Effect.Shake('login', {delay: 0.25, duration:0.5, distance: 135});
+          } */
           
         }
         

@@ -1302,16 +1302,21 @@ class Pages extends SmartestSystemApplication{
 			case "2":
 			
             if($this->requestParameterIsSet('form_submitted')){
+                
+                $type = in_array($this->getRequestParameter('page_type'), array('NORMAL', 'ITEMCLASS', 'LIST', 'TAG')) ? $this->getRequestParameter('page_type') : 'NORMAL';
+                
+                SmartestSession::get('__newPage')->setType($type);
             
     			if($this->getRequestParameter('page_type') == 'ITEMCLASS'){
     			    $model = new SmartestModel;
     			    if($model->find($this->getRequestParameter('page_model'))){
-    			        SmartestSession::get('__newPage')->setType($this->getRequestParameter('page_type'));
     			        SmartestSession::get('__newPage')->setDatasetId($this->getRequestParameter('page_model'));
     		        }else{
     		            $this->setRequestParameter('stage', 1);
     		            $this->forward('websitemanager', 'addPage');
     		        }
+    			}else{
+    			    
     			}
 			
     			if(!strlen(SmartestSession::get('__newPage')->getTitle()) && !$this->getRequestParameter('page_title')){
@@ -1331,7 +1336,6 @@ class Pages extends SmartestSystemApplication{
     			    SmartestSession::get('__newPage')->setTitle($this->getRequestParameter('page_title'));
     			}
 			
-    			$type = in_array($this->getRequestParameter('page_type'), array('NORMAL', 'ITEMCLASS', 'LIST', 'TAG')) ? $this->getRequestParameter('page_type') : 'NORMAL';
     			$this->send($this->getRequestParameter('page_parent'), 'page_parent');
 			
     			SmartestSession::get('__newPage')->setParent($this->getRequestParameter('page_parent'));
@@ -1389,11 +1393,10 @@ class Pages extends SmartestSystemApplication{
                 $template = "addPage.stage2.tpl";
                 $this->send($this->getSite(), 'siteInfo');
                 $this->send(SmartestSession::get('__newPage')->getParent(), 'page_parent');
-                // $this->send(SmartestSession::get('__newPage')->getUrl(), 'suggested_url');
                 $url_array = SmartestSession::get('__newPage')->getUnsavedUrls();
                 $this->send($url_array[0], 'suggested_url');
-                // print_r(SmartestSession::get('__newPage'));
                 $newPage = SmartestSession::get('__newPage');
+                $this->send($templates, 'templates');
                 
             }
             
@@ -1425,6 +1428,8 @@ class Pages extends SmartestSystemApplication{
 		        
 		    } 
 			
+            // echo SmartestSession::get('__newPage')->getType();
+            
             if(SmartestSession::get('__newPage')->getType() == 'NORMAL'){
 			    SmartestSession::get('__newPage')->setDraftTemplate($this->getRequestParameter('page_draft_template'));
 			    SmartestSession::get('__newPage')->setDescription(strip_tags($this->getRequestParameter('page_description')));
@@ -1436,9 +1441,9 @@ class Pages extends SmartestSystemApplication{
 				SmartestSession::get('__newPage')->setParent($this->getRequestParameter('page_id'));
 			}
 			
-			if($this->getRequestParameter('page_preset')){
+			/* if($this->getRequestParameter('page_preset')){
 				SmartestSession::set('__newPage_preset_id', $this->getRequestParameter('page_preset'));
-			}
+			} */
 			
 			/* if($this->getRequestParameter('page_model')){
 				SmartestSession::get('__newPage')->setDatasetId($this->getRequestParameter('page_model'));
@@ -1476,9 +1481,12 @@ class Pages extends SmartestSystemApplication{
 		    }
 			
 			// should the page have a preset?
-            if($preset_id = SmartestSession::get('__newPage_preset_id')){
+            if($this->getRequestParameter('page_preset')){
                 
                 $preset = new SmartestPagePreset;
+                
+                SmartestSession::set('__newPage_preset_id', $this->getRequestParameter('page_preset'));
+                $preset_id = SmartestSession::get('__newPage_preset_id');
                 
                 // if so, apply those definitions
                 if($preset->find($preset_id)){
@@ -1554,7 +1562,7 @@ class Pages extends SmartestSystemApplication{
     		
     		$this->send($this->getSite()->getModels(), 'models');
 			
-			$type = 'start';
+			// $type = 'start';
 			
             SmartestSession::set('__newPage', $page);
 			

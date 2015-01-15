@@ -1,6 +1,6 @@
 <script type="text/javascript">
   var asset_id = {$asset.id};
-  var asset_label = '{$asset.label}';
+  var asset_label = '{$asset.label|escape:'quotes'}';
 </script>
 
 <div id="work-area">
