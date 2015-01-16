@@ -2770,7 +2770,8 @@ class Assets extends SmartestSystemApplication{
                     $placeholder = new SmartestPlaceholder;
                     
                     if($placeholder->find($this->getRequestParameter('placeholder_id'))){
-                        $assets = $property->getPossibleAssets();
+                        // $assets = $property->getPossibleAssets();
+                        $assets = $placeholder->getPossibleAssets($this->getSite()->getId());
                         $this->send($this->getRequestParameter('for'), 'for');
                         $this->send($this->getRequestParameter('placeholder_id'), 'placeholder_id');
                     }

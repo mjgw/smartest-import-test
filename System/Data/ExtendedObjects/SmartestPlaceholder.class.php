@@ -135,6 +135,33 @@ class SmartestPlaceholder extends SmartestAssetClass{
         $type_codes = $type['accept'];
 	    
 	}
+    
+    public function onlyAcceptsImages(){
+        
+        if($this->getType() == 'SM_ASSETCLASS_STATIC_IMAGE'){
+            return true;
+        }else{
+            if($this->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_ASSETGROUP'){
+                $group_id = $this->getFilterValue();
+                $group = new SmartestAssetGroup;
+                $alh = new SmartestAssetsLibraryHelper;
+                if($group->find($group_id)){
+                    if($group->getFilterType() == 'SM_SET_FILTERTYPE_ASSETTYPE' && $alh->assetTypeCodeIsBinaryImage($group->getFilterValue())){
+                        return true;
+                    }elseif($group->getFilterType() == 'SM_SET_FILTERTYPE_ASSETCLASS' && $group->getFilterValue() == 'SM_ASSETCLASS_STATIC_IMAGE'){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+        
+    }
 	
 	public function getAssetsByType(){
 	    

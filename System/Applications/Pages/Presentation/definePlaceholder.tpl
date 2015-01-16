@@ -21,7 +21,7 @@ function toggleParamsHolder(){
 
 <div id="work-area">
   
-  <h3>Define placeholder: {$placeholder.name}</h3>
+  <h3>Define placeholder: <span class="light">{$placeholder.name}</span></h3>
   
   {if $require_choose_item}
   
@@ -47,12 +47,16 @@ function toggleParamsHolder(){
     
     <div class="edit-form-row">
       <div class="form-section-label">Choose a file to define this placeholder with</div>
+      {if $only_accepts_images}
+      {image_select id="chosen-asset-id" name="chosen_asset_id" for="placeholder" placeholder_id=$placeholder.id value=$asset onchange="$('file_chooser').submit()"}
+      {else}
       <select name="chosen_asset_id" onchange="$('file_chooser').submit()">
         {if !$valid_definition}<option value="">None Selected</option>{/if}
         {foreach from=$assets item="available_asset"}
           <option value="{$available_asset.id}"{if $available_asset.id==$asset.id} selected="selected"{/if}>{if $available_asset.id==$live_asset_id}* {/if}{$available_asset.label}</option>
         {/foreach}
       </select>
+      {/if}
       
     </div>
     
@@ -74,7 +78,7 @@ function toggleParamsHolder(){
     
       <div class="edit-form-row">
         <div class="form-section-label">Chosen File:</div>
-        <b>{$asset.label}</b> ({if $asset_type.storage.type == 'file'}{$asset_type.storage.location}{/if}{$asset.url}) - {$asset_type.label}{if $asset.is_image} ({$asset.width} x {$asset.height} pixels){/if}
+        <b>{$asset.label}</b> <code>({if $asset_type.storage.type == 'file'}{$asset_type.storage.location}{/if}{$asset.url})</code> - {$asset_type.label}{if $asset.is_image} ({$asset.width} x {$asset.height} pixels){/if}
       </div>
       
       {if $show_item_options}

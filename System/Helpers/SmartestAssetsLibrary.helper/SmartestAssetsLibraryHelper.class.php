@@ -761,7 +761,9 @@ class SmartestAssetsLibraryHelper{
 	    
 	}
 	
-	
+	public function assetTypeCodeIsBinaryImage($type_code){
+	    return in_array($type_code, array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE'));
+	}
 	
 	public function getAssetsByModelId($model_id=0, $site_id='', $mode=1, $avoid_ids='', $code){
 		

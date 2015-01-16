@@ -2823,6 +2823,10 @@ class Pages extends SmartestSystemApplication{
     	        if($placeholder->hydrateBy('name', $placeholder_name)){
 	            
     	            $this->setTitle('Define Placeholder | '.$placeholder_name);
+                    
+                    // var_dump();
+                    
+                    $this->send($placeholder->onlyAcceptsImages(), 'only_accepts_images');
 	            
     	            $types_array = SmartestDataUtility::getAssetTypes();
                 

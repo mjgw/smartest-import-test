@@ -435,13 +435,13 @@ class AssetsAjax extends SmartestSystemApplication{
                             
                             $placeholder = new SmartestPlaceholder;
                             if($placeholder->find($placeholder_id)){
-                                // Property exists, so that's good
-                                /* if($placeholder->getOptionSetType() == 'SM_PROPERTY_FILTERTYPE_ASSETGROUP'){
+                                // Placeholder exists, so that's good
+                                if($placeholder->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_ASSETGROUP'){
                                     $group = new SmartestAssetGroup;
-                                    if($group->find($property->getOptionSetId())){
+                                    if($group->find($placeholder->getFilterValue())){
                                         $group->addAssetById($asset->getId(), false);
                                     }
-                                } */
+                                }
                             }
                         }
                         
