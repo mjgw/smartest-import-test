@@ -855,8 +855,6 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     		$separator = (isset($params['separator'])) ? $params['separator'] : "&gt;";
     		$string = "";
     		
-    		// print_r($breadcrumbs);
-
     		$link_params = array();
 
     		if(isset($params['linkclass'])){

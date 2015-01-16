@@ -857,15 +857,15 @@ class SmartestCmsLink extends SmartestHelper{
                     switch($this->getType()){
 
                         case SM_LINK_TYPE_PAGE:
-                        return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getTitle());
+                        return $fa_prefix.SmartestStringHelper::toXmlEntitiesSmart($this->_destination->getTitle());
                         break;
 
                         case SM_LINK_TYPE_METAPAGE:
                 
                         if($this->_destination->getForceStaticTitle() == 1){
-                            return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getTitle(true));
+                            return $fa_prefix.SmartestStringHelper::toXmlEntitiesSmart($this->_destination->getTitle(true));
                         }else{
-                            return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getTitle());
+                            return $fa_prefix.SmartestStringHelper::toXmlEntitiesSmart($this->_destination->getTitle());
                         }
                 
                         break;
@@ -875,11 +875,11 @@ class SmartestCmsLink extends SmartestHelper{
                         break;
                 
                         case SM_LINK_TYPE_TAG:
-                        return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getLabel());
+                        return $fa_prefix.SmartestStringHelper::toXmlEntitiesSmart($this->_destination->getLabel());
                         break;
                         
                         case SM_LINK_TYPE_AUTHOR:
-                        return $fa_prefix.SmartestStringHelper::toXmlEntities($this->_destination->getFullName());
+                        return $fa_prefix.SmartestStringHelper::toXmlEntitiesSmart($this->_destination->getFullName());
                         break;
                 
                         case SM_LINK_TYPE_DOWNLOAD:

@@ -86,7 +86,11 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
     }
     
     public function toHtmlEncoded(){
-        return SmartestStringHelper::toHtmlEncoded($this->_string);
+        return SmartestStringHelper::toHtmlEntitiesSmart($this->_string);
+    }
+    
+    public function toXmlEncoded(){
+        return SmartestStringHelper::toXmlEntitiesSmart($this->_string);
     }
     
     public function isMd5Hash(){
@@ -132,7 +136,7 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             case "textile":
             return SmartestStringHelper::parseTextile($this->_string);
             case "xmlentities":
-            return (string) SmartestStringHelper::toXmlEntities($this->_string);
+            return (string) SmartestStringHelper::toXmlEntitiesSmart($this->_string);
             case "html_escape":
             return htmlspecialchars($this->_string, ENT_QUOTES, 'UTF-8', false);
             case "empty":

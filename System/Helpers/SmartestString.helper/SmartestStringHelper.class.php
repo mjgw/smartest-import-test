@@ -439,28 +439,32 @@ class SmartestStringHelper extends SmartestHelper{
 	
 	public static function toHexUrlEncoded($string){
 	    
+        $chars = array();
+        
 	    for ($c = 0; $c < strlen($string); $c++) {
             if(preg_match('!\w!', $string{$c})) {
-                $string_encode .= '%'.bin2hex($string{$c});
+                $chars[] = '%'.bin2hex($string{$c});
             }else{
-                $string_encode .= $string{$c};
+                $chars[] = $string{$c};
             }
         }
         
-        return $string_encode;
+        return implode($chars);
 	}
 	
 	public static function toHtmlEncoded($string){
 	    
+        $chars = array();
+        
 	    for ($c = 0; $c < strlen($string); $c++) {
             if(preg_match('!\w!', $string{$c})) {
-                $string_encode .= '&#x'.bin2hex($string{$c}).';';
+                $chars[] = '&#x'.bin2hex($string{$c}).';';
             }else{
-                $string_encode .= $string{$c};
+                $chars[] = $string{$c};
             }
         }
         
-        return $string_encode;
+        return implode($chars);
 	}
 	
 	public static function toHash($string, $length=32, $type='MD5'){
@@ -719,9 +723,7 @@ class SmartestStringHelper extends SmartestHelper{
 	}
 	
 	public static function containsEscapedEntities($string){
-	    
 	    return preg_match('/&(#\d+|\w+);/i', $string);
-	    
 	}
 	
 	public static function isEmailAddress($string){
