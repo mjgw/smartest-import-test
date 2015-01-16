@@ -843,31 +843,31 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	
     public function save(){
 	    
-        if(!isset($this->_modified_properties['parent_id'])){
+        if(!isset($this->_modified_properties['parent_id']) && !$this->_properties['parent_id']){
             $this->setParentId(0);
         }
         
-        if(!isset($this->_modified_properties['model_id'])){
+        if(!isset($this->_modified_properties['model_id']) && !$this->_properties['model_id']){
             $this->setModelId(0);
         }
         
-        if(!isset($this->_modified_properties['thumbnail_id'])){
+        if(!isset($this->_modified_properties['thumbnail_id']) && !$this->_properties['thumbnail_id']){
             $this->setThumbnailId(0);
         }
         
-        if(!isset($this->_modified_properties['info'])){
+        if(!isset($this->_modified_properties['info']) && !$this->_properties['info']){
             $this->setField('info', null);
         }
         
-        if(!isset($this->_modified_properties['is_subbed'])){
+        if(!isset($this->_modified_properties['is_subbed']) && !$this->_properties['is_subbed']){
             $this->setIsSubbed(0);
         }
         
-        if(!isset($this->_modified_properties['is_hidden'])){
+        if(!isset($this->_modified_properties['is_hidden']) && !$this->_properties['is_hidden']){
             $this->setIsHidden(0);
         }
         
-        if(!isset($this->_modified_properties['search_field'])){
+        if(!isset($this->_modified_properties['search_field']) && !$this->_properties['search_field']){
             $this->setSearchField('');
         }
         

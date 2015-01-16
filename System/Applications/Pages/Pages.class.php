@@ -1435,6 +1435,8 @@ class Pages extends SmartestSystemApplication{
 			    SmartestSession::get('__newPage')->setDescription(strip_tags($this->getRequestParameter('page_description')));
 			    SmartestSession::get('__newPage')->setMetaDescription(strip_tags($this->getRequestParameter('page_meta_description')));
 			    SmartestSession::get('__newPage')->setKeywords(strip_tags($this->getRequestParameter('page_keywords')));
+            }else if(SmartestSession::get('__newPage')->getType() == 'ITEMCLASS'){
+                SmartestSession::get('__newPage')->setDraftTemplate($this->getRequestParameter('page_draft_template'));
             }
 			
 			if($this->getRequestParameter('page_id')){

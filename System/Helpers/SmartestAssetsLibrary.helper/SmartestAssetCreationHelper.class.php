@@ -32,16 +32,22 @@ class SmartestAssetCreationHelper{
     
     public function finish(){
         
+        if(is_object($this->_thumbnail_asset)){
+            while(!$this->_thumbnail_asset->getId()){
+                $this->_thumbnail_asset->save();
+            }
+            while(!$this->_asset->getThumbnailId()){
+                $this->_asset->setThumbnailId($this->_thumbnail_asset->getId());
+            }
+        }
+        
         $this->_asset->save();
+        
+        $this->_thumbnail_asset->setParentId($this->_asset->getId());
+        $this->_thumbnail_asset->save();
         
         if($this->_asset_type['storage']['type'] == 'database'){
             $this->_asset->getTextFragment()->save();
-        }
-        
-        if(is_object($this->_thumbnail_asset)){
-            $this->_thumbnail_asset->save();
-            $this->_asset->setThumbnailId($this->_thumbnail_asset->getId());
-            $this->_asset->save();
         }
         
         return $this->_asset;
@@ -163,6 +169,10 @@ class SmartestAssetCreationHelper{
                             $this->_thumbnail_asset->setUserId(SmartestSession::get('user')->getId());
                             $this->_thumbnail_asset->setType($type);
                             $this->_thumbnail_asset->setUrl(end(explode('/', $saved_thumbnail_file)));
+                            if(is_object(SmartestSession::get('current_open_project'))){
+                                $this->_thumbnail_asset->setSiteId(SmartestSession::get('current_open_project')->getId());
+                            }
+                            
                     
                         }else{
                     

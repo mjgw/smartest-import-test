@@ -743,7 +743,7 @@ class SmartestDataObject implements ArrayAccess{
 		if(count($this->_modified_properties)){
 		    
 		    $sql = $this->getSaveSql();
-		    $this->_last_query = $sql;
+            $this->_last_query = $sql;
     		$id = $this->database->query($sql);
 		    
 		    if($this->_came_from_database){
@@ -753,11 +753,19 @@ class SmartestDataObject implements ArrayAccess{
     			$this->_came_from_database = true;
     		}
 		    
-		    $this->_modified_properties = array();
+		    $this->clearChanges();
 		    $this->_escape_values_on_save = false;
 		
+	    }else{
+	        
+            throw new SmartestException("save() called on unchanged SmartestDataObject");
+            
 	    }
 	}
+    
+    public function clearChanges(){
+        $this->_modified_properties = array();
+    }
 	
 	public function delete(){
 		$sql = "DELETE FROM ".$this->_table_name." WHERE ".$this->_table_prefix."id='".$this->getId()."' LIMIT 1";

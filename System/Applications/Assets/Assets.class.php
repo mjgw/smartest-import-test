@@ -839,14 +839,15 @@ class Assets extends SmartestSystemApplication{
 		        
 		        // if($everything_ok){
     		    
-    		    // Add a bit more information about the asset    
+                // Add a bit more information about the asset   
+                $asset->clearChanges(); 
     		    $asset->setShared($this->getRequestParameter('asset_shared') ? 1 : 0);
     		    $asset->setSiteId($this->getSite()->getId());
     		    $asset->setLanguage(strtolower(substr($this->getRequestParameter('asset_language'), 0, 3))); // ISO-639-3 language codes are only ever three letters long
     		    $this->getUser()->addRecentlyEditedAssetById($asset->getId(), $this->getSite()->getId());
     		    $asset->save();
-		        
-		        if(strlen($this->getRequestParameter('initial_group_id')) && is_numeric($this->getRequestParameter('initial_group_id'))){
+                
+                if(strlen($this->getRequestParameter('initial_group_id')) && is_numeric($this->getRequestParameter('initial_group_id'))){
 		            
 		            $group = new SmartestAssetGroup;
 		            
@@ -1214,7 +1215,9 @@ class Assets extends SmartestSystemApplication{
 	    if($placeholder->find($placeholder_id)){
 	        
 	        if($this->getRequestParameter('asset_ids') && is_array($this->getRequestParameter('asset_ids'))){
-	        
+	            
+                $added_ids = array();
+                
 	            $set = new SmartestAssetGroup;
     	        $set->setLabel($this->getRequestParameter('asset_group_label'));
     	        $set->setName(SmartestStringHelper::toVarName($this->getRequestParameter('asset_group_label')));
@@ -1226,10 +1229,13 @@ class Assets extends SmartestSystemApplication{
     	        header("HTTP/1.1 201 Created");
 	        
 	            foreach($this->getRequestParameter('asset_ids') as $asset_id){
-	                $set->addAssetById($asset_id, false);
+                    if(!in_array($asset_id, $added_ids)){
+    	                $set->addAssetById($asset_id, false);
+                        $added_ids[] = $asset_id;
+                    }
 	            }
 	            
-	            $this->addUserMessageToNextRequest("A group was successfully created and ".count($this->getRequestParameter('asset_ids'))." files were added to it.", SmartestUserMessage::SUCCESS);
+	            $this->addUserMessageToNextRequest("A group was successfully created and ".count($added_ids)." files were added to it.", SmartestUserMessage::SUCCESS);
 	            $this->redirect("/assets/browseAssetGroup?group_id=".$set->getId());
 	            
             }else{
