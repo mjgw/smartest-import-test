@@ -756,10 +756,6 @@ class SmartestDataObject implements ArrayAccess{
 		    $this->clearChanges();
 		    $this->_escape_values_on_save = false;
 		
-	    }else{
-	        
-            throw new SmartestException("save() called on unchanged SmartestDataObject");
-            
 	    }
 	}
     
