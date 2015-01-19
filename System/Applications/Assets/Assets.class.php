@@ -2518,7 +2518,7 @@ class Assets extends SmartestSystemApplication{
 
 		$asset = new SmartestAsset;
 
-		if($asset->hydrate($asset_id)){
+		if($asset->find($asset_id)){
 
 		    $live_instances = $asset->getLiveInstances();
 		    $this->send($live_instances, 'live_instances');
@@ -2530,7 +2530,7 @@ class Assets extends SmartestSystemApplication{
 
 		    $this->setTitle("Delete File?");
 
-		    $this->send($asset->__toArray(), 'asset');
+		    $this->send($asset, 'asset');
 
 		}else{
 		    $this->addUserMessageToNextRequest("The asset ID was not recognized", SmartestUserMessage::ERROR);

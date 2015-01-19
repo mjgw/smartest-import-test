@@ -1,6 +1,6 @@
 <div id="work-area">
 
-<h3>Delete Asset</h3>
+<h3>Delete this file?</h3>
 	
 	<form action="{$domain}{$section}/deleteAsset" method="post">
 	
@@ -10,11 +10,17 @@
 	
 	<!-- Asset can be deleted if permissions are ok -->
 	
-	<div class="instruction">Are you sure you want to delete this file?</div>
+  <div class="instruction">Are you sure you want to delete this file?</div>
+  
+  {if $asset.is_binary_image}
+  <div>
+    <img src="{$asset.image.constrain_400x400.web_path}" alt="" style="{$asset.image.constrain_400x400.css_dimensions_retina}" />
+  </div>
+  {/if}
 	
 	<div class="buttons-bar">
 	  <input type="button" value="Cancel" onclick="cancelForm()" />
-	  <input type="submit" value="OK" />
+	  <input type="submit" value="Delete" />
 	</div>
 	
 	{elseif $num_live_instances == 0 && $num_draft_instances > 0}

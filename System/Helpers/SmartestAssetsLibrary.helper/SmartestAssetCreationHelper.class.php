@@ -228,19 +228,21 @@ class SmartestAssetCreationHelper{
         
         $textarea_contents = SmartestTextFragmentCleaner::convertDoubleLineBreaks($textarea_contents);
         
-        $new_temp_file = SM_ROOT_DIR.'System/Temporary/'.md5(microtime(true)).'.'.$suffixes[0];
-        SmartestFileSystemHelper::save($new_temp_file, SmartestStringHelper::sanitize($textarea_contents), true);
+        // $new_temp_file = SM_ROOT_DIR.'System/Temporary/'.md5(microtime(true)).'.'.$suffixes[0];
+        // SmartestFileSystemHelper::save($new_temp_file, SmartestStringHelper::sanitize($textarea_contents), true);
         
         if($this->_asset_type['storage']['type'] == 'database'){
             
             $filename = $this->_asset->getStringId().'.'.$suffixes[0];
             
-            if(is_file($new_temp_file)){
-                // add contents of file in System/Temporary/ to database as a text fragment
-                $this->_asset->getTextFragment()->setContent(SmartestFileSystemHelper::load($new_temp_file, true));
-            }else{
+            // if(is_file($new_temp_file)){
+            //     // add contents of file in System/Temporary/ to database as a text fragment
+            //     $this->_asset->getTextFragment()->setContent(SmartestStringHelper::sanitize($textarea_contents));
+            // }else{
                 $this->_asset->getTextFragment()->setContent(SmartestStringHelper::sanitize($textarea_contents));
-            }
+            //}
+            
+            $this->_asset->connectTextFragmentOnSave();
             
             $this->_asset->setUrl($filename);
             return true;

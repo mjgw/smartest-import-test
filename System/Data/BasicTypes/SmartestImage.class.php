@@ -721,6 +721,12 @@ class SmartestImage extends SmartestFile{
 	        
 	        case "height":
 	        return (int) $this->getHeight();
+            
+	        case "retina_width":
+	        return (int) ceil($this->getWidth()/2);
+	        
+	        case "retina_height":
+	        return (int) ceil($this->getHeight()/2);
 	        
 	        case "is_portrait":
 	        return (bool) $this->isPortrait();
@@ -735,7 +741,17 @@ class SmartestImage extends SmartestFile{
 	        return $this->getWebPath();
 	        
 	        case "og_meta":
-	        return '';
+            $request_data = SmartestPersistentObject::get('request_data');
+            $domain = $request_data->g('domain');
+            // TODO: Adjust protocol to https where it is in use
+	        return '<meta name="og:image" value="http://'.$_SERVER['HTTP_HOST'].$domain.$this->getWebPath().'" />';
+            
+            case "css_dimensions":
+            return 'width:'.$this->getWidth().'px ;height:'.$this->getHeight().'px';
+            
+            case "retina_css_dimensions":
+            case "css_dimensions_retina":
+            return 'width:'.ceil($this->getWidth()/2).'px;height:'.ceil($this->getHeight()/2).'px';
 	        
 	        case "_ui_preview":
 	        $prev = $this->getSquarePreviewForUI();

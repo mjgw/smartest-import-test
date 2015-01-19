@@ -10,6 +10,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     protected $_image;
     protected $_save_textfragment_on_save = false;
     protected $_set_textfragment_asset_id_on_save = false;
+    protected $_set_textfragment_id_on_save = false;
     protected $_absolute_uri_object;
     protected $_thumbnail_asset = null;
     
@@ -123,6 +124,9 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             
             case "is_image":
             return $this->isImage();
+            
+            case "is_binary_image":
+            return $this->isBinaryImage();
             
             case "thumbnail_image":
             return $this->getThumbnailImage();
@@ -380,6 +384,13 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    $info = $this->getTypeInfo();
 	    return (isset($info['storage']) && $info['storage']['type'] == 'file');
 	}
+    
+    public function connectTextFragmentOnSave(){
+        
+        $this->_save_textfragment_on_save = true;
+        $this->_set_textfragment_id_on_save = true;
+        
+    }
 	
 	public function getTextFragment(){
 	    
@@ -399,6 +410,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
                         $tf->setCreated(time());
                         $this->setField('fragment_id', $tf->getId());
                         $this->_save_textfragment_on_save = true;
+                        $this->_set_textfragment_id_on_save = true;
                         SmartestLog::getInstance('system')->log("Text asset '".$this->getLabel()."' with ID ".$this->getId()." did not have an associated TextFragment. A new one was created.");
                     }
                     
@@ -411,12 +423,14 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	                    $tf->setAssetId($this->getId());
                         $tf->setCreated(time());
                         $this->_save_textfragment_on_save = true;
+                        $this->_set_textfragment_id_on_save = true;
 	                    $this->_text_fragment = $tf;
 	                    SmartestLog::getInstance('system')->log("Text asset '".$this->getLabel()."' with ID ".$this->getId()." did not have an associated TextFragment. A new one was created.");
                     }else{
                         // this is a new text asset, so it doesn't have an id yet.
                         $this->_text_fragment = $tf;
                         $this->_set_textfragment_asset_id_on_save = true;
+                        $this->_set_textfragment_id_on_save = true;
                     }
     	        }
     	        
@@ -545,6 +559,10 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	}
 	
 	public function isImage(){
+	    return in_array($this->getType(), array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE', 'SM_ASSETTYPE_SVG_IMAGE', 'SM_ASSETTYPE_INSTAGRAM_IMAGE'));
+	}
+    
+	public function isBinaryImage(){
 	    return in_array($this->getType(), array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE'));
 	}
 	
@@ -875,20 +893,26 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    
 	    if($this->usesTextFragment()){
 	    
-	        $tf = $this->getTextFragment();
-	        
 	        if($this->_set_textfragment_asset_id_on_save){
-	            $tf->setAssetId($this->getId());
+	            $this->getTextFragment()->setAssetId($this->getId());
 	        }
 	        
 	        if($this->_set_textfragment_asset_id_on_save || $this->_save_textfragment_on_save || !$tf->getId()){
-	            $tf->save();
-	            if($this->getFragmentId() != $tf->getId()){
-	                $this->setFragmentId($tf->getId());
+	            $this->getTextFragment()->save();
+	            if(($this->getFragmentId() != $this->getTextFragment()->getId() && $this->getTextFragment()->getId() > 0) || $this->_set_textfragment_id_on_save){
+	                $this->setFragmentId($this->getTextFragment()->getId());
+                    parent::save();
 	            }
 	        }
-	        
-	        /* if($tf->getId()){
+            
+            // echo 'Fragment ID according to Asset: '.$this->getFragmentId();
+            // echo 'Fragment ID according to fragment: '.$this->getTextFragment()->getId();
+            // echo 'Asset ID according to Asset:'.$this->getId();
+            // echo 'Asset ID according to fragment:'.$this->getTextFragment()->getAssetId();
+            // 
+            // exit;
+            
+            /* if($tf->getId()){
 	            // the textfragment already exists in the database
 	            $this->setFragmentId($this->getTextFragment()->getId());
 	            $tf->save();
