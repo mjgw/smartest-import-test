@@ -89,14 +89,18 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     
     public function pageFragment(){
         
-        if($this->lookupSiteDomain()){
+        $page_webid = $this->getRequestParameter('page_id');
+        $site = new SmartestSite;
+        
+        if($site->findByPageId($page_webid)){
+            
+            $this->_site = $site;
             
             define('SM_AJAX_CALL', true);
             
             // echo "hello world";
             $helper = new SmartestPageManagementHelper;
     		$type_index = $helper->getPageTypesIndex($this->_site->getId()); // ID needed
-    		$page_webid = $this->getRequestParameter('page_id');
     		
     		if($this->getRequestParameter('draft') && SmartestStringHelper::toRealBool($this->getRequestParameter('draft')) && $this->_auth->getUserIsLoggedIn()){
     		    $draft_mode = true;
@@ -104,8 +108,6 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     		    $draft_mode = false;
     		}
     		
-    		// var_dump($this->getRequestParameter('draft'));
-
     		if(isset($type_index[$page_webid])){
     		    if($type_index[$page_webid] == 'ITEMCLASS' && $this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
     		        $page = new SmartestItemPage;
@@ -116,7 +118,7 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     		    $page = new SmartestPage;
     		}
 		
-    		if($page->hydrate($page_webid)){
+    		if($page->smartFind($page_webid)){
 		        
 		        $page->setDraftMode($draft_mode);
 		        
@@ -129,7 +131,8 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     		                $ph = new SmartestWebPagePreparationHelper($page);
     		            }else{
     		                // item could not be found
-    		                echo "Item not found";
+                            header('HTTP/1.1 404 Not Found');
+    		                echo "Error 404: Item not found";
     		                exit;
     		            }
     		        }else{
@@ -137,8 +140,8 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     		        }
 		        
     		    }else{
-    		        // echo "hello";
-    		        // page is a static page - no item
+    		        
+                    // page is a static page - no item
     		        $ph = new SmartestWebPagePreparationHelper($page);
 		        
     		        $overhead_finish_time = microtime(true);
@@ -170,14 +173,15 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
 		    
     		}else{
 		    
-    		    echo "Page not found";
+    		    echo "Error 404: Page not found";
                 exit;
 		    
     		}
 		
 		}else{
-
-            echo "No such domain";
+            
+            header('HTTP/1.1 404 Not Found');
+            echo "Error 404: Site could not be determined because no such page ID exists";
             exit;
 
         }

@@ -225,14 +225,14 @@ class SmartestCmsLink extends SmartestHelper{
             $data = $markup_attributes->getParameters();
         }
         
-        $allowed_attributes = array('title', 'id', 'name', 'style', 'class', 'target', 'rel', 'dir', 'accesskey', 'tabindex', 'lang', 'download');
-        $deprecated_javascript_attributes = array('onclick', 'ondblclick', 'onmouseover', 'onmouseout');
+        $allowed_attributes = array('title', 'id', 'name', 'style', 'class', 'target', 'rel', 'dir', 'accesskey', 'tabindex', 'lang', 'download', 'itemprop');
+        $javascript_attributes = array('onclick', 'ondblclick', 'onmouseover', 'onmouseout');
         $html_attributes_array = array();
         $other_attributes_array = array();
         
         foreach($data as $name => $value){
             
-            if(in_array($name, $deprecated_javascript_attributes)){
+            if(in_array($name, $javascript_attributes)){
                 $html_attributes_array[$name] = $value;
             }else if(in_array($name, $allowed_attributes)){
                 // Make sure attributed supplied for display are XML friendly

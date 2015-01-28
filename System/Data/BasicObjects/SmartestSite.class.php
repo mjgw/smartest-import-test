@@ -395,6 +395,34 @@ class SmartestSite extends SmartestBaseSite{
         return in_array(SmartestStringHelper::toVarName($field_name), $this->getFieldNames());
         
     }
+    
+    public function findByPageId($page_id){
+        
+        $result = array();
+        
+        // var_dump($page_id);
+        
+	    if(is_numeric($page_id)){
+			// numeric_id
+			$sql = "SELECT page_site_id FROM Pages WHERE page_id='".$page_id."'";
+            $result = $this->database->queryToArray($sql);
+		}else if(preg_match('/[a-zA-Z0-9\$-]{32}/', $page_id)){
+			// 'webid'
+            $sql = "SELECT page_site_id FROM Pages WHERE page_webid='".$page_id."'";
+            $result = $this->database->queryToArray($sql);
+		}else{
+            // echo "did not match";
+        }
+        
+        if(count($result)){
+            // print_r($result);
+            $site_id = $result[0]['page_site_id'];
+            return $this->find($site_id);
+        }else{
+            return null;
+        }
+        
+    }
 	
 	public function getFullDirectoryPath(){
 	    return SM_ROOT_DIR.'Sites/'.$this->getDirectoryName().'/';
@@ -524,6 +552,7 @@ class SmartestSite extends SmartestBaseSite{
             return $this->getLanguageCode();
             
             case "home_page":
+            case "homepage":
             return $this->getHomePage();
             
         }

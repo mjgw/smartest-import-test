@@ -694,6 +694,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	public function getTitle(){
 	    return $this->getName();
 	}
+    
+	public function getFormattedTitle(){
+	    return $this->getName();
+	}
 	
 	public function getDate(){
 	    if($this->getDraftMode()){

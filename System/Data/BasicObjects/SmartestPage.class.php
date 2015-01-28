@@ -1570,7 +1570,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
                     return "websitemanager/preview?page_id=".$this->getWebid();
                 }
             }else{
-                return $this->getUrl();
+                return $this->getDefaultUrl();
             }
 	        
 	        case 'date':
