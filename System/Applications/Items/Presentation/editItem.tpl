@@ -55,7 +55,7 @@
 {if $item._model.item_name_field_visible || count($metapages)}
 <div class="edit-form-row">
   <div class="form-section-label">{$item._model.name} {$item._model.item_name_field_name}</div>
-  <input type="text" name="item_name" value="{$item.name|escape_double_quotes}" />
+  <input type="text" name="item_name" value="{$item.editor_name|escape_double_quotes}" />
 </div>{/if}
 
 {if $item.has_metapage || $allow_edit_item_slug}

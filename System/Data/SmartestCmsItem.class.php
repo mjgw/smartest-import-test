@@ -248,6 +248,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            
 	            case 'label':
 	            return $this->getItem()->getName();
+                
+                case 'editor_name':
+                return $this->getEditorName();
 	            
 	            case 'related':
 	            // Sergiy - Moved your if statement to here: (Marcus)
@@ -673,6 +676,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 		}
 		return $n;
 	}
+    
+    public function getEditorName(){
+        return $this->getItem()->getName();
+    }
 	
 	public function setName($name){
 		return $this->getItem()->setName($name);
