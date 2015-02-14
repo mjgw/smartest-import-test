@@ -446,7 +446,14 @@ class QuinceBase{
         $this->$name = $data;
     }
     
-    protected function redirect($to, $http_code=303, $exit=true){
+    protected function redirect($to, $http_code=303){
+        
+        $destination = $this->_handleDestination($to);
+		throw new QuinceRedirectException($destination);
+		
+    }
+    
+    protected function _handleDestination($to){
         
         if(!$to){
 			
@@ -467,6 +474,8 @@ class QuinceBase{
             
             if($r->routeExists($matches[1].':'.$matches[2])){
                 $destination = $r->fetchRouteUrl($to, $matches);
+            }else{
+                $destination = '';
             }
             
             // print_r($matches);
@@ -479,6 +488,8 @@ class QuinceBase{
             $r->setRequest($this->_request);
             if($r->routeExists($this->_request->getModule().':'.$matches[1])){
                 $destination = $r->fetchRouteUrl('@'.$this->_request->getModule().':'.$matches[1].$matches[2]);
+            }else{
+                $destination = '';
             }
             
             // print_r($matches);
@@ -486,9 +497,9 @@ class QuinceBase{
 		}else{
 		    $destination = $to;
 		}
-		
-		throw new QuinceRedirectException($destination);
-		
+        
+        return $destination;
+        
     }
     
     public function setCurrentRequest($r){

@@ -93,7 +93,24 @@ class Desktop extends SmartestSystemApplication{
 		if($this->getRequestParameter('site_id')){
 		    
 		    if($this->getUser()->openSiteById($this->getRequestParameter('site_id'))){
-		        $this->redirect('/smartest');
+                if($this->requestParameterIsSet('continueTo')){
+                    
+                    if(strpos($this->getRequestParameter('continueTo'), '%') !== false){
+                        $desination = urldecode($this->getRequestParameter('continueTo'));
+                    }else{
+                        $desination = $this->getRequestParameter('continueTo');
+                    }
+                    
+                    if($desination = $this->_handleDestination($desination)){
+                        $this->redirect($desination);
+                    }else{
+                        $this->redirect('/smartest');
+                    }
+                    
+                }else{
+                    $this->redirect('/smartest');
+                }
+		        
 		    }else{
 		        $this->addUserMessageToNextRequest('You don\'t have permission to access that site. This action has been logged.', SmartestUserMessage::ACCESS_DENIED);
                 SmartestLog::getInstance('site')->log("User ".$this->getUser()->__toString()." tried to access this site but is not currently granted permission to do so.");

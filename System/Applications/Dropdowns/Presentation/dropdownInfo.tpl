@@ -15,6 +15,11 @@
       </div>
       
       <div class="edit-form-row">
+        <div class="form-section-label">Name </div>
+        <input type="text" name="dropdown_name" value="{$dropdown.name}" />
+      </div>
+      
+      <div class="edit-form-row">
         <div class="form-section-label">Language </div>
           <select name="dropdown_language">
 {foreach from=$_languages item="lang" key="langcode"}

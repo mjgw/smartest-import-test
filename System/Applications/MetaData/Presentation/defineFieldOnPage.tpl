@@ -32,8 +32,8 @@
     </div>
   
     <div class="buttons-bar">
-      <input type="submit" name="action" value="Save" />
       <input type="button" value="Cancel" onclick="cancelForm();" />
+      <input type="submit" name="action" value="Save field value" />
     </div>
   
 </div>

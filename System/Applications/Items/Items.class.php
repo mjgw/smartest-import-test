@@ -1350,6 +1350,11 @@ class Items extends SmartestSystemApplication{
 	
 	public function editItem($get, $post){
 		
+        if(!$this->requestParameterIsSet('from')){
+            $this->setFormReturnUri();
+            $this->setFormReturnDescription('editing item');
+        }
+        
 		$item_id = $this->getRequestParameter('item_id');
 		
 		$item = SmartestCmsItem::retrieveByPk($item_id);

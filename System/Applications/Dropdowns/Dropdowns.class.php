@@ -100,6 +100,7 @@ class Dropdowns extends SmartestSystemApplication{
 	    
 	    if($dropdown->find($dropdown_id)){
 	        $dropdown->setLabel($post['dropdown_label']);
+            $dropdown->setName(SmartestStringHelper::toVarName($post['dropdown_name']));
 	        $dropdown->setLanguage($post['dropdown_language']);
 	        $dropdown->save();
 	    }
@@ -164,7 +165,7 @@ class Dropdowns extends SmartestSystemApplication{
 	    if(strlen($post['dropdownvalue_value'])){
 	        $value = SmartestStringHelper::toVarName($post['dropdownvalue_value']);
         }else{
-            $value = SmartestStringHelper::toVarName($post['dropdownvalue_label']);
+            $value = $post['dropdownvalue_value'];
         }
 	    
 	    $dropdown_id = (int) $this->getRequestParameter('dropdown_id');

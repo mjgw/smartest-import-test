@@ -878,7 +878,7 @@ class Pages extends SmartestSystemApplication{
                                 }
                             }else{
                                 // tag does not exist - require tag select
-                                $this->send('The selected tag does not exists. Please choose another tag to preview on this page.', 'chooser_message');
+                                $this->send('The selected tag does not exist. Please choose another tag to preview on this page.', 'chooser_message');
                                 $this->send(false, 'show_item_list');
                                 $this->send(true, 'show_tag_list');
                                 $this->send(false, 'show_search_box');
@@ -1126,6 +1126,7 @@ class Pages extends SmartestSystemApplication{
                 $preview_url .= '#'.$this->getRequestParameter('hash');
             }
             $this->send($preview_url, 'preview_url');
+            $this->send($preview_url.'&amp;hide_newwin_link=true', 'full_page_preview_url');
         }
 		
 		/* if($content["page"] = $this->manager->getPage($page_id)){

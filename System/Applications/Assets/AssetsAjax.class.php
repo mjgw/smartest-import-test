@@ -475,6 +475,76 @@ class AssetsAjax extends SmartestSystemApplication{
                     $upload->setUploadDirectory(SM_ROOT_DIR.'System/Temporary/');
                     $ach->createNewAssetFromFileUpload($upload, $this->getRequestParameter('asset_label'));
                     $asset = $ach->finish();
+                    
+                    $assetSimpleObj = new stdClass;
+                    $assetSimpleObj->asset_id = $asset->getId();
+                    $assetSimpleObj->asset_webid = $asset->getWebId();
+                    $assetSimpleObj->asset_label = $asset->getLabel();
+                    $assetSimpleObj->asset_url = $asset->getUrl();
+                    
+                    if($this->requestParameterIsSet('for')){
+                    
+                        $assetSimpleObj->for = $this->getRequestParameter('for');
+                    
+                        switch($this->getRequestParameter('for')){
+                        
+                            case 'ipv':
+                        
+                            if($property_id = $this->getRequestParameter('property_id')){
+                                // Property exists, so that's good
+                                
+                                $assetSimpleObj->property_id = $this->getRequestParameter('property_id');
+                            
+                                $property = new SmartestItemProperty;
+                                if($property->find($property_id)){
+                                    
+                                    // If an item is specified, set the new asset as the value for this property on the specified item
+                                    if($this->requestParameterIsSet('item_id')){
+                                        if($item = SmartestCmsItem::retrieveByPk((int) $this->getRequestParameter('item_id'))){
+                                            $item->setPropertyValueByNumericKey($property_id, $asset->getId());
+                                            $item->save();
+                                        }
+                                    }
+                                        
+                                    // If the property is limited to a grou, add the file to that group
+                                    if($property->getOptionSetType() == 'SM_PROPERTY_FILTERTYPE_ASSETGROUP'){
+                                        $group = new SmartestAssetGroup;
+                                        if($group->find($property->getOptionSetId())){
+                                            $group->addAssetById($asset->getId(), false);
+                                        }
+                                    }
+                                }
+                            }
+                        
+                            break;
+                        
+                            case 'placeholder':
+                        
+                            if($placeholder_id = $this->getRequestParameter('placeholder_id')){
+                            
+                                $assetSimpleObj->placeholder_id = $this->getRequestParameter('placeholder_id');
+                            
+                                $placeholder = new SmartestPlaceholder;
+                                if($placeholder->find($placeholder_id)){
+                                    
+                                    // TODO: If a page is specified, set this asset as the value for the given placeholder
+                                    
+                                    // Placeholder exists, so that's good
+                                    if($placeholder->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_ASSETGROUP'){
+                                        $group = new SmartestAssetGroup;
+                                        if($group->find($placeholder->getFilterValue())){
+                                            $group->addAssetById($asset->getId(), false);
+                                        }
+                                    }
+                                }
+                            }
+                        
+                            break;
+                        
+                        }
+                    
+                    }
+                    
                 }else{
                     // The requested asset type does not exist
                 }
