@@ -156,7 +156,7 @@ class Items extends SmartestSystemApplication{
   	    $model = new SmartestModel;
   	    
   	    if($this->getRequestParameter('use_plural_name')){
-  	        $found_model = $model->findBy('varname', $this->getRequestParameter('plural_name'));
+  	        $found_model = $model->findBy('varname', $this->getRequestParameter('plural_name'), $this->getSite()->getId());
   	    }else{
   	        $model_id = $this->getRequestParameter('class_id');
   	        $found_model = $model->find($model_id);
@@ -1359,9 +1359,9 @@ class Items extends SmartestSystemApplication{
 		
 		$item = SmartestCmsItem::retrieveByPk($item_id);
 		
-	    if(is_object($item)){
+        if(is_object($item)){
 	        
-	        if(($item->getItem()->getCreatedbyUserid() != $this->getUser()->getId()) && !$this->getUser()->hasToken('modify_items')){
+            if(($item->getItem()->getCreatedbyUserid() != $this->getUser()->getId()) && !$this->getUser()->hasToken('modify_items')){
 	            $this->addUserMessageToNextRequest('You didn\'t create this item and do not have permission to edit it.', SmartestUserMessage::ACCESS_DENIED);
 	            SmartestLog::getInstance('site')->log('Suspicious activity: '.$this->getUser()->__toString().' tried to edit '.strtolower($item->getModel()->getName()).' \''.$item->getName().'\' via direct URL entry.');
     		    $this->redirect('/'.$this->getRequest()->getModule().'/getItemClassMembers?class_id='.$item->getItem()->getItemclassId());

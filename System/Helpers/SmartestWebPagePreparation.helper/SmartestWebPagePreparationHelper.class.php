@@ -129,6 +129,7 @@ class SmartestWebPagePreparationHelper{
         }else{
             
             if($draft_mode){
+                header('HTTP/1.1 500 Internal Server Error');
                 echo "Smartest: Container '".$container_name."' not yet defined";
             }   
             exit;

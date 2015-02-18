@@ -126,9 +126,36 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
 		        
     		        if($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
     		            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
-    		                $item->setDraftMode($draft_mode);
+    		                
+                            $item->setDraftMode($draft_mode);
     		                $page->setPrincipalItem($item);
     		                $ph = new SmartestWebPagePreparationHelper($page);
+                            
+            		        $overhead_finish_time = microtime(true);
+                    		$overhead_time_taken = number_format(($overhead_finish_time - SM_START_TIME)*1000, 2, ".", "");
+
+                    		define("SM_OVERHEAD_TIME", $overhead_time_taken);
+                    		SmartestPersistentObject::get('timing_data')->setParameter('overhead_time', microtime(true));
+                
+                            $container_name = SmartestStringHelper::toVarName($this->getRequestParameter('container_name'));
+                
+                            define('SM_LINK_URLS_ABSOLUTE', true);
+                
+                    	    $html = $ph->fetchContainer($this->getRequestParameter('container_name'), $draft_mode);
+
+                	        ///// START FILTER CHAIN
+                    	    $fc = new SmartestFilterChain("WebPageBuilder");
+                    	    $fc->setDraftMode($draft_mode);
+                	        $html = $fc->execute($html);
+
+                	        $cth = 'Content-Type: '.$this->getRequest()->getContentType().'; charset='.$this->getRequest()->getCharSet();
+                            header($cth);
+        	        
+                	        header('HTTP/1.1 206 Partial content');
+        	        
+                	        echo $html;
+                	        exit;
+                            
     		            }else{
     		                // item could not be found
                             header('HTTP/1.1 404 Not Found');
@@ -150,7 +177,7 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
             		define("SM_OVERHEAD_TIME", $overhead_time_taken);
             		SmartestPersistentObject::get('timing_data')->setParameter('overhead_time', microtime(true));
                 
-                    $this->getRequestParameter('container_name');
+                    $container_name = SmartestStringHelper::toVarName($this->getRequestParameter('container_name'));
                 
                     define('SM_LINK_URLS_ABSOLUTE', true);
                 
