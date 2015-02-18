@@ -290,11 +290,11 @@ type:
     suffix:
       - {mime: text/css, _content: css}
 
-#  SM_ASSETTYPE_DYNAMIC_CSS:
-#    id: SM_ASSETTYPE_DYNAMIC_CSS
+#  SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET:
+#    id: SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET
 #    category: browser_instructions
 #    label: Sass Dynamic CSS Stylesheet
-#    description: Dynamic CSS Stylesheet in the Sass (Syntactically Awesome Stylesheets) metalanguage
+#    description: Dynamic CSS Stylesheet in the Sass (Syntactically Awesome Stylesheets) metalanguage. SCSS syntax only.
 #    class: SmartestTextAsset
 #    editable: true
 #    parsable: true
@@ -312,6 +312,7 @@ type:
 #      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false}
 #    storage:
 #      type: database
+#      live_cache: Public/Resources/System/Cache/Sass/
 #    suffix:
 #      - {mime: text/css, _content: scss}
 #      - {mime: text/css, _content: sass}

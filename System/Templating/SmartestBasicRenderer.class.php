@@ -102,7 +102,7 @@ class SmartestBasicRenderer extends SmartestEngine{
         
         $asset_type_info = $this->_asset->getTypeInfo();
         
-        if($preview_mode){
+        if($preview_mode && isset($asset_type_info['render']['preview_template'])){
             $render_template = SM_ROOT_DIR.$asset_type_info['render']['preview_template'];
         }else{
             $render_template = SM_ROOT_DIR.$asset_type_info['render']['template'];
@@ -133,57 +133,102 @@ class SmartestBasicRenderer extends SmartestEngine{
                 
                 if($this->_asset->usesTextFragment()){
                     
-                    $render_process_id = SmartestStringHelper::toVarName('textfragment_'.$this->_asset->getStringid().'_'.substr(microtime(true), -6));
+                    if($this->_asset->getCategory() == 'user_text'){
                     
-                    if($this->_asset->getTextFragment()->containsAttachmentTags()){
-                        $attachments = $this->_asset->getTextFragment()->getAttachments();
-                    }else{
-                        $attachments = array();
-                    }
+                        $render_process_id = SmartestStringHelper::toVarName('textfragment_'.$this->_asset->getStringid().'_'.substr(microtime(true), -6));
                     
-                    // If draft, check that a temporary preview copy has been created, and creat it if not
-                    if($this->getDraftMode()){
-                        
-                        if($this->_asset->getTextFragment()->ensurePreviewFileExists()){
-                            
-                            $child = $this->startChildProcess($render_process_id);
-                	        $child->setContext(SM_CONTEXT_DYNAMIC_TEXTFRAGMENT);
-                	        $child->setProperty('asset', $this->_asset);
-                	        $child->setProperty('attachments', $attachments);
-                	        $child->setDraftMode($this->getDraftMode());
-                	        
-                	        $content = $child->fetch($this->_asset->getTextFragment()->getParsableFilePath(true));
-                	        
-                            $this->killChildProcess($child->getProcessId());
-                	        
+                        if($this->_asset->getTextFragment()->containsAttachmentTags()){
+                            $attachments = $this->_asset->getTextFragment()->getAttachments();
                         }else{
-                            $content = $this->raiseError('TextFragment render preview could not be created.');
+                            $attachments = array();
+                        }
+                    
+                        // If draft, check that a temporary preview copy has been created, and creat it if not
+                        if($this->getDraftMode()){
+                        
+                            if($this->_asset->getTextFragment()->ensurePreviewFileExists()){
+                            
+                                $child = $this->startChildProcess($render_process_id);
+                    	        $child->setContext(SM_CONTEXT_DYNAMIC_TEXTFRAGMENT);
+                    	        $child->setProperty('asset', $this->_asset);
+                    	        $child->setProperty('attachments', $attachments);
+                    	        $child->setDraftMode($this->getDraftMode());
+                	        
+                    	        $content = $child->fetch($this->_asset->getTextFragment()->getParsableFilePath(true));
+                	        
+                                $this->killChildProcess($child->getProcessId());
+                	        
+                            }else{
+                                $content = $this->raiseError('TextFragment render preview could not be created.');
+                            }
+                        
+                        }else{
+                        // otherwise parse local disk copy.
+                            if($this->_asset->getTextFragment()->isPublished()){
+                            
+                    	        $child = $this->startChildProcess($render_process_id);
+                    	        $child->setContext(SM_CONTEXT_DYNAMIC_TEXTFRAGMENT);
+                    	        $child->setProperty('asset', $this->_asset);
+                    	        $child->setProperty('attachments', $attachments);
+                    	        $child->setDraftMode($this->getDraftMode());
+                	        
+                    	        $content = $child->fetch($this->_asset->getTextFragment()->getParsableFilePath());
+                	        
+                    	        $this->killChildProcess($child->getProcessId());
+                	        
+                            }else{
+                                $content = $this->raiseError("Asset '".$this->_asset->getStringid()."' is not published");
+                            }
+                        }
+                    
+                        $parser = new SmartestDataBaseStoredTextAssetToolkit();
+                        $method = $this->_asset->getParseMethodName();
+                    
+                        if(method_exists($parser, $method)){
+                            $content = $parser->$method($content, $this->_asset, $this);
+                        }
+                    
+                    }elseif($this->_asset->getCategory() == 'browser_instructions'){
+                        
+                        if($this->getDraftMode()){
+                            
+                            // Render a <link> or <script> tag that points to a method on the CMSFrontEnd app that will parse the dynamic CSS or JS
+                            $address = 'website/renderDynamicBrowserInstruction?file_id='.$this->_asset->getWebId().'&amp;nonce='.substr($this->_asset->getContentHash(), 0, 8);
+                            
+                            ob_start();
+                            $this->assign('sass_web_path', $address);
+                            $this->run($render_template, array('asset_info'=>$this->_asset, 'render_data'=>$render_data, 'image'=>$image));
+                            $content = ob_get_contents();
+                	        ob_end_clean();
+                            
+                            return $content;
+                            
+                        }else{
+                            
+                            if(isset($asset_type_info['storage']['live_cache'])){
+                                
+                                // Parse the dynamic CSS or JS now, save to a file,
+                                
+                            
+                                // then render a <link> or <script> tag that points to the saved file
+                                $address = $this->_asset->getLiveCacheWebPath();
+                            
+                                ob_start();
+                                $this->assign('sass_web_path', $address);
+                                $this->run($render_template, array('asset_info'=>$this->_asset, 'render_data'=>$render_data, 'image'=>$image));
+                                $content = ob_get_contents();
+                    	        ob_end_clean();
+                            
+                                return $content;
+                                
+                            }else{
+                                
+                                // There is nowhere for parsed files to be cached
+                                
+                            }
+                            
                         }
                         
-                    }else{
-                    // otherwise parse local disk copy.
-                        if($this->_asset->getTextFragment()->isPublished()){
-                            
-                	        $child = $this->startChildProcess($render_process_id);
-                	        $child->setContext(SM_CONTEXT_DYNAMIC_TEXTFRAGMENT);
-                	        $child->setProperty('asset', $this->_asset);
-                	        $child->setProperty('attachments', $attachments);
-                	        $child->setDraftMode($this->getDraftMode());
-                	        
-                	        $content = $child->fetch($this->_asset->getTextFragment()->getParsableFilePath());
-                	        
-                	        $this->killChildProcess($child->getProcessId());
-                	        
-                        }else{
-                            $content = $this->raiseError("Asset '".$this->_asset->getStringid()."' is not published");
-                        }
-                    }
-                    
-                    $parser = new SmartestDataBaseStoredTextAssetToolkit();
-                    $method = $this->_asset->getParseMethodName();
-                    
-                    if(method_exists($parser, $method)){
-                        $content = $parser->$method($content, $this->_asset, $this);
                     }
                     
                 }else{

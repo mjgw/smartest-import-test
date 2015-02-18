@@ -1,5 +1,11 @@
 {if $sm_user_agent.is_supported_browser}
 
+<script type="text/javascript">
+  
+var suffixRegex = {if $file_suffix_regex}{$file_suffix_regex}{else}null{/if};
+  
+</script>
+
 {if $post_max_size_warning}
 <div class="warning">There is an issue in your PHP configration. Although upload_max_filesize has been configured to allow uploads of up to <strong>{$max_upload_size_in_megs} MB</strong>, the post_max_size directive in php.ini will still limit uploads to only <strong>{$post_max_size_in_megs} MB</strong>, and uploads will fail completely if they exceed this. To fix this, change the post_max_size directive to match upload_max_filesize.</div>
 {/if}
@@ -9,7 +15,9 @@
 </div>
 <div class="edit-form-row">
   <div class="form-section-label">Choose a file on your computer to upload</div>
-  <input type="file" name="new_file" id="asset-file" /><div class="form-hint">Please do not upload files larger than <strong>{if $post_max_size_warning}{$post_max_size_in_megs}{else}{$max_upload_size_in_megs}{/if} MB</strong></div>
+  <input type="file" name="new_file" id="asset-file" />
+  <div class="form-hint" style="color:#c30;display:none" id="asset-type-warning">The file you have selected is not the correct file type.</div>
+  <div class="form-hint">Please do not upload files larger than <strong>{if $post_max_size_warning}{$post_max_size_in_megs}{else}{$max_upload_size_in_megs}{/if} MB</strong></div>
 </div>
 <div class="edit-form-row" id="upload-progress-bar-holder" style="display:none">
   <div class="form-section-label"> </div>
@@ -22,14 +30,31 @@
 var uploadUrl = sm_domain+'ajax:assets/uploadNewFileViaBrowserAjaxRequest';
 {literal}
 document.observe('dom:loaded', function(){
+  
+  $('asset-file').observe('change', function(){
+    if(suffixRegex.match($('asset-file').value)){
+      if($('asset-type-warning').visible()){
+        $('asset-type-warning').fade({duration: 0.3});
+      }
+      if(!$('confirm-asset-create').visible()){
+        $('confirm-asset-create').appear({duration: 0.3});
+      }
+    }else{
+      $('asset-type-warning').appear({duration: 0.3});
+      $('confirm-asset-create').fade({duration: 0.3});
+    }
+  });
+  
   $('confirm-asset-create').observe('click', function(e){
+    
     e.stop();
     var uploadInfo = {};
     uploadInfo.asset_label = $F('new-asset-name');
+    
     $$('input.purpose_inputs').each(function(ipt){
       uploadInfo[ipt.name] = ipt.value;
     });
-    // console.log(uploadInfo);
+    
     if(($('new-asset-name').getValue() == itemNameFieldDefaultValue) || $('new-asset-name').getValue() == ''){
       return false;
     }else{
@@ -47,7 +72,6 @@ document.observe('dom:loaded', function(){
       var uploadProgress = function(evt) {
         
         if (evt.lengthComputable) {
-        
             var percentComplete = Math.round(evt.loaded * 100 / evt.total);
           
             if(!$('upload-progress-inner').visible()){
@@ -55,9 +79,7 @@ document.observe('dom:loaded', function(){
             }
           
             var cssWidthValue = percentComplete.toString() + '%';
-          
             $('upload-progress-inner').setStyle({width: cssWidthValue});
-          
         }
         
       }
@@ -79,8 +101,6 @@ document.observe('dom:loaded', function(){
         console.log(iterator.key+':'+iterator.value);
       });
       
-      // console.log(formdata);
-      
       $('upload-progress-bar-holder').show();
       
       var xhr = new XMLHttpRequest;
@@ -90,7 +110,6 @@ document.observe('dom:loaded', function(){
       xhr.addEventListener("error", uploadFailed, false);
       xhr.send(formdata);
       
-      // alert('proceed with upload');
     }
   });
 });
@@ -105,8 +124,31 @@ document.observe('dom:loaded', function(){
 <div style="margin-top:8px;margin-bottom:8px" id="uploader" class="special-box">
   <div class="edit-form-row">
     <div class="form-section-label">Choose a file on your computer to upload</div>
-    <input type="file" name="new_file" /><div class="form-hint">Please do not upload files larger than <strong>{if $post_max_size_warning}{$post_max_size_in_megs}{else}{$max_upload_size_in_megs}{/if} MB</strong></div>
+    <input type="file" name="new_file" id="asset-file" />
+    <div class="form-hint" style="color:#c30;display:none" id="asset-type-warning">The file you have selected is not the correct file type.</div>
+    <div class="form-hint">Please do not upload files larger than <strong>{if $post_max_size_warning}{$post_max_size_in_megs}{else}{$max_upload_size_in_megs}{/if} MB</strong></div>
     <div class="breaker"></div>
   </div>
 </div>
+
+<script type="text/javascript">
+  
+var suffixRegex = {if $file_suffix_regex}{$file_suffix_regex}{else}null{/if};
+
+{literal}$('asset-file').observe('change', function(){
+  if(suffixRegex.match($('asset-file').value)){
+    if($('asset-type-warning').visible()){
+      $('asset-type-warning').fade({duration: 0.3});
+    }
+    if(!$('confirm-asset-create').visible()){
+      $('confirm-asset-create').appear({duration: 0.3});
+    }
+  }else{
+    $('asset-type-warning').appear({duration: 0.3});
+    $('confirm-asset-create').fade({duration: 0.3});
+  }
+});{/literal}
+  
+</script>
+
 {/if}

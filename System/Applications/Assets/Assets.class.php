@@ -436,6 +436,8 @@ class Assets extends SmartestSystemApplication{
             		// preg_match('/(\d+)M$/', $mr, $m);
                     // 
                     
+                    $this->send($alh->getFilenameExtensionTestRegex($asset_type), 'file_suffix_regex');
+                    
                     if(ini_get('post_max_size') != '0'){
                     
                         preg_match('/(\d+)M$/', ini_get('post_max_size'), $matches);

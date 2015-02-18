@@ -163,8 +163,8 @@
     
     <type id="SM_DATATYPE_DROPDOWN_MENU" valuetype="foreignkey">
         
-        <label>Dropdown Menu</label>
-        <description>A value from one of the dropdown menus defined in the dropdown menu editor.</description>
+        <label>Custom dropdown menu</label>
+        <description>A value from one of your custom dropdown menus, created in the dropdown menu editor.</description>
         <usage>field,itemproperty</usage>
         <long>false</long>
         <sortable>true</sortable>
@@ -191,6 +191,16 @@
         <render template="System/Presentation/WebPageBuilder/property.rgb_color.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/default.tpl" />
     </type>
+    
+    <!--<type id="SM_DATATYPE_ICON" valuetype="string">
+        <label>Icon</label>
+        <description>A vector icon, powered by FontAwesome</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestIcon</class>
+        <long>false</long>
+        <render template="System/Presentation/WebPageBuilder/property.fa_icon.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/default.tpl" />
+    </type>-->
     
     <type id="SM_DATATYPE_EMAIL_ADDRESS" valuetype="string">
         <label>Email address</label>
@@ -330,9 +340,27 @@
         <description>ISBN is a standardised number for identifying published books.</description>
         <usage>field,itemproperty</usage>
         <class>SmartestString</class>
-        <long>true</long>
+        <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/sl_text.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_LICENSE" valuetype="string">
+        <label>Intellectual property license</label>
+        <description>A license for software, writing, images, or other intellectual property</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestLicense</class>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/license.tpl" />
+    </type>
+    
+    <type id="SM_DATATYPE_COUNTRY" valuetype="string">
+        <label>Country</label>
+        <description>A country of the world. Uses the ISO 3166-1 alpha-2 standard.</description>
+        <usage>field,itemproperty</usage>
+        <class>SmartestCountry</class>
+        <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
+        <input template="System/Presentation/InterfaceBuilder/Inputs/license.tpl" />
     </type>
     
     <!--<type id="SM_DATATYPE_ASSET_DOWNLOAD" valuetype="foreignkey">

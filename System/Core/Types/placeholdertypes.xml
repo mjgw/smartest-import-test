@@ -140,7 +140,7 @@
     <label>CSS Stylesheet</label>
     <setfrompreview>false</setfrompreview>
     <accept>SM_ASSETTYPE_STYLESHEET</accept>
-    <accept>SM_ASSETTYPE_DYNAMIC_CSS</accept>
+    <accept>SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET</accept>
   </type>
   
   <type id="SM_ASSETCLASS_BROWSER_INSTRUCTION">

@@ -340,6 +340,13 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    return $this->_type_info;
 	    
 	}
+    
+    public function getCategory(){
+        
+        $info = $this->getTypeInfo();
+        return isset($info['category']) ? $info['category'] : 'unknown';
+        
+    }
 	
 	public function getMimeType(){
 	    
@@ -486,6 +493,10 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    }
 	    
 	}
+    
+    public function getContentHash(){
+        return md5($this->getContent()->getValue());
+    }
 	
 	public function isEditable(){
 	    $info = $this->getTypeInfo();
@@ -496,6 +507,24 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    $info = $this->getTypeInfo();
 	    return (isset($info['parsable']) && SmartestStringHelper::toRealBool($info['parsable']));
 	}
+    
+    public function getLiveCacheDirectory(){
+        
+        $info = $this->getTypeInfo();
+        
+        if(isset($info['storage']['live_cache'])){
+            return str_replace('Public/', '', $info['storage']['live_cache']);
+        }
+        
+    }
+    
+    public function getLiveCacheWebPath(){
+        $info = $this->getTypeInfo();
+        
+        if(isset($info['storage']['live_cache'])){
+            return $this->getLiveCacheDirectory().$this->getUrl().'&amp;nonce='.substr($this->getContentHash(), 0, 8);
+        }
+    }
 	
 	public function getFullPathOnDisk(){
 	    

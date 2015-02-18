@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 740
+    revision: 741
     minimum_php_version: 5.3
     minimum_database_version: 21
     default_timezone: Europe/London
@@ -40,6 +40,7 @@ system:
     - website/pageFragment
     - website/pageInfo
     - website/setPrivacyCookieNoJS
+    - website/renderDynamicBrowserInstruction
   content_interaction_methods:
     - website/renderPageFromUrl
     - website/renderPageFromId
@@ -54,6 +55,7 @@ system:
     - website/pageFragment
     - website/pageInfo
     - website/setPrivacyCookieNoJS
+    - website/renderDynamicBrowserInstruction
   smarty_config:
     default_templates_dir: Presentation/
     templates_cache: System/Cache/Smarty/
@@ -87,6 +89,7 @@ system:
       - Public/Resources/Stylesheets/
       - Public/Resources/Javascript/
       - Public/Resources/Fonts/
+      - Public/Resources/System/Cache/Sass/
     templates_repo:
       - Presentation/Masters/
       - Presentation/Layouts/

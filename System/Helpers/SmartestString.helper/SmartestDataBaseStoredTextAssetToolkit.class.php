@@ -83,7 +83,7 @@ class SmartestDataBaseStoredTextAssetToolkit{
         
        $rd = $asset->getRenderData();
        
-       if($rd['parse_urls']){
+       if(SmartestStringHelper::toRealBool($rd['parse_urls'])){
            $content = preg_replace('/(https?:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/', '<a href="${1}">${1}</a>', $raw_contents);
        }else{
            $content = $raw_contents;
@@ -91,7 +91,7 @@ class SmartestDataBaseStoredTextAssetToolkit{
        
        $content = str_replace('<3', '♥', $content);
        
-       if($rd['convert_double_line_breaks']){
+       if(SmartestStringHelper::toRealBool($rd['convert_double_line_breaks'])){
            $content = preg_replace("/[\r\n]{2,}/", '<br /><br />', $content);
        }
        

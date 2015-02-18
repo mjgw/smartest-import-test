@@ -1089,6 +1089,26 @@ class SmartestDataUtility{
 	    
 	}
     
+    public static function getCountries(){
+        
+        if(SmartestSession::get('user') instanceof SmartestSystemUser){
+            $languagecode = SmartestSession::get('user')->getPreferredUiLanguage();
+        }else{
+            $languagecode = 'eng';
+        }
+        
+        if($languagecode == 'eng' || !is_file(SM_ROOT_DIR.'System/Languages/SystemLocalizations/'.$languagecode.'/countries.yml')){
+            $raw_countries = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Languages/countries.yml');
+        }elseif(is_file(SM_ROOT_DIR.'System/Languages/SystemLocalizations/'.$languagecode.'/countries.yml')){
+            $raw_countries = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Languages/SystemLocalizations/'.$languagecode.'/countries.yml');
+        }else{
+            return array();
+        }
+        
+        return $raw_countries['countries'];
+        
+    }
+    
     public function getPlaceholders($site_id=null){
         
 	    $sql = "SELECT * FROM AssetClasses WHERE assetclass_type NOT IN ('SM_ASSETCLASS_CONTAINER', 'SM_ASSETCLASS_ITEM_SPACE')";

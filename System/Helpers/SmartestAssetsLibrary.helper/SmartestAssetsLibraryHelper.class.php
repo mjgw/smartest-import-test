@@ -1331,4 +1331,31 @@ class SmartestAssetsLibraryHelper{
 	    
 	}
     
+    public function getFilenameExtensionTestRegex($type_code){
+        
+        if(is_array($type_code)){
+            $suffixes = array();
+            
+            foreach($type_code as $tc){
+                
+                $s = $this->getAllSuffixesForType($tc);
+                
+                if(is_array($s)){
+                    foreach($s as $suffix){
+                        if(!in_array($suffix, $suffixes)){
+                            $suffixes[] = $suffix;
+                        }
+                    }
+                }
+                
+            }
+            
+        }else{
+            $suffixes = $this->getAllSuffixesForType($type_code);
+        }
+        
+        return "/\.(".implode('|', $suffixes).")$/i";
+        
+    }
+    
 }

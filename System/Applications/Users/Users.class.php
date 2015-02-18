@@ -229,7 +229,7 @@ class Users extends SmartestSystemApplication{
 	    
 	        $permission_editable_sites = $this->getUser()->getPermissionEditableSites();
 	        
-	        $user_id = $get['user_id'];	
+	        $user_id = $this->getRequestParameter('user_id');	
         	$user = new SmartestSystemUser;
     	
         	if($user->find($user_id)){
@@ -706,5 +706,21 @@ class Users extends SmartestSystemApplication{
     	    }
 	    }
 	}
+    
+    public function userAssociatedContent(){
+        
+		$user = new SmartestUser;
+		
+		if($user->find($this->getRequestParameter('user_id'))){
+		    $this->setTitle('Content associated to user: '.$user->getFullName());
+		    $this->send($user, 'user');
+        }else{
+            $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
+            $this->formForward();
+        }
+		
+		$this->send($this->getUser()->hasToken('modify_user_permissions'), 'show_tokens_edit_tab');
+        
+    }
     
 }

@@ -300,7 +300,7 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	
 	public function getPossibleValues(){
 	    
-	    if($this->_possible_values_retrieval_attempted){
+        if($this->_possible_values_retrieval_attempted){
 	        
 	        return $this->_possible_values;
 	        
@@ -573,8 +573,8 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	            
 	            }else{
 	                
-    	            // non-database entity types? to be continued...
-    	            $this->_possible_values = array();
+                    // non-database entity types? to be continued...
+                    $this->_possible_values = array();
 	                
     	        }
 	            
@@ -582,6 +582,10 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	            return $this->_possible_values;
 	            
 	        }else{
+                if($this->getDatatype() == 'SM_DATATYPE_LICENSE'){
+                    $this->_possible_values = SmartestLicense::getLicenseData();
+                    return $this->_possible_values;
+                }
 	            $this->_possible_values_retrieval_attempted = true;
 	            return array();
 	        }
@@ -757,8 +761,7 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	        return $p;
 	        
 	        case "_options":
-	        // print_r(count($this->getPossibleValues()));
-	        return $this->getPossibleValues();
+            return $this->getPossibleValues();
 	        
 	        case "_model":
 	        return $this->getModel();

@@ -47,6 +47,30 @@ div.breaker{
     
 }
 
+@media screen and (max-width: 981px) {
+    
+    /** Full Width: 981 pixels wide or more, landscape only **/
+    
+    #fixed-width{
+    
+        width:700px;
+    
+    }
+    
+}
+
+@media screen and (max-width: 701px) {
+    
+    /** Full Width: 701 pixels wide or more, landscape only **/
+    
+    #fixed-width{
+    
+        width:500px;
+    
+    }
+    
+}
+
 #fixed-width h1{
     font-family: "source-sans";
     margin:0 0 10px 0;

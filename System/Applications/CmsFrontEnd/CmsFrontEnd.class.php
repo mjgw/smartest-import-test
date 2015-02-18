@@ -463,6 +463,17 @@ class CmsFrontEnd extends SmartestSystemApplication{
         exit;
 	    
 	}
+    
+    public function renderDynamicBrowserInstruction(){
+        
+        $asset = new SmartestRenderableAsset;
+        
+        if($asset->findBy('webid', $this->getRequestParameter('file_id'))){
+            header('Content-type: '.$asset->getMimeType());
+            // echo $asset->getMimeType();
+        }
+        
+    }
 	
 	private function renderPage($draft_mode=false){
 	    
