@@ -424,6 +424,8 @@ div.sm-numeric-slider-handle{
     -moz-border-radius:7px;
     -webkit-border-radius:7px;
     
+    cursor: ew-resize;
+    
 }
 
 p.editable{

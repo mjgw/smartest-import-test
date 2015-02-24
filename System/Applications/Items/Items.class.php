@@ -50,12 +50,42 @@ class Items extends SmartestSystemApplication{
         $this->send($this->getApplicationPreference('item_list_style', 'grid'), 'list_view');
         
 		$this->setTitle("Recent items");
+        $this->setFormReturnUri();
 		$this->setFormReturnDescription('recent items');
         
         $this->send($this->getUser()->hasToken('modify_items'), 'can_edit_items');
 		
 		$recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), null, 24);
         $this->send($recent, 'recent_items');
+        
+        $this->send($this->getUser()->hasToken('add_items'), 'allow_create_new');
+        
+    }
+    
+    public function itemPublishQueue(){
+        
+        $now = time();
+        // echo $now;
+        
+        $num_days = 7;
+        $delta = floor($num_days*24*60*60);
+        // echo $delta;
+        $most_recent_modification = $now-$delta;
+        // echo date('g:ia l jS F, Y', $most_recent_modification);
+        $since = new SmartestDateTime($most_recent_modification);
+        $this->send($since, 'since');
+        
+        $h = new SmartestCmsItemsHelper;
+        $items = $h->getItemsWithChangedPropertyValues(null, $this->getSite()->getId(), $most_recent_modification);
+        $this->send($items, 'changed_items');
+        
+        $this->send($this->getUser()->hasToken('modify_items'), 'can_edit_items');
+        $this->send($this->getApplicationPreference('item_list_style', 'grid'), 'list_view');
+		$recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), null, 24);
+        $this->send($recent, 'recent_items');
+        
+        $this->setFormReturnUri();
+		$this->setFormReturnDescription('item publish queue');
         
     }
 	

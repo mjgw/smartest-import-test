@@ -536,14 +536,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	public function find($id, $draft=false){
 		
 		if($this->_item->find($id)){
-		    
 		    $this->_runPostSimpleItemFind($id, $draft);
 		    return true;
-		
 	    }else{
-	        
 	        return false;
-	        
 	    }
 		
 	}
@@ -551,14 +547,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	public function findBy($field, $id, $draft=false){
 		
 		if($this->_item->findBy($field, $id)){
-		    
 		    $this->_runPostSimpleItemFind($this->_item->getId(), $draft);
 		    return true;
-		
 	    }else{
-	        
 	        return false;
-	        
 	    }
 		
 	}
@@ -1268,7 +1260,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
         
 		$this->_save_errors = array();
 		
-		if(!$this->_came_from_database){
+		if($this->_came_from_database){
+            $this->unCache();
+        }else{
 		    
 		    if(!$this->_item->getWebId()){
 		    
@@ -1487,11 +1481,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    $this->_item->setPublic('TRUE');
 	    $this->_item->save();
 	    
-	    foreach($this->getCacheFiles() as $file){
-	        
-	        unlink($file);
-	        
-	    }
+	    $this->unCache();
 	    
 	}
 	
@@ -1499,6 +1489,12 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    $this->_item->setPublic('FALSE');
 	    $this->_item->save();
 	}
+    
+    public function unCache(){
+	    foreach($this->getCacheFiles() as $file){
+	        unlink($file);
+	    }
+    }
 	
 	public function isApproved(){
 	    return ($this->_item->getChangesApproved() == 1) ? true : false;

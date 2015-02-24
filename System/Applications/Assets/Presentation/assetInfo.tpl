@@ -56,7 +56,7 @@
       </tr>
       {if $asset.created > 0}
       <tr>
-        <td class="field-name">Created:</td>
+        <td class="field-name">{if $asset.type_info.storage.type == 'file'}Uploaded{else}Created{/if}:</td>
         <td>{$asset.created|date_format:"%A %B %e, %Y, %l:%M%p"}</span></td>
       </tr>
       {/if}

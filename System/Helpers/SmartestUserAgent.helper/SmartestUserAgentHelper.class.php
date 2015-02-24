@@ -346,6 +346,10 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
 	    $array['language'] = $this->_browser['language'];
 	    return $array;
 	}
+    
+    public function __toString(){
+        return 'User Agent Info: '.print_r($this->__toArray(), true);
+    }
 	
 	public function getSimpleClientSideObjectAsJson(){
 	    return json_encode($this->getSimpleClientSideObject());
@@ -394,6 +398,7 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
             return (SM_USERAGENT_TYPE == SM_USERAGENT_NORMAL || SM_USERAGENT_TYPE == SM_USERAGENT_UNSUPPORTED_BROWSER);
             
             case "is_supported_browser":
+            case "supported":
             return (SM_USERAGENT_TYPE == SM_USERAGENT_NORMAL);
             
             case "is_unsupported_browser":
