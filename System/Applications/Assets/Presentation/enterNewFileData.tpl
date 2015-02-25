@@ -24,19 +24,37 @@
       {/if}<br />
       
       <b>Size</b>: {$file.size}<br />
-      <b>Shared</b>: <input type="checkbox" id="share_{$smarty.foreach.files.index}" name="new_files[{$smarty.foreach.files.index}][shared]" value="1" /><label for="share_{$smarty.foreach.files.index}">Check here to share this file with other sites</label><br />
-      <b>Archive</b>: <input type="checkbox" id="archive_{$smarty.foreach.files.index}" name="new_files[{$smarty.foreach.files.index}][archive]" value="1" /><label for="archive_{$smarty.foreach.files.index}">Check here to archive this file straight away</label><br />
-      {if !$file.suffix_recognized}<div class="warning">The suffix of this file (.{$file.actual_suffix}) has not been recognized.</div>{/if}
       
-      {* {if count($file.possible_groups) && count($file.possible_types) == 1}
+      {if count($file.possible_groups) && count($file.possible_types) == 1}
       <strong>Add to group</strong>:
       <div style="display:inline-block" id="groups-container-{$smarty.foreach.files.index}">
 {foreach from=$file.possible_groups item="group"}
-        <input type="checkbox" style="display:none" name="new_files[{$smarty.foreach.files.index}][groups][]" id="new-file-{$smarty.foreach.files.index}-group-{$group.id}"> <label for="new-file-{$smarty.foreach.files.index}-group-{$group.id}" class="checkbox-array">{$group.label}</label>
+        <input type="checkbox" style="display:none" name="new_files[{$smarty.foreach.files.index}][groups][]" id="new-file-{$smarty.foreach.files.index}-group-{$group.id}" value="{$group.id}"> <label for="new-file-{$smarty.foreach.files.index}-group-{$group.id}" data-groupid="{$group.id}" class="new-file-{$smarty.foreach.files.index}-grouplabel checkbox-array">{$group.label}</label>
 {/foreach}
       </div>
       <div class="breaker"></div>
-      {/if} *}
+      
+      <script type="text/javascript">
+      {literal}(function(fileTempId){
+        $$('label.new-file-'+fileTempId+'-grouplabel').each(function(l){
+          l.observe('click', function(){
+            var gid = l.readAttribute('data-groupid');
+            var c = $('new-file-'+fileTempId+'-group-'+gid);
+            if(c.checked){
+              l.removeClassName('selected');
+            }else{
+              l.addClassName('selected');
+            }
+          });
+        });
+      }){/literal}({$smarty.foreach.files.index});
+      </script>
+      
+      {/if}
+      
+      <b>Shared</b>: <input type="checkbox" id="share_{$smarty.foreach.files.index}" name="new_files[{$smarty.foreach.files.index}][shared]" value="1" /><label for="share_{$smarty.foreach.files.index}">Check here to share this file with other sites</label><br />
+      <b>Archive</b>: <input type="checkbox" id="archive_{$smarty.foreach.files.index}" name="new_files[{$smarty.foreach.files.index}][archive]" value="1" /><label for="archive_{$smarty.foreach.files.index}">Check here to archive this file straight away</label><br />
+      {if !$file.suffix_recognized}<div class="warning">The suffix of this file (.{$file.actual_suffix}) has not been recognized.</div>{/if}
       
     </li>
   {/foreach}

@@ -266,6 +266,7 @@ class Assets extends SmartestSystemApplication{
 	    
 	    $h = new SmartestAssetsLibraryHelper;
 	    $asset_types = $h->getTypes();
+        $groups = array();
 	    
 	    foreach($new_files as $nf){
 	        
@@ -314,7 +315,23 @@ class Assets extends SmartestSystemApplication{
     	        $a->setUrl($filename);
     	        $a->setUserId($this->getUser()->getId());
     	        $a->setCreated(time());
-    	        $a->save();
+                
+                $a->save();
+                
+                if(isset($nf['groups']) && is_array($nf['groups'])){
+                    
+                    foreach($nf['groups'] as $group_id){
+                        
+                        $g = new SmartestAssetGroup;
+                        
+                        if(isset($groups[$group_id])){
+                            $groups[$group_id]->addAssetById($a->getId());
+                        }elseif($g->find($group_id)){
+                            $g->addAssetById($a->getId());
+                            $groups[$group_id] = $g;
+                        }
+                    }
+                }
 	        
     	        /* if(isset($nf['group']) && is_numeric($nf['group'])){
     	            $a->addToGroupById($nf['group'], true);
@@ -322,8 +339,9 @@ class Assets extends SmartestSystemApplication{
             }
 	        
 	    }
-	    
-	    $this->addUserMessageToNextRequest(count($new_files)." file".((count($new_files) == 1) ? " was " : "s were ")."successfully added to the repository.", SmartestUserMessage::SUCCESS);
+        
+        $message = count($new_files)." file".((count($new_files) == 1) ? " was " : "s were ")."successfully added to the media library";
+        $this->addUserMessageToNextRequest($message, SmartestUserMessage::SUCCESS);
 	    $this->formForward();
 	    
 	}
