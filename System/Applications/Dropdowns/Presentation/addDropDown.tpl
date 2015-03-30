@@ -12,6 +12,15 @@
     </div>
     
     <div class="edit-form-row">
+      <div class="form-section-label">Type</div>
+      <select name="dropdown_datatype">
+{foreach from=$types item="datatype"}
+        <option value="{$datatype.id}">{$datatype.label}</option>
+{/foreach}
+      </select>	
+    </div>
+    
+    <div class="edit-form-row">
       <div class="buttons-bar">
         <input type="checkbox" name="continue_to_values" value="1" id="continue-to-values" checked="checked" />
         <label for="continue-to-values">Add values after saving</label>

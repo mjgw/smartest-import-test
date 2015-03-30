@@ -96,6 +96,8 @@ class SmartestSite extends SmartestBaseSite{
 	
 	public function getSerializedPageTree($tree){
 		
+        // var_dump($tree);
+        
 		foreach($tree as $key => $page){
 			
 			$this->displayPages[$this->displayPagesIndex]['info'] = $page['info'];
@@ -554,6 +556,13 @@ class SmartestSite extends SmartestBaseSite{
             case "home_page":
             case "homepage":
             return $this->getHomePage();
+            
+            case "pages_list":
+            return $this->getPagesList();
+            
+            case "_admin_normal_pages_list":
+            // return $this->getHomePage()->setDraftMode(true)->getSerializedPageTree();
+            return $this->getPagesList(true, true);
             
         }
         

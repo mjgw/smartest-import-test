@@ -4,6 +4,7 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
     
     protected $_dropdown = null;
     protected $_value_object;
+    protected $_data_type;
     
     public function __toString(){
         
@@ -52,6 +53,25 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
         
     }
     
+    public function getDataType(){
+        if($this->_data_type){
+            return $this->_data_type;
+        }elseif(is_object($this->_dropdown)){
+            $this->_data_type = $this->_dropdown->getDatatype();
+            return $this->_data_type;
+        }else{
+            $sql = "SELECT dropdown_datatype FROM DropDowns WHERE dropdown_id='".$this->getDropdownId()."' LIMIT 1";
+            $result = $this->database->queryToArray($sql);
+            if(count($result)){
+                $this->_data_type = $result[0]['dropdown_datatype'];
+                return $this->_data_type;
+            }else{
+                // Apparently the dropdown does not exist. This should probably be logged.
+                return 'SM_DATATYPE_SL_TEXT';
+            }
+        }
+    }
+    
     public function getStorableFormat(){
         // return serialize(array('dropdown_id'=>$this->getDropdownId(), 'value'=>$this->getValue()));
         // return $this->getValue();
@@ -78,7 +98,10 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
     
     public function getValueObject(){
         // Todo: Once dropdown menus are types, different classes will need to be returned here depending on type
-        return new SmartestString($this->_properties['value']);
+        $class = SmartestDataUtility::getClassForDataType($this->getDatatype());
+        // var_dump($this->getDatatype());
+        // var_dump($class);
+        return new $class($this->_properties['value']);
     }
     
     public function hydrateFromFormData($v, $dropdown_id=null){
@@ -112,6 +135,13 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
             case "dropdown":
             return $this->getDropdown();
             
+        }
+        
+        // var_dump($value = $this->getValueObject());
+        
+        if(is_object($this->getValueObject()) && $this->getValueObject()->offsetExists($offset)){
+            // echo "return offset";
+            return $this->getValueObject()->offsetGet($offset);
         }
         
         return parent::offsetGet($offset);

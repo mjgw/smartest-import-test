@@ -231,11 +231,15 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
             return $this->_page;
             case "placeholder":
             return $this->_asset_class;
-            case "empty":
+            case "defined":
             // TODO: $draft should be set according to draft mode
-            $draft = false;
+            // $draft = false;
             // var_dump($this->hasAsset($draft));
-            return $this->hasAsset($draft);
+            return is_object($this->_asset) && $this->_asset->getId();
+            
+            case "empty":
+            return !(is_object($this->_asset) && $this->_asset->getId());
+            
             
         }
         

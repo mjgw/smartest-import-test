@@ -6,6 +6,7 @@ class SmartestModel extends SmartestBaseModel{
 	protected $_model_settings;
 	protected $_site;
 	protected $_temporary_fields = null;
+    protected $_sub_models = array();
 	
 	protected function __objectConstruct(){
 		
@@ -20,18 +21,18 @@ class SmartestModel extends SmartestBaseModel{
 	    $this->buildPropertyMap();
 	    return $bool;
 	}
-	
-	protected function buildPropertyMap(){
+    
+    protected function buildPropertyMap(){
 		
 		if(!count($this->_model_properties)){
 	    
-	        if(SmartestCache::hasData('model_properties_'.$this->_properties['id'], true)){
+	        /* if(SmartestCache::hasData('model_properties_'.$this->_properties['id'], true)){
     		    $result = SmartestCache::load('model_properties_'.$this->_properties['id'], true);
-    	    }else{
+    	    }else{ */
     		    $sql = "SELECT * FROM ItemProperties WHERE itemproperty_itemclass_id='".$this->_properties['id']."' ORDER BY itemproperty_order_index ASC";
-    		    $result = $this->database->queryToArray($sql);
+    		    $result = $this->database->queryToArray($sql, true);
     		    SmartestCache::save('model_properties_'.$this->_properties['id'], $result, -1, true);
-    	    }
+            // }
 		
 		    foreach($result as $db_property){
     			$property = new SmartestItemProperty;
@@ -67,6 +68,8 @@ class SmartestModel extends SmartestBaseModel{
 	
 	public function __postHydrationAction(){
 	    
+        $this->buildPropertyMap();
+        
 	    if(!$this->_model_settings){
 	        $this->_model_settings = new SmartestParameterHolder("Settings for model '".$this->_properties['name']."'");
         }
@@ -80,6 +83,48 @@ class SmartestModel extends SmartestBaseModel{
 	    }
 	    
 	}
+    
+    public function getSubModels($refresh=false){
+        
+        if($refresh || !count($this->_sub_models)){
+            
+            $sql = "SELECT * FROM ItemClasses WHERE (ItemClasses.itemclass_type='SM_ITEMCLASS_MT1_SUB_MODEL' OR ItemClasses.itemclass_type='SM_ITEMCLASS_MTM_SUB_MODEL') AND ItemClasses.itemclass_parent_id='".$this->getId()."' ORDER BY ItemClasses.itemclass_name ASC";
+            $result = $this->database->queryToArray($sql);
+            $sub_models = array();
+        
+            foreach($result as $r){
+                $m = new SmartestSubModel;
+                $m->hydrate($r);
+                $sub_models[] = $m;
+            }
+            
+            $this->_sub_models = $sub_models;
+            
+        }
+        
+        return $this->_sub_models;
+        
+    }
+    
+    public function hasSubModels(){
+        return (bool) count($this->getSubModels());
+    }
+    
+    public function getManyToOneSubModels(){
+        
+        $sql = "SELECT * FROM ItemClasses WHERE ItemClasses.itemclass_type='SM_ITEMCLASS_MT1_SUB_MODEL' AND ItemClasses.itemclass_parent_id='".$this->getId()."' ORDER BY ItemClasses.itemclass_name ASC";
+        $result = $this->database->queryToArray($sql);
+        $sub_models = array();
+        
+        foreach($result as $r){
+            $m = new SmartestSubModel;
+            $m->hydrate($r);
+            $sub_models[] = $m;
+        }
+        
+        return $sub_models;
+        
+    }
 	
 	public function getProperties(){
 	    
@@ -87,8 +132,8 @@ class SmartestModel extends SmartestBaseModel{
 	    return $this->_model_properties;
 	    
 	}
-	
-	public function getPropertiesForReorder(){
+    
+    public function getPropertiesForReorder(){
 	    
 	    $this->buildPropertyMap();
 	    $props = array();
@@ -140,10 +185,24 @@ class SmartestModel extends SmartestBaseModel{
 	        return $property;
 	    }
 	}
+    
+    public function getParentModel(){
+            
+        $parent_id = $this->getParentId();
+        $m = new SmartestModel;
+        
+        if($m->find($parent_id)){
+            return $m;
+        }else{
+            throw new SmartestException('Could not find parent model for sub model \''.$this->getPluralName().'\'');
+        }
+        
+    }
 	
 	public function refresh(){
 	    SmartestCache::clear('model_properties_'.$this->_properties['id'], true);
-        SmartestObjectModelHelper::buildAutoClassFile($this->_properties['id'], SmartestStringHelper::toCamelCase($this->getName()));
+        $this->buildAutoClassFile();
+        // SmartestObjectModelHelper::buildAutoClassFile($this->_properties['id'], SmartestStringHelper::toCamelCase($this->getName()));
 	}
 	
 	
@@ -310,6 +369,9 @@ class SmartestModel extends SmartestBaseModel{
 	        case "properties":
 	        case "_properties":
 	        return new SmartestArray($this->getProperties());
+            
+            case "manual_order":
+            return $this->getSubModelManualOrdering();
 	        
 	        case 'default_sort_property':
 	        return $this->getDefaultSortProperty();
@@ -328,6 +390,12 @@ class SmartestModel extends SmartestBaseModel{
                 // var_dump($this->getTemporaryRelatedItems()->count());
             }
             return $this->getTemporaryRelatedItems();
+            
+            case 'mt1_sub_models':
+            return $this->getManyToOneSubModels();
+            
+            case 'parent_model':
+            return $this->getParentModel();
 	        
 	    }
 	    
@@ -585,6 +653,7 @@ class SmartestModel extends SmartestBaseModel{
         
         // Create new set from the item IDs
         $set = new SmartestSortableItemReferenceSet($this, $set_item_draft_mode);
+        $set->loadItemIds($ids);
         
         // Sort the items by their default sort property, or by name if this is not defined
         if($default_property_id = $this->getDefaultSortPropertyId()){
@@ -1118,6 +1187,22 @@ class SmartestModel extends SmartestBaseModel{
         }
     }
     
+    public function setSubModelManualOrdering($flag){
+        return $this->setSettingValue('manual_ordering', (int) (bool) $flag);
+    }
+    
+    public function getSubModelManualOrdering(){
+        
+        if($this->getType() == 'SM_ITEMCLASS_MODEL'){
+            return '0';
+        }
+        
+        $raw = $this->getSettingValue('manual_ordering');
+        $v = (bool) $raw;
+        return $v;
+        
+    }
+    
     public function getLongIdFormatIsCustom(){
         return !in_array($this->getLongIdFormat(), array('_STD', '_UUID', 'NNNNNNNNNNNNNNNN', 'my-NNNNNNNNNNNN', 'my-NNNNNNNN', 'NNNNNNNN', 'CCCCCC'));
     }
@@ -1183,12 +1268,14 @@ class SmartestModel extends SmartestBaseModel{
 			define($constant_name, $this->getId(), true);
 			define($new_constant_name, $this->getId(), true);
 		}
+        
+        $last_acceptable_modification_time = time() - 24*60*60;
 		
 		// if(is_file(SM_ROOT_DIR.'System/Cache/ObjectModel/Models/auto'.$class_name.'.class.php')){
 		if(class_exists($this->getAutoClassName())){ // $this->getAutoClassName()
 		    
 		}else{
-        	if(is_file($this->getAutoClassFilePath())){
+        	if(is_file($this->getAutoClassFilePath()) && filemtime($this->getAutoClassFilePath()) > $last_acceptable_modification_time){
         		// include SM_ROOT_DIR.'System/Cache/ObjectModel/Models/auto'.$class_name.'.class.php';
         		include $this->getAutoClassFilePath();
         	}else{
@@ -1218,6 +1305,13 @@ class SmartestModel extends SmartestBaseModel{
         		}
         	}
 	    }
+        
+        if($this->getType() == 'SM_ITEMCLASS_MODEL'){
+            $sub_models = $this->getSubModels();
+            foreach($sub_models as $sm){
+                $sm->init();
+            }
+        }
         
     }
     
@@ -1259,7 +1353,7 @@ class SmartestModel extends SmartestBaseModel{
             $shared = $this->isShared();
             $specified = false;
         }else{
-            $shared = $shared_status;
+            $shared = (bool) $shared_status;
             $specified = true;
         }
         
@@ -1322,6 +1416,8 @@ class SmartestModel extends SmartestBaseModel{
 		
 	    if($this->getType() == 'SM_ITEMCLASS_MODEL'){
 	        $file = file_get_contents(SM_ROOT_DIR.'System/Data/ObjectModelTemplates/autoobject_template.txt');
+    	}else if($this->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+    	    $file = file_get_contents(SM_ROOT_DIR.'System/Data/ObjectModelTemplates/autoobject_mt1_submodel_template.txt');
 	    }else if($this->getType() == 'SM_ITEMCLASS_USER_PROFILE_SERVICE'){
 	        $file = file_get_contents(SM_ROOT_DIR.'System/Data/ObjectModelTemplates/autouserprofile_template.txt');
 	    }
@@ -1334,7 +1430,18 @@ class SmartestModel extends SmartestBaseModel{
 		$file = str_replace('__THEFUNCTIONS__', $functions, $file);
 		$file = str_replace('__THEVARNAMELOOKUPS__', $varnames_lookup, $file);
 		$file = str_replace('__MODEL_ID__', $this->getId(), $file);
-		$file = str_replace('__TIME__', date("Y-m-d h:i:s"), $file);
+		$file = str_replace('__TIME__', date("Y-m-d H:i:s"), $file);
+        
+        if(strpos($file, '__THEMT1SUBMODELNAMES__') !== false){
+            $file = str_replace('__THEMT1SUBMODELNAMES__', $this->buildAutoClassMT1SubModelCode(), $file);
+        }
+        
+        // exit;
+        
+        // echo $this->getType();
+        if($this->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+            $file = str_replace('__PARENT_MODEL_SINGULAR_VARNAME__', SmartestStringHelper::toVarName($this->getParentModel()->getName()), $file);
+        }
 	    
 	    if(file_put_contents($this->getAutoClassFilePath(), $file)){
 			return true;
@@ -1394,6 +1501,41 @@ class SmartestModel extends SmartestBaseModel{
 		return $code;
 	    
 	}
+    
+    public function buildAutoClassMT1SubModelCode(){
+        
+        $code = '';
+        
+        $sub_models = $this->getManyToOneSubModels();
+        
+        if(count($sub_models)){
+            
+            $code = '    protected $_many_to_one_sub_models = array(';
+            
+            foreach($sub_models as $k=>$sm){
+                $code .= "\n         '".$sm->getVarName()."' => ".$sm->getId();
+                if($k < (count($sub_models) - 1)){
+                    $code .= ',';
+                }
+            }
+            
+            $code .= "\n    );\n\n";
+            
+            foreach($sub_models as $k=>$sm){
+                
+                $code .= "    public function get".SmartestStringHelper::toCamelCase($sm->getPluralName())."(){\n";
+                $code .= '        return $this->getSubModelItems('.$sm->getId().');';
+                $code .= "\n    }\n\n";
+                
+            }
+            
+        }else{
+            $code = '    protected $_many_to_one_sub_models = array();';
+        }
+        
+        return $code;
+        
+    }
 	
 	public function getMembersListUrl(){
 	    

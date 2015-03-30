@@ -63,6 +63,13 @@
 </div>
 {/if}
 
+{if $model.type == 'SM_ITEMCLASS_MT1_SUB_MODEL' && $parent_item}
+<div class="special-box">
+  This {$model.name|lower} will be added to the {$parent_model.name|lower} &ldquo;{$parent_item.name}&rdquo;
+</div>
+<input type="hidden" name="parent_item_id" value="{$parent_item.id}" />
+{/if}
+
 <form action="{$domain}{$section}/insertItem" method="post" id="new-item-form">
 
 <input type="hidden" name="class_id" value="{$model.id}" />
@@ -103,6 +110,23 @@
   <div class="form-hint">Separate tags with commas</div>
 </div>
 
+{if $model.type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}
+
+{if $parent_item}
+<input type="hidden" name="parent_item_id" value="{$parent_item.id}" />
+{else}
+<div class="edit-form-row">
+  <div class="form-section-label">Choose a {$parent_model.name|lower}</div>
+  <select name="parent_item_id">
+{foreach from=$possible_parent_items item="ppi"}
+    <option value="{$ppi.id}">{$ppi.name}</option>
+{/foreach}
+  </select>
+</div>
+{/if}
+
+{/if}
+
 {foreach from=$properties key="pid" item="property"}
 
 <div class="edit-form-row">
@@ -133,7 +157,7 @@
 </div>
 
 <div class="buttons-bar">
-  <input type="button" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$model.id}';" value="Cancel" />
+  <input type="button" onclick="cancelForm();" value="Cancel" />
   <input type="submit" value="Save Changes" />
 </div>
 

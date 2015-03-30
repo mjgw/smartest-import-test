@@ -1,4 +1,4 @@
-# Smartest User Tokens / Last updated in reveision 402 by Marcus
+# Smartest User Tokens / Last updated in reveision 744 by Marcus
 id:type:scope:code:category:description
 0:p:s:root_permission:SM_USERTOKEN_SYSTEM:{{ROOT!}} Carry out any action on any site.
 # Number 1 was formerly "create_remove_settings" for adding and removing system settings themselves
@@ -13,7 +13,6 @@ id:type:scope:code:category:description
 9:p:s:modify_page_properties:SM_USERTOKEN_PAGES:Edit the properties of pages, such as title, URLs, and meta information
 10:p:s:modify_draft_pages:SM_USERTOKEN_PAGES:Update placeholders, containers, itemspaces &amp; lists
 11:p:s:approve_page_changes:SM_USERTOKEN_PAGES:Approve pages marked as ready for approval
-# Number 12 was formerly a setting for seeing the advanced page edit screen
 12:p:s:edit_model:SM_USERTOKEN_ITEMS:Edit the basic attributes of models
 13:p:s:modify_user_permissions:SM_USERTOKEN_USERS:Edit the permissions of other users
 14:p:s:modify_items:SM_USERTOKEN_ITEMS:Edit Items

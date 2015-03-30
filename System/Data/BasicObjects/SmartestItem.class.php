@@ -28,10 +28,18 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	public function getIsApproved(){
 	    return (bool) $this->getChangesApproved();
 	}
-	
-	public function isApproved(){
+    
+    public function isApproved(){
 	    return $this->getIsApproved();
 	}
+    
+    public function getIsModifiedSinceLastPublish(){
+        return $this->getModified() > $this->getLastPublished();
+    }
+    
+    public function isModifiedSinceLastPublish(){
+        return $this->getIsModifiedSinceLastPublish();
+    }
 	
 	public function getModel(){
 	    
@@ -142,7 +150,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	
 	public function offsetExists($offset){
 	    
-	    return parent::offsetExists($offset) || in_array($offset, array('name', 'title', 'created', 'modified', 'last_published', 'title', 'link_contents', 'class', 'model', '_model', 'tags', 'authors', 'url', 'absolute_url', 'has_metapage', 'metapage_id'));
+	    return parent::offsetExists($offset) || in_array($offset, array('name', 'title', 'created', 'modified', 'last_published', 'title', 'link_contents', 'class', 'model', '_model', 'tags', 'authors', 'url', 'has_metapage', 'metapage_id'));
 	    
 	}
 	
@@ -217,6 +225,8 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    if(!$this->getSiteId()){
             $this->setSiteId($this->getCurrentSiteId());
         }
+        
+        $this->setModified(time());
         
 	    parent::save();
 	    
@@ -999,9 +1009,11 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    
 	    if($lc = $this->getCmsLinkContents()){
 	        
+            // echo $this->getCmsLinkContents();
 	        $link = SmartestCmsLinkHelper::createLink($this->getCmsLinkContents(), array());
     	    
     	    if($link->hasError()){
+                // echo $link->getError();
     	        return '#';
     	    }else{
     	        return $link->getUrl($draft_mode, $ignore_status);

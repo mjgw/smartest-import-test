@@ -1,6 +1,6 @@
 <div id="work-area">
   <h3>{$property.name}</h3>
-  Item: {$item.name} (<a href="{$domain}datamanager/editItem?item_id={$item.id}">Back to item</a>)<br />
+  Item: {$item.name} <a href="{$domain}datamanager/editItem?item_id={$item.id}" class="button small">Back to item</a><br />
   Property Type: {$property._type_info.label}<br />
   Property type code: <code>{$property._type_info.id}</code><br /><br />
   Raw stored value: <code>{$raw_value}</code><br /><br />

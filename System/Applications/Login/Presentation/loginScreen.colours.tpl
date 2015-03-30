@@ -75,7 +75,7 @@
           $$('body')[0].removeClassName(bgcolors[colourindex]);
           $$('body')[0].addClassName(bgcolors[newcolourindex]);
           colourindex = newcolourindex;
-        }, 10500);
+        }, 8500);
         
         $('loginform').observe('keypress', function(e){
           

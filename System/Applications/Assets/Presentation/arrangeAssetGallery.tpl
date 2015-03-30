@@ -2,7 +2,7 @@
     
   {load_interface file="edit_filegroup_tabs.tpl"}
     
-  <h3>Arrange file gallery contents</h3>
+  <h3>Arrange file gallery contents: <span class="light">{$group.label}</span></h3>
 
 {if count($assets)}
 
@@ -119,10 +119,15 @@ var itemsList = Sortable.create('sortable-gallery-members', {
 
 <div id="actions-area">
   
-  {if $request_parameters.item_id && $request_parameters.from}
+  {if $request_parameters.from}
   <ul class="actions-list">
     <li><b>Workflow options</b></li>
+    {if $request_parameters.item_id}
     <li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>
+    {/if}
+    {if $request_parameters.from == 'pagePreview'}
+    <li class="permanent-action"><a href="#" onclick="cancelForm();"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to page preview</a></li>
+    {/if}
   </ul>
   {/if}
   

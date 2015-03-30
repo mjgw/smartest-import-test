@@ -6,6 +6,9 @@
 class __THISCLASSNAME__ extends SmartestCmsItem{
 
     protected $_model_id = __MODEL_ID__;
+    protected $_model_class = 'SmartestModel';
+    
+__THEMT1SUBMODELNAMES__
     
 __THECONSTANTS__
 

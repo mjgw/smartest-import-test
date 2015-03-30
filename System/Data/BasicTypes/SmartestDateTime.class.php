@@ -260,7 +260,7 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     
     public function offsetExists($offset){
 	    
-	    return in_array($offset, array('g', 'i', 'a', 'm', 's', 'h', 'Y', 'M', 'D', 'H', 'unix'));
+	    return in_array($offset, array('g', 'i', 'a', 'm', 's', 'h', 'Y', 'year', 'M', 'D', 'H', 'unix', 'raw', 'month_name', 'D', 'mysql_day', 'empty', 'in_past', 'has_passed', 'in_future', 'now_delta_raw', 'now_delta_formatted'));
 	    
 	}
 	

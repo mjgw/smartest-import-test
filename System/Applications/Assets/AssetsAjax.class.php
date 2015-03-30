@@ -33,16 +33,68 @@ class AssetsAjax extends SmartestSystemApplication{
 	    $q = $this->getRequestParameter('query');
 	    // $sql = "SELECT Assets.* FROM Assets, TextFragments, Tags, TagsObjectsLookup WHERE (asset_site_id='".$this->getSite()->getId()."' OR asset_shared=1) AND asset_deleted='0' AND (Assets.asset_stringid LIKE '%".$q."%' OR Assets.asset_label LIKE '%".$q."%' OR (TextFragments.textfragment_content LIKE '%".$q."%' AND (TextFragments.textfragment_asset_id=Assets.asset_id OR Assets.asset_fragment_id=TextFragments.textfragment_id) OR (Tags.tag_label LIKE '%".$q."%' AND TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND TagsObjectsLookup.taglookup_object_id=Assets.asset_id AND TagsObjectsLookup.taglookup_type='SM_ASSET_TAG_LINK'))) ORDER BY Assets.asset_label";
 	    // $result = $db->queryToArray($sql);
-	    $sql1 = "SELECT Assets.asset_id FROM Assets, TextFragments WHERE TextFragments.textfragment_asset_id=Assets.asset_id AND (Assets.asset_site_id='".$this->getSite()->getId()."' OR Assets.asset_shared='1') AND Assets.asset_deleted=0 AND (TextFragments.textfragment_content LIKE '%".$q."%') ORDER BY Assets.asset_label LIMIT 150";
+        
+        if($this->requestParameterIsSet('limit')){
+            
+            $limit_file_types = array();
+            $separated = explode(',', $this->getRequestParameter('limit'));
+            $alh = new SmartestAssetsLibraryHelper;
+            
+            if(count($separated)){
+                foreach($separated as $pft){
+                    if(substr($pft, 0, 12) == 'SM_ASSETTYPE'){
+                        $limit_file_types[] = $pft;
+                    }elseif(substr($pft, 0, 12) == 'SM_ASSETCLAS'){
+                        $ach = new SmartestAssetClassesHelper;
+                        $unpacked_asset_type_codes = $ach->getAssetTypeCodesFromAssetClassType($pft);
+                        if(is_array($unpacked_asset_type_codes)){
+                            foreach($unpacked_asset_type_codes as $c){
+                                $limit_file_types[] = $c;
+                            }
+                        }
+                    }elseif($alh->isValidCategoryShortName($pft)){
+                        $unpacked_asset_type_codes = $alh->getAssetTypeCodesInCategory($pft);
+                        if(is_array($unpacked_asset_type_codes)){
+                            foreach($unpacked_asset_type_codes as $c){
+                                $limit_file_types[] = $c;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            $limit_file_types = array_unique($limit_file_types);
+            
+        }else{
+            $limit_file_types = array();
+        }
+        
+        if(count($limit_file_types)){
+            if(count($limit_file_types) > 1){
+                if($this->getRequestParameter('limitType') == 'exclude'){
+                    $sql_filetype_insert = " AND asset_type NOT IN ('".implode("','", $limit_file_types)."')";
+                }else{
+                    $sql_filetype_insert = " AND asset_type IN ('".implode("','", $limit_file_types)."')";
+                }
+            }else{
+                if($this->getRequestParameter('limitType') == 'exclude'){
+                    $sql_filetype_insert = " AND asset_type != '".$limit_file_types[0]."'";
+                }else{
+                    $sql_filetype_insert = " AND asset_type = '".$limit_file_types[0]."'";
+                }
+            }
+        }else{
+            $sql_filetype_insert = '';
+        }
+        
+	    $sql1 = "SELECT Assets.asset_id FROM Assets, TextFragments WHERE TextFragments.textfragment_asset_id=Assets.asset_id AND (Assets.asset_site_id='".$this->getSite()->getId()."' OR Assets.asset_shared='1') AND Assets.asset_deleted=0 AND (TextFragments.textfragment_content LIKE '%".$q."%')".$sql_filetype_insert." ORDER BY Assets.asset_label LIMIT 150";
 	    $result1 = $db->queryToArray($sql1);
 	    
-	    $sql2 = "SELECT Assets.asset_id FROM Assets, Tags, TagsObjectsLookup WHERE Assets.asset_deleted=0 AND (Assets.asset_site_id='".$this->getSite()->getId()."' OR Assets.asset_shared='1') AND (Tags.tag_label LIKE '%".$q."%' AND TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND TagsObjectsLookup.taglookup_object_id=Assets.asset_id AND TagsObjectsLookup.taglookup_type='SM_ASSET_TAG_LINK') LIMIT 150";
+	    $sql2 = "SELECT Assets.asset_id FROM Assets, Tags, TagsObjectsLookup WHERE Assets.asset_deleted=0 AND (Assets.asset_site_id='".$this->getSite()->getId()."' OR Assets.asset_shared='1') AND (Tags.tag_label LIKE '%".$q."%' AND TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND TagsObjectsLookup.taglookup_object_id=Assets.asset_id AND TagsObjectsLookup.taglookup_type='SM_ASSET_TAG_LINK')".$sql_filetype_insert." LIMIT 150";
 	    $result2 = $db->queryToArray($sql2);
 	    
-	    $sql3 = "SELECT Assets.asset_id FROM Assets WHERE Assets.asset_deleted=0 AND (Assets.asset_site_id='{$this->getSite()->getId()}' OR Assets.asset_shared='1') AND (Assets.asset_stringid LIKE '%{$q}%' OR Assets.asset_label LIKE '%{$q}%')";
+	    $sql3 = "SELECT Assets.asset_id FROM Assets WHERE Assets.asset_deleted=0 AND (Assets.asset_site_id='{$this->getSite()->getId()}' OR Assets.asset_shared='1') AND (Assets.asset_stringid LIKE '%{$q}%' OR Assets.asset_label LIKE '%{$q}%')".$sql_filetype_insert;
 	    $result3 = $db->queryToArray($sql3);
-	    
-	    // echo $sql3;
 	    
 	    $asset_ids = array();
 	    
@@ -60,7 +112,8 @@ class AssetsAjax extends SmartestSystemApplication{
 	    
 	    $asset_ids = array_unique($asset_ids);
 	    
-	    $final_sql = "SELECT Assets.* FROM Assets WHERE Assets.asset_id IN ('".implode("','", $asset_ids)."') ORDER BY asset_label ASC";
+	    $final_sql = "SELECT Assets.* FROM Assets WHERE Assets.asset_id IN ('".implode("','", $asset_ids)."')";
+        $final_sql .= " ORDER BY asset_label ASC";
 	    $result = $db->queryToArray($final_sql);
 	    $assets = array();
 	    

@@ -117,16 +117,17 @@ define('SM_LOG_ACCESS_DENIED', 8);
 define('SM_LOG_ACCESSDENIED',  8);
 define('SM_LOG_USER_ACTION',   16);
 
-define('SM_LINK_TYPE_DUD',          0);
-define('SM_LINK_TYPE_PAGE',         1);
-define('SM_LINK_TYPE_METAPAGE',     2);
-define('SM_LINK_TYPE_IMAGE',        4);
-define('SM_LINK_TYPE_DOWNLOAD',     8);
-define('SM_LINK_TYPE_TAG',          16);
-define('SM_LINK_TYPE_AUTHOR',       32);
-define('SM_LINK_TYPE_EXTERNAL',     256);
-define('SM_LINK_TYPE_MAILTO',       512);
-define('SM_LINK_TYPE_QUINCE_ROUTE', 1024);
+define('SM_LINK_TYPE_DUD',           0);
+define('SM_LINK_TYPE_PAGE',          1);
+define('SM_LINK_TYPE_METAPAGE',      2);
+define('SM_LINK_TYPE_IMAGE',         4);
+define('SM_LINK_TYPE_DOWNLOAD',      8);
+define('SM_LINK_TYPE_TAG',           16);
+define('SM_LINK_TYPE_AUTHOR',        32);
+define('SM_LINK_TYPE_EXTERNAL',      256);
+define('SM_LINK_TYPE_MAILTO',        512);
+define('SM_LINK_TYPE_QUINCE_ROUTE',  1024);
+define('SM_LINK_TYPE_INTERNAL_ITEM', 2048);
 
 define('SM_LINK_SCOPE_NONE',     0);
 define('SM_LINK_SCOPE_INTERNAL', 1);
@@ -136,6 +137,7 @@ define('SM_LINK_FORMAT_AUTO',         1);
 define('SM_LINK_FORMAT_USER',         2);
 define('SM_LINK_FORMAT_URL',          4);
 define('SM_LINK_FORMAT_QUINCE_ROUTE', 8);
+define('SM_LINK_FORMAT_FORM',         16);
 
 define('SM_DATETIME_RESOLUTION_SECONDS', 1);
 define('SM_DATETIME_RESOLUTION_MINUTES', 2);

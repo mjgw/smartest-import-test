@@ -20,6 +20,19 @@
       </div>
       
       <div class="edit-form-row">
+        <div class="form-section-label">Type</div>
+{if $allow_datatype_change}
+        <select name="dropdown_datatype">
+{foreach from=$types item="datatype"}
+          <option value="{$datatype.id}"{if $datatype.id == $dropdown.datatype} selected="selected"{/if}>{$datatype.label}</option>
+{/foreach}
+        </select>
+{else}
+        {$dropdown.datatype}
+{/if}
+      </div>
+      
+      <div class="edit-form-row">
         <div class="form-section-label">Language </div>
           <select name="dropdown_language">
 {foreach from=$_languages item="lang" key="langcode"}

@@ -43,7 +43,7 @@
   
   <div class="edit-form-row">
     <div class="form-section-label">Type</div>
-    {if $page.type == "ITEMCLASS"}Object Meta-Page{else}Regular Web-Page{/if}
+    {if $page.type == "ITEMCLASS"}Meta-page {help id="websitemanager:metapages"}What are meta-pages?{/help}{else}Regular web-page{/if}
   </div>
   
   {if $page.type == "ITEMCLASS"}
@@ -53,8 +53,8 @@
   </div> *}
   
   <div class="edit-form-row">
-    <div class="form-section-label">Object Model</div>
-    <a href="{$domain}smartest/items/{$page.model.varname}">{$page.model.plural_name}</a>
+    <div class="form-section-label">Model</div>
+    {$page.model.plural_name} <a href="{$domain}smartest/items/{$page.model.varname}" class="button small"> view all</a> {help id="datamanager:models"}What is a model?{/help}
   </div>
   {/if}
   
@@ -62,7 +62,7 @@
     <div class="form-section-label">Title</div>
     	<input type="text" name="page_title" value="{$page.static_title}" />
     	{if $page.type == "ITEMCLASS"}
-    	  <span class="form-hint">This is only visible to the public if you check "Always use page name" below.</span>
+    	  <div class="form-hint">This is only visible to the public if you check "Always use page name" below.</div>
     	{else}
     	  {if !$page.title}<div>You must have a title! </div>{/if}
     	{/if}

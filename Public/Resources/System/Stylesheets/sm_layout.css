@@ -307,6 +307,11 @@ div.edit-form-row{
     clear:both;
 }
 
+div.edit-form-sub-row{
+    box-sizing:border-box;
+    padding-left:200px;
+}
+
 p.editable{
     margin:0px;
     padding:4px;
@@ -380,6 +385,25 @@ div.buttons-bar{
 	padding:4px;
 	text-align:right;
 	clear:both;
+}
+
+ul.round-buttons-list{
+    margin:0px;
+    padding:5px;
+}
+
+ul.round-buttons-list li{
+    display:inline-block;
+    text-align:center;
+    margin-right:2px;
+}
+
+ul.round-buttons-list li a{
+    display:block;
+    padding:8px 3px;
+    box-sizing:border-box;
+    width:40px;
+    height:40px;
 }
 
 div.sm-boolean-switch{
@@ -519,6 +543,10 @@ div.image-picker-caption{
     	width:150px;
     }
     
+    div.edit-form-sub-row{
+        padding-left:165px;
+    }
+    
     div.form-hint{
         padding:1px 6px 6px 165px;
     }
@@ -541,6 +569,10 @@ div.image-picker-caption{
     
     div.form-section-label{
     	width:120px;
+    }
+    
+    div.edit-form-sub-row{
+        padding-left:135px;
     }
     
     div.form-hint{
@@ -582,8 +614,12 @@ div.warning{
     margin:10px 0 10px 0;
 }
 
-div.warning p{
+div.warning p, div.special-box p{
     margin:0 0 5px 0;
+}
+
+div.warning p:last-child, div.special-box p:last-child{
+    margin-bottom:0px;
 }
 
 div.warning ul{

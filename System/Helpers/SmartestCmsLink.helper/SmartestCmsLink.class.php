@@ -15,6 +15,7 @@ class SmartestCmsLink extends SmartestHelper{
     protected $_request;
     protected $_hash = '';
     protected $_model;
+    protected $_preset_content_markup = null;
     
     const PAGE = 1;
     const METAPAGE = 2;
@@ -25,6 +26,7 @@ class SmartestCmsLink extends SmartestHelper{
     const EXTERNAL = 256;
     const MAILTO = 512;
     const QUINCE = 1024;
+    const INTERNAL_ITEM = 2048;
     
     const ERROR_PAGE_NOT_FOUND = 1;
     const ERROR_ITEM_NOT_FOUND = 2;
@@ -43,12 +45,7 @@ class SmartestCmsLink extends SmartestHelper{
             $this->_destination_properties = $destination_properties;
         }
         
-        $this->_markup_attributes = $this->getSeparatedAttributes($markup_attributes)->getParameter('html');
-        $this->_render_data = $this->getSeparatedAttributes($markup_attributes)->getParameter('other');
-        
-        // Give any HTML attributes passed by SmartestCmsLinkHelper a chance to be included
-        $extra_markup_attributes = $this->getSeparatedAttributes($this->_destination_properties)->getParameter('html');
-        $this->_markup_attributes->absorb($extra_markup_attributes);
+        $this->applyMarkupAttributes($markup_attributes);
         
         if($this->_destination_properties->hasParameter('hash')){
             $this->_hash = $this->_destination_properties->getParameter('hash');
@@ -107,18 +104,40 @@ class SmartestCmsLink extends SmartestHelper{
         
     }
     
+    public function applyMarkupAttributes($markup_attributes){
+        
+        if($this->_markup_attributes){
+            $this->_markup_attributes->absorb($this->getSeparatedAttributes($markup_attributes)->getParameter('html'));
+        }else{
+            $this->_markup_attributes = $this->getSeparatedAttributes($markup_attributes)->getParameter('html');
+        }
+        
+        if($this->_render_data){
+            $this->_render_data->absorb($this->getSeparatedAttributes($markup_attributes)->getParameter('other'));
+        }else{
+            $this->_render_data = $this->getSeparatedAttributes($markup_attributes)->getParameter('other');
+        }
+        
+        // Give any HTML attributes passed by SmartestCmsLinkHelper a chance to be included
+        $extra_markup_attributes = $this->getSeparatedAttributes($this->_destination_properties)->getParameter('html');
+        $this->_markup_attributes->absorb($extra_markup_attributes);
+        
+    }
+    
     ///// NEW API FUNCTIONS /////
     
     public function setTypeFromNamespace($ns){
         
         $ns = strtolower($ns);
         
+        // var_dump($this->_destination_properties->getParameter('destination'));
+        
         if(strlen($this->_destination_properties->getParameter('destination'))){
         
             $du = new SmartestDataUtility;
             $model_names = array_keys($du->getModelNamesLowercase());
         
-            if(in_array($ns, array('page', 'metapage', 'item', 'image', 'img', 'download', 'dl', 'tag', 'tag_page', 'user', 'author', 'mailto', 'quince'))){
+            if(in_array($ns, array('page', 'metapage', 'item', 'image', 'img', 'asset', 'file', 'download', 'dl', 'tag', 'tag_page', 'user', 'author', 'mailto', 'quince'))){
             
                 switch($ns){
                 
@@ -126,9 +145,14 @@ class SmartestCmsLink extends SmartestHelper{
                     $this->setType(SM_LINK_TYPE_PAGE);
                     $this->addClass('sm-link-internal');
                     break;
-                
-                    case "metapage":
+                    
                     case "item":
+                    $this->addClass('sm-link-internal');
+                    $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_FORM);
+                    $this->setType(SM_LINK_TYPE_INTERNAL_ITEM);
+                    break;
+                    
+                    case "metapage":
                     $this->setType(SM_LINK_TYPE_METAPAGE);
                     $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
                     $this->addClass('sm-link-internal');
@@ -141,6 +165,8 @@ class SmartestCmsLink extends SmartestHelper{
                 
                     case "download":
                     case "dl":
+                    case "asset":
+                    case "file":
                     $this->setType(SM_LINK_TYPE_DOWNLOAD);
                     $this->addClass('sm-link-download');
                     break;
@@ -230,20 +256,22 @@ class SmartestCmsLink extends SmartestHelper{
         $html_attributes_array = array();
         $other_attributes_array = array();
         
-        foreach($data as $name => $value){
+        if(is_array($data)){
+            foreach($data as $name => $value){
             
-            if(in_array($name, $javascript_attributes)){
-                $html_attributes_array[$name] = $value;
-            }else if(in_array($name, $allowed_attributes)){
-                // Make sure attributed supplied for display are XML friendly
-                $html_attributes_array[$name] = SmartestStringHelper::toXmlEntities($value);
-            }else if(substr($name, 0, 5) == 'data_'){
-                // Custom non-visible HTML5 attributes
-                $html_attributes_array['data-'.substr($name, 5)] = SmartestStringHelper::toXmlEntitiesSmart($value);
-            }else{
-                $other_attributes_array[$name] = $value;
+                if(in_array($name, $javascript_attributes)){
+                    $html_attributes_array[$name] = $value;
+                }else if(in_array($name, $allowed_attributes)){
+                    // Make sure attributed supplied for display are XML friendly
+                    $html_attributes_array[$name] = SmartestStringHelper::toXmlEntities($value);
+                }else if(substr($name, 0, 5) == 'data_'){
+                    // Custom non-visible HTML5 attributes
+                    $html_attributes_array['data-'.substr($name, 5)] = SmartestStringHelper::toXmlEntitiesSmart($value);
+                }else{
+                    $other_attributes_array[$name] = $value;
+                }
+            
             }
-            
         }
         
         $html_attributes = new SmartestParameterHolder("Link HTML Attributes");
@@ -401,6 +429,12 @@ class SmartestCmsLink extends SmartestHelper{
             return SmartestSession::get('current_open_project')->getId();
         }
         
+        $s = new SmartestSite;
+        
+        if($s->findBy('domain', $_SERVER['HTTP_HOST'])){
+            return $s->getId();
+        }
+        
     }
     
     public function getSite(){
@@ -466,6 +500,51 @@ class SmartestCmsLink extends SmartestHelper{
                 $this->_destination = $d;
             }else{
                 return $this->error("The requested page was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
+            }
+            
+            break;
+            
+            case SM_LINK_TYPE_INTERNAL_ITEM:
+            
+            if($this->_destination_properties->getParameter('item_ref_field_name') == 'id'){
+                
+                $sql = "SELECT Items.item_id, Items.item_slug, Items.item_webid, Items.item_itemclass_id, Items.item_site_id, Items.item_deleted, ItemClasses.itemclass_varname, ItemClasses.itemclass_name, ItemClasses.itemclass_id FROM Items, ItemClasses WHERE item_id='".$this->_destination_properties->getParameter('item_ref_field_value')."' AND Items.item_itemclass_id=ItemClasses.itemclass_id AND item_site_id='".$this->getSiteId()."' AND item_deleted != '1'";
+                $result = $this->database->queryToArray($sql);
+                
+                if(count($result)){
+                    
+                    $item = SmartestCmsItem::retrieveByPk($result[0]['item_id']);
+                    
+                    if($this->_destination_properties->hasParameter('metapage_override') && $this->_destination_properties->getParameter('metapage_override') == true && $d = $this->getMetaPageObject($this->_destination_properties->getParameter('metapage_override_name'), $item->getModelId())){
+                        
+                        $sql = "SELECT * FROM Pages WHERE page_name='".$this->_destination_properties->getParameter('metapage_override_name')."' AND page_dataset_id='".$item->getModelId()."' AND page_site_id='".constant('SM_CMS_PAGE_SITE_ID')."' AND page_type='ITEMCLASS' AND page_deleted != 'TRUE'";
+                        $result = $this->database->queryToArray($sql);
+                        
+                    }else{
+                        
+                        $sql = "SELECT * FROM Pages WHERE page_id='".$item->getMetaPageId()."' AND page_site_id='".$this->getSiteId()."' AND page_type='ITEMCLASS' AND page_deleted != 'TRUE'";
+                        $result = $this->database->queryToArray($sql);
+                        
+                    }
+                    
+                    if(count($result)){
+                        
+                        $d = new SmartestItemPage;
+                        $d->hydrate($result[0]);
+                        $d->setPrincipalItem($item);
+                    
+                        $this->_destination = $d;
+                        
+                        // echo "found destination";
+                    
+                    }else{
+                        return $this->error("The requested meta-page was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
+                    }
+                    
+                }else{
+                    return $this->error("The requested item was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
+                }
+                
             }
             
             break;
@@ -554,15 +633,23 @@ class SmartestCmsLink extends SmartestHelper{
             break;
             
             case SM_LINK_TYPE_DOWNLOAD:
+            
             $d = new SmartestAsset;
             
-            if($d->hydrateBy('url', $this->_destination_properties->getParameter('filename'))){
+            if($this->_destination_properties->hasParameter('asset_id') && is_numeric($this->_destination_properties->getParameter('asset_id')) && $d->find($this->_destination_properties->getParameter('asset_id'))){
+                
+                $this->_destination = $d;
+            
+            }elseif($this->_destination_properties->hasParameter('filename') && $d->hydrateBy('url', $this->_destination_properties->getParameter('filename'))){
+                
                 $mime_type = $d->getMimeType();
+                
                 if($mime_type){
                     $this->_markup_attributes->setParameter('type', $mime_type);
                 }
             
                 $this->_destination = $d;
+            
             }else{
                 return $this->error("The requested asset (File name: '".$this->_destination_properties->getParameter('filename')."') was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
             }
@@ -571,13 +658,25 @@ class SmartestCmsLink extends SmartestHelper{
             
             case SM_LINK_TYPE_TAG:
             $d = new SmartestTag;
-            $d->hydrateBy('name', $this->_destination_properties->getParameter('tag_name'));
+            
+            if($this->_destination_properties->hasParameter('tag_id') && is_numeric($this->_destination_properties->getParameter('tag_id'))){
+                $d->hydrate($this->_destination_properties->getParameter('tag_id'));
+            }else{
+                $d->hydrateBy('name', $this->_destination_properties->getParameter('tag_name'));
+            }
+            
             $this->_destination = $d;
             break;
             
             case SM_LINK_TYPE_AUTHOR:
             $d = new SmartestUser;
-            $d->hydrateBy('username', $this->_destination_properties->getParameter('username'));
+            
+            if($this->_destination_properties->hasParameter('user_id') && is_numeric($this->_destination_properties->getParameter('user_id'))){
+                $d->hydrate($this->_destination_properties->getParameter('user_id'));
+            }else{
+                $d->hydrateBy('username', $this->_destination_properties->getParameter('username'));
+            }
+            
             $this->_destination = $d;
             break;
             
@@ -683,24 +782,24 @@ class SmartestCmsLink extends SmartestHelper{
         
     }
     
+    public function setContent($markup){
+        
+        $this->_preset_content_markup = $markup;
+        
+    }
+    
     public function getContent($draft_mode=false){
         
-        if($this->_render_data->hasParameter('with')){
+        if($this->_preset_content_markup){
+        
+            return $this->_preset_content_markup;
+        
+        }elseif($this->_render_data->hasParameter('with')){
             // if the with="" attribute is specified
             
             if($this->_render_data->getParameter('with') instanceof SmartestImage || ($this->_render_data->getParameter('with') instanceof SmartestAsset && $this->_render_data->getParameter('with')->isImage()) || substr($this->_render_data->getParameter('with'), 0, 6) == 'image:'){
-                // return $this->_render_data->getParameter('with')->render();
                 
-                /* $a = new SmartestRenderableAsset;
-                $a->findBy('url', substr($this->_render_data->getParameter('with'), 6));
-                
-                if($this->_render_data->hasParameter('alt')){
-                    $a->setAdditionalRenderData(array('alt_text'=>$this->_render_data->getParameter('alt')));
-                } */
-                
-                // return $a->render($draft_mode);
-								
-				if($this->_render_data->getParameter('with') instanceof SmartestImage){
+                if($this->_render_data->getParameter('with') instanceof SmartestImage){
                     
                     $img = $this->_render_data->getParameter('with');
                 
@@ -715,15 +814,13 @@ class SmartestCmsLink extends SmartestHelper{
                     if(!$img->loadFile(SM_ROOT_DIR.'Public/Resources/Images/'.substr($this->_render_data->getParameter('with'), 6))){
                     
                         // Image not recognised - error
-                        return;
+                        return '';
                     
                     }
                     
                 }
                 
-				// print_r($this->_render_data->getParameter('img_scale_ratio'));
-				
-                if(is_numeric($this->_render_data->getParameter('img_width')) && is_numeric($this->_render_data->getParameter('img_height'))){
+				if(is_numeric($this->_render_data->getParameter('img_width')) && is_numeric($this->_render_data->getParameter('img_height'))){
                     
 					if(!$this->_render_data->hasParameter('create_resized_image') || SmartestStringHelper::toRealBool($this->_render_data->getParameter('create_resized_image'))){
 	                    
@@ -820,6 +917,10 @@ class SmartestCmsLink extends SmartestHelper{
                 if($this->_render_data->hasParameter('alt')){
                     $img->setAltText($this->_render_data->getParameter('alt'));
                 }
+                
+                if($this->_render_data->hasParameter('img_style')){
+                    $img->setSingleRenderDataParameter('style', $this->_render_data->getParameter('img_style'));
+                }
             
                 return $img->render();
                 
@@ -861,6 +962,7 @@ class SmartestCmsLink extends SmartestHelper{
                         break;
 
                         case SM_LINK_TYPE_METAPAGE:
+                        case SM_LINK_TYPE_INTERNAL_ITEM:
                 
                         if($this->_destination->getForceStaticTitle() == 1){
                             return $fa_prefix.SmartestStringHelper::toXmlEntitiesSmart($this->_destination->getTitle(true));
@@ -906,7 +1008,11 @@ class SmartestCmsLink extends SmartestHelper{
         return new SmartestExternalUrl($url);
     }
     
-    public function getUrl($draft_mode=false, $ignore_status=false){
+    public function getUrl($draft_mode=null, $ignore_status=false){
+        
+        if(is_null($draft_mode)){
+            $draft_mode = ($this->_request->getAction() == 'renderEditableDraftPage' || $this->_request->getAction() == 'pageFragment');
+        }
         
         switch($this->getType()){
 
@@ -943,8 +1049,9 @@ class SmartestCmsLink extends SmartestHelper{
             }
             
             break;
-
+            
             case SM_LINK_TYPE_METAPAGE:
+            case SM_LINK_TYPE_INTERNAL_ITEM:
             
             if($draft_mode){ 
                 if($this->_request->getRequestParameter('hide_newwin_link')){
@@ -961,6 +1068,7 @@ class SmartestCmsLink extends SmartestHelper{
                 
                 return $url;
             }else{
+                
                 if(($this->_destination->getIsPublishedAsBoolean() && $this->_destination->getPrincipalItem()->isPublished()) || $ignore_status){
                     
                     $template_url = $this->_request->getDomain().$this->_destination->getDefaultUrl();
@@ -980,7 +1088,7 @@ class SmartestCmsLink extends SmartestHelper{
             }
     
             break;
-
+            
             case SM_LINK_TYPE_IMAGE:
             return $this->_destination->getWebUrl();
             break;
@@ -1059,7 +1167,7 @@ class SmartestCmsLink extends SmartestHelper{
         
     }
     
-    public function render($draft_mode=false, $ama=''){
+    public function render($draft_mode=false, $ama='', $link_content=null){
         
         if($this->getType() == SM_LINK_TYPE_EXTERNAL){
             
@@ -1088,10 +1196,16 @@ class SmartestCmsLink extends SmartestHelper{
             
         }
         
-        $url = $this->getUrl($draft_mode);
-        $contents = $this->getContent();
+        // $url = $this->getUrl($draft_mode);
+        // var_dump($url);
+        if($link_content){
+            // $contents = ;
+            $this->setContent($link_content);
+        } /*else{
+            $contents = $this->getContent();
+        } */
         
-        if($draft_mode && ($this->getType() == SM_LINK_TYPE_PAGE || $this->getType() == SM_LINK_TYPE_METAPAGE || $this->getType() == SM_LINK_TYPE_TAG || $this->getType() == SM_LINK_TYPE_AUTHOR) && $url != '#'){
+        if($draft_mode && ($this->getType() == SM_LINK_TYPE_PAGE || $this->getType() == SM_LINK_TYPE_INTERNAL_ITEM || $this->getType() == SM_LINK_TYPE_METAPAGE || $this->getType() == SM_LINK_TYPE_TAG || $this->getType() == SM_LINK_TYPE_AUTHOR) && $url != '#'){
             $this->_markup_attributes->setParameter('target', '_top');
         }
         
@@ -1104,7 +1218,7 @@ class SmartestCmsLink extends SmartestHelper{
            $this->_markup_attributes->loadArray($additional_markup_attributes);
         }
         
-        if(($this->getType() == SM_LINK_TYPE_PAGE || $this->getType() == SM_LINK_TYPE_METAPAGE) && !$this->_markup_attributes->hasParameter('title')){
+        if(($this->getType() == SM_LINK_TYPE_PAGE || $this->getType() == SM_LINK_TYPE_METAPAGE || $this->getType() == SM_LINK_TYPE_INTERNAL_ITEM) && !$this->_markup_attributes->hasParameter('title')){
             // Make sure that any title added automatically won't break well-formed markup
             $this->_markup_attributes->setParameter('title', SmartestStringHelper::toXmlEntities($this->_destination->getTitle()));
         }

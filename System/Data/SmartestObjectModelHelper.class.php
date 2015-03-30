@@ -36,6 +36,8 @@ class SmartestObjectModelHelper{
 	        $className = $name;
 	    } */
 	    
+        // throw new SmartestException('This is a test');
+        
 		$model = new SmartestModel;
 		
 		if($model->find($id)){

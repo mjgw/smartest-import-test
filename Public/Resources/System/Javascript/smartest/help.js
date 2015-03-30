@@ -26,6 +26,7 @@ Smartest.HelpViewer = Class.create({
             if(MODALS.isVisible){
                 MODALS.hideViewer();
             }
+            document.observe('keyup', this.hideOnEscKey.bindAsEventListener(this));
         }
     },
     
@@ -57,7 +58,17 @@ Smartest.HelpViewer = Class.create({
             $('help').fade({duration: 0.3});
             setTimeout(function(){$('help-updater').update('');}, 302);
             this.isVisible = false;
+            document.stopObserving('keyup');
         }
+    },
+    
+    hideOnEscKey: function(evt){
+      
+        evt = evt || window.event;
+        if (evt.keyCode == 27) {
+          this.hideViewer();
+        }
+      
     },
     
     back: function(){

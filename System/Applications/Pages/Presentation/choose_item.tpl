@@ -1,4 +1,4 @@
-<div class="instruction">This is an object meta-page. it is only used for editing info about {$model.plural_name|lower}.</div>
+<div class="instruction">This is a meta-page. It is only used for displaying individual {$model.plural_name|lower}, and doesn't have much content of its own. {help id="websitemanager:metapages"}What are meta-pages?{/help}</div>
 <div class="instruction">{$chooser_message}</div>
 
 {if count($items)}

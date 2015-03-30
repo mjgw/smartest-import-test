@@ -31,6 +31,24 @@ function openPage(pageAction){
 
 <div id="work-area">
 
+{if $require_item_select}
+
+<h3>{$model.plural_name}</h3>
+
+<div class="special-box">
+  <p>{$model.plural_name} only exist in attachment to specific {$parent_model.plural_name|lower}. Please choose one to continue.</p>
+  <form action="{$domain}datamanager/getSubModelItems">
+  <select name="item_id">
+{foreach from=$possible_parent_items item="ppi"}
+    <option value="{$ppi.id}">{$ppi.name}</option>
+{/foreach}
+  </select>
+  <input type="submit" value="Go" />
+  <input type="hidden" name="sub_model_id" value="{$model.id}" />
+</div>
+
+{else}
+
 {load_interface file="model_list_tabs.tpl"}
 
 <h3>{$model.plural_name}</h3>
@@ -117,6 +135,8 @@ function openPage(pageAction){
       There are no {$model.plural_name|lower} yet. {if $allow_create_new}<a href="{$domain}{$section}/addItem?class_id={$model.id}" class="button">Click here</a> to create one.{else}Your user account does not have permission to create them.{/if}
   </div>
   
+{/if}
+
 {/if}
 
 </div>

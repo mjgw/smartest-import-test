@@ -2,6 +2,7 @@
   <ul>
     {if $show_left_nav_options}
     <li class="top-level{if $section == "desktop" && $method == 'siteHome'} on{else} off{/if}"><a href="{$domain}smartest"><span class="option-holder"><i class="flaticon solid house-3"></i>{$_l10n_global_strings.main_nav.home}</span></a> </li>
+    {* <li class="top-level{if $section == "desktop" && $method == 'siteDashboard'} on{else} off{/if}"><a href="{$domain}smartest/dashboard"><span class="option-holder"><i class="fa fa-tachometer"></i>Dashboard</span></a></li> *}
     <li class="top-level{if $section == "websitemanager" || $section == "metadata"} on{else} off{/if}" id="nav-pages"><a href="{$domain}smartest/pages"><span class="option-holder"><i class="flaticon solid network"></i>{$_l10n_global_strings.main_nav.pages}</span></a></li>
     <li class="top-level{if $section == "datamanager" || $section == "sets"} on{else} off{/if}" id="nav-items"><a href="{$domain}smartest/models"><span class="option-holder"><i class="fa fa-cube"></i>{$_l10n_global_strings.main_nav.items}</span></a></li>
     <li class="top-level{if $section == "assets"} on{else} off{/if}" id="nav-files"><a href="{$domain}smartest/files"><span class="option-holder"><i class="flaticon solid media-gallery-1"></i>{$_l10n_global_strings.main_nav.files}</span></a></li>

@@ -200,6 +200,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	
 	public function setDraftMode($mode){
 	    $this->_draft_mode = (bool) $mode;
+        return $this;
 	}
 	
 	public function getMasterTemplate(){

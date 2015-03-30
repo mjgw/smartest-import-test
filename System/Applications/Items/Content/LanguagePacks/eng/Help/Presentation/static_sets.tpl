@@ -1,0 +1,1 @@
+<p>Static sets act like folders. You can place any items from the set's model into a static set, and </p>

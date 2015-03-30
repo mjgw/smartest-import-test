@@ -101,7 +101,7 @@ document.observe('dom:loaded', function(){
       <div id="thumbnail_size_selector">
         <div class="edit-form-row">
           <div class="form-section-label">Relative size:</div>
-          {slider name="thumbnail_relative_size" value=$relative_size min="20" max="90" value_unit="%" slidehook="updateSize"} <span id="file-size" style="padding-left:10px"></span>
+          {slider name="thumbnail_relative_size" value=$relative_size min="10" max="90" value_unit="%" slidehook="updateSize"} <span id="file-size" style="padding-left:10px"></span>
         </div>
         <div class="edit-form-row">
           <div class="form-section-label">Zoom resized images?</div>

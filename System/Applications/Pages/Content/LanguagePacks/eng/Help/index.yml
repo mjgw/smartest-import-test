@@ -1,21 +1,29 @@
 help:
   fields:
     title: Page fields
-    keywords: content, structure
+    keywords: [content, structure]
     content: fields.tpl
+    wiki_url: http://wiki.smartestproject.org/Field
   placeholders:
     title: Placeholders
-    keywords: content, structure
+    keywords: [content, structure]
     content: placeholders.tpl
+    wiki_url: http://wiki.smartestproject.org/Placeholder
   containers:
     title: Containers
-    keywords: structure
+    keywords: [structure, templates]
     content: containers.tpl
+    wiki_url: http://wiki.smartestproject.org/Container
   lists:
     title: Lists
-    keywords: content, structure
+    keywords: [content, data]
     content: lists.tpl
   page_elements_tree:
     title: Page elements tree
-    keywords: content, structure
+    keywords: [content, structure]
     content: pageelements.tpl
+  metapages:
+    title: Meta-pages
+    keywords: [views, content, items, data]
+    content: metapages.tpl
+    wiki_url: http://wiki.smartestproject.org/Meta-page

@@ -9,7 +9,7 @@
       
       <div class="edit-form-row">
         <div class="form-section-label">Field Name: </div>
-        {if $field_name}<input type="hidden" name="property_name" value="{$field_name}" />{$field_name}{else}<input type="text" name="property_name" value="unnamed_property" id="property-name" class="unfilled" />{/if}
+        {if $field_name}<input type="hidden" name="property_name" value="{$field_name}" /><code>{$field_name}</code>{else}<input type="text" name="property_name" value="unnamed_property" id="property-name" class="unfilled" />{/if}
       </div>
       
       <div class="edit-form-row">

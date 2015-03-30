@@ -39,7 +39,10 @@
   
   <div class="breaker"></div>
   
-  <div class="buttons-bar"><input type="button" value="Drag items to change order" id="submit-ajax" disabled="disabled" /></div>
+  <div class="buttons-bar">
+    <input type="button" value="Drag items to change order" id="submit-ajax" disabled="disabled" />
+    <input type="button" value="Done" onclick="cancelForm();">
+  </div>
   
   <script type="text/javascript" src="{$domain}Resources/System/Javascript/scriptaculous/src/dragdrop.js"></script>
     

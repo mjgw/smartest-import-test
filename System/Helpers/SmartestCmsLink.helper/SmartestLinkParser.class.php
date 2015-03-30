@@ -185,8 +185,8 @@ class SmartestLinkParser{
             $l->setParameter('namespace', 'quince');
             
         }else{
-        
-            $pattern = '/^(([\\w_-]+):)?([^#\\|]+[^:#])(#([\\w\\._-]+))?(\\|([^\\]]+))?$/i';
+            
+            $pattern = '/^(([\w_-]+):)([\w\.@_-]+)(#([\w\._-]+))?(\|([^\]]+))?$/i';
             preg_match($pattern, $string, $m);
             
             $l = new SmartestParameterHolder("Parsed Link Destination Properties: ".$m[0]);
@@ -195,20 +195,34 @@ class SmartestLinkParser{
             $l->setParameter('namespace', $m[2]);
             $l->setParameter('format', SM_LINK_FORMAT_USER);
             
+            // echo $l->getParameter('namespace');
+            
             if($l->getParameter('namespace') == 'mailto'){
                 $l->setParameter('destination', $m[3]);
             }
-                
-            if(in_array($m[2], array('image', 'asset', 'download'))){
-                $l->setParameter('filename', $m[3]);
+            
+            if(in_array($m[2], array('image', 'asset', 'download', 'dl'))){
+                if(is_numeric($m[3])){
+                    $l->setParameter('asset_id', $m[3]);
+                }else{
+                    $l->setParameter('filename', $m[3]);
+                }
             }
             
             if(in_array($m[2], array('user', 'author'))){
-                $l->setParameter('username', $m[3]);
+                if(is_numeric($m[3])){
+                    $l->setParameter('user_id', $m[3]);
+                }else{
+                    $l->setParameter('username', $m[3]);
+                }
             }
             
             if($m[2] == 'tag'){
-                $l->setParameter('tag_name', $m[3]);
+                if(is_numeric($m[3])){
+                    $l->setParameter('tag_id', $m[3]);
+                }else{
+                    $l->setParameter('tag_name', $m[3]);
+                }
             }
         
             if(isset($m[7])){
@@ -221,13 +235,15 @@ class SmartestLinkParser{
                 $l->setParameter('hash', $m[5]);
             }
             
-            if($m[2]){
+            // var_dump( $m );
+            
+            /* if($m[2]){
                 $l->setParameter('page_ref_field_name', 'name');
                 $l->setParameter('page_ref_field_value', SmartestStringHelper::toSlug($m[3]));
             }else{
                 $l->setParameter('scope', SM_LINK_SCOPE_NONE);
                 return $l;
-            }
+            } */
             
             if(strpos($l->getParameter('destination'), '=') !== false){
             
@@ -265,9 +281,30 @@ class SmartestLinkParser{
             }else{
                 
                 if(strtolower($l->getParameter('namespace')) == 'page'){
-                    $l->setParameter('page_ref_field_name', 'name');
-                    $l->setParameter('page_ref_field_value', SmartestStringHelper::toSlug($m[3]));
+                    
+                    if(is_numeric($m[3])){
+                        $l->setParameter('page_ref_field_name', 'id');
+                        $l->setParameter('page_ref_field_value', $m[3]);
+                    }else{
+                        $l->setParameter('page_ref_field_name', 'name');
+                        $l->setParameter('page_ref_field_value', SmartestStringHelper::toSlug($m[3]));
+                    }
+                    
+                }elseif(strtolower($l->getParameter('namespace')) == 'item'){
+                    
+                    $l->setParameter('format', SM_LINK_FORMAT_FORM);
+                    $l->setParameter('scope', SM_LINK_SCOPE_INTERNAL);
+                    
+                    if(is_numeric($m[3])){
+                        $l->setParameter('item_ref_field_name', 'id');
+                        $l->setParameter('item_ref_field_value', $m[3]);
+                    }else{
+                        $l->setParameter('item_ref_field_name', 'slug');
+                        $l->setParameter('item_ref_field_value', SmartestStringHelper::toSlug($m[3]));
+                    }
+                    
                 }else{
+                    
                     if(!in_array($l->getParameter('namespace'), array('image', 'download', 'tag', 'asset', 'mailto'))){
                         $l->setParameter('destination', $m[1].SmartestStringHelper::toSlug($m[3]));
                         $l->setParameter('item_ref_field_name', 'slug');
@@ -287,5 +324,37 @@ class SmartestLinkParser{
     public function processRegexMatch($match){
         
     }
+    
+    /* public static function parseInternalLinkFromSubmittedValue($submitted_value){
+        
+        $submitted_value = strtolower(trim($submitted_value));
+        
+        // var_dump($submitted_value);
+        
+        preg_match('/(page|item|asset|download|tag|user):(\d+)/', $submitted_value, $matches);
+        $l = new SmartestParameterHolder("Parsed Internal Link Destination Properties: ".$matches[0]);
+        $l->setParameter('namespace', $matches[1]);
+        $l->setParameter('destination', $matches[0]);
+        $l->setParameter('target_object_id', $matches[2]);
+        
+        /* if($matches[1] == 'page'){
+            $l->setParameter('page_ref_field_name', 'id');
+            $l->setParameter('page_ref_field_value', $matches[2]);
+        }elseif($matches[1] == 'item'){
+            $l->setParameter('item_ref_field_name', 'id');
+            $l->setParameter('item_ref_field_value', $matches[2]);
+        }elseif($matches[1] == 'user'){
+            $l->setParameter('user_id', $matches[2]);
+        }elseif($matches[1] == 'file'){
+            $l->setParameter('asset_id', $matches[2]);
+        }elseif($matches[1] == 'tag'){
+            $l->setParameter('tag_id', $matches[2]);
+        } 
+        
+        $l->setParameter('format', SM_LINK_FORMAT_USER);
+        
+        return $l;
+        
+    } */
     
 }

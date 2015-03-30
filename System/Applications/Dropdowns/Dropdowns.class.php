@@ -23,6 +23,9 @@ class Dropdowns extends SmartestSystemApplication{
 
 	public function addDropDown($get){ 
 		
+        $types = SmartestDataUtility::getDataTypes('dropdown', true, false);
+        $this->send($types, 'types');
+        
 	}
 
 	public function insertDropDown($get, $post){ 
@@ -39,6 +42,7 @@ class Dropdowns extends SmartestSystemApplication{
     	        
     	        $dropdown->setName($name);
     	        $dropdown->setLabel($label);
+                $dropdown->setDatatype($this->getRequestParameter('dropdown_datatype'));
     	        $dropdown->save();
     	        $this->addUserMessageToNextRequest('Your new dropdown menu was saved successfully.', SmartestUserMessage::SUCCESS);
     	        
@@ -71,6 +75,9 @@ class Dropdowns extends SmartestSystemApplication{
 	        $this->send($dropdown, 'dropdown');
 	        $this->send($dropdown->getFieldsWhereUsed($this->getSite()->getId()), 'fields');
 	        $this->send($dropdown->getItemPropertiesWhereUsed($this->getSite()->getId()), 'item_properties');
+            $this->send($this->getUser()->hasToken('edit_dropdown_datatype'), 'allow_datatype_change');
+            $types = SmartestDataUtility::getDataTypes('dropdown', true, false);
+            $this->send($types, 'types');
 	    }else{
 	        $this->addUserMessageToNextRequest('The dropdown ID was not recognized.', SmartestUserMessage::ERROR);
 	        $this->redirect('/smartest/dropdowns');
@@ -101,6 +108,9 @@ class Dropdowns extends SmartestSystemApplication{
 	    if($dropdown->find($dropdown_id)){
 	        $dropdown->setLabel($post['dropdown_label']);
             $dropdown->setName(SmartestStringHelper::toVarName($post['dropdown_name']));
+            if($this->getUser()->hasToken('edit_dropdown_datatype')){
+                $dropdown->setDatatype($this->getRequestParameter('dropdown_datatype'));
+            }
 	        $dropdown->setLanguage($post['dropdown_language']);
 	        $dropdown->save();
 	    }

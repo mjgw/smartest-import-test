@@ -65,13 +65,10 @@ class Items extends SmartestSystemApplication{
     public function itemPublishQueue(){
         
         $now = time();
-        // echo $now;
         
         $num_days = 7;
         $delta = floor($num_days*24*60*60);
-        // echo $delta;
         $most_recent_modification = $now-$delta;
-        // echo date('g:ia l jS F, Y', $most_recent_modification);
         $since = new SmartestDateTime($most_recent_modification);
         $this->send($since, 'since');
         
@@ -91,7 +88,6 @@ class Items extends SmartestSystemApplication{
 	
 	public function getItemClassSets($get){
 	    
-	    // $this->redirect('/sets/getItemClassSets?class_id='.$this->getRequestParameter('class_id'));
 	    $this->redirect('@sets:model_sets?class_id='.$this->getRequestParameter('class_id'));
 	    
 	}
@@ -200,6 +196,22 @@ class Items extends SmartestSystemApplication{
   	    
   	    if($found_model){
   	        
+            if($model->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL' || $model->getType() == 'SM_ITEMCLASS_MTM_SUB_MODEL'){
+                // This is a sub model, so an item needs to be chosen
+                
+                if(is_numeric($this->getRequestParameter('item_id'))){
+                    $this->setRequestParameter('sub_model_id', $model->getId());
+                    $this->forward('datamanager', 'getSubModelItems');
+                }else{
+                    $this->send($model->getParentModel(), 'parent_model');
+                    $this->send(true, 'require_item_select');
+                    $this->send($model->getParentModel()->getAllItems($this->getSite()->getId(), 0), 'possible_parent_items');
+                }
+                
+            }else{
+                $this->send(false, 'require_item_select');
+            }
+            
   	        $this->send((bool) count($model->getMetaPages()), 'has_metapages');
   	        
   	        if(is_file($model->getClassFilePath())){
@@ -261,6 +273,122 @@ class Items extends SmartestSystemApplication{
   	    }
 	
 	}
+    
+    public function getSubModelItems(){
+        
+        if($this->getRequestParameter('item_id')){
+            
+            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                
+                $m = new SmartestSubModel;
+                $item->setDraftMode(true);
+                
+                if($m->find($this->getRequestParameter('sub_model_id'))){
+                    
+                    // $this->setFormReturnUri();
+                    // $this->setFormReturnDescription($m->getPluralName());
+                    
+                    $m->init();
+                    $this->send($m, 'sub_model');
+                    
+                    $items = $item->getSubModelItems($m->getId());
+                    $this->send($items, 'items');
+                    $this->send(count($items), 'num_items');
+                    
+          	        if(is_file($m->getClassFilePath())){
+  	            
+          	            if(class_exists($m->getClassName())){
+          	                $class_exists = true;
+          	            }else{
+  	                
+          	                $du = new SmartestDataUtility;
+              	            $du->flushModelsCache();
+      	            
+          	                if($m->buildClassFile()){
+              	                $class_exists = true;
+              	            }else{
+              	                $class_exists = false;
+              	                $this->addUserMessage("The class file for this model could not be built", SmartestUserMessage::WARNING);
+                            }
+          	            }
+  	            
+          	        }else{
+  	            
+          	            $du = new SmartestDataUtility;
+          	            $du->flushModelsCache();
+  	            
+          	            if($m->buildClassFile()){
+          	                $class_exists = true;
+          	            }else{
+          	                $class_exists = false;
+          	                $this->addUserMessage("The class file for this model could not be built", SmartestUserMessage::WARNING);
+                        }
+                
+          	        }
+                    
+        		    if($this->getRequestParameter('page_id')){
+		        
+        		        $page = new SmartestPage;
+        		        if($page->hydrate($this->getRequestParameter('page_id'))){
+        		            $this->send($page->isEditableByUserId($this->getUser()->getId()), 'page_is_editable');
+        		        }else{
+        		            $this->send(false, 'page_is_editable');
+        		        }
+		        
+        		    }else{
+        		        $this->send(false, 'page_is_editable');
+        		    }
+                    
+                }else{
+                    $this->addUserMessage("The sub model ID provided has not been found.", SmartestUserMessage::ERROR);
+                }
+                
+                $allow_create_new = ($this->getUser()->hasToken('add_items') && $class_exists);
+                $this->send($allow_create_new, 'allow_create_new');
+                
+                $this->send($item, 'item');
+                $this->send($item->getId(), 'item_id');
+                $this->send($this->getApplicationPreference('item_list_style', 'grid'), 'list_view');
+                
+            }else{
+                $this->addUserMessageToNextRequest('The item ID was not recognized.');
+                $this->formForward();
+            }
+            
+        }else{
+            $this->addUserMessageToNextRequest('No item ID was set');
+            $this->formForward();
+        }
+        
+    }
+    
+    public function setSubModelItemOrder(){
+        
+        if($this->getRequestParameter('item_id')){
+            
+            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                
+                $m = new SmartestSubModel;
+                $this->send($m, 'sub_model');
+                $item->setDraftMode(true);
+                
+                if($m->find($this->getRequestParameter('sub_model_id'))){
+                
+                    $this->send($item, 'parent_item');
+                    $items = $item->getSubModelItems($m->getId());
+                    $this->send($items, 'items');
+                    $this->send(count($items), 'num_items');
+                
+                }
+                
+            }
+            
+        }else{
+            $this->addUserMessageToNextRequest('No item ID was set');
+            $this->formForward();
+        }
+        
+    }
     
     public function releaseUserHeldItems($get){
         
@@ -379,11 +507,6 @@ class Items extends SmartestSystemApplication{
 	deleteItem()
 	deleteItemClass()
 	*/
-	
-	/* function removeProperty($get, $post){
-		$itemproperty_id = mysql_real_escape_string($this->getRequestParameter('itemproperty_id'));
-    		return $this->manager->deleteItemClassProperty($itemproperty_id);
-	} */
 	
 	public function deleteProperty($get){
 	    
@@ -1268,10 +1391,21 @@ class Items extends SmartestSystemApplication{
                 if(is_numeric($this->getRequestParameter('itemclass_default_description_property_id')) && $this->getRequestParameter('itemclass_default_description_property_id') > 1){
                     $model->setDefaultDescriptionPropertyId($this->getRequestParameter('itemclass_default_description_property_id'));
                 }
-
-                if($this->getRequestParameter('itemclass_default_sort_property_id')){
-                    $model->setDefaultSortPropertyId($this->getRequestParameter('itemclass_default_sort_property_id'));
-                    $model->setDefaultSortPropertyDirection($this->getRequestParameter('itemclass_default_sort_direction'));
+                
+                if($model->getType() == 'SM_ITEMCLASS_MODEL'){
+                    if($this->getRequestParameter('itemclass_default_sort_property_id')){
+                        $model->setDefaultSortPropertyId($this->getRequestParameter('itemclass_default_sort_property_id'));
+                        $model->setDefaultSortPropertyDirection($this->getRequestParameter('itemclass_default_sort_direction'));
+                    }
+                }else{
+                    $manual_ordering = SmartestStringHelper::toRealBool(SmartestStringHelper::toRealBool($this->getRequestParameter('itemclass_manual_ordering')));
+                    $model->setSubModelManualOrdering($manual_ordering);
+                    if(!$manual_ordering){
+                        if($this->getRequestParameter('itemclass_default_sort_property_id')){
+                            $model->setDefaultSortPropertyId($this->getRequestParameter('itemclass_default_sort_property_id'));
+                            $model->setDefaultSortPropertyDirection($this->getRequestParameter('itemclass_default_sort_direction'));
+                        }
+                    }
                 }
 
                 if(is_numeric($this->getRequestParameter('itemclass_default_thumbnail_property_id'))){
@@ -1338,8 +1472,13 @@ class Items extends SmartestSystemApplication{
                     $this->addUserMessageToNextRequest("The model has been successfully updated.", SmartestUserMessage::SUCCESS);
                     $model->save();
                 }
-            
-                $this->redirect("/datamanager/editModel?class_id=".$model->getId());
+                
+                if($model->getType() == 'SM_ITEMCLASS_MODEL'){
+                    $this->redirect("/datamanager/editModel?class_id=".$model->getId());
+                }else{
+                    $this->formForward();
+                }
+                
             
     	    }else{
     	        $this->addUserMessageToNextRequest("The model ID was not recognized.", SmartestUserMessage::ERROR);
@@ -1381,8 +1520,8 @@ class Items extends SmartestSystemApplication{
 	public function editItem($get, $post){
 		
         if(!$this->requestParameterIsSet('from')){
-            $this->setFormReturnUri();
-            $this->setFormReturnDescription('editing item');
+            // $this->setFormReturnUri();
+            // $this->setFormReturnDescription('editing item');
         }
         
 		$item_id = $this->getRequestParameter('item_id');
@@ -1416,8 +1555,16 @@ class Items extends SmartestSystemApplication{
 	        if($dud_properties){
 	            $item->getModel()->refresh();
 	        }
-		    
-		    $this->send($item->getModel()->getMetaPages(), 'metapages');
+            
+            $this->send($item->getModel()->getType(), 'model_type');
+            
+            // If the item is a sub-item of another item, send that information
+            if($item->getModel()->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+                $this->send($item->getParentItem(), 'parent_item');
+                $this->send($item->getModel()->getParentModel(), 'parent_model');
+            }
+            
+            $this->send($item->getModel()->getMetaPages(), 'metapages');
 		    $this->send((bool) count($item->getModel()->getMetaPages()), 'has_metapages');
 		    $this->send($this->getUser()->hasToken('create_remove_properties'), 'can_edit_properties');
 		    $this->send($this->getUser()->hasToken('create_assets'), 'can_create_assets');
@@ -1491,7 +1638,7 @@ class Items extends SmartestSystemApplication{
 		        $item->getItem()->setLanguage(SmartestStringHelper::sanitize($this->getRequestParameter('item_language')));
 		        $item->getItem()->setSearchField(SmartestStringHelper::sanitize($this->getRequestParameter('item_search_field')));
 		        $item->getItem()->setMetapageId($this->getRequestParameter('item_metapage_id'));
-        		$item->getItem()->setModified(time());
+        		// $item->getItem()->setModified(time());
 		        
 		        if(strlen($this->getRequestParameter('item_slug'))){
 		            if($allow_edit_item_slug){
@@ -1734,7 +1881,23 @@ class Items extends SmartestSystemApplication{
         
             if(is_object($item)){
 	            
-	            if(($this->getUser()->hasToken('publish_approved_items') && $item->isApproved()) || $this->getUser()->hasToken('publish_all_items')){
+                $item->setDraftMode(true);
+                
+                if($this->requestParameterIsSet('sub_model_items') && is_array($this->getRequestParameter('sub_model_items'))){
+                    
+                    foreach($this->getRequestParameter('sub_model_items') as $sub_model_id => $action){
+                        
+                        if($action == 'CHANGED'){
+                            $item->rePublishSubModelItems($sub_model_id);
+                        }elseif($action == 'ALL'){
+                            $item->publishSubModelItems($sub_model_id);
+                        }
+                        
+                    }
+                    
+                }
+                
+                if(($this->getUser()->hasToken('publish_approved_items') && $item->isApproved()) || $this->getUser()->hasToken('publish_all_items')){
 	                
 	                if(!count($item->getModel()->getMetaPages())){
 	                    if($this->getRequestParameter('hide_no_metapage_warning') == '1'){
@@ -1851,6 +2014,12 @@ class Items extends SmartestSystemApplication{
                     }
                 }else{
                     $this->send(false, 'show_page_publish_option');
+                }
+                
+                if($item->getModel()->hasSubModels()){
+                    $this->send($item->getModel()->getSubModels(), 'sub_models');
+                }else{
+                    $this->send(array(), 'sub_models');
                 }
 	            
     	        if(($this->getUser()->hasToken('publish_approved_items') && $item->isApproved()) || $this->getUser()->hasToken('publish_all_items')){
@@ -2138,6 +2307,30 @@ class Items extends SmartestSystemApplication{
                     $this->redirect('/smartest/file/new?for=ipv&property_id='.$model->getPrimaryPropertyId());
                 }
                 
+                if($model->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+                    
+                    $parent_model = $model->getParentModel();
+                    
+                    if($this->requestParameterIsSet('parent_item_id') && is_numeric($this->getRequestParameter('parent_item_id'))){
+                        if($parent_item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('parent_item_id'))){
+                            $this->send($parent_item, 'parent_item');
+                        }else{
+                            throw new SmartestException('Parent item \''.$this->getRequestParameter('parent_item_id').'\' could not be found');
+                        }
+                    }else{
+                        // No parent item is set os the screen should generate a dropdown menu
+                        $this->send($parent_model->getAllItems($this->getSite()->getId(), 0), 'possible_parent_items');
+                    }
+                    
+                    $this->send($parent_model, 'parent_model');
+                
+                }elseif($model->getType() == 'SM_ITEMCLASS_MTM_SUB_MODEL'){
+                    
+                    $parent_model = $model->getParentModel();
+                    $this->send($parent_model, 'parent_model');
+                    
+                }
+                
                 $start_name = 'Unnamed '.$model->getName();
                 $this->send($start_name, 'start_name');
                 $this->send($this->getUser()->hasToken('create_assets'), 'can_create_assets');
@@ -2182,6 +2375,31 @@ class Items extends SmartestSystemApplication{
                 
                     $item->hydrateNewFromRequest($new_values, $this->getSite()->getId());
                     $item->setSiteId($this->getSite()->getId());
+                    
+                    if($model->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+                        
+                        $parent_model = $model->getParentModel();
+                        
+                        if($this->requestParameterIsSet('parent_item_id') && is_numeric($this->getRequestParameter('parent_item_id'))){
+                            
+                            if($parent_item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('parent_item_id'))){
+                                $item->setParentItemId($this->getRequestParameter('parent_item_id'));
+                                $item->setSubModelItemOrderIndex($parent_item->getNextSubModelItemOrderIndex($model->getId()));
+                            }else{
+                                throw new SmartestException("A parent ".$parent_model->getName()." with ID '".$this->getRequestParameter('parent_item_id')."' could not be found");
+                            }
+                            
+                        }else{
+                            // No parent item is set
+                            throw new SmartestException("A parent item must be set for items of the model '".$model->getPluralName()."'");
+                        }
+                
+                    }elseif($model->getType() == 'SM_ITEMCLASS_MTM_SUB_MODEL'){
+                    
+                        $parent_model = $model->getParentModel();
+                        // $this->send($parent_model, 'parent_model');
+                    
+                    }
                 
                     if($success = $item->save()){
                         
@@ -2347,6 +2565,12 @@ class Items extends SmartestSystemApplication{
             $templates = $tlh->getMasterTemplates($this->getSite()->getId());
             $this->send($templates, 'templates');
             
+    		$du = new SmartestDataUtility;
+    		$models = $du->getModels(false, $this->getSite()->getId(), true);
+		    $this->send($models, 'models');
+            
+            $this->send(json_encode(reset($models)->getPropertyVarnames()), 'first_model_property_varnames_json');
+            
             $site_lib_dir = SM_ROOT_DIR.'Sites/'.$this->getSite()->getDIrectoryName().'/Library/';
             $site_om_dir = $site_lib_dir.'ObjectModel/';
             
@@ -2393,18 +2617,75 @@ class Items extends SmartestSystemApplication{
 		        $shared = ($this->getRequestParameter('itemclass_shared') && $this->getRequestParameter('itemclass_shared'));
 		        
 		        if($du->modelNameIsAvailable($this->getRequestParameter('itemclass_name'), $this->getSite()->getId(), false)){
-		        
-        		    $model = new SmartestModel;
+		            
+                    if($this->getRequestParameter('itemclass_role') == 'constituent'){
+        		        $model = new SmartestSubModel;
+                    }else{
+                        $model = new SmartestModel;
+                    }
+                    
         		    $model->setName($this->getRequestParameter('itemclass_name'));
         		    $model->setPluralName($this->getRequestParameter('itemclass_plural_name'));
         		    $model->setVarname(SmartestStringHelper::toVarName($this->getRequestParameter('itemclass_plural_name')));
         		    $model->setWebid(SmartestStringHelper::random(16));
-        		    $model->setType('SM_ITEMCLASS_MODEL');
-        		    $model->setSiteId($this->getSite()->getId());
+                    
+                    $model->save();
+                    
+                    if($this->getRequestParameter('itemclass_role') == 'constituent'){
+                        
+                        $parent_model = new SmartestModel;
+                        
+                        if($parent_model->find($this->getRequestParameter('itemclass_parent_model'))){
+                		    
+                            $model->setSiteId($parent_model->getSiteId());
+                            $model->setParentId($parent_model->getId());
+                            
+                            if($this->getRequestParameter('itemclass_parent_model_rel') == 'mt1'){
+                                // Many-to-one
+                                $model->setType('SM_ITEMCLASS_MT1_SUB_MODEL');
+                                
+                                // Create a property for objects of the child model to access their parent(s)
+                                // $cp = new SmartestItemProperty;
+                                // $cp->setWebid(SmartestStringHelper::random(16));
+                    		    // $cp->setOrderIndex(0);
+                                // $cp->setName($parent_model->getName());
+                                // $cp->setVarname(SmartestStringHelper::toVarName($parent_model->getName()));
+                                // $cp->setDatatype('SM_DATATYPE_CMS_ITEM');
+                                // $cp->setItemClassId($model->getId());
+                                // $cp->setForeignKeyFilter($parent_model->getId());
+                                // $cp->save();
+                                // $model->setParentItemPropertyId($cp->getId());
+                                
+                                // Create a property for objects of the parent model to access child objects in the model being created
+            		            // $aqp = new SmartestItemProperty;
+            		            // $aqp->setWebid(SmartestStringHelper::random(16));
+                    		    // $aqp->setOrderIndex($parent_model->getNextPropertyOrderIndex());
+            		            // $aqp->setItemClassId($parent_model->getId());
+            		            // $aqp->setDatatype('SM_DATATYPE_AUTO_ITEM_FK');
+            		            // $aqp->setForeignKeyFilter($cp->getId());
+            		            // $aqp->setName($this->getRequestParameter('itemclass_parent_model_property_name'));
+            		            // $aqp->setVarName(SmartestStringHelper::toVarName($this->getRequestParameter('itemclass_parent_model_property_name')));
+            		            // $aqp->save();
+                                
+                                $parent_model->buildAutoClassFile();
+                            
+                            }elseif($this->getRequestParameter('itemclass_parent_model_rel') == 'mtm'){
+                                // Many-to-many
+                                $model->setType('SM_ITEMCLASS_MTM_SUB_MODEL');
+                                
+                            }
+                            
+                        }
+            		    
+                    }else{
+            		    $model->setType('SM_ITEMCLASS_MODEL');
+            		    $model->setSiteId($this->getSite()->getId());
+                    }
         		    
         		    // This feature needs to be thought through some more:
         		    // $model->setItemNameFieldVisible($this->getRequestParameter('itemclass_name_field_visible') ? 1 : 0);
         		    $model->setItemNameFieldVisible(1);
+                    $model->setSubModelManualOrdering(1);
         		    
         		    if($model->hasSameNameAsModelOnOtherSite()){
         		        $model->setShared(0);
@@ -2412,8 +2693,8 @@ class Items extends SmartestSystemApplication{
         		    }else{
         		        $model->setShared((int) $shared);
     		        }
-    		        
-        		    $model->save();
+                    
+                    $model->save();
     		    
         		    if($this->getRequestParameter('create_meta_page') && $this->getRequestParameter('create_meta_page') == 1){
         		        $p = new SmartestPage;
@@ -2561,7 +2842,8 @@ class Items extends SmartestSystemApplication{
             		$property->save();
 	    
             	    SmartestCache::clear('model_properties_'.$model->getId(), true);
-            	    SmartestObjectModelHelper::buildAutoClassFile($model->getId(), $model->getName());
+                    $model->refreshProperties();
+            	    // SmartestObjectModelHelper::buildAutoClassFile($model->getId(), $model->getName());
     	    
             	    SmartestLog::getInstance('site')->log($this->getUser()->__toString()." added a property called $new_property_name to model ".$model->getName().".", SmartestLog::USER_ACTION);
 	                
@@ -2584,7 +2866,8 @@ class Items extends SmartestSystemApplication{
             		            $aqp->save();
             		            
             		            SmartestCache::clear('model_properties_'.$foreign_model->getId(), true);
-                        	    SmartestObjectModelHelper::buildAutoClassFile($foreign_model->getId(), $foreign_model->getName());
+                                $foreign_model->buildAutoClassFile();
+                        	    // SmartestObjectModelHelper::buildAutoClassFile($foreign_model->getId(), $foreign_model->getName());
             		            
             		        }
             		    }

@@ -205,6 +205,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    if($offset == 'name'){
 	        return new SmartestString($this->getName());
 	    }
+        
+        if(is_array($this->_many_to_one_sub_models) && array_key_exists($offset, $this->_many_to_one_sub_models)){
+            return $this->getSubModelItems($this->_many_to_one_sub_models[$offset]);
+        }
 	    
 	    if($this->_item->offsetExists($offset)){
 	        
@@ -222,7 +226,11 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	                return $v;
                 }
             }
+            
+        }else if(isset($this->_many_to_one_sub_models) && count($this->_many_to_one_sub_models) && isset($this->_many_to_one_sub_models[$offset])){
 	        
+            return $this->getSubModelItems($this->_many_to_one_sub_models[$offset]);
+            
 	    }else{
 	        
 	        switch($offset){
@@ -279,6 +287,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            
 	            case 'absolute_uri':
 	            case 'absolute_url':
+                // echo "test";
 	            return $this->getAbsoluteUri();
 	            
 	            case 'description':
@@ -688,6 +697,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	public function setLanguage($lang_code){
 		return $this->getItem()->setLanguage($lang_code);
 	}
+    
+    public function setSubModelItemOrderIndex($order_index){
+        return $this->getItem()->setOrderIndex($order_index);
+    }
 	
 	// needed for compliance with SmartestGenericListedObject
 	public function getTitle(){
@@ -759,7 +772,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    
 	    if($link->hasError()){
 	        // echo $link->getError();
-	        return '#';
+	        // return '#';
 	    }else{
 	        return $link->getUrl(false, true);
         }
@@ -774,8 +787,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	
 	public function getModel(){
 	    
-	    if(!$this->_model && is_object($this->_item) && $this->_item->getItemclassId()){
-	        $model = new SmartestModel;
+        if(!$this->_model && is_object($this->_item) && $this->_item->getItemclassId()){
+	        $modelclass = isset($this->_model_class) ? $this->_model_class : 'SmartestModel';
+            $model = new $modelclass;
 	        $model->find($this->_item->getItemclassId());
 	        $this->_model = $model;
 	    }else if(!$this->_model && $this->_model_id){
@@ -792,6 +806,39 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	public function getModelId(){
 	    return $this->_item->getItemclassId();
 	}
+    
+    public function getParentItemId(){
+        return $this->_item->getParentId();
+    }
+    
+    public function setParentItemId($id){
+        $this->_item->setParentId($id);
+    }
+    
+    public function getParentItem(){
+        if(isset($this->_parent_item) && is_object($this->_parent_item)){
+            return $this->_parent_item;
+        }else{
+            if($this->getModel()->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+                if($parent_item_id = $this->getParentItemId()){
+                    if($parent_item = SmartestCmsItem::retrieveByPk($parent_item_id)){
+                        $this->_parent_item = $parent_item;
+                        return $this->_parent_item;
+                    }else{
+                        // an item with this ID couldn't be found!
+                        throw new SmartestException('No item with the ID \''.$parent_item_id.'\' could be found.');
+                    }
+                }else{
+                    // There is no parent item ID!
+                    throw new SmartestException('No parent item ID for item ID \''.$this->getId().'\' could be found.');
+                    return null;
+                }
+            }else{
+                return null;
+            }
+        }
+        
+    }
 	
 	public function getDescriptionField(){
 	    
@@ -935,7 +982,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    
 	    $result = array();
 	    
-	    foreach($this->_varnames_lookup as $vn => $id){
+        foreach($this->_varnames_lookup as $vn => $id){
 	    
 	        if($numeric_keys){
 	            $key = $id;
@@ -1041,6 +1088,81 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 		return $result;
 		
 	}
+    
+    public function getSubModelItems($sub_model_id){
+        
+        $m = new SmartestSubModel;
+        
+        if($m->find($sub_model_id)){
+            
+            $ids = array();
+            
+            if($m->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+            
+                $sql = "SELECT Items.item_id FROM Items WHERE item_itemclass_id='".$m->getId()."' AND item_parent_id='".$this->getId()."'";
+            
+                if($this->getDraftMode()){
+                    $set_item_draft_mode = true;
+                }else{
+                    $set_item_draft_mode = false;
+                    $sql .= " AND item_public='TRUE' AND item_is_archived !='1'";
+                }
+                
+                $th = new SmartestDatabaseTableHelper;
+                
+                if($th->tableHasColumn('Items', 'item_order_index')){
+                    $sql .= " ORDER BY item_order_index ASC";
+                }else{
+                    $th->flushCache();
+                }
+                
+                $result = $this->database->queryToArray($sql);
+            
+                foreach($result as $r){
+                    $ids[] = $r['item_id'];
+                }
+            
+            }elseif($m->getType() == 'SM_ITEMCLASS_MTM_SUB_MODEL'){
+                
+                
+                
+            }
+            
+            // Create new set from the item IDs
+            $set = new SmartestSortableItemReferenceSet($m, $set_item_draft_mode);
+            $set->loadItemIds($ids);
+            
+            // print_r($ids);
+        
+            // Sort the items by their default sort property, or by name if this is not defined
+            if($default_property_id = $m->getDefaultSortPropertyId()){
+                // $set->sort($default_property_id, $m->getDefaultSortPropertyDirection());
+            }
+            
+            return $set->getItems();
+            
+        }
+        
+    }
+    
+    public function getNextSubModelItemOrderIndex($sub_model_id){
+        
+        $m = new SmartestSubModel;
+        
+        if($m->find($sub_model_id)){
+            
+            $sql = "SELECT Items.item_id, Items.item_order_index FROM Items WHERE item_itemclass_id='".$m->getId()."' AND item_parent_id='".$this->getId()."' ORDER BY item_order_index DESC LIMIT 1";
+            $result = $this->database->queryToArray($sql);
+            
+            if(count($result)){
+                return $result[0]['item_order_index'];
+            }else{
+                return 0;
+            }
+            
+        }
+        
+    }
 	
 	public function getTags(){
 	    return $this->_item->getTags();
@@ -1303,6 +1425,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            $this->_item->setSlug(SmartestStringHelper::toSlug($this->_item->getName()));
 	        }
 	        
+            $this->_item->setLastModified(time());
 	        $this->_item->save();
             
             foreach($this->getModel()->getProperties() as $prop){
@@ -1471,6 +1594,14 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        }
 	        
 	    }
+        
+        if($this->getModel()->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+            $this->getParentItem()->unCache();
+        }
+        
+        if(isset($this->_many_to_one_sub_models)){
+            
+        }
 	    
 	    $sql = "UPDATE TodoItems SET todoitem_is_complete='1' WHERE todoitem_type='SM_TODOITEMTYPE_PUBLISH_ITEM' AND todoitem_foreign_object_id='".$this->_item->getId()."'";
 	    $this->database->rawQuery($sql);
@@ -1495,6 +1626,29 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        unlink($file);
 	    }
     }
+    
+    public function rePublishAllSubModelItems(){
+        if(isset($this->_many_to_one_sub_models)){
+            foreach($this->_many_to_one_sub_models as $sub_model_id){
+                $this->publishSubModelItems($sub_model_id);
+            }
+        }
+    }
+    
+    public function publishSubModelItems($sub_model_id, $all=true){
+        
+        $items = $this->getSubModelItems($sub_model_id);
+        
+        foreach($items as $sub_model_item){
+            if(($sub_model_item->isPublished() && $sub_model_item->getItem()->getIsModifiedSinceLastPublish()) || $all){
+                $sub_model_item->publish();
+            }
+        }
+    }
+    
+    public function rePublishSubModelItems($sub_model_id){
+        return $this->publishSubModelItems($sub_model_id, false);
+    }
 	
 	public function isApproved(){
 	    return ($this->_item->getChangesApproved() == 1) ? true : false;
@@ -1512,6 +1666,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    
 	    $model = new SmartestModel;
 	    $model->find($model_id);
+        // $model->init();
 	    return $model->getClassName();
 	    
     }
@@ -1525,10 +1680,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
                 $className = self::getModelClassName($item_id);
             }
         
-            if(!$dont_bother_with_class && class_exists($className)){
-                $object = new $className;
-            }else{
+            if($dont_bother_with_class || !class_exists($className)){
                 $object = new SmartestCmsItem;
+            }else{
+                $object = new $className;
             }
         
         }else{

@@ -126,13 +126,18 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             case "first_para":
             return SmartestStringHelper::getFirstParagraph($this->_string);
             case "convert_line_breaks":
-            return $this->toParagraphs();
+            return SmartestStringHelper::splitBySingleLineBreaks($this->_string);
             case "encoded":
             return $this->toHexEncoded();
             case "urlencoded":
             return urlencode($this->_string);
             case "wordcount":
             return $this->getWordCount();
+            case "charcount":
+            case "charactercount":
+            return strlen($this->_string);
+            case "paracount":
+            return count(SmartestStringHelper::splitBySingleLineBreaks($this->_string));
             case "textile":
             return SmartestStringHelper::parseTextile($this->_string);
             case "xmlentities":

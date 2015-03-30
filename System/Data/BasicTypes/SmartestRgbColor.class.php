@@ -184,11 +184,23 @@ class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorab
             return $this->getBrightness()->getValue() <= 154;
             case "text_black":
             return $this->getBrightness()->getValue() > 154;
+            case "css":
+            return 'color:#'.$this->toHex();
+            case "css_rgb":
+            return 'color:rgb('.$this->toRgb256().')';
+            case "css_bg":
+            return 'background-color:#'.$this->toHex();
+            case "css_rgb_bg":
+            return 'background-color:rgb('.$this->toRgb256().')';
+            
         }
     }
     
     public function offsetSet($offset, $value){}
     public function offsetUnset($offset){}
-    public function offsetExists($offset){}
+    
+    public function offsetExists($offset){
+        return in_array($offset, array('red', 'r', 'green', 'g', 'blue', 'b', 'hex', 'rgb', 'brightness', 'brightness_int', 'text_white', 'text_black', 'css', 'css_rgb', 'css_bg', 'css_bg_rgb'));
+    }
     
 }

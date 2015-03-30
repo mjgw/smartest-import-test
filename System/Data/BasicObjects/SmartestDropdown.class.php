@@ -27,6 +27,16 @@ class SmartestDropdown extends SmartestBaseDropdown{
         
     }
     
+    public function __postHydrationAction(){
+        // Correcting earlier versions where the 'datatype' field was not used
+        if($this->_came_from_database){
+            if(!strlen($this->getDatatype())){
+                $this->setDatatype('SM_DATATYPE_SL_TEXT');
+                $this->save();
+            }
+        }
+    }
+    
     public function getOptionsAsArrays(){
         
         $options = $this->getOptions();

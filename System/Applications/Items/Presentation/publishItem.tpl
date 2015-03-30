@@ -37,6 +37,20 @@
       {if $meta_page.is_published == 'TRUE'}{else}<div class="warning"><strong>Warning: Meta-page unavailable</strong><br />The default meta-page for this item is not currently published, but you don't have permission to publish it. You can publish this {$item._model.name|strtolower}, but most hyperlinks or URLs that correspond to it will not work until this page is published.</div>{/if}
     {/if}
     
+    {if count($sub_models)}
+{foreach from=$sub_models item="sub_model"}
+      <div class="edit-form-row">
+        <div class="form-section-label">What to do with {$sub_model.plural_name|lower}</div>
+        <select name="sub_model_items[{$sub_model.id}]">
+          <option value="CHANGED">Re-publish any modified {$sub_model.plural_name|lower} that are already live</option>
+          <option value="ALL">Publish all this {$item._model.name|lower}'s {$sub_model.plural_name|lower}</option>
+          <option value="NONE">Do nothing with this {$item._model.name|lower}'s {$sub_model.plural_name|lower}</option>
+        </select>
+      </div>
+{/foreach}
+    
+    {/if}
+    
     {if !empty($itemspaces)}
     <div class="edit-form-row">
       <div class="form-section-label">Update itemspaces where this {$item._model.name|strtolower} is chosen in draft?</div>

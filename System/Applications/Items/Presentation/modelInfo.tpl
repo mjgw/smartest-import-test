@@ -19,7 +19,7 @@
     
     <div class="edit-form-row">
       <div class="form-section-label">Primary site</div>
-      {$main_site_name}
+      {$main_site_name.xmlentities}
     </div>
     
     <div class="edit-form-row">

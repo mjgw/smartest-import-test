@@ -6,6 +6,8 @@
 class __THISCLASSNAME__ extends SmartestUserProfile{
 
     protected $_model_id = __MODEL_ID__;
+    protected $_user = null;
+    protected $_model_class = 'SmartestUserProfileService';
     
 __THECONSTANTS__
 

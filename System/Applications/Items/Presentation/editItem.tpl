@@ -6,26 +6,30 @@
 
 {if $item.deleted}<div class="warning">Warning: This {$item._model.name|strtolower} is currently in the trash.</div>{/if}
 
-<div id="instruction">You are editing the draft property values of the {$item._model.name|strtolower} &quot;<strong>{$item.name}</strong>&quot;</div>
+<div class="instruction">You are editing the draft property values of the {$item._model.name|strtolower} &quot;<strong>{$item.name}</strong>&quot;</div>
+
+{if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}
+<div class="instruction">This <strong>{$item._model|lower}</strong> is attached to the {$parent_model.name|lower} &ldquo;{$parent_item.name}&rdquo; <a href="{$parent_item.action_url}" class="button">Edit {$parent_model.name|lower}</a> <a href="{$domain}datamanager/getSubModelItems?item_id={$parent_item.id}&amp;sub_model_id={$item._model.id}" class="button">See all {$item._model.plural_name|lower} for this {$parent_model.name|lower}</a></div>
+{/if}
 
 <div id="sets" class="special-box">
      Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em> <a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}" class="button">Create one</a>{/if}
- {if count($possible_sets)}
-         <div>
-           <form action="{$domain}sets/transferSingleItem" method="post">
-             <input type="hidden" name="item_id" value="{$item.id}" />
-             <input type="hidden" name="transferAction" value="add" />
-             <input type="hidden" name="returnTo" value="editItem" />
-             Add this item to set:
-             <select name="set_id">
- {foreach from=$possible_sets item="possible_set"}
-               <option value="{$possible_set.id}">{$possible_set.label}</option>
- {/foreach}
-             </select>
-             <input type="submit" value="Go" />
-           </form>
-         </div>
- {/if}
+{if count($possible_sets)}
+       <div>
+         <form action="{$domain}sets/transferSingleItem" method="post">
+           <input type="hidden" name="item_id" value="{$item.id}" />
+           <input type="hidden" name="transferAction" value="add" />
+           <input type="hidden" name="returnTo" value="editItem" />
+           Add this item to set:
+           <select name="set_id">
+{foreach from=$possible_sets item="possible_set"}
+             <option value="{$possible_set.id}">{$possible_set.label}</option>
+{/foreach}
+           </select>
+           <input type="submit" value="Go" />
+         </form>
+       </div>
+{/if}
 </div>
 
 {if $item.has_metapage && count($metapages)}
@@ -56,7 +60,8 @@
 <div class="edit-form-row">
   <div class="form-section-label">{$item._model.name} {$item._model.item_name_field_name}</div>
   <input type="text" name="item_name" value="{$item.editor_name|escape_double_quotes}" />
-</div>{/if}
+</div>
+{/if}
 
 {if $item.has_metapage || $allow_edit_item_slug}
 
@@ -83,8 +88,8 @@
 
 {foreach from=$item._editable_properties key="pid" item="property"}
 <div class="edit-form-row">
-  <div class="form-section-label">{if $property.required == 'TRUE'}<strong>{/if}{$property.name}{* ({$property.varname}) *}{if $property.required == 'TRUE'}</strong> *{/if}{if $can_edit_properties}<a style="float:left" title="Edit this property" href="{$domain}datamanager/editItemClassProperty?from=item_edit&amp;item_id={$item.id}&amp;itemproperty_id={$property.id}"><img src="{$domain}Resources/System/Images/edit_setting_minimal.png" alt="Edit this property" /></a>{/if}</div>
-  {item_field property=$property value=$item[$pid]} {* <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}">Test</a> *}
+  <div class="form-section-label">{if $property.required == 'TRUE'}<strong>{/if}{$property.name}{* ({$property.varname}) *}{if $property.required == 'TRUE'}</strong> *{/if}{if $can_edit_properties}<a style="float:left" title="Edit this property" href="{$domain}datamanager/editItemClassProperty?from=item_edit&amp;item_id={$item.id}&amp;itemproperty_id={$property.id}" class="clickable-icon"><i class="fa fa-cog"></i></a>{/if}</div>
+  {item_field property=$property value=$item[$pid]} {* <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}" class="button small">Test</a> *}
 </div>
 {/foreach}
 
@@ -155,6 +160,7 @@ $('form-save-button').observe('click', function(e){
   <ul class="actions-list" id="non-specific-actions">
     <li><b>This {$item._model.name}</b></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id={$item.id}', '{$item._model.name} info');" class="right-nav-link"><img src="{$domain}Resources/Icons/information.png" border="0" />&nbsp;About this {$item._model.name}</a></li>
+    {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/editItem?item_id={$parent_item.id}';"><img src="{$domain}Resources/Icons/package_small.png" alt="" />&nbsp;Back to {$parent_model.name}</a></li>{/if}
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/releaseItem?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/lock_open.png" border="0" />&nbsp;Release for others to edit</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/approveItem?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" />&nbsp;Approve changes</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addTodoItem?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" />&nbsp;Assign To-do</a></li>
@@ -165,7 +171,7 @@ $('form-save-button').observe('click', function(e){
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$item.itemclass_id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" />&nbsp;Finish editing for now</a></li>
   </ul>
   
-  <ul class="actions-list" id="non-specific-actions">
+  <ul class="actions-list">
     <li><b>{$item._model.name} Options</b></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$item._model.id}';" class="right-nav-link">Back to {$item._model.plural_name}</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addItem?class_id={$item._model.id}';" class="right-nav-link">New {$item._model.name}</a></li>
@@ -173,7 +179,7 @@ $('form-save-button').observe('click', function(e){
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassProperties?class_id={$item._model.id}';" class="right-nav-link">Edit the properties of this model</a></li>
   </ul>
 
-  <ul class="actions-list" id="non-specific-actions">
+  <ul class="actions-list">
     <li><span style="color:#999">Recently edited {$item._model.plural_name|strtolower}</span></li>
     {foreach from=$recent_items item="recent_item"}
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_item.action_url}'"><img border="0" src="{$recent_item.small_icon}" /> {$recent_item.label|summary:"28"}</a></li>

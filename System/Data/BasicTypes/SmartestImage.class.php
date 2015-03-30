@@ -741,17 +741,22 @@ class SmartestImage extends SmartestFile{
 	        return $this->getWebPath();
 	        
 	        case "og_meta":
-            $request_data = SmartestPersistentObject::get('request_data');
-            $domain = $request_data->g('domain');
+            // $request_data = SmartestPersistentObject::get('request_data');
+            // $domain = $request_data->g('domain');
             // TODO: Adjust protocol to https where it is in use
-	        return '<meta name="og:image" value="http://'.$_SERVER['HTTP_HOST'].$domain.$this->getWebPath().'" />';
+	        return '<meta name="og:image" value="http://'.$_SERVER['HTTP_HOST'].$this->getWebPath().'" />';
             
             case "css_dimensions":
-            return 'width:'.$this->getWidth().'px ;height:'.$this->getHeight().'px';
+            return 'width:'.$this->getWidth().'px ;height:'.$this->getHeight().'px; ';
             
             case "retina_css_dimensions":
             case "css_dimensions_retina":
-            return 'width:'.ceil($this->getWidth()/2).'px;height:'.ceil($this->getHeight()/2).'px';
+            return 'width:'.ceil($this->getWidth()/2).'px;height:'.ceil($this->getHeight()/2).'px;';
+            
+            case "css_background_image":
+            // $request_data = SmartestPersistentObject::get('request_data');
+            // $domain = $request_data->g('domain');
+            return "background-image:url('".$this->getWebPath()."');";
 	        
 	        case "_ui_preview":
 	        $prev = $this->getSquarePreviewForUI();

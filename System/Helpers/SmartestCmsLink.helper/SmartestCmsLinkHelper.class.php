@@ -26,6 +26,12 @@ class SmartestCmsLinkHelper extends SmartestHelper{
             $link = self::createLinkFromTag($to, $markup_attributes);
         }else if($to instanceof SmartestUser){
             $link = self::createLinkFromAuthor($to, $markup_attributes);
+        }else if($to instanceof SmartestCmsLink){
+            $link = &$to;
+            // TODO: Pass markup attributes to existing link object
+            if($markup_attributes){
+                $link->applyMarkupAttributes($markup_attributes);
+            }
         }else{
             $properties = SmartestLinkParser::parseSingle($to);
             $link = new SmartestCmsLink($properties, $markup_attributes);

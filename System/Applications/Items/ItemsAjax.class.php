@@ -37,6 +37,62 @@ class ItemsAjax extends SmartestSystemApplication{
 	    $this->send($items, 'items');
 	    
 	}
+    
+    public function linkableItemTextSearch(){
+	    
+        $db = SmartestDatabase::getInstance('SMARTEST');
+        
+        // get metapages
+        
+        $sql0 = "SELECT DISTINCT page_dataset_id FROM Pages WHERE `page_type` = 'ITEMCLASS' AND `page_deleted` != 'TRUE' AND `page_site_id`='".$this->getSite()->getId()."'";
+        $result0 = $db->queryToArray($sql0);
+        
+        $metapage_model_ids = array();
+        
+        foreach($result0 as $r){
+            $metapage_model_ids[] = $r['page_dataset_id'];
+        }
+        
+        if(count($metapage_model_ids)){
+            
+    	    $sql = "SELECT Items.item_id FROM Items WHERE (item_site_id='".$this->getSite()->getId()."' OR item_shared=1) AND item_deleted='0' AND (item_name LIKE '%".$this->getRequestParameter('query')."%' OR item_search_field LIKE '%".$this->getRequestParameter('query')."%') AND item_itemclass_id IN ('".implode("','", $metapage_model_ids)."') ORDER BY item_name LIMIT 150";
+    	    $result1 = $db->queryToArray($sql);
+	    
+    	    $sql2 = "SELECT Items.item_id FROM Items, Tags, TagsObjectsLookup WHERE (item_site_id='".$this->getSite()->getId()."' OR item_shared=1) AND item_deleted='0' AND (Tags.tag_label LIKE '%".$this->getRequestParameter('query')."%' AND TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND TagsObjectsLookup.taglookup_object_id=Items.item_id AND TagsObjectsLookup.taglookup_type='SM_ITEM_TAG_LINK') AND item_itemclass_id IN ('".implode("','", $metapage_model_ids)."') ORDER BY item_name LIMIT 150"; 
+    	    $result2 = $db->queryToArray($sql2);
+	    
+    	    $item_ids = array();
+	    
+    	    foreach($result1 as $r){
+    	        $item_ids[] = $r['item_id'];
+    	    }
+	    
+    	    foreach($result2 as $r){
+    	        $item_ids[] = $r['item_id'];
+    	    }
+	    
+    	    $item_ids = array_unique($item_ids);
+	    
+    	    $final_sql = "SELECT Items.* FROM Items WHERE Items.item_id IN ('".implode("','", $item_ids)."') ORDER BY item_name LIMIT 150";
+    	    $result = $db->queryToArray($final_sql);
+	    
+    	    $items = array();
+	    
+    	    foreach($result as $r){
+    	        $item = new SmartestItem;
+    	        $item->hydrate($r);
+    	        $items[] = $item;
+    	    }
+            
+        }else{
+            
+            $items = array();
+            
+        }
+        
+	    $this->send($items, 'items');
+	    
+	}
 	
 	public function tagItem(){
 	    
@@ -437,5 +493,55 @@ class ItemsAjax extends SmartestSystemApplication{
 	    
 	    }
 	}
+    
+    public function getModelPropertyVarnames(){
+        
+        $id = $this->getRequestParameter('model_id');
+        $model = new SmartestModel;
+        
+        if($model->find($id)){
+            
+            $property_varnames = array();
+            
+            foreach($model->getProperties() as $p){
+                $property_varnames[] = $p->getVarname();
+            }
+            
+            header('Content-type: application/json');
+            // This is what the above line should be
+            // $this->getController()->getCurrentRequest()->setContentType('application/json');
+            // print_r(json_encode($property_varnames));
+            echo json_encode($property_varnames);
+            exit;
+            
+        }
+        
+    }
+    
+    public function updateSubModelItemOrder(){
+        
+        if($parent_item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('parent_item_id'))){
+            
+            $parent_item->setDraftMode(true);
+            $id_positions = array_flip(explode(',', $this->getRequestParameter('value_ids')));
+            
+            $child_items = $parent_item->getSubModelItems($this->getRequestParameter('sub_model_id'));
+            
+            foreach($child_items as $child_item){
+                $new_order = $id_positions[$child_item->getId()];
+                $child_item->setSubModelItemOrderIndex($new_order);
+                $child_item->save();
+            }
+            
+            $parent_item->unCache();
+            
+        }else{
+            
+            header("HTTP/1.1 404 Not Found");
+            exit;
+            
+        }
+        
+    }
 
 }

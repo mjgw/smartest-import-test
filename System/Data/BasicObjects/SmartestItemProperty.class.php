@@ -53,6 +53,22 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
 	    }
 	    
 	}
+    
+    public function save(){
+        
+        parent::save();
+        
+        $model = new SmartestModel;
+    
+        if($model->find($this->getItemclassId())){
+	        // clear the cache and rebuild auto object model file
+	        SmartestCache::clear('model_properties_'.$model->getId(), true);
+            $model->refreshProperties();
+        }else{
+            
+        }
+        
+    }
 	
 	public function delete($rebuild_cache=true){
 	    
@@ -83,7 +99,8 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
     	        parent::delete();
     	        // clear the cache and rebuild auto object model file
     	        SmartestCache::clear('model_properties_'.$model->getId(), true);
-    	        SmartestObjectModelHelper::buildAutoClassFile($model->getId(), $model->getName());
+                $model->refreshProperties();
+    	        // SmartestObjectModelHelper::buildAutoClassFile($model->getId(), $model->getName());
             }else{
                 // log
             }

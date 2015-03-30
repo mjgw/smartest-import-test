@@ -40,6 +40,7 @@ class SmartestEngine extends Smarty{
 		$this->right_delimiter = '}';
 		
 		$this->assign('request_parameters', $this->_request_data->getParameter('request_parameters'));
+        $this->assign('system_data_info', new SmartestFrontEndSystemInfoQueryService);
 		
 		$this->_tpl_vars['random'] = new SmartestRandomNumberGenerator;
 		

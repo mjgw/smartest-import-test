@@ -1,0 +1,1 @@
+<p>Meta-pages are pages where single items are presented. They give you the ability to to control how all items of a given model will appear, without having to set layout and design separately for each item.</p>

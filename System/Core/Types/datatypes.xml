@@ -4,7 +4,7 @@
     <type id="SM_DATATYPE_SL_TEXT" valuetype="string">
         <label>Short text field</label>
         <description>A short, single line of text such as first or last name. Maximum 255 characters.</description>
-        <usage>field,itemproperty</usage>
+        <usage>field,itemproperty,dropdown</usage>
         <class>SmartestString</class>
         <long>true</long>
         <sortable>true</sortable>
@@ -89,6 +89,20 @@
       <menu value="id" display="title" />
       
       <class>SmartestPage</class>
+      
+    </type>
+    
+    <type id="SM_DATATYPE_INTERNAL_LINK" valuetype="string">
+      
+      <label>Internal link to a page, item or file</label>
+      <description>A link to a page, item or file</description>
+      <usage>itemproperty,field</usage>
+      <long>false</long>
+      
+      <render template="System/Presentation/WebPageBuilder/property.internal_link.tpl" />
+      <input template="System/Presentation/InterfaceBuilder/Inputs/internal_link.tpl" />
+      
+      <class>SmartestInternalLink</class>
       
     </type>
     
@@ -185,7 +199,7 @@
     <type id="SM_DATATYPE_RGB_COLOR" valuetype="string">
         <label>Color</label>
         <description>A 24-bit RGB color</description>
-        <usage>field,itemproperty</usage>
+        <usage>field,itemproperty,dropdown</usage>
         <class>SmartestRgbColor</class>
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.rgb_color.tpl" />
@@ -205,7 +219,7 @@
     <type id="SM_DATATYPE_EMAIL_ADDRESS" valuetype="string">
         <label>Email address</label>
         <description>An email address.</description>
-        <usage>field,itemproperty</usage>
+        <usage>field,itemproperty,dropdown</usage>
         <class>SmartestEmailAddress</class>
         <long>false</long>
         <sortable>false</sortable>
@@ -216,7 +230,7 @@
     <type id="SM_DATATYPE_TIMESTAMP" valuetype="string">
         <label>Timestamp</label>
         <description>An exact point in time - year, month, day, hour, minute, and second.</description>
-        <usage>field,itemproperty,feed</usage>
+        <usage>field,itemproperty,feed,dropdown</usage>
         <class>SmartestDateTime</class>
         <sortable>true</sortable>
         <quantity>true</quantity>
@@ -230,7 +244,7 @@
         
         <label>Day</label>
         <description>A date that specifies year, month, and day of the month, but not the time of day.</description>
-        <usage>field,itemproperty,feed</usage>
+        <usage>field,itemproperty,feed,dropdown</usage>
         <class>SmartestDateTime</class>
         <sortable>true</sortable>
         <quantity>true</quantity>
@@ -257,7 +271,7 @@
     <type id="SM_DATATYPE_TWITTER_ACCT" valuetype="string">
         <label>Twitter account</label>
         <description>A user account on the social networking service Twitter</description>
-        <usage>field,itemproperty</usage>
+        <usage>field,itemproperty,dropdown</usage>
         <class>SmartestTwitterAccountName</class>
         <long>true</long>
         <sortable>true</sortable>

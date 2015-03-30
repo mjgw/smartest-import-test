@@ -5,7 +5,7 @@ module:
   longname: Desktop
   default_action: startpage
   aliases:
-    - {url: /smartest/_start, action: newDesktop}
+#    - {url: /smartest/_start, action: newDesktop}
     - {url: /smartest/about, action: aboutSmartest}
     - {url: /smartest/close, action: closeCurrentSite}
     - {url: /smartest/site/new, action: createSite}
@@ -19,5 +19,8 @@ module:
     open_site:
       action: openSite
       url: /smartest/site/open/:site_id
+    site_dashboard:
+      action: siteDashboard
+      url: /smartest/dashboard
   meta:
     system: true

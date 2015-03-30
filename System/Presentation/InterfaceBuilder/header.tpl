@@ -63,7 +63,7 @@
       document.observe('dom:loaded', function(){
       
         document.observe('scrolled:vertically', function(evt){
-          console.log(evt.memo.currentScrollTop);
+          // console.log(evt.memo.currentScrollTop);
           if(evt.memo.currentScrollTop > 50){
             if(!$('primary-ajax-loader').hasClassName('scrolled')){
               $('primary-ajax-loader').addClassName('scrolled');

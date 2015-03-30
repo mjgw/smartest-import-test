@@ -19,17 +19,20 @@
         <option value="NORMAL" selected="selected">Regular Web-page</option>
         <option value="ITEMCLASS">Item Meta-page</option>
         {* <option value="TAG">Tag list-page</option> *}
-      </select>
+      </select> {help id="websitemanager:metapages"}What are meta-pages?{/help}
     </div>
   	
-    <div class="edit-form-row" style="display:none" id="model-selector">
-	    <div class="form-section-label">Select a Model</div>
-	    <select name="page_model">
-	      {foreach from=$models item="model"}
-	      <option value="{$model.id}">{$model.plural_name}</option>
-	      {/foreach}
-	    </select>
-	  </div>
+    <div style="display:none" id="model-selector">
+      <div></div>
+      <div class="edit-form-row">
+  	    <div class="form-section-label">Select a Model</div>
+  	    <select name="page_model">
+  	      {foreach from=$models item="model"}
+  	      <option value="{$model.id}">{$model.plural_name}</option>
+  	      {/foreach}
+  	    </select> {help id="datamanager:models"}What are models?{/help}
+  	  </div>
+    </div>
     
     <script type="text/javascript">
       $('page-type-selector').observe('change', function(e){ldelim}

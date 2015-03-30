@@ -197,7 +197,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
 	            $this->_item_ids = array();
 	        }
 	        foreach($ids as $item_id){
-	            if(($overwrite || !in_array($this->_item_ids)) && is_numeric($item_id)){
+	            if(($overwrite || !in_array($item_id, $this->_item_ids)) && is_numeric($item_id)){
 	                $this->_item_ids[] = $item_id;
 	            }
 	        }

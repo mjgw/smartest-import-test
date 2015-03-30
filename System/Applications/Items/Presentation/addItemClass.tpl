@@ -1,18 +1,42 @@
-<script src="{$domain}Resources/Javascript/livesearch.js" type="text/javascript"></script> 
-
 <script language="javascript">
+
+var parentModelProperties = {$first_model_property_varnames_json};
 
 {literal}
 var setPlural = true;
+var setParentModelPropertyName = true;
 
-function suggestPluralName(){
+var suggestPluralName = function (){
 	if(setPlural == true){
 		$('plural').value = $('modelname').value+"s";
+	}
+	
+}
+
+var suggestParentModelPropertyName = function(){
+	if(setParentModelPropertyName == true){
+		$('itemclass-parent-model-property-name').value = ($('modelname').value+"s").toVarName();
+    checkParentModelPropertyName();
 	}
 }
 
 function turnOffAutoPlural(){
 	setPlural = false;
+}
+
+var parentModelPropertyNameUpdate = function(){
+  setParentModelPropertyName = false;
+  checkParentModelPropertyName();
+}
+
+var checkParentModelPropertyName = function(){
+  if(parentModelProperties.indexOf($F('itemclass-parent-model-property-name').toVarName()) != -1){
+    $('itemclass-parent-model-property-name').addClassName('error');
+    $('itemclass-parent-model-property-name-hint').update("The value '"+$F('itemclass-parent-model-property-name')+"' is not allowed because it is already a property name of the "+$('model-'+$F('main-model-select')+'-option').innerHTML+" model.");
+  }else{
+    $('itemclass-parent-model-property-name').removeClassName('error');
+    $('itemclass-parent-model-property-name-hint').update('');
+  }
 }
 
 {/literal}
@@ -41,12 +65,44 @@ function turnOffAutoPlural(){
     
 <div class="edit-form-row">
   <div class="form-section-label">Model Name:</div>
-  <input id="modelname" onkeyup="suggestPluralName()" type="text" name="itemclass_name" style="width:200px" /><span class="form-hint">ie "Article", "Car", "Person"</span>
+  <input id="modelname" onkeyup="suggestPluralName(); suggestParentModelPropertyName();" type="text" name="itemclass_name" style="width:200px" /><span class="form-hint">ie "Article", "Car", "Person"</span>
 </div>
 
 <div class="edit-form-row">
   <div class="form-section-label">Model Plural Name:</div>
   <input id="plural" onkeyup="turnOffAutoPlural()" type="text" name="itemclass_plural_name" style="width:200px" /><span class="form-hint">ie "Articles", "Cars", "People"</span>
+</div>
+
+<div class="edit-form-row">
+  <div class="form-section-label">Role</div>
+  <select name="itemclass_role" id="model-role-select">
+    <option value="freestanding">Freestanding model</option>
+    <option value="constituent">Constituent items for another model</option>
+  </select>
+  <div class="form-hint">Leave this as it is if you are unsure. You can rename this field later.</div>
+</div>
+
+<div id="constituent-model-options" style="display:none">
+  <div class="edit-form-row">
+    <div class="form-section-label">Parent model</div>
+    <select name="itemclass_parent_model" id="main-model-select">
+{foreach from=$models item="parent_model"}
+      <option value="{$parent_model.id}" id="model-{$parent_model.id}-option" data-varname="{$parent_model.varname}">{$parent_model.plural_name}</option>
+{/foreach}
+    </select>
+  </div>
+  <div class="edit-form-row">
+    <div class="form-section-label">Relationship</div>
+    <select name="itemclass_parent_model_rel" id="main-model-relationship-select">
+      <option value="mt1">Many-to-one</option>
+      <option value="mtm">Many-to-many</option>
+    </select>
+  </div>
+  <div class="edit-form-row">
+    <div class="form-section-label">Parent model property name</div>
+    <input type="text" name="itemclass_parent_model_property_name" value="" id="itemclass-parent-model-property-name" onkeyup="parentModelPropertyNameUpdate()" />
+    <div class="form-hint" id="itemclass-parent-model-property-name-hint"></div>
+  </div>
 </div>
 
 {* <div class="edit-form-row">
@@ -110,3 +166,32 @@ function turnOffAutoPlural(){
 </form>
 
 </div>
+
+<script type="text/javascript">
+{literal}
+  
+  $('model-role-select').observe('change', function(e){
+    if($F('model-role-select') == 'constituent'){
+      $('constituent-model-options').blindDown({duration: 0.3});
+    }else{
+      $('constituent-model-options').blindUp({duration: 0.3});
+    }
+  });
+  
+  $('main-model-select').observe('change', function(e){
+    new Ajax.Request('/ajax:datamanager/getModelPropertyVarnames?model_id='+$F('main-model-select'), {
+      onSuccess: function(response){
+        parentModelProperties = response.responseJSON;
+        checkParentModelPropertyName();
+        if(setParentModelPropertyName){
+          var modelVarName = $('model-'+$F('main-model-select')+'-option').readAttribute('data-varname');
+          var modelPluralName = $('model-'+$F('main-model-select')+'-option').innerHTML;
+          // $('itemclass-parent-model-property-name').value = modelPluralName;
+          suggestParentModelPropertyName();
+        }
+      }
+    });
+  });
+  
+{/literal}
+</script>

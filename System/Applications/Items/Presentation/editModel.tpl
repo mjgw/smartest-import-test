@@ -147,7 +147,31 @@
         {/if}
       </div>
       
+      {if $model.type == 'SM_ITEMCLASS_MT1_SUB_MODEL' || $model.type == 'SM_ITEMCLASS_MTM_SUB_MODEL'}
+      
+      <script type="text/javascript">
+      {literal}
+      var toggleDefaultSortControl = function(value){
+        
+        if(value){
+          Effect.BlindUp('sort-property-row', {duration: 0.3});
+        }else{
+          Effect.BlindDown('sort-property-row', {duration: 0.3});
+        }
+        
+      }
+      {/literal}  
+      </script>
+      
       <div class="edit-form-row">
+        <div class="form-section-label">Manual sorting</div>{if $model.manual_order}{/if}
+        {boolean name="itemclass_manual_ordering" id="itemclass-manual-ordering" value=$model.manual_order changehook="toggleDefaultSortControl"}
+      </div>
+      
+      {/if}
+      
+      <div id="sort-property-row" style="display:{if $model.type == 'SM_ITEMCLASS_MODEL' || !$model.manual_order}block{else}none{/if}">
+        <div class="edit-form-row">
           <div class="form-section-label">Default sort property</div>
           {if $can_edit_model}
           <select name="itemclass_default_sort_property_id">
@@ -168,75 +192,76 @@
         </div>
         
         <div class="edit-form-row">
-              <div class="form-section-label">Default sort direction</div>
-              {if $can_edit_model}
-              <select name="itemclass_default_sort_direction">
-                <option value="ASC"{if $model.default_sort_property_dir == 'ASC'} selected="selected"{/if}>Ascending</option>
-                <option value="DESC"{if $model.default_sort_property_dir == 'DESC'} selected="selected"{/if}>Descending</option>
-              </select>
-              <div class="form-hint">This is used only when the default sort property above is used.</div>
-              {else}
-                {if $model.default_sort_property_dir == 'DESC'}Descending{else}Ascending{/if}
-              {/if}
-            </div>
-        
-        <div class="edit-form-row">
-              <div class="form-section-label">Default thumbnail property</div>
-              {if $can_edit_model}
-              <select name="itemclass_default_thumbnail_property_id">
-                <option value="0">None</option>
-                {foreach from=$thumbnail_properties item="property"}
-                <option value="{$property.id}"{if $model.default_thumbnail_property_id == $property.id} selected="selected"{/if}>{$property.name}</option>
-                {/foreach}
-              </select>
-              {else}
-              {if $model.default_thumbnail_property_id}
-                {foreach from=$thumbnail_properties item="property"}
-                  {if $model.default_thumbnail_property_id == $property.id}{$property.name}{/if}
-                {/foreach}
-              {else}
-                None
-              {/if}
-              {/if}
-            </div>
+          <div class="form-section-label">Default sort direction</div>
+          {if $can_edit_model}
+          <select name="itemclass_default_sort_direction">
+            <option value="ASC"{if $model.default_sort_property_dir == 'ASC'} selected="selected"{/if}>Ascending</option>
+            <option value="DESC"{if $model.default_sort_property_dir == 'DESC'} selected="selected"{/if}>Descending</option>
+          </select>
+          <div class="form-hint">This is used only when the default sort property above is used.</div>
+          {else}
+            {if $model.default_sort_property_dir == 'DESC'}Descending{else}Ascending{/if}
+          {/if}
+        </div>
+      </div>
+      
+      <div class="edit-form-row">
+        <div class="form-section-label">Default thumbnail property</div>
+        {if $can_edit_model}
+        <select name="itemclass_default_thumbnail_property_id">
+          <option value="0">None</option>
+          {foreach from=$thumbnail_properties item="property"}
+          <option value="{$property.id}"{if $model.default_thumbnail_property_id == $property.id} selected="selected"{/if}>{$property.name}</option>
+          {/foreach}
+        </select>
+        {else}
+        {if $model.default_thumbnail_property_id}
+          {foreach from=$thumbnail_properties item="property"}
+            {if $model.default_thumbnail_property_id == $property.id}{$property.name}{/if}
+          {/foreach}
+        {else}
+          None
+        {/if}
+        {/if}
+      </div>
             
-    <div class="edit-form-row">
-      <div class="form-section-label">Long ID format for new items</div>
-      {if $can_edit_model}
-      <select name="itemclass_long_id_format" id="long-id-format-changer">
-        <option{if $model.long_id_format == "_STD"} selected="selected"{/if} value="_STD">Standard 32-char mixed random</option>
-        <option{if $model.long_id_format == "_UUID"} selected="selected"{/if} value="_UUID">UUID (ISO/IEC 9834-8:2012)</option>
-        <option{if $model.long_id_format == "NNNNNNNNNNNNNNNN"} selected="selected"{/if} value="NNNNNNNNNNNNNNNN">16 digits</option>
-        <option{if $model.long_id_format == "NNNNNNNN"} selected="selected"{/if} value="NNNNNNNN">8 digits</option>
-        <option{if $model.long_id_format == "my-NNNNNNNNNNNN"} selected="selected"{/if} value="my-NNNNNNNNNNNN">MMYY-12 digits</option>
-        <option{if $model.long_id_format == "my-NNNNNNNN"} selected="selected"{/if} value="my-NNNNNNNN">MMYY-8 digits</option>
-        <option{if $model.long_id_format == "CCCCCC"} selected="selected"{/if} value="CCCCCC">Standard record locator (6 digits or uppercase letters)</option>
-        <option{if $model.long_id_format_custom} selected="selected"{/if} value="_CUSTOM">Custom (advanced)</option>
-      </select>
-      <input type="text" name="itemclass_long_id_custom_format" value="{if $model.long_id_format_custom}{$model.long_id_format}{/if}" id="long-id-custom-format" style="display:{if $model.long_id_format_custom}inline{else}none{/if}" />
-      <div class="form-hint">Does not affect items already created</div>
-      <script type="text/javascript">
-      {literal}
-      $('long-id-format-changer').observe('change', function(){
-          if($('long-id-format-changer').value == '_CUSTOM'){
-              $('long-id-custom-format').show();
-          }else{
-              $('long-id-custom-format').hide();
-          }
-      });
-      {/literal}
-      </script>
-      {else}
-        {if $model.long_id_format == "_STD"}Standard 32-char mixed random{/if}
-        {if $model.long_id_format == "_UUID"}UUID (ISO/IEC 9834-8:2012){/if}
-        {if $model.long_id_format == "NNNNNNNNNNNNNNNN"}16 digits{/if}
-        {if $model.long_id_format == "NNNNNNNN"}8 digits{/if}
-        {if $model.long_id_format == "my-NNNNNNNNNNNN"}MMYY-12 digits{/if}
-        {if $model.long_id_format == "my-NNNNNNNN"}MMYY-8 digits{/if}
-        {if $model.long_id_format == "CCCCCC"}Standard record locator (6 digits or uppercase letters){/if}
-        {if $model.long_id_format_custom}Custom{/if}
-      {/if}
-    </div>
+      <div class="edit-form-row">
+        <div class="form-section-label">Long ID format for new items</div>
+        {if $can_edit_model}
+        <select name="itemclass_long_id_format" id="long-id-format-changer">
+          <option{if $model.long_id_format == "_STD"} selected="selected"{/if} value="_STD">Standard 32-char mixed random</option>
+          <option{if $model.long_id_format == "_UUID"} selected="selected"{/if} value="_UUID">UUID (ISO/IEC 9834-8:2012)</option>
+          <option{if $model.long_id_format == "NNNNNNNNNNNNNNNN"} selected="selected"{/if} value="NNNNNNNNNNNNNNNN">16 digits</option>
+          <option{if $model.long_id_format == "NNNNNNNN"} selected="selected"{/if} value="NNNNNNNN">8 digits</option>
+          <option{if $model.long_id_format == "my-NNNNNNNNNNNN"} selected="selected"{/if} value="my-NNNNNNNNNNNN">MMYY-12 digits</option>
+          <option{if $model.long_id_format == "my-NNNNNNNN"} selected="selected"{/if} value="my-NNNNNNNN">MMYY-8 digits</option>
+          <option{if $model.long_id_format == "CCCCCC"} selected="selected"{/if} value="CCCCCC">Standard record locator (6 digits or uppercase letters)</option>
+          <option{if $model.long_id_format_custom} selected="selected"{/if} value="_CUSTOM">Custom (advanced)</option>
+        </select>
+        <input type="text" name="itemclass_long_id_custom_format" value="{if $model.long_id_format_custom}{$model.long_id_format}{/if}" id="long-id-custom-format" style="display:{if $model.long_id_format_custom}inline{else}none{/if}" />
+        <div class="form-hint">Does not affect items already created</div>
+        <script type="text/javascript">
+        {literal}
+        $('long-id-format-changer').observe('change', function(){
+            if($('long-id-format-changer').value == '_CUSTOM'){
+                $('long-id-custom-format').show();
+            }else{
+                $('long-id-custom-format').hide();
+            }
+        });
+        {/literal}
+        </script>
+        {else}
+          {if $model.long_id_format == "_STD"}Standard 32-char mixed random{/if}
+          {if $model.long_id_format == "_UUID"}UUID (ISO/IEC 9834-8:2012){/if}
+          {if $model.long_id_format == "NNNNNNNNNNNNNNNN"}16 digits{/if}
+          {if $model.long_id_format == "NNNNNNNN"}8 digits{/if}
+          {if $model.long_id_format == "my-NNNNNNNNNNNN"}MMYY-12 digits{/if}
+          {if $model.long_id_format == "my-NNNNNNNN"}MMYY-8 digits{/if}
+          {if $model.long_id_format == "CCCCCC"}Standard record locator (6 digits or uppercase letters){/if}
+          {if $model.long_id_format_custom}Custom{/if}
+        {/if}
+      </div>
       
       {* <div class="edit-form-row">
           <div class="form-section-label">Color</div>

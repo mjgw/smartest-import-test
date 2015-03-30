@@ -13,7 +13,12 @@ class SmartestCache{
 		$file_path = SM_ROOT_DIR.'System/Cache/Data/'.$file_name;
 	
 		if(file_exists($file_path)){
-			return unserialize(file_get_contents($file_path));
+            if(filemtime($file_path) > SM_CACHE_LAST_MTIME){ // Check that the cache is not more than a week old, and delete if it is
+                return unserialize(file_get_contents($file_path));
+            }else{
+                unlink($file_path);
+                return null;
+            }
 		}else{
 			return null;
 		}
@@ -46,7 +51,7 @@ class SmartestCache{
 		
 		$file_path = SM_ROOT_DIR.'System/Cache/Data/'.$file_name;
 	    
-	    if(file_exists($file_path)){
+	    if(file_exists($file_path) && filemtime($file_path) > SM_CACHE_LAST_MTIME){
 			return true;
 		}else{
 			return false;

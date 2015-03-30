@@ -378,11 +378,13 @@ class SmartestDataUtility{
 	}
 	
 	public function getUsers(){
-	    
+	    $uh = new SmartestUsersHelper;
+        return $uh->getUsers();
 	}
 	
 	public function getSystemUsers(){
-	    
+	    $uh = new SmartestUsersHelper;
+        return $uh->getSystemUsers();
 	}
 	
 	public function isValidModelName($string){
@@ -490,9 +492,9 @@ class SmartestDataUtility{
         
     }
 	
-	public static function getDataTypes($usage_filter=''){
+	public static function getDataTypes($usage_filter='', $refresh=false, $save=true){
 	    
-	    if(self::$data_types){
+	    if(self::$data_types && !$refresh){
 	        
 	        return self::$data_types;
 	        
@@ -563,7 +565,9 @@ class SmartestDataUtility{
                 }
     	    }
     	    
-    	    self::$data_types = $types;
+            if($save){
+                self::$data_types = $types;
+            }
 	    
         }
 	    

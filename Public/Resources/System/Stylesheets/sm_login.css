@@ -21,7 +21,7 @@ body{
 }
 
 body.slowchange{
-    transition:background-color 12s;
+    transition:background-color 9s;
 }
 
 body.blue{

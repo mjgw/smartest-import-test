@@ -61,6 +61,8 @@ class SmartestResponse{
 	public function __construct(){
 	    
 	    $this->_error_stack = new SmartestErrorStack();
+        
+        define('SM_CACHE_LAST_MTIME', time() - 804600); // A week ago
 	    
 	    if(is_file(SM_ROOT_DIR."System/Core/Info/system.yml")){
 	        define('SYSTEM_INFO_FILE', SM_ROOT_DIR."System/Core/Info/system.yml");
@@ -163,6 +165,7 @@ class SmartestResponse{
         	'System/Base/SmartestSiteActions.class.php',
         	'System/Data/SmartestPageRenderingDataRequestHandler.class.php',
         	'System/Data/SmartestPageNavigationDataRequestHandler.class.php',
+            'System/Data/SmartestFrontEndSystemInfoQueryService.class.php',
         	'System/Templating/SmartestBasicRenderer.class.php',
         	'System/Templating/SmartestSingleItemTemplateRenderer.class.php',
         	'System/Templating/SmartestWebPageBuilder.class.php',
@@ -516,10 +519,7 @@ class SmartestResponse{
 		
 		SmartestPersistentObject::set('presentationLayer', $this->_smarty);
 		
-		$cth = 'Content-Type: '.$this->_controller->getCurrentRequest()->getContentType().'; charset='.$this->_controller->getCurrentRequest()->getCharSet();
-	    header($cth);
-	    
-	    if(is_dir($this->_controller->getCurrentRequest()->getMeta('_module_dir').'Library/')){
+		if(is_dir($this->_controller->getCurrentRequest()->getMeta('_module_dir').'Library/')){
 	        $existing_include_path = get_include_path();
 	        $ip_array = explode(constant('PATH_SEPARATOR'), $existing_include_path);
 	        $ip_array[] = $this->_controller->getCurrentRequest()->getMeta('_module_dir').'Library/';
@@ -714,8 +714,11 @@ class SmartestResponse{
 	    if($this->_controller->getCurrentRequest()->getUserActionObject() instanceof SmartestSystemApplication){
 		    $this->_smarty->assign('sm_messages', self::$user_messages);
 	    }
+        
+		$cth = 'Content-Type: '.$this->_controller->getCurrentRequest()->getContentType().'; charset='.$this->_controller->getCurrentRequest()->getCharSet();
+	    header($cth);
 	    
-	    if($this->_display_enabled){
+        if($this->_display_enabled){
 	        echo $this->fetch();
         }
         

@@ -640,13 +640,74 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             }else if($this->_request_data->g('request_parameters')->g('page_id')){
                 $url .= '&amp;from=pagePreview&amp;page_webid='.$this->_request_data->g('request_parameters')->g('page_id');
             }
-            // print_r($this->_request_data);
             $html = '<a class="sm-edit-button" href="'.$url.'" target="_top" title="Edit item ID '.$item_id.'"><img src="'.$this->_request_data->g('domain').'Resources/Icons/package_small.png" alt="Edit item ID '.$item_id.'" /></a>';
         }else{
             $html = '';
         }
         
         return $html;
+        
+    }
+    
+    public function renderReorderSetButton($identifier){
+        
+        if($this->getDraftMode()){
+        
+            $set = new SmartestCmsItemSet;
+        
+            if(is_numeric($identifier)){
+                if(!$set->find($identifier)){
+                    return $this->raiseError("Item set with ID '".$identifier."' could not be found.");
+                }
+            }else{
+                if(!$set->findBy('name', $identifier)){
+                    return $this->raiseError("Item set with name '".$identifier."' could not be found.");
+                }
+            }
+        
+            if($set->getType('STATIC')){
+                $html = '<a class="sm-edit-button" href="'.$this->_request_data->g('domain').'sets/editStaticSetOrder?set_id='.$set->getId().'" target="_top"><img src="'.$this->_request_data->g('domain').'Resources/Icons/arrow_switch.png" alt="" /></a>';
+                return $html;
+            }else{
+                return $this->raiseError("Item set '".$set->getLabel()."' is not static and cannot be ordered manually.");
+            }
+        
+        }else{
+            
+            return '';
+            
+        }
+        
+    }
+    
+    public function renderEditGalleryButton($identifier){
+        
+        if($this->getDraftMode()){
+        
+            $g = new SmartestAssetGroup;
+        
+            if(is_numeric($identifier)){
+                if(!$g->find($identifier)){
+                    return $this->raiseError("Gallery with ID '".$identifier."' could not be found.");
+                }
+            }else{
+                if(!$g->findBy('name', $identifier)){
+                    return $this->raiseError("Gallery with name '".$identifier."' could not be found.");
+                }
+            }
+        
+            if($g->getIsGallery()){
+                $html = '<a class="sm-edit-button" href="'.$this->_request_data->g('domain').'assets/arrangeAssetGallery?group_id='.$g->getId().'&amp;from=pagePreview" target="_top"><img src="'.$this->_request_data->g('domain').'Resources/Icons/arrow_switch.png" alt="" /></a>';
+                return $html;
+            }else{
+                return $this->raiseError("File group '".$set->getLabel()."' is not a gallery.");
+            }
+        
+        }else{
+            
+            return '';
+            
+        }
         
     }
     

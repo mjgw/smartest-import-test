@@ -88,6 +88,13 @@ class Desktop extends SmartestSystemApplication{
         
     }
     
+    public function siteDashboard(){
+        
+        $this->setTitle($this->getSite()->getName().' | Dashboard');
+        
+        
+    }
+    
     public function openSite($get){
 		
 		if($this->getRequestParameter('site_id')){

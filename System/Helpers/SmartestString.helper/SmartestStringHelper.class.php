@@ -890,6 +890,12 @@ class SmartestStringHelper extends SmartestHelper{
         
     }
     
+    public static function splitBySingleLineBreaks($string){
+        
+        return preg_split('/[\r\n\t]+/', $string);
+        
+    }
+    
     public static function toRegularExpression($string, $add_slashes=false){
 	    
 	    $regexp = str_replace('/', '\/', $string);

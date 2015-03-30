@@ -440,6 +440,7 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             
             case "all":
             case "objects":
+            // var_dump($this->_draft_mode);
             return $this->getObjectsOnSite($this->getCurrentSiteId(), $this->_draft_mode);
             
             case "url":

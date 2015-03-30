@@ -105,6 +105,38 @@ class SmartestAssetsLibraryHelper{
         return $names;
     }
     
+    public function getCategoryIds($importable_only=false){
+        
+        $names = array();
+        
+        foreach($this->getCategories($importable_only) as $cat){
+            $names[] = $cat['id'];
+        }
+        
+        return $names;
+    }
+    
+    public function isValidCategoryShortName($n){
+        return in_array($n, $this->getCategoryShortNames());
+    }
+    
+    public function isValidCategoryId($n){
+        return in_array($n, $this->getCategoryIds());
+    }
+    
+    public function getAssetTypeCodesInCategory($category){
+        if($this->isValidCategoryShortName($category)){
+            $types = $this->getTypesInCategories($category);
+            $type_ids = array();
+            foreach($types as $t){
+                $type_ids[] = $t['id'];
+            }
+            return $type_ids;
+        }else{
+            return array();
+        }
+    }
+    
     public function getGalleryAssetCategories(){
         
         $cats = $this->getCategories();
