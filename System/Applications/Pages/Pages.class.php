@@ -26,7 +26,6 @@ class Pages extends SmartestSystemApplication{
 	    // $this->setsManager = new SetsManager;
 	    // $this->templatesManager = new TemplatesManager;
 	    // $this->propertiesManager = new PagePropertiesManager;
-	    // var_dump($this);
 	}
 	
 	public function startPage(){
@@ -2827,8 +2826,6 @@ class Pages extends SmartestSystemApplication{
 	            
     	            $this->setTitle('Define Placeholder | '.$placeholder_name);
                     
-                    // var_dump();
-                    
                     $this->send($placeholder->onlyAcceptsImages(), 'only_accepts_images');
 	            
     	            $types_array = SmartestDataUtility::getAssetTypes();
@@ -2852,8 +2849,6 @@ class Pages extends SmartestSystemApplication{
     	                        $item_uses_default = true;
     	                    }
     	                }
-    	                
-    	                // var_dump($page_definition->getDraftRenderData());
     	                
     	                $params = array();
     	                
@@ -3692,6 +3687,7 @@ class Pages extends SmartestSystemApplication{
 	    
 	    $page = new SmartestPage;
 	    $page_webid = $this->getRequestParameter('page_id');
+        
 	    if($this->getRequestParameter('item_id')){$item_id = $this->getRequestParameter('item_id');}else{$item_id = false;}
 	    
 	    if($page->smartFind($page_webid)){
@@ -4437,8 +4433,8 @@ class Pages extends SmartestSystemApplication{
     		    $this->send($page, "pageInfo");
     		    
     		    $b = (($this->getRequestParameter('responseTableLinks') && !SmartestStringHelper::toRealBool($this->getRequestParameter('responseTableLinks'))) ? false : true);
-    		    // var_dump($b);
-    		    // $this->send(new SmartestBoolean($b), 'responseTableLinks');
+    		    
+                // $this->send(new SmartestBoolean($b), 'responseTableLinks');
     		    
     	    }
 	    }

@@ -18,7 +18,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	}
 	
 	public function getIsPublic(){
-		return ($this->getPublic() == 'TRUE') ? true : false;
+        return ($this->getPublic() == 'TRUE') ? true : false;
 	}
 	
 	public function getIsPublished(){

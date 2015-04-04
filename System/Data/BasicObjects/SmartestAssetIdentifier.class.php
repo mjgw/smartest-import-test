@@ -9,7 +9,7 @@ class SmartestAssetIdentifier extends SmartestBaseAssetIdentifier{
     protected $_loaded = false;
     protected $_page;
     protected $_asset_class;
-    protected $_simple_item;
+    protected $_simple_item = null;
     
 	protected function __objectConstruct(){
 		
@@ -63,7 +63,14 @@ class SmartestAssetIdentifier extends SmartestBaseAssetIdentifier{
             $field = 'live_asset_id';
         }
         
-        $this->_properties[$field];
+        return $this->_properties[$field];
+        
+    }
+    
+    public function hasSimpleItem($draft=false){
+        
+        $this->getSimpleItem($draft);
+        return is_object($this->_simple_item);
         
     }
     
@@ -76,11 +83,11 @@ class SmartestAssetIdentifier extends SmartestBaseAssetIdentifier{
                     return $this->_item->getItem();
                 }else{
                     $item = new SmartestItem;
-
-                    if($item->hydrate($this->getCurrentDefinitionId($draft))){
+                    
+                    if($item->find($this->getCurrentDefinitionId($draft))){
                         $this->_simple_item = $item;
                     }else{
-                        return $item;
+                        // return $item;
                     }
 
                 }

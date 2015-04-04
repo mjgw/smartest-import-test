@@ -2044,6 +2044,8 @@ class Items extends SmartestSystemApplication{
     	            }
 	            
     	        }
+                
+                // if the item isn't published, look for item spaces where the item has been chosen, but isn't already the live definition
 	    
             }else{
             
