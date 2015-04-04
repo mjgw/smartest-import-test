@@ -1813,9 +1813,13 @@ class Assets extends SmartestSystemApplication{
         			    if($asset_type['storage']['type'] == 'database'){
         			        if($asset->usesTextFragment()){
         			            $content = htmlspecialchars($asset->getTextFragment()->getContent(), ENT_COMPAT, 'UTF-8');
+                                $this->send(true, 'show_publish');
+        			        }else{
+        			            $this->send(false, 'show_publish');
         			        }
     			        }else{
     			            $file = SM_ROOT_DIR.$asset_type['storage'].$asset->getUrl();
+                            $this->send(false, 'show_publish');
     			            $content = htmlspecialchars(SmartestFileSystemHelper::load($asset->getFullPathOnDisk()), ENT_COMPAT, 'UTF-8');
     			        }
                     
@@ -1826,13 +1830,11 @@ class Assets extends SmartestSystemApplication{
             		    }
         		    
             		    if(isset($asset_type['parsable']) && SmartestStringHelper::toRealBool($asset_type['parsable'])){
-            		        $this->send(true, 'show_publish');
             		        $this->send(true, 'show_attachments');
             		    }else{
-            		        $this->send(false, 'show_publish');
             		        $this->send(false, 'show_attachments');
             		    }
-                    
+                        
                         $content = SmartestStringHelper::protectSmartestTags($content);
                     
     			        $this->send($content, 'textfragment_content');

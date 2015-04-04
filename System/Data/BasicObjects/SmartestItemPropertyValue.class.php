@@ -313,7 +313,7 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
 
                         if($this->_properties['content'] instanceof SmartestAsset){
                             
-                            if($this->_properties['content']->isEditable() && $this->_properties['content']->isParsable()){
+                            if($this->_properties['content']->isEditable() && $this->_properties['content']->usesTextFragment()){
                                 $this->_properties['content']->getTextFragment()->publish();
                             }
                             
@@ -321,7 +321,7 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
                             $asset = new SmartestAsset;
                             $asset->hydrate($this->_properties['content']);
 
-                            if($asset->isEditable() && $asset->isParsable()){
+                            if($asset->isEditable() && $asset->usesTextFragment()){
                                 $asset->getTextFragment()->publish();
                             }
                         }

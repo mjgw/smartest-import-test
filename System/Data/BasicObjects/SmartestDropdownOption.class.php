@@ -54,17 +54,30 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
     }
     
     public function getDataType(){
-        if($this->_data_type){
+        // A few hoops to make sure new dropdown menu datatypes (as of r744) are never blank. SM_DATATYPE_SL_TEXT is the default datatype.
+        if(strlen($this->_data_type)){
             return $this->_data_type;
         }elseif(is_object($this->_dropdown)){
-            $this->_data_type = $this->_dropdown->getDatatype();
+            if($this->_dropdown->getDatatype()){
+                $this->_data_type = $this->_dropdown->getDatatype();
+            }else{
+                $this->_dropdown->setDatatype('SM_DATATYPE_SL_TEXT');
+                $this->_dropdown->save();
+                $this->_data_type = 'SM_DATATYPE_SL_TEXT';
+            }
             return $this->_data_type;
         }else{
             $sql = "SELECT dropdown_datatype FROM DropDowns WHERE dropdown_id='".$this->getDropdownId()."' LIMIT 1";
             $result = $this->database->queryToArray($sql);
             if(count($result)){
-                $this->_data_type = $result[0]['dropdown_datatype'];
-                return $this->_data_type;
+                if(strlen($result[0]['dropdown_datatype'])){
+                    $this->_data_type = $result[0]['dropdown_datatype'];
+                    return $this->_data_type;
+                }else{
+                    $this->database->rawQuery('UPDATE DropDowns SET dropdown_datatype="SM_DATATYPE_SL_TEXT" WHERE dropdown_id="'.$this->getDropdownId().'" LIMIT 1');
+                    $this->_data_type = 'SM_DATATYPE_SL_TEXT';
+                    return $this->_data_type;
+                }
             }else{
                 // Apparently the dropdown does not exist. This should probably be logged.
                 return 'SM_DATATYPE_SL_TEXT';
@@ -98,10 +111,9 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
     
     public function getValueObject(){
         // Todo: Once dropdown menus are types, different classes will need to be returned here depending on type
-        $class = SmartestDataUtility::getClassForDataType($this->getDatatype());
-        // var_dump($this->getDatatype());
-        // var_dump($class);
-        return new $class($this->_properties['value']);
+        // $class = SmartestDataUtility::getClassForDataType($this->getDatatype());
+        // return new $class($this->_properties['value']);
+        return SmartestDataUtility::objectize($this->_properties['value'], $this->getDatatype());
     }
     
     public function hydrateFromFormData($v, $dropdown_id=null){

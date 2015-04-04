@@ -53,6 +53,6 @@
     
     document.getElementById('sm_previewBar').style.display = 'none';
     document.getElementById('sm_previewBar').style.display = 'block';
-    document.getElementById('sm_previewBar').style.zIndex = '99';
+    // document.getElementById('sm_previewBar').style.zIndex = '99';
   
 </script>

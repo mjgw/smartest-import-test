@@ -2666,8 +2666,6 @@ class Items extends SmartestSystemApplication{
             		            // $aqp->setName($this->getRequestParameter('itemclass_parent_model_property_name'));
             		            // $aqp->setVarName(SmartestStringHelper::toVarName($this->getRequestParameter('itemclass_parent_model_property_name')));
             		            // $aqp->save();
-                                
-                                $parent_model->buildAutoClassFile();
                             
                             }elseif($this->getRequestParameter('itemclass_parent_model_rel') == 'mtm'){
                                 // Many-to-many
@@ -2715,6 +2713,10 @@ class Items extends SmartestSystemApplication{
         		        $model->setDefaultMetaPageId($this->getSite()->getId(), $p->getId());
         		        $model->save();
         		    }
+                    
+                    if(is_object($parent_model)){
+                        $parent_model->buildAutoClassFile();
+                    }
     		    
         		    $this->addUserMessageToNextRequest("The new model has been saved. Now add some properties.", SmartestUserMessage::SUCCESS);
         		    // SmartestCache::clear('model_class_names', true);

@@ -6,7 +6,7 @@
   
   {load_interface file="edit_tabs.tpl"}
   
-  <h3>{$sub_model.plural_name} for product <span class="light">&lsquo;{$item.name}&rsquo;</span></h3>
+  <h3>{$sub_model.plural_name} for {$item._model.name|lower} <span class="light">&lsquo;{$item.name}&rsquo;</span></h3>
   
   <form id="pageViewForm" method="get" action="">
     <input type="hidden" name="item_id" id="item_id_input" value="" />

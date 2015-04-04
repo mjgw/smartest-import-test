@@ -1,5 +1,5 @@
-x: <input type="text" name="item[{$property.id}][x]" value="{$value.x}" style="width:40px" />
-y: <input type="text" name="item[{$property.id}][y]" value="{$value.y}" style="width:40px" />
+<i class="fa fa-arrows-h" style="font-size:1.3em"></i> (x) <input type="text" name="item[{$property.id}][x]" value="{$value.x}" style="width:40px" />
+<i class="fa fa-arrows-v" style="font-size:1.3em"></i> (y) <input type="text" name="item[{$property.id}][y]" value="{$value.y}" style="width:40px" />
 orient from:
 <select name="item[{$property.id}][orient]" style="width:160px">
   <option value="TL"{if $value.orient == 'TL'} selected="selected"{/if}>Top left</option>

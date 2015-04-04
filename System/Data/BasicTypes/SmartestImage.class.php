@@ -722,10 +722,12 @@ class SmartestImage extends SmartestFile{
 	        case "height":
 	        return (int) $this->getHeight();
             
-	        case "retina_width":
+	        case "hd_width":
+            case "retina_width":
 	        return (int) ceil($this->getWidth()/2);
 	        
-	        case "retina_height":
+	        case "hd_height":
+            case "retina_height":
 	        return (int) ceil($this->getHeight()/2);
 	        
 	        case "is_portrait":
@@ -749,9 +751,15 @@ class SmartestImage extends SmartestFile{
             case "css_dimensions":
             return 'width:'.$this->getWidth().'px ;height:'.$this->getHeight().'px; ';
             
+            case "hd_css_dimensions":
+            case "css_dimensions_hd":
             case "retina_css_dimensions":
             case "css_dimensions_retina":
             return 'width:'.ceil($this->getWidth()/2).'px;height:'.ceil($this->getHeight()/2).'px;';
+            
+            case "css_hd_bg_and_dimensions":
+            case "css_retina_bg_and_dimensions":
+            return 'width:'.ceil($this->getWidth()/2).'px;height:'.ceil($this->getHeight()/2).'px;background-image:url(\''.$this->getWebPath().'\');background-size:'.ceil($this->getWidth()/2).'px '.ceil($this->getHeight()/2).'px';
             
             case "css_background_image":
             // $request_data = SmartestPersistentObject::get('request_data');
