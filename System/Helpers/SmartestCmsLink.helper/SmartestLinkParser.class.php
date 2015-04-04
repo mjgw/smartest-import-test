@@ -235,8 +235,6 @@ class SmartestLinkParser{
                 $l->setParameter('hash', $m[5]);
             }
             
-            // var_dump( $m );
-            
             /* if($m[2]){
                 $l->setParameter('page_ref_field_name', 'name');
                 $l->setParameter('page_ref_field_value', SmartestStringHelper::toSlug($m[3]));
@@ -245,9 +243,11 @@ class SmartestLinkParser{
                 return $l;
             } */
             
-            if(strpos($l->getParameter('destination'), '=') !== false){
-            
-                if(preg_match('/(meta)?page:((name|id|webid)=)?([\w_\$-]+)(:((name|id|webid)=)?([\w_\$-]+))?/i', $l->getParameter('destination'), $m)){
+            if(strpos($string, '=')){
+                
+                if(preg_match('/(meta)?page:((name|id|webid)=)?([\w_\$-]+)(:((name|id|webid)=)?([\w_\$-]+))?/i', $string, $m)){
+                    
+                    $l->setParameter('destination', $string);
                     
                     if(strlen($m[2])){
                         $l->setParameter('page_ref_field_name', $m[3]);
@@ -263,7 +263,8 @@ class SmartestLinkParser{
                     
                     $l->setParameter('format', SM_LINK_FORMAT_AUTO);
                     
-                    if(isset($m[5]) && strlen($m[5])){
+                    if(strlen($m[1]) && isset($m[5]) && strlen($m[5])){
+                        $l->setParameter('namespace', 'metapage');
                         if(strlen($m[6])){
                             if($m[7] == 'name'){
                                 $l->setParameter('item_ref_field_name', 'slug');
@@ -274,8 +275,12 @@ class SmartestLinkParser{
                             $l->setParameter('item_ref_field_name', 'slug');
                         }
                         $l->setParameter('item_ref_field_value', SmartestStringHelper::toSlug($m[8]));
+                    }else{
+                        $l->setParameter('namespace', 'page');
                     }
                 
+                }else{
+                    // regex did not match
                 }
             
             }else{

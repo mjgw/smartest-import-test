@@ -4364,6 +4364,7 @@ class Pages extends SmartestSystemApplication{
 		                        
 		                        $url->setItemId($item->getId());
 		                        $url->setUrl($url_string);
+                                $url->save();
     		                    
     	                    }
 
@@ -4379,12 +4380,13 @@ class Pages extends SmartestSystemApplication{
                     if($this->getRequestParameter('forward_to_default') && $this->getRequestParameter('forward_to_default') == '1'){
                         $url->setRedirectType($this->getRequestParameter('url_redirect_type'));
                     }
+                    
+                    $url->save();
 		        
 	            }
 	            
 	            SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} added the URL '{$url->getUrl()}' for page '{$page->getTitle()}'.", SmartestLog::USER_ACTION);
 	            
-		        $url->save();
 		        SmartestLog::getInstance('site')->log("{$this->getUser()} added URL '{$this->getRequestParameter('page_url')}' to page: {$page->getTitle()}.", SmartestLog::USER_ACTION);
 		        $this->addUserMessageToNextRequest("The new URL was successully added.", SmartestUserMessage::SUCCESS);
 		        

@@ -956,7 +956,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     			    $text = $this->renderLink($to, $link_params);
 			    } */
 			    
-			    $ph = new SmartestParameterHolder("Link Attributes: [".$to."]");
+                $ph = new SmartestParameterHolder("Link Attributes: [".$to."]");
 			    $ph->loadArray($link_params);
 			    
 			    $link = SmartestCmsLinkHelper::createLink($to, $ph);
