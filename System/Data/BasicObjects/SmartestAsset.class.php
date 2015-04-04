@@ -114,6 +114,9 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             case "size":
             return $this->getSize();
             
+            case "modified":
+            return $this->getModified();
+            
             case "owner":
             $o = new SmartestSystemUser;
 	        if($o->find($this->_properties['user_id'])){
@@ -340,6 +343,25 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    return $this->_type_info;
 	    
 	}
+    
+    public function getModified(){
+        
+        if($this->usesLocalFile() && is_file($this->getFullPathOnDisk())){
+            
+            $db_mtime = (int) parent::getModified();
+            $file_mtime = (int) filemtime($this->getFullPathOnDisk());
+            
+            if($file_mtime > $db_mtime){
+                $this->database->rawQuery('UPDATE Assets SET asset_modified='.$file_mtime.' WHERE asset_id="'.$this->getId().'" LIMIT 1');
+            }
+            
+            return max($db_mtime, $file_mtime);
+            
+        }else{
+            return parent::getModified();
+        }
+        
+    }
     
     public function getCategory(){
         

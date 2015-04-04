@@ -1666,8 +1666,8 @@ class Assets extends SmartestSystemApplication{
 		if($asset->find($asset_id)){
 		    
 		    // $this->setFormReturnUri();
-		    
-		    $data = $asset;
+            
+            $data = $asset;
 		    
 		    $comments = $asset->getComments();
 		    $this->send($comments, 'comments');
