@@ -8,7 +8,8 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
     
     public function __toString(){
         
-        return $this->_properties['value'];
+        // return $this->_properties['value'];
+        return $this->getValueObject()->__toString();
         
     }
     
@@ -55,6 +56,11 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
     
     public function getDataType(){
         // A few hoops to make sure new dropdown menu datatypes (as of r744) are never blank. SM_DATATYPE_SL_TEXT is the default datatype.
+        
+        if(!$this->getDropdownId()){
+            // throw new SmartestException('No dropdown ID');
+        }
+        
         if(strlen($this->_data_type)){
             return $this->_data_type;
         }elseif(is_object($this->_dropdown)){
@@ -67,9 +73,11 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
             }
             return $this->_data_type;
         }else{
-            $sql = "SELECT dropdown_datatype FROM DropDowns WHERE dropdown_id='".$this->getDropdownId()."' LIMIT 1";
+            $sql = "SELECT * FROM DropDowns WHERE dropdown_id='".$this->getDropdownId()."' LIMIT 1";
             $result = $this->database->queryToArray($sql);
             if(count($result)){
+                $this->_dropdown = new SmartestDropdown;
+                $this->_dropdown->hydrate($result[0]);
                 if(strlen($result[0]['dropdown_datatype'])){
                     $this->_data_type = $result[0]['dropdown_datatype'];
                     return $this->_data_type;
@@ -95,7 +103,7 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
         
         if(is_numeric($dropdown_id)){
             return $this->hydrateByValueWithDropdownId($v, $dropdown_id);
-        }else if(preg_match('/(\d+):([\w_-]+)/', $v, $matches)){
+        }else if(preg_match('/^(\d+):(.+)/', $v, $matches)){
             return $this->hydrateByValueWithDropdownId($matches[2], $matches[1]);
         }
         
@@ -113,14 +121,27 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
         // Todo: Once dropdown menus are types, different classes will need to be returned here depending on type
         // $class = SmartestDataUtility::getClassForDataType($this->getDatatype());
         // return new $class($this->_properties['value']);
+        // echo $this->getDatatype();
         return SmartestDataUtility::objectize($this->_properties['value'], $this->getDatatype());
     }
     
     public function hydrateFromFormData($v, $dropdown_id=null){
+        // var_dump($v);
+        // var_dump(preg_match('/^(\d+):(.+)/', $v, $matches));
+        // var_dump($matches);
+        // exit;
         if(is_numeric($dropdown_id)){
-            return $this->hydrateByValueWithDropdownId($v, $dropdown_id);
+            if(preg_match('/^(\d+):(.+)/', $v, $matches)){
+                return $this->hydrateByValueWithDropdownId($matches[2], $dropdown_id);
+            }else{
+                return $this->hydrateByValueWithDropdownId($v, $dropdown_id);
+            }
         }else{
-            return $this->searchForMatchingValue($v);
+            if(preg_match('/^(\d+):(.+)/', $v, $matches)){
+                return $this->hydrateByValueWithDropdownId($matches[2], $matches[1]);
+            }else{
+                return $this->searchForMatchingValue($v);
+            }
         }
     }
     
@@ -139,10 +160,14 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
             return '<option value="'.$this->_properties['value'].'" selected="selected">'.$this->_properties['label'].'</option>';
             
             case "value":
+            // var_dump($this->_properties['value']);
             return $this->getValueObject();
             
             case "label":
             return new SmartestString($this->_properties['label']);
+            
+            case "option_value":
+            return $this->getStorableFormat();
             
             case "dropdown":
             return $this->getDropdown();

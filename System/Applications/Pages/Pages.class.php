@@ -4277,11 +4277,11 @@ class Pages extends SmartestSystemApplication{
 		    $page_type = $page->getType();
 		    $is_valid_item = false;
 		    
-		    if($page_type == 'ITEMCLASS' || $page_type == 'SM_PAGETYPE_ITEMCLASS' || $page_type == 'SM_PAGETYPE_DATASET'){
+            if($page_type == 'ITEMCLASS' || $page_type == 'SM_PAGETYPE_ITEMCLASS' || $page_type == 'SM_PAGETYPE_DATASET'){
 		        
-		        if($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
+                if($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
 		            
-		            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                    if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
 		                
 		                if($page->getDatasetId() == $item->getModel()->getId()){
 		                    $this->send($item, 'item');
@@ -4293,8 +4293,8 @@ class Pages extends SmartestSystemApplication{
 		        }
 		        
 		    }
-		    
-		    // $ishomepage = $this->getRequestParameter('ishomepage');
+            
+            // $ishomepage = $this->getRequestParameter('ishomepage');
 		    $page_id = $page->getId();
 		    $page_info = $page;
 		    $site = $page->getSite();

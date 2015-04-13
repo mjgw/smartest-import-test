@@ -253,6 +253,19 @@ ul.modal-options-grid li#create-modal-option-site{
     background-image:url(../Images/create-new-site.png);
 }
 
+div.modal-error{
+    
+    border:2px solid #ff4411;
+    font-size:12px;
+    /* border:3px solid #f07878; */
+    background-color:#ffb6b6;
+    padding:5px;
+    margin:10px 0 10px 0;
+    border-radius:6px;
+    -moz-border-radius:6px;
+    
+}
+
 ul.file-thumbnails{
     margin:0px;
     padding:0px;

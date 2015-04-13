@@ -18,7 +18,7 @@ class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorab
     public function setValue($v){
         
         if(!strlen($v)){
-            $v = '#00f';
+            $v = '#ff9900';
         }
         
         if(preg_match(self::RGB_HEX_MATCH, $v, $matches)){
@@ -93,7 +93,11 @@ class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorab
     }
     
     public function hydrateFromStorableFormat($v){
-        return $this->setValue(substr($v, 1));
+        if($v{0} == '#'){
+            return $this->setValue(substr($v, 1));
+        }else{
+            return $this->setValue($v);
+        }
     }
     
     // and two from SmartestSubmittableValue
@@ -125,10 +129,11 @@ class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorab
     }
     
     public function toIntegers(){
-        $ints = new SmartestParameterHolder("Color ints");
+        $ints = new SmartestParameterHolder("Color ints for color ".$this->toHex());
         $ints->setParameter('red', $this->_red);
         $ints->setParameter('green', $this->_green);
         $ints->setParameter('blue', $this->_blue);
+        return $ints;
     }
     
     public function getRed(){
@@ -192,6 +197,9 @@ class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorab
             return 'background-color:#'.$this->toHex();
             case "css_rgb_bg":
             return 'background-color:rgb('.$this->toRgb256().')';
+            case "css_wtxt":
+            case "css_background_with_txt":
+            return 'background-color:#'.$this->toHex().'; color:'.(($this->getBrightness()->getValue() > 154) ? '#000' : '#fff');
             
         }
     }
@@ -200,7 +208,7 @@ class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorab
     public function offsetUnset($offset){}
     
     public function offsetExists($offset){
-        return in_array($offset, array('red', 'r', 'green', 'g', 'blue', 'b', 'hex', 'rgb', 'brightness', 'brightness_int', 'text_white', 'text_black', 'css', 'css_rgb', 'css_bg', 'css_bg_rgb'));
+        return in_array($offset, array('red', 'r', 'green', 'g', 'blue', 'b', 'hex', 'rgb', 'brightness', 'brightness_int', 'text_white', 'text_black', 'css', 'css_rgb', 'css_bg', 'css_bg_rgb', 'css_background_with_txt', 'css_wtxt'));
     }
     
 }

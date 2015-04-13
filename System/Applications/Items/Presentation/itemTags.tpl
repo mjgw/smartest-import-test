@@ -5,15 +5,27 @@
   <h3>Tags for {$model.name|lower}: <span class="light">{$item.name}</span></h3>
   <div class="instruction">Choose which tags this item is attached to. Some tags may not make sense for certain sites, but they can be ignored.</div>
   
-  <script type="text/javascript">
-  var TL = new Smartest.UI.TagsList();
-  </script>
-  
   <div style="text-align:justify">
   {foreach from=$tags item="tag"}
-    <a class="tag{if $tag.attached} selected{/if}" href="javascript:TL.toggleItemTagged({$item.id}, {$tag.id});" id="tag-link-{$tag.id}">{$tag.label}</a>
+    <a class="tag{if $tag.attached} selected{/if}" href="#toggle-tag" id="tag-link-{$tag.id}" data-tagid="{$tag.id}">{$tag.label}</a>
   {/foreach}
   </div>
+  
+  <script type="text/javascript">
+  
+  var itemId = '{$item.id}';
+  var TL = new Smartest.UI.TagsList();
+  
+  {literal}
+  $$('a.tag').each(function(a){
+    a.observe('click', function(evt){
+      evt.stop();
+      TL.toggleItemTagged(itemId,a.readAttribute('data-tagid'));
+    });
+  });
+  {/literal}
+  
+  </script>
   
 </div>
 

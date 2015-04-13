@@ -10,9 +10,18 @@
 
   <div id="edit-form-layout">
 
+{if $is_valid_item}
+    <div class="modal-error" style="display:none" id="urls-error">*</div>
+    
+    <div class="edit-form-row">
+      <div class="form-section-label">{$item._model.name} {$item._model.infn|lower}</div>
+      {$item.name}
+    </div>
+{/if}
+
     <div class="edit-form-row">
       <div class="form-section-label">New URL, not including leading '/'</div>
-      <input type="text" name="page_url" value="" />
+      <input type="text" name="page_url" value="" id="page-url-string" />
     </div>
     
     <div class="edit-form-row">
@@ -35,7 +44,7 @@
 {if $is_valid_item}
     <div class="edit-form-row">
       <div class="form-section-label">Applies to</div>
-      <select name="page_url_type">
+      <select name="page_url_type" id="page-url-type">
         <option value="SINGLE_ITEM">This {$item._model.name|lower} only</option>
         <option value="ALL_ITEMS">All {$item._model.plural_name|lower}</option>
       </select>
@@ -46,12 +55,43 @@
       <div class="buttons-bar">
         <img src="{$domain}Resources/System/Images/ajax-loader.gif" style="display:none" id="saver-gif" alt="" />
       	<input type="button" value="Cancel" onclick="MODALS.hideViewer();" />
-      	<input type="button" name="action" onclick="return saveNewPageUrl();" value="Save" />
+      	<input type="button" name="action" value="Save" id="save-button" />
       </div>
     </div>
 
   </div>
 
   </form>
+  
+{if $is_valid_item}
+  <script type="text/javascript">
+{literal}
+  $('save-button').observe('click', function(evt){
+    if($F('page-url-type') == 'ALL_ITEMS'){
+      if(/(:|\$)(name|id|long_id)/.match($F('page-url-string'))){
+        if($F('page-url-string').charAt(0)){
+          saveNewPageUrl();
+          $('urls-error').hide();
+        }else{
+          $('urls-error').update("The URL field cannot be blank");
+          $('urls-error').appear({duration:0.3});
+        }
+      }else{
+        evt.stop();
+        $('urls-error').update("No matching URL parts. The new URL must contain ':name', ':id' or ':long_id' in order to enable each item to be recognised.");
+      }
+    }else{
+      if($F('page-url-string').charAt(0)){
+        saveNewPageUrl();
+        $('urls-error').hide();
+      }else{
+        $('urls-error').update("The URL field cannot be blank");
+        $('urls-error').appear({duration:0.3});
+      }
+    }
+  });
+{/literal}
+  </script>
+{/if}
 
 </div>

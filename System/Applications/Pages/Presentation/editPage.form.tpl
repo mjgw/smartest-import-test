@@ -209,7 +209,7 @@
       
       // alert('adding listeners');
       
-      console.log($$('a.make_url_default').length);
+      // console.log($$('a.make_url_default').length);
       
       $$('a.delete_url').each(function(el){
         el.observe('click', function(e){
@@ -237,9 +237,9 @@
       });
     
       $$('a.make_url_default').each(function(el){
-        console.log($(el));
+        // console.log($(el));
         $(el).observe('click', function(e){
-          console.log('clicked');
+          // console.log('clicked');
           e.stop();
           // if(confirm('Are you sure you want to delete this URL?')){
             var urlId = el.readAttribute('data-urlid');
@@ -277,7 +277,7 @@
   	
     <script type="text/javascript">
     
-    var newUrlUrl = '{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&amp;item_id={$item.id}{/if}';
+    var newUrlUrl = '{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&item_id={$item.id}{/if}';
     
     {literal}
     $('new-url-button').observe('click', function(e){

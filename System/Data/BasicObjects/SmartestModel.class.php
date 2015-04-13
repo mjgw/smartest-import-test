@@ -355,6 +355,7 @@ class SmartestModel extends SmartestBaseModel{
 	        return $this->getColor();
 	        
 	        case "item_name_field_name":
+            case "infn":
 	        return $this->getItemNameFieldName();
 	        
 	        case "item_name_field_visible":
