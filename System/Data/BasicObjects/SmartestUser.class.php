@@ -249,12 +249,12 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
             return $this->_user_info;
 	        
 	        default:
-	        if(in_array($offset, array_keys($this->getModelPluralNames()))){
-                return $this->getCreditedItemsOnCurrentSite($this->_model_plural_names[$offset]);
+            if(parent::offsetExists($offset)){
+                return parent::offsetGet($offset);
             }else if($this->_user_info->hasParameter($offset)){
                 return $this->_user_info->getParameter($offset);
-            }else{
-                return parent::offsetGet($offset);
+            }else if(in_array($offset, array_keys($this->getModelPluralNames()))){
+                return $this->getCreditedItemsOnCurrentSite($this->_model_plural_names[$offset]);
             }
 	        
 	    }

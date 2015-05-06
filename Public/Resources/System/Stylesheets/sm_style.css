@@ -850,6 +850,17 @@ ul.objects-list > li input[type="text"]:focus{
     outline-width: 0;
 }
 
+ul.auto-fk-ipv-items{
+    list-style-type:none;
+    margin:0px;
+    padding:0px;
+}
+
+ul.auto-fk-ipv-items li{
+    display:inline-block;
+    margin:0 5px 5px 0;
+}
+
 /* ul.author-list{
     
 }

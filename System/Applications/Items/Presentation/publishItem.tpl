@@ -1,6 +1,6 @@
 <div id="work-area">
   
-  <h3>Publish options: {$item.name}</h3>
+  <h3>Publish options: {$item.editor_name}</h3>
   
   <form action="{$domain}{$section}/publishItem" method="post">
     

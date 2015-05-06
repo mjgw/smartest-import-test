@@ -2,7 +2,7 @@
 
 {load_interface file="edit_tabs.tpl"}
 
-<h3>Edit {$item._model.name|lower}: <span class="light">{$item.name}</span></h3>
+<h3>Edit {$item._model.name|lower}: <span class="light">{$item.editor_name}</span></h3>
 
 {if $item.deleted}<div class="warning">Warning: This {$item._model.name|strtolower} is currently in the trash.</div>{/if}
 

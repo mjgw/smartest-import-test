@@ -665,7 +665,11 @@ class SmartestResponse{
 		    if($this->_controller->getCurrentRequest()->getAction() == "preferences"){
 			    $this->_ui_template = SM_ROOT_DIR.SM_SYSTEM_SYS_TEMPLATES_DIR."Error/_prefsTemplateNotFound.tpl";
 		    }else{
-		        $this->_ui_template = SM_ROOT_DIR.SM_SYSTEM_SYS_TEMPLATES_DIR."Error/_subTemplateNotFound.tpl";
+                if($this->isSystemClass()){
+		            $this->_ui_template = SM_ROOT_DIR.SM_SYSTEM_SYS_TEMPLATES_DIR."Error/_subTemplateNotFound.tpl";
+                }else{
+                    $this->_ui_template = SM_ROOT_DIR.SM_SYSTEM_SYS_TEMPLATES_DIR."Error/_userClassSubTemplateNotFound.tpl";
+                }
 		    }
 			
 		}

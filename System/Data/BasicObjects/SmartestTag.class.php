@@ -460,14 +460,16 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             
         }
         
+        if(array_key_exists($offset, $this->_properties) || parent::offsetExists($offset)){
+            return parent::offsetGet($offset);
+        }
+        
         $du = new SmartestDataUtility;
         $models = $du->getModelPluralNamesLowercase();
         
         if(isset($models[$offset])){
             // Model-specific tagged items retrieval by model name
             return new SmartestArray($this->_getItems($this->getCurrentSiteId(), $models[$offset], false));
-        }else{
-            return parent::offsetGet($offset);
         }
         
     }

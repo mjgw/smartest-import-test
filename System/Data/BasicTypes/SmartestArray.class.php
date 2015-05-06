@@ -103,6 +103,7 @@ class SmartestArray implements ArrayAccess, IteratorAggregate, Countable, Smarte
             case "_data":
             case "_items":
             case "_objects":
+            case "_values":
             return $this->getData();
             case "_count":
             return count($this->_data);

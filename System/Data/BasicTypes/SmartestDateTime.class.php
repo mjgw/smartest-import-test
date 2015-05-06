@@ -32,16 +32,18 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     
     public function setValue($v){
         
+        // print_r($v);
+        
         if($v == self::NOW){
             $this->_value = time();
             $this->_sync_value_to_now = true;
             return true;
-        }else if($v == self::NEVER){
+        }else if($v == self::NEVER || $v == '0' || !$v){
             $this->_is_never = true;
         }else if(is_array($v)){
             $this->setValueFromUserInputArray($v);
             return true;
-        }else if(is_numeric($v)){
+        }else if(is_numeric($v) && $v != '0'){
             $this->_value = (int) $v;
             return true;
         }else if(strlen($v) == 19){ // this is the fastest way to check for the format YYYY-MM-DD hh:ii:ss
@@ -84,8 +86,11 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     }
     
     public function getUnixFormat(){
+        
+        // var_dump($this->_is_never);
+        
         if($this->_is_never){
-            return null;
+            return 0;
         }
         
         if($this->_sync_value_to_now){
@@ -102,6 +107,10 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     }
     
     public function getNowDeltaFormatted(){
+        
+        if($this->_is_never){
+            return 'Never';
+        }
         
         // get delta between $time and $currentTime
         $delta = abs(time() - $this->_value);
@@ -184,7 +193,7 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     public function getStorableFormat(){
         
         if($this->_is_never){
-            return self::NEVER;
+            return '0';
         }
         
         if($this->_sync_value_to_now){
@@ -206,6 +215,12 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     
     public function hydrateFromFormData($v){
         
+        if(isset($v['is_never']) && (bool) $v['is_never']){
+            $this->_is_never = true;
+            $this->_value = 0;
+            return true;
+        }
+        
         if(!is_array($v)){
             return $this->setValue($v);
         }
@@ -213,19 +228,19 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
         if(isset($v['h'])){
             $hour = $v['h'];
         }else{
-            $hour = 0;
+            $hour = 1;
         }
         
         if(isset($v['i'])){
             $minute = $v['i'];
         }else{
-            $minute = 0;
+            $minute = 1;
         }
         
         if(isset($v['s'])){
             $second = $v['s'];
         }else{
-            $second = 0;
+            $second = 1;
         }
         
         if(isset($v['Y'])){
@@ -295,7 +310,7 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
 	        
 	        case 'unix':
 	        case 'raw':
-	        return $this->_value;
+	        return $this->getUnixFormat();
 	        
 	        case 'mysql_day':
 	        return date('Y-m-d', $this->_value);
@@ -307,20 +322,27 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
 	        return date($this->_day_format, $this->_value);
 	        
 	        case 'time_only':
-	        return date($this->_time_format, $this->_value);
+            if($this->_is_never){
+                return 'Never'; 
+            }else{
+                return date($this->_time_format, $this->_value);
+            }
 	        
 	        case 'month_only':
 	        return date('F Y', $this->_value);
 	        
 	        case 'in_past':
 	        case 'has_passed':
-	        return new SmartestBoolean(time() > $this->_value);
+	        return new SmartestBoolean(!$this->_is_never && time() > $this->_value);
 	        
 	        case 'in_future':
-	        return new SmartestBoolean(time() < $this->_value);
+	        return new SmartestBoolean(!$this->_is_never && time() < $this->_value);
 	        
 	        case 'now_delta_raw':
 	        return $this->getNowDeltaRaw();
+            
+            case 'is_never':
+            return $this->_is_never;
 	        
 	        case 'now_delta_formatted':
 	        return $this->getNowDeltaFormatted();

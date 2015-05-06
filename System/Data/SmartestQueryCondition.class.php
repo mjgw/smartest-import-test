@@ -11,6 +11,12 @@ class SmartestQueryCondition{
         
         if($value instanceof SmartestStorableValue){
             $this->_value = $value;
+        }elseif(is_array($value)){
+            if($operator == SmartestQuery::IN){
+                $this->_value = $value;
+            }else{
+                throw new SmartestException("SmartestQueryCondition can only accept array values when the operator is the 'IN' (SmartestQuery::IN) operator");
+            }
         }else{
             throw new SmartestException("SmartestQueryCondition can only accept values that implement SmartestStorableValue");
         }
@@ -101,8 +107,33 @@ class SmartestQueryCondition{
             case 23:
             // Right now or in the future - ie great than or equal to time() Only used for chronological values
             return " >= '".time()."'";
+            
+            case SmartestQuery::IN:
+            return " IN ('".implode("','", $this->sqlIzeArray($this->_value))."') ";
 			
         }
+        
+    }
+    
+    public function sqlIzeArrayValue($value){
+        
+        if(is_object($value) && $value instanceof SmartestStorableValue){
+            return $value->getStorableFormat();
+        }else{
+            return $value;
+        }
+        
+    }
+    
+    public function sqlIzeArray($value){
+        
+        $sqlized_values = array();
+        
+        foreach($value as $v){
+            $sqlized_values[] = $this->sqlIzeArrayValue($v);
+        }
+        
+        return $sqlized_values;
         
     }
     

@@ -96,24 +96,40 @@ class SmartestQuery{
 	    if(isset($this->_properties[$property_id])){
 	        $p = $this->_properties[$property_id];
 	        
-	        try{
-	            if($value_obj = SmartestDataUtility::objectizeFromNewRawDataGivenToItemPropertyValue($value, $p->getDataType(), $p->getForeignKeyFilter())){
-	                $c = new SmartestQueryCondition($value_obj, $p, $operator);
-	                $this->conditions[] = $c;
-	            }else{
-	                // value not understood - log and use SmartestString?
-	                $value_obj = new SmartestString($value);
-	                $c = new SmartestQueryCondition($value_obj, $p, $operator);
-	                $this->conditions[] = $c;
-	            }
-	        }catch(SmartestException $e){
-	            // value not understood - log and skip?
-	            
-	            /* if(is_array()){
-	                
-	            } */
-	            // echo "value ".$value." not understood for property ID ".$property_id;
-	        }
+            if(is_array($value) && $operator == self::IN){
+                
+                $objectized_values = array();
+            
+                foreach($value as $v){
+                    try{
+                        $v = SmartestDataUtility::objectizeFromNewRawDataGivenToItemPropertyValue($v, $p->getDataType(), $p->getForeignKeyFilter());
+                    }catch(SmartestException $e){
+                        // ERROR MESSAGE
+                    }
+                    $objectized_values[] = $v;
+                }
+                
+                $c = new SmartestQueryCondition($objectized_values, $p, $operator);
+                $this->conditions[] = $c;
+                
+            }else{
+            
+    	        try{
+    	            if($value_obj = SmartestDataUtility::objectizeFromNewRawDataGivenToItemPropertyValue($value, $p->getDataType(), $p->getForeignKeyFilter())){
+    	                $c = new SmartestQueryCondition($value_obj, $p, $operator);
+    	                $this->conditions[] = $c;
+    	            }else{
+    	                // value not understood - log and use SmartestString?
+    	                $value_obj = new SmartestString($value);
+    	                $c = new SmartestQueryCondition($value_obj, $p, $operator);
+    	                $this->conditions[] = $c;
+    	            }
+    	        }catch(SmartestException $e){
+    	            // value not understood - log and skip?
+    	            // echo "value ".$value." not understood for property ID ".$property_id;
+    	        }
+            
+            }
 	        
 	    }else if($property_id == SmartestCmsItem::NAME || $property_id == SmartestCmsItem::WEB_ID){
 	        
@@ -123,7 +139,24 @@ class SmartestQuery{
 	        $c = new SmartestQueryCondition($value_obj, $p, $operator);
 	        $this->conditions[] = $c;
 	        
-	    }else if($property_id == SmartestCmsItem::ID || $property_id == SmartestCmsItem::NUM_COMMENTS || $property_id == SmartestCmsItem::NUM_HITS || $property_id == SmartestCmsItem::AVERAGE_RATING){
+	    }else if($property_id == SmartestCmsItem::ID){
+            
+            if($operator == self::IN && is_array($value)){
+            
+                $c = new SmartestQueryCondition($value, $p, $operator);
+                $this->conditions[] = $c;
+            
+            }else{
+            
+                $value_obj = new SmartestNumeric($value);
+	            $p = new SmartestPseudoItemProperty;
+	            $p->setId($property_id);
+	            $c = new SmartestQueryCondition($value_obj, $p, $operator);
+	            $this->conditions[] = $c;
+            
+            }
+            
+        }else if($property_id == SmartestCmsItem::NUM_COMMENTS || $property_id == SmartestCmsItem::NUM_HITS || $property_id == SmartestCmsItem::AVERAGE_RATING){
 	        
 	        $value_obj = new SmartestNumeric($value);
 	        $p = new SmartestPseudoItemProperty;
@@ -138,10 +171,19 @@ class SmartestQuery{
 	        $c = new SmartestQueryCondition(new SmartestString($value), $p, $operator);
 	        $this->conditions[] = $c;
 	        
-	        /* echo $property_id.' ';
-	        echo $value.' ';
-	        echo $operator.' '; */
+            /* }elseif($operator == self::IN && is_array($value)){
 	        
+            $objectized_values = array();
+            
+            foreach($value as $v){
+                try{
+                    $v = SmartestDataUtility::objectizeFromNewRawDataGivenToItemPropertyValue($v, $p->getDataType(), $p->getForeignKeyFilter());
+                }catch(SmartestException $e){
+                    
+                }
+                $objectized_values[] = $v;
+            } */
+            
         }else{
 	        // unknown property ID - throw exception?
 	    }
