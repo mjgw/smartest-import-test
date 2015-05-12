@@ -1,10 +1,9 @@
   <div class="edit-form-row">
     <div style="width:100%" id="text_window">
       <textarea name="content" id="tpl_textArea" wrap="virtual"></textarea>
+      <span class="form-hint">Editor powered by TinyMCE 4</span>
     </div>
   </div>
-
-  {* <div id="uploader_link" class="special-box">or, alternatively, <a href="javascript:showUploader();">upload a file</a>.</div> *}
 
 <!--<script language="javascript" type="text/javascript" src="{$domain}Resources/System/Javascript/tiny_mce/tiny_mce.js"></script>-->
 <script src="{$domain}Resources/System/Javascript/tinymce4/tinymce.min.js"></script>

@@ -11,7 +11,9 @@ String.prototype.trim = function(){
 
 String.prototype.toVarName = function(){ 
 	var replaceString = this.replace(/[\s_,\.@-]+/g, '_');
+  replaceString = replaceString.replace(/\s?&\s?/g, '_and_');
 	replaceString = replaceString.replace(/[\'\"]+/g, '');
+  replaceString = replaceString.replace(/[^\w_]+/g, '');
 	var trimmed = replaceString.trim();
 	var lc = trimmed.toLowerCase();
 	return lc;

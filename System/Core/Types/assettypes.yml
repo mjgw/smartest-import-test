@@ -38,7 +38,7 @@ type:
     large_icon: textile_file.png
     input_options:
       - SM_ASSETINPUTTYPE_DIRECT_INPUT
-    input_panel: add.plain_text.tpl
+    input_panel: add.textile_text.tpl
     render:
       template: System/Presentation/WebPageBuilder/display.plain_text.tpl
     storage:

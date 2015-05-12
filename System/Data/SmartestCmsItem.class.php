@@ -207,7 +207,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    }
         
         if(is_array($this->_many_to_one_sub_models) && array_key_exists($offset, $this->_many_to_one_sub_models)){
-            return $this->getSubModelItems($this->_many_to_one_sub_models[$offset]);
+            return new SmartestArray($this->getSubModelItems($this->_many_to_one_sub_models[$offset]));
         }
 	    
 	    if($this->_item->offsetExists($offset)){

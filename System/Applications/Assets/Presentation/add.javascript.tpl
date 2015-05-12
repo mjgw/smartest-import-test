@@ -14,12 +14,23 @@
   <div class="form-section-label">File Contents</div>
   <div class="textarea-holder">
     <textarea name="content" id="tpl_textArea" wrap="virtual">// Created by {$_user.full_name}</textarea>
+    <span class="form-hint">Editor powered by CodeMirror</span>
   </div>
 </div>
 
+  <script type="text/javascript">
+
+  var myCodeMirror = CodeMirror.fromTextArea($('tpl_textArea'), {ldelim}
+      lineNumbers: true,
+      mode: "javascript",
+      lineWrapping: true
+    {rdelim});
+  
+  </script>
+
 <!--<div id="uploader_link" class="special-box">or, alternatively,
   <a href="javascript:showUploader();">upload a file</a>.
-</div>-->
+</div>
 
 <script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
 
@@ -31,4 +42,4 @@
   height: '300px',
   path: "{$domain}Resources/System/Javascript/CodeMirror-0.65/js/"
 {literal}  }); {/literal}
-</script>
+</script>-->

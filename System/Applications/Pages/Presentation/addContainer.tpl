@@ -35,7 +35,7 @@ document.observe('dom:loaded', function(){
 
 <div id="work-area">
 
-<h3>Add a New Container</h3>
+<h3>Add a new container</h3>
 
 <form action="{$domain}{$section}/insertContainer" method="post" style="margin:0px" id="new-container-form">
   

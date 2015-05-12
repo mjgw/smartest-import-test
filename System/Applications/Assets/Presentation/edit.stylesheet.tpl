@@ -39,6 +39,7 @@
     <div class="form-section-label">File contents</div>
     <div class="textarea-holder">
       <textarea name="asset_content" id="tpl_textArea" wrap="virtual" >{$textfragment_content}</textarea>
+      <span class="form-hint">Editor powered by CodeMirror</span>
     </div>
   </div>
   
@@ -50,7 +51,19 @@
     {/if}
   </div>
   
-  <script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
+  <script type="text/javascript">
+
+  var myCodeMirror = CodeMirror.fromTextArea($('tpl_textArea'), {ldelim}
+      lineNumbers: true,
+      mode: "css",
+  {if !$allow_save}    readOnly: true,
+  {/if}
+      lineWrapping: true
+    {rdelim});
+  
+  </script>
+  
+  <!--<script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
 
   <script type="text/javascript">
   {literal}  var editor = new CodeMirror.fromTextArea('tpl_textArea', {{/literal}
@@ -60,6 +73,6 @@
     height: '300px',
     path: "{$domain}Resources/System/Javascript/CodeMirror-0.65/js/"
   {literal}  }); {/literal}
-  </script>
+  </script>-->
   
 {if $allow_save}</form>{/if}

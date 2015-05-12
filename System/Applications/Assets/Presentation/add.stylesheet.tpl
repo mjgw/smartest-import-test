@@ -24,14 +24,25 @@
     <div class="form-section-label">Add your CSS here:</div>
     <div class="textarea-holder">
       <textarea name="content" id="tpl_textArea" wrap="virtual"></textarea>
+      <span class="form-hint">Editor powered by CodeMirror</span>
     </div>
   </div>
+  
+  <script type="text/javascript">
+
+  var myCodeMirror = CodeMirror.fromTextArea($('tpl_textArea'), {ldelim}
+      lineNumbers: true,
+      mode: "css",
+      lineWrapping: true
+    {rdelim});
+  
+  </script>
   
   <!--<div id="uploader_link" class="special-box">or, alternatively,
     <a href="javascript:showUploader();">upload a file</a>.
   </div>-->
   
-  <script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
+  <!--<script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
 
   <script type="text/javascript">
   {literal}  var editor = new CodeMirror.fromTextArea('tpl_textArea', {{/literal}
@@ -41,4 +52,4 @@
     height: '400px',
     path: "{$domain}Resources/System/Javascript/CodeMirror-0.65/js/"
   {literal}  }); {/literal}
-  </script>
+  </script>-->

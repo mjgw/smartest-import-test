@@ -1,3 +1,53 @@
+<script type="text/javascript">
+{literal}
+
+var CM;
+
+var makeAttachment = function(){
+  addAttachmentTag(prompt('Please enter a name for the attachment'));  
+}
+
+var addAttachmentTag = function(attachmentName){  
+  CM.replaceSelection("\n"+'<?sm:attachment name="'+attachmentName.toVarName()+'":?>'+"\n");
+}
+  
+/* var insertAtCaret = function (areaId, text) {
+    var txtarea = document.getElementById(areaId);
+    var scrollPos = txtarea.scrollTop;
+    var strPos = 0;
+    var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ? 
+        "ff" : (document.selection ? "ie" : false ) );
+    if (br == "ie") { 
+        txtarea.focus();
+        var range = document.selection.createRange();
+        range.moveStart ('character', -txtarea.value.length);
+        strPos = range.text.length;
+    }
+    else if (br == "ff") strPos = txtarea.selectionStart;
+
+    var front = (txtarea.value).substring(0,strPos);  
+    var back = (txtarea.value).substring(strPos,txtarea.value.length); 
+    txtarea.value=front+text+back;
+    strPos = strPos + text.length;
+    if (br == "ie") { 
+        txtarea.focus();
+        var range = document.selection.createRange();
+        range.moveStart ('character', -txtarea.value.length);
+        range.moveStart ('character', strPos);
+        range.moveEnd ('character', 0);
+        range.select();
+    }
+    else if (br == "ff") {
+        txtarea.selectionStart = strPos;
+        txtarea.selectionEnd = strPos;
+        txtarea.focus();
+    }
+    txtarea.scrollTop = scrollPos;
+} */
+  
+{/literal}
+</script>
+
 <div id="work-area">
   
   {load_interface file="edit_asset_tabs.tpl"}
@@ -18,6 +68,10 @@
       
       <div class="special-box">Are you trying to include images in this text as attachments? {help id="assets:attachments"}read this guide{/help}</div>
       
+      <a class="button" href="#add-attachment" onclick="makeAttachment(); return false;">Add an attachment</a>
+      
+      <div class="breaker" style="height:10px"></div>
+      
       <div class="textarea-holder" style="width:100%">
           <textarea name="asset_content" id="tpl_textArea" wrap="virtual" style="width:100%;padding:0">{$textfragment_content}</textarea>
           <span class="form-hint">Editor powered by CodeMirror</span>
@@ -32,7 +86,17 @@
 
   </form>
   
-  <script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  {literal}
+  CM = CodeMirror.fromTextArea($('tpl_textArea'), {
+      lineNumbers: true,
+      mode: "htmlmixed",
+      lineWrapping: true
+    });
+  {/literal}
+  </script>
+  
+  <!--<script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
 
   <script type="text/javascript">
   {literal}  var editor = new CodeMirror.fromTextArea('tpl_textArea', {{/literal}
@@ -42,7 +106,7 @@
     height: '300px',
     path: "{$domain}Resources/System/Javascript/CodeMirror-0.65/js/"
   {literal}  }); {/literal}
-  </script>
+  </script>-->
   
 </div>
 

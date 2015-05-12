@@ -3784,7 +3784,7 @@ class Pages extends SmartestSystemApplication{
         if($page->smartFind($page_webid)){
             
             $page->setDraftMode(true);
-            
+            $this->setTitle('Define list parameters');
             $list = new SmartestCmsItemList;
             
             if($list->load($list_name, $page, true)){
@@ -3799,6 +3799,7 @@ class Pages extends SmartestSystemApplication{
             $this->send($list->getDraftSetId(), 'set_id');
             $this->send($list, 'list');
             $this->send($list_name, 'list_name');
+            $this->send(is_writable(SM_ROOT_DIR.'Presentation/Layouts/'), 'can_create_template');
             
             $alh = new SmartestAssetsLibraryHelper;
             $this->send($alh->getAssetsByTypeCode('SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE', $this->getSite()->getId()), 'compound_list_templates');
@@ -3872,7 +3873,7 @@ class Pages extends SmartestSystemApplication{
             $list->setMaximumLength((int) $this->getRequestParameter('list_maximum_length'));
             $list->setTItle($this->getRequestParameter('list_title'));
             
-            if($list_type == 'SM_LIST_ARTICULATED'){
+            /* if($list_type == 'SM_LIST_ARTICULATED'){
             
                 $templates = SmartestFileSystemHelper::load(SM_ROOT_DIR.'Presentation/ListItems/');
             
@@ -3892,15 +3893,49 @@ class Pages extends SmartestSystemApplication{
                     $list->setDraftTemplateFile($this->getRequestParameter('main_template'));
                 }
             
-            }else{
+            }else{ */
                 
                 if(is_numeric($this->getRequestParameter('dataset_id'))){
-                    $list->setDraftSetId((int) $this->getRequestParameter('dataset_id'));
+                    
+                    $dataset_id = $this->getRequestParameter('dataset_id');
+                    $set = new SmartestCmsItemSet;
+                    
+                    if($set->find($dataset_id)){
+                        $list->setDraftSetId((int) $this->getRequestParameter('dataset_id'));
+                        $model = $set->getModel();
+                    }else{
+                        $this->addUserMessageToNextRequest('The selected set or items could not be found.', SmartestUserMessage::ERROR);
+                    }
                 }
                 
-                $list->setDraftTemplateFile($this->getRequestParameter('art_main_template'));
+                if($this->getRequestParameter('art_main_template') == 'NEW'){
+                    
+                    $template_contents = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Install/Samples/simple_list_template.tpl');
+                    $template_intended_path = SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Layouts/list_'.$list->getName().'.tpl');
+                    $template_contents = str_replace('%LOCATION%', $template_intended_path, $template_contents);
+                    $template_contents = str_replace('%LISTNAME%', $list->getName(), $template_contents);
+                    SmartestFileSystemHelper::save($template_intended_path, $template_contents);
+                    
+                    // Create template record
+                    $t = new SmartestTemplateAsset;
+                    $t->setType('SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE');
+                    $t->setSiteId($this->getSite()->getId());
+                    $t->setCreated(time());
+                    $t->setUserId($this->getUser()->getId());
+                    $t->setWebId(SmartestStringHelper::random(32));
+                    $t->setLabel('Template for list '.$list->getName());
+                    $t->setStringId('list_'.$list->getName());
+                    if(is_object($model)) $t->setModelId($model->getId());
+                    $t->setUrl(SmartestFileSystemHelper::baseName($template_intended_path));
+                    $t->save();
+                    
+                    $list->setDraftTemplateFile($t->getUrl());
+                    
+                }else{
+                    $list->setDraftTemplateFile($this->getRequestParameter('art_main_template'));
+                }
                 
-            }
+            // }
             
             SmartestLog::getInstance('site')->log($log_message, SmartestLog::USER_ACTION);
             
@@ -4001,6 +4036,8 @@ class Pages extends SmartestSystemApplication{
 	        $this->send(false, 'allow_continue');
 	    }else{
 	        
+            $this->send(SmartestStringHelper::toTitleCaseFromVarName($new_name), 'suggested_label');
+            
 	        // get templates
 	        $assetshelper = new SmartestAssetsLibraryHelper;
 	        $templates = $assetshelper->getAssetsByTypeCode('SM_ASSETTYPE_ITEMSPACE_TEMPLATE', $this->getSite()->getId());
@@ -4010,6 +4047,9 @@ class Pages extends SmartestSystemApplication{
 	        $du = new SmartestDataUtility;
 	        $sets = $du->getDataSets(false, $this->getSite()->getId());
 	        $this->send($sets, 'sets');
+            
+            // Check other things
+            $this->send(is_writable(SM_ROOT_DIR.'Presentation/Layouts/'), 'can_create_template');
 	        
 	        $this->send($new_name, 'name');
 	        
@@ -4035,14 +4075,50 @@ class Pages extends SmartestSystemApplication{
 	            $item_space->setSiteId($this->getSite()->getId());
 	        
 	            $dataset_id = (int) $this->getRequestParameter('itemspace_dataset_id');
-	            $item_space->setDataSetId($dataset_id);
+                $dataset = new SmartestCmsItemSet;
+                
+                if($dataset->find($dataset_id)){
+                    $item_space->setDataSetId($dataset_id);
+                    $model = $dataset->getModel();
+                }else{
+                    $this->addUserMessageToNextRequest('The chosen set was not recognized.', SmartestUserMessage::ERROR);
+                    $this->formForward();
+                }
 	        
 	            $use_template = $this->getRequestParameter('itemspace_use_template');
 	            $item_space->setUsesTemplate($use_template);
 	        
 	            if($use_template){
-	                $template_id = (int) $this->getRequestParameter('itemspace_template_id');
-    	            $item_space->setTemplateAssetId($template_id);
+                    
+                    $template_id = $this->getRequestParameter('itemspace_template_id');
+                    
+                    if($template_id == 'NEW'){
+                        
+                        $template_contents = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Install/Samples/itemspace_template.tpl');
+                        $template_intended_path = SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Layouts/itemspace_'.$new_name.'.tpl');
+                        $template_contents = str_replace('%LOCATION%', $template_intended_path, $template_contents);
+                        $template_contents = str_replace('%MODELNAME%', $model->getName(), $template_contents);
+                        SmartestFileSystemHelper::save($template_intended_path, $template_contents);
+                        
+                        // Create template record
+                        $t = new SmartestTemplateAsset;
+                        $t->setType('SM_ASSETTYPE_ITEMSPACE_TEMPLATE');
+                        $t->setSiteId($this->getSite()->getId());
+                        $t->setCreated(time());
+                        $t->setUserId($this->getUser()->getId());
+                        $t->setWebId(SmartestStringHelper::random(32));
+                        $t->setLabel('Template for itemspace '.$item_space->getLabel());
+                        $t->setStringId('itemspace_'.$item_space->getName());
+                        $t->setModelId($model->getId());
+                        $t->setUrl(SmartestFileSystemHelper::baseName($template_intended_path));
+                        $t->save();
+                        
+                        $item_space->setTemplateAssetId($t->getId());
+                        
+                    }elseif(is_numeric($template_id)){
+	                    $template_id = (int) $this->getRequestParameter('itemspace_template_id');
+    	                $item_space->setTemplateAssetId($template_id);
+                    }
 	            }
 	            
 	            SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} created an itemspace with the name '{$item_space->getName()}'.", SmartestLog::USER_ACTION);

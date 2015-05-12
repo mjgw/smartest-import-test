@@ -660,6 +660,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	                $this->renderPage();
                 }else{
                     // page designated as user page doesn't exist, or no page has been designated
+                    $this->renderNotFoundPage();
                 }
 	        }else{
 	            // User not recognised
@@ -672,6 +673,13 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	        }
         }
 	}
+	
+	/* public function imageServer(){
+	    
+	    $requested_file_name = $this->getRequestParameter('image_file');
+	    $requested_format = $this->getRequestParameter('image_file', 'original');
+	    
+	} */
 	
 	public function buildRobotsTxtFile(){
 	    header('Content-type: text/plain');

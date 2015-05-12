@@ -28,6 +28,8 @@
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_tabs.css" />
     {* <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_buttons.css" /> *}
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_modals.css" />
+    <link rel="stylesheet" href="{$domain}Resources/System/Javascript/CodeMirror-5.2/lib/codemirror.css">
+    <link rel="stylesheet" href="{$domain}Resources/System/Javascript/CodeMirror-5.2/addon/display/fullscreen.css">
 		
 		<script type="text/javascript" language="javascript">
 
@@ -39,19 +41,26 @@
        
     </script>
     
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/scriptaculous/lib/prototype.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/scriptaculous/src/effects.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/scriptaculous/src/controls.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/scriptaculous/src/slider.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/syntacticx-livepipe-ui/src/livepipe.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/syntacticx-livepipe-ui/src/scrollbar.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/jscolor/jscolor.js"></script>
-                                                                                                  
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/smartest/interface.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/smartest/treeview.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/smartest/help.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/smartest/prefs.js"></script>
-    <script type="text/javascript" language="javascript" src="{$domain}Resources/System/Javascript/vsclabs/vsc-scrollwatcher.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/scriptaculous/lib/prototype.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/scriptaculous/src/effects.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/scriptaculous/src/controls.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/scriptaculous/src/slider.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/syntacticx-livepipe-ui/src/livepipe.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/syntacticx-livepipe-ui/src/scrollbar.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/jscolor/jscolor.js"></script>
+                                                                            
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/interface.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/treeview.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/help.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/prefs.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/vsclabs/vsc-scrollwatcher.js"></script>
+    
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/CodeMirror-5.2/lib/codemirror.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/CodeMirror-5.2/mode/css/css.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/CodeMirror-5.2/mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/CodeMirror-5.2/mode/xml/xml.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/CodeMirror-5.2/mode/htmlmixed/htmlmixed.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/CodeMirror-5.2/mode/htmlembedded/htmlembedded.js"></script>
     
     <script type="text/javascript">
       {literal}

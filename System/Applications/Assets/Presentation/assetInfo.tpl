@@ -66,7 +66,7 @@
         <td>{$asset.modified|date_format:"%A %B %e, %Y, %l:%M%p"}</span></td>
       </tr>
       {/if}
-      {if $asset.is_image}
+      {if $asset.is_binary_image}
       <tr>
         <td style="width:150px;background-color:#fff" class="field-name">Preview</td>
         <td>

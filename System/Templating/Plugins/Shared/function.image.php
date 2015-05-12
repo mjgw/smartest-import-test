@@ -7,7 +7,7 @@
  */
 
 function smarty_function_image($params, &$smarty){
-	if(@$params['file']){
+	if(isset($params['file'])){
 		return $smarty->getImage($params);
 	}else{
 		return null;

@@ -30,6 +30,11 @@ div{
  	font-family: lucida grande,verdana,sans-serif;
 }
 
+div.CodeMirror, div.CodeMirror div{
+    font-size:0.95rem;
+ 	font-family: monospace;
+}
+
 a{
     outline: none;
     color:#FF9900;

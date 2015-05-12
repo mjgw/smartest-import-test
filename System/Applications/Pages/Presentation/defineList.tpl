@@ -52,15 +52,18 @@ function adjustListOptions(currentListValue){
     <div class="edit-form-row">
       <div class="form-section-label">Maximum length</div>
       <input type="text" name="list_maximum_length" value="{$list.maximum_length}" />
+      <div class="form-hint">Limit the list to how many items? Zero or no value means unlimited.</div>
     </div>
     
-    <div class="edit-form-row">
+    {* <div class="edit-form-row">
       <div class="form-section-label">Type</div>
       <select name="dataset_type" onchange="adjustListOptions(this.value)">
         <option value="SM_LIST_SIMPLE"{if $list.type == 'SM_LIST_SIMPLE'} selected="selected"{/if}>Single container template, self-contained</option>
         <option value="SM_LIST_ARTICULATED"{if $list.type == 'SM_LIST_ARTICULATED'} selected="selected"{/if}>Separate header, repeating and footer templates</option>
       </select>
-    </div>
+    </div> *}
+    
+    <input type="hidden" name="dataset_type" value="SM_LIST_SIMPLE" />
     
     <div id="simple_options"{if $list.type == 'SM_LIST_ARTICULATED'} style="display:none"{/if}>
     
@@ -70,6 +73,7 @@ function adjustListOptions(currentListValue){
           {foreach from=$compound_list_templates item="ct"}
           <option value="{$ct.url}" {if $main_template == $ct.url} selected="selected"{/if}>{$ct.url}</option>
           {/foreach}
+          {if $can_create_template}<option value="NEW">Create new template...</option>{/if}
         </select>
       </div>
     

@@ -102,7 +102,7 @@ function validateUploadSuffix(){
 
 <div id="work-area">
   
-  <h3>Add a new {$new_asset_type_info.label|strtolower} file to the repository</h3>
+  <h3>Add a new {$new_asset_type_info.label|strtolower} file to the media library</h3>
   
   {if $require_type_selection}
   

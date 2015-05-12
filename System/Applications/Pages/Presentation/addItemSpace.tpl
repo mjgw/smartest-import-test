@@ -8,6 +8,11 @@
   <form action="{$domain}{$section}/insertItemSpace" method="post">
     
     <div class="edit-form-row">
+      <div class="form-section-label">Label</div>
+      <input type="text" name="itemspace_label" value="{$suggested_label}" />
+    </div>
+    
+    <div class="edit-form-row">
       <div class="form-section-label">Name</div>
       {$name}<input type="hidden" name="itemspace_name" value="{$name}" />
     </div>
@@ -24,13 +29,18 @@
     <div class="edit-form-row">
       <div class="form-section-label">Use specific template?</div>
       {if empty($templates)}
-      <span class="form-hint">No itemspace templates are currently available</span>
+      <span class="form-hint">No itemspace templates are currently available</span><br />
+      {if $can_create_template}
+      <input type="checkbox" name="itemspace_use_template" value="1" id="use-template-checkbox" /> <label for="use-template-checkbox">Create a new template</label>
+      <input type="hidden" name="itemspace_template_id" value="NEW" />
+      {/if}
       {else}
       <input type="checkbox" name="itemspace_use_template" value="1" />
       <select name="itemspace_template_id">
         {foreach from=$templates item="template"}
         <option value="{$template.id}">{$template.url}</option>
         {/foreach}
+        {if $can_create_template}<option value="NEW">Create a new template for this itemspace</option>{/if}
       </select>
       {/if}
     </div>

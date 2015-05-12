@@ -1,3 +1,9 @@
+<script type="text/javascript">
+  
+var CM;
+  
+</script>
+
 {if $allow_save}<form action="{$domain}{$section}/updateAsset" method="post" name="newJscr" enctype="multipart/form-data">{/if}
     
     <input type="hidden" name="asset_id" value="{$asset.id}" />
@@ -9,6 +15,8 @@
       <input type="text" name="params[{$parameter_name}]" value="{$parameter.value}" style="width:250px" />
     </div>
     {/foreach}
+    
+    <a href="#fullscreen" onclick="CM.setOption('fullScreen', !CM.getOption('fullScreen'));">Full screen</a>
     
     <div class="edit-form-row">
       <div class="form-section-label">File contents</div>
@@ -26,7 +34,19 @@
       {/if}
     </div>
     
-    <script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    CM = CodeMirror.fromTextArea($('tpl_textArea'), {ldelim}
+        lineNumbers: true,
+        mode: "javascript",
+    {if !$allow_save}    readOnly: true,
+    {/if}
+        lineWrapping: true
+      {rdelim});
+  
+    </script>
+    
+    <!--<script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
 
     <script type="text/javascript">
     {literal}  var editor = new CodeMirror.fromTextArea('tpl_textArea', {{/literal}
@@ -36,6 +56,6 @@
       height: '300px',
       path: "{$domain}Resources/System/Javascript/CodeMirror-0.65/js/"
     {literal}  }); {/literal}
-    </script>
+    </script>-->
 
 {if $allow_save}</form>{/if}

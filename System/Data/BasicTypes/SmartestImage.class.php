@@ -741,6 +741,10 @@ class SmartestImage extends SmartestFile{
 	        
 	        case "web_path":
 	        return $this->getWebPath();
+            
+	        case "absolute_web_path":
+            case "absolute_uri":
+	        return 'http://'.$_SERVER['HTTP_HOST'].$this->getWebPath();
 	        
 	        case "og_meta":
             // $request_data = SmartestPersistentObject::get('request_data');

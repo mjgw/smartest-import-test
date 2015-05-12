@@ -159,9 +159,11 @@
   </type>
   
   <type id="SM_ASSETCLASS_CUFON_FONT">
-    <label>Font (using Cufón)</label>
+    <label>Font (using Cufón, WOFF or EOT)</label>
     <setfrompreview>false</setfrompreview>
     <accept>SM_ASSETTYPE_CUFON_FONT</accept>
+    <accept>SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT</accept>
+    <accept>SM_ASSETTYPE_EOT_FONT_FORMAT</accept>
   </type>
   
   <type id="SM_ASSETCLASS_BROWSER_INSTRUCTION">
