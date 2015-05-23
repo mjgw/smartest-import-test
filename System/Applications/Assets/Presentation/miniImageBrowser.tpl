@@ -29,6 +29,10 @@
         <div class="form-section-label">Give this image a label</div>
         <input type="text" name="asset_label" value="" id="asset-label" />
       </div>
+      <!--<div class="edit-form-row">
+        <div class="form-section-label">Credit, if this a photo</div>
+        <input type="text" name="asset_credit" value="" id="asset-credit" />
+      </div>-->
       <div class="edit-form-row" id="choose-file-row">
         <div class="form-section-label">Choose an image file (JPEG, PNG or GIF)</div>
         <input type="file" name="asset_file" id="asset-file" />

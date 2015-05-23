@@ -11,12 +11,18 @@
 </object>
 
 <?sm:else:?>
-<object width="<?sm:if $render_data.width:?><?sm:$render_data.width:?><?sm:else:?>290<?sm:/if:?>" height="16"> 
+
+<?sm:* <object width="<?sm:if $render_data.width:?><?sm:$render_data.width:?>px<?sm:else:?>290px<?sm:/if:?>" height="16"> 
   <param name="kioskmode" value="true"> 
   <param name="src" value="<?sm:$domain:?>Resources/Assets/<?sm:$asset_info.url:?>"> 
   <param name="autoplay" value="false"> 
   <param name="controller" value="true"> 
   <embed src="<?sm:$domain:?>Resources/Assets/<?sm:$asset_info.url:?>" type="video/quicktime" height="16" width="<?sm:if $render_data.width:?><?sm:$render_data.width:?><?sm:else:?>290<?sm:/if:?>" controller="true" autoplay="false" kioskmode="true"> 
-</object>
+</object> *:?>
+
+<audio controls style="width:<?sm:if $render_data.width:?><?sm:$render_data.width:?>px<?sm:else:?>290px<?sm:/if:?>" height="16">
+  <source src="<?sm:$domain:?>Resources/Assets/<?sm:$asset_info.url:?>" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 <?sm:/if:?>

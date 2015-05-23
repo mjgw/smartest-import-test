@@ -91,6 +91,8 @@ type:
     suffix:
       - {mime: text/html, _content: html}
       - {mime: text/html, _content: htm}
+    param:
+      - {name: width, label: "Width when embedded", type: SM_DATATYPE_NUMERIC, required: false, default: 250}
 
 # Images
   SM_ASSETTYPE_JPEG_IMAGE:
@@ -195,6 +197,7 @@ type:
     description: Exterally hosted image on Instagram
     class: SmartestExternallyHostedVideoAsset
     parsable: false
+    attachable: true
     input_options:
       - SM_ASSETINPUTTYPE_URL_INPUT
     url_translation:
@@ -470,6 +473,7 @@ type:
     description: Exterally hosted video on YouTube
     class: SmartestExternallyHostedVideoAsset
     parsable: false
+    attachable: true
     input_options:
       - SM_ASSETINPUTTYPE_URL_INPUT
     url_translation:
@@ -480,7 +484,7 @@ type:
     render:
       template: System/Presentation/WebPageBuilder/display.youtube.tpl
     param:
-      - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 480}
+      - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 640}
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 360}
       - {name: show_title_player_actions, label: "Show title and player actions", type: SM_DATATYPE_BOOLEAN, required: false, default: true}
       - {name: enhanced_privacy_mode, label: "Enhanced privacy mode", type: SM_DATATYPE_BOOLEAN, required: false, default: true}
@@ -492,6 +496,7 @@ type:
     description: Exterally hosted video on Vimeo
     class: SmartestExternallyHostedVideoAsset
     parsable: false
+    attachable: true
     input_options:
       - SM_ASSETINPUTTYPE_URL_INPUT
     url_translation:

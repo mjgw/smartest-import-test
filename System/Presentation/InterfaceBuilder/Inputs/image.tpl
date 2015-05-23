@@ -31,7 +31,9 @@
 <div class="breaker"></div>
 <script type="text/javascript">
   $('{$_input_data.id}').observe('image:chosen', function(e){ldelim}
+  
 {if $_input_data.change_hook}{$_input_data.change_hook}$F('{$_input_data.id}'), '{$_input_data.id}');{/if}
 {if $_input_data.change_js}{$_input_data.change_js}{/if}
+
   {rdelim});
 </script>

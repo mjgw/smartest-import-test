@@ -55,6 +55,9 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
             $data['float'] = $this->getFloat();
             $data['border'] = $this->getBorder();
             // $data['asset'] = $this->_asset->__toArray();
+            if(!$this->_asset->isBinaryImage()){
+                $data['manual_width'] = $this->getManualWidth();
+            }
             $data['asset'] = $this->_asset;
         }
         
@@ -197,6 +200,14 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
         $this->setContextDataField('border', SmartestStringHelper::toRealBool($border));
     }
     
+    public function getManualWidth(){
+        return $this->getContextDataField('manual_width');
+    }
+    
+    public function setManualWidth($width){
+        $this->setContextDataField('manual_width', $width);
+    }
+    
     public function getResizeImageResizeFlag(){
         return $this->getContextDataField('allow_resize');
     }
@@ -219,6 +230,12 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
     
     public function setThumbnailRelativeSize($size){
         $this->setContextDataField('thumbnail_relative_size', (int) $size);
+    }
+    
+    public function getIsImage(){
+        if($this->hasAsset()){
+            return $this->_asset->isBinaryImage();
+        }
     }
     
     public function hasAsset(){
@@ -247,6 +264,10 @@ class SmartestTextFragmentAttachment extends SmartestManyToManyLookup{
     
     public function getTextFragment(){
         return $this->_textFragment;
+    }
+    
+    public function setAttachedAssetAdditionalRenderDataParameter($name, $value){
+        $this->_asset->setSingleAdditionalRenderDataParameter($name, $value);
     }
     
     public function save(){

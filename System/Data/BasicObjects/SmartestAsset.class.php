@@ -284,26 +284,58 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	
 	public function getWidth(){
 	    
-	    if($this->isImage()){
+	    if($this->isBinaryImage()){
+            
 	        if(!$this->_image){
 		        $this->_image = new SmartestImage;
 	            $this->_image->loadFile($this->getFullPathOnDisk());
 	        }
-		    return $this->_image->getWidth();
+		    
+            return $this->_image->getWidth();
+            
+		}else{
+            
+            $dp = $this->getDefaultParams();
+            
+            if(is_array($dp) && array_key_exists('width', $dp) && (is_numeric($dp['width']) || $dp['width'] instanceof SmartestNumeric)){
+                return (string) $dp['width'];
+            }elseif(preg_match('/width="(\d+(\.\d+))"/i', $this->getContent(true), $matches)){
+                if(strpos($matches[1], '.')){
+                    return ceil((float) $matches[1]);
+                }else{
+                    return $matches[1];
+                }
+            }
 		}
 	    
 	}
 	
 	public function getHeight(){
 	    
-	    if($this->isImage()){
+	    if($this->isBinaryImage()){
+            
 	        if(!$this->_image){
 		        $this->_image = new SmartestImage;
 	            $this->_image->loadFile($this->getFullPathOnDisk());
 	        }
+            
 		    return $this->_image->getHeight();
+            
+		}else{
+            
+            $dp = $this->getDefaultParams();
+            
+            if(is_array($dp) && array_key_exists('height', $dp) && (is_numeric($dp['height']) || $dp['height'] instanceof SmartestNumeric)){
+                return (string) $dp['height'];
+            }elseif(preg_match('/height="(\d+(\.\d+))"/i', $this->getContent(true), $matches)){
+                if(strpos($matches[1], '.')){
+                    return ceil((float) $matches[1]);
+                }else{
+                    return $matches[1];
+                }
+            }
+            
 		}
-	    
 	}
 	
 	public function getWordCount(){
@@ -475,10 +507,10 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    
 	}
 	
-	public function getContent(){
+	public function getContent($raw=false){
 	    
 	    if($this->getTextFragment()){
-	        if($this->isParsable()){
+	        if($this->isParsable() || $raw){
 	            $string = $this->getTextFragment()->getContent();
             }else{
                 $string = htmlspecialchars($this->getTextFragment()->getContent(), ENT_COMPAT, 'UTF-8');

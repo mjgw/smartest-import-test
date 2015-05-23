@@ -8,11 +8,11 @@
   {foreach from=$attachments item="attachment"}
   <div style="padding:8px;background-color:#{cycle values="ddd,fff"};min-height:100px">
     
-    {if $attachment.asset.id}<img src="{$attachment.asset.image.constrain_400x200.web_path}" alt="" style="float:right;max-width:200px;max-height:100px" />{/if}
+    {if $attachment.asset.id && $attachment.asset.is_binary_image}<img src="{$attachment.asset.image.constrain_400x200.web_path}" alt="" style="float:right;max-width:200px;max-height:100px" />{/if}
     
     <strong>Name in text:</strong>&nbsp;<code>{$attachment.name}</code><br />
     <strong>Attached file:</strong>&nbsp;{if $attachment.asset.id}<code>{$attachment.asset.url}</code>{else}<em style="color:#999">None yet</em>{/if}<br />
-    {if $attachment.allow_resize && $attachment.asset.is_image}<strong>Resizing: </strong>{$attachment.thumbnail_relative_size}% ({$attachment.thumbnail.width}x{$attachment.thumbnail.height} pixels)<br />{/if}
+    {if $attachment.allow_resize && $attachment.asset.is_binary_image}<strong>Resizing: </strong>{$attachment.thumbnail_relative_size}% ({$attachment.thumbnail.width}x{$attachment.thumbnail.height} pixels)<br />{/if}
     <strong>Caption:</strong>&nbsp;{$attachment.caption}<br />
     <strong>Align:</strong>&nbsp;{$attachment.alignment}
     

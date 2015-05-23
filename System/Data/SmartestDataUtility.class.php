@@ -7,6 +7,7 @@ class SmartestDataUtility{
 	public static $data_types;
 	public static $asset_types;
 	public static $assetclass_types;
+    public static $model_names_lowercase;
 	
 	public static $models_class_names;
 	
@@ -155,14 +156,23 @@ class SmartestDataUtility{
 	
 	public function getModelNamesLowercase($site_id=''){
 	    
-	    $models = $this->getModels(false, $site_id);
-	    $names = array();
+        if(is_array(self::$model_names_lowercase)){
+            
+            return self::$model_names_lowercase;
+            
+        }else{
+            
+            $models = $this->getModels(false, $site_id);
+    	    $names = array();
 	    
-	    foreach($models as $m){
-	        $names[SmartestStringHelper::toVarName($m->getName())] = $m->getId();
-	    }
-	    
-	    return $names;
+    	    foreach($models as $m){
+    	        $names[SmartestStringHelper::toVarName($m->getName())] = $m->getId();
+    	    }
+	        
+            self::$model_names_lowercase = $names;
+    	    return $names;
+            
+        }
 	    
 	}
 	

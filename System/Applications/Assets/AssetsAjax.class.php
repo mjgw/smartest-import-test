@@ -382,11 +382,12 @@ class AssetsAjax extends SmartestSystemApplication{
             
             $obj = new stdClass;
             
-            if($asset->isImage()){
+            if($asset->isBinaryImage()){
                 $obj->width = $asset->getWidth();
                 $obj->height = $asset->getHeight();
                 $obj->is_image = true;
             }else{
+                $obj->width = $asset->getWidth();
                 $obj->is_image = false;
             }
             

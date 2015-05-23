@@ -218,6 +218,9 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
             case "render_data":
             return $this->_render_data;
             
+            case "render_data_debug":
+            return print_r($this->_render_data, true);
+            
             case "link_contents":
             if($this->isImage()){
                 return 'image:'.$this->getUrl();

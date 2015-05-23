@@ -60,13 +60,27 @@ class SmartestBasicRenderer extends SmartestEngine{
                     
                     if($attachment['status'] == 'DEFINED'){
                         
-                        if($attachment['allow_resize'] && $attachment['asset']->isImage()){
-                            $attachment['div_width'] = (int) $attachment['thumbnail']['width'];
+                        if($attachment['asset']->isBinaryImage()){
+                            if($attachment['allow_resize']){
+                                $attachment['div_width'] = (int) $attachment['thumbnail']['width'];
+                            }else{
+                                $attachment['div_width'] = (int) $attachment['asset']['width'];
+                            }
                         }else{
-                            $attachment['div_width'] = (int) $attachment['asset']['width'];
+                            if($attachment->getManualWidth() && is_numeric(trim($attachment->getManualWidth()))){
+                                $attachment['div_width'] = $attachment->getManualWidth();
+                                $attachment->setAttachedAssetAdditionalRenderDataParameter('width', $attachment->getManualWidth());
+                                if($attachment['asset']->getHeight() && $attachment['asset']->getWidth() && is_numeric($attachment['asset']->getHeight())){
+                                    $new_height = $attachment['asset']->getHeight()*$attachment->getManualWidth()/$attachment['asset']->getWidth();
+                                    // echo $attachment['asset']->getHeight()*$attachment->getManualWidth()/$attachment['asset']->getWidth();
+                                    $attachment->setAttachedAssetAdditionalRenderDataParameter('height', $new_height);
+                                }
+                            }elseif($attachment['asset']->getWidth()){
+                                $attachment['div_width'] = $asset->getWidth();
+                            }
                         }
                         
-                        if($attachment['zoom'] && $attachment['asset']->isImage()){
+                        if($attachment['zoom'] && $attachment['asset']->isBinaryImage()){
                             $file = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/zoom_attachment.tpl';
                         }else{
                             $file = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/attachment.tpl';
@@ -233,7 +247,7 @@ class SmartestBasicRenderer extends SmartestEngine{
                     
                 }else{
                     
-                    if($this->_asset->isImage()){
+                    if($this->_asset->isBinaryImage()){
                         
                         $image = $this->_asset->getImage();
                         
@@ -256,6 +270,15 @@ class SmartestBasicRenderer extends SmartestEngine{
                             $render_data['height'] = $image->getHeight();
                         }
                     
+                    }else{
+                        
+                        // TODO: Sort out Px vs Percentages in widths
+                    
+                        // print_r($render_data);
+                        /* if(is_numeric($render_data['width'])){
+                            
+                        } */
+                        
                     }
                     
                     ob_start();

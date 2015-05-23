@@ -639,10 +639,50 @@ class SmartestAssetsLibraryHelper{
 	    return $codes;
 	    
 	}
+    
+    public function getAttachableAssetTypeCodesWithoutBinaryImages(){
+	    
+	    $processed_xml_data = SmartestDataUtility::getAssetTypes();
+	    $codes = array();
+	    
+	    foreach($processed_xml_data as $code=>$type){
+	        if(isset($type['attachable']) && SmartestStringHelper::toRealBool($type['attachable']) && !in_array($code, array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE'))){
+	            $codes[] = $code;
+	        }
+	    }
+	    
+	    return $codes;
+	    
+	}
 	
 	public function getAttachableFiles($site_id=''){
 	    
 	    $attachable_type_codes = $this->getAttachableAssetTypeCodes();
+	    $sql = "SELECT * FROM Assets WHERE asset_deleted!='1'";
+	    
+	    if(is_numeric($site_id)){
+	        $sql .= " AND (asset_site_id='".$site_id."' OR asset_shared='1')";
+	    }
+	    
+	    $sql .= " AND asset_type IN ('".implode("', '", $attachable_type_codes)."') ORDER BY asset_label, asset_url";
+	    
+	    $result = $this->database->queryToArray($sql);
+	    
+	    $assets = array();
+	    
+	    foreach($result as $a){
+	        $asset = new SmartestAsset;
+	        $asset->hydrate($a);
+	        $assets[] = $asset;
+	    }
+	    
+	    return $assets;
+	    
+	}
+    
+	public function getAttachableFilesWithoutBinaryImages($site_id=''){
+	    
+	    $attachable_type_codes = $this->getAttachableAssetTypeCodesWithoutBinaryImages();
 	    $sql = "SELECT * FROM Assets WHERE asset_deleted!='1'";
 	    
 	    if(is_numeric($site_id)){

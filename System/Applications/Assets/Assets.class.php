@@ -2392,12 +2392,12 @@ class Assets extends SmartestSystemApplication{
                 
                     // $attachable_files = $this->manager->getAttachableFiles($this->getSite()->getId());
                     $helper = new SmartestAssetsLibraryHelper;
-            	    $attachable_files = $helper->getAttachableFiles($this->getSite()->getId());
+            	    $attachable_files = $helper->getAttachableFilesWithoutBinaryImages($this->getSite()->getId());
             	    
-                    $this->send($attachable_files, 'files');
+                    $this->send($attachable_files, 'non_image_files');
                 
                     $textfragment = $asset->getTextFragment();
-                
+                    
                     if(is_object($textfragment)){
                 
                         $current_def = $textfragment->getAttachmentCurrentDefinition($attachment_name);
@@ -2410,14 +2410,29 @@ class Assets extends SmartestSystemApplication{
                         $attached_asset = $current_def->getAsset();
                         $this->send($attached_asset, 'attached_asset');
                         
-                        $resize = $current_def->getResizeImageResizeFlag();
-                        $this->send($resize, 'resize');
+                        if(is_object($attached_asset)){
+                            
+                            if($attached_asset->isBinaryImage()){
+                            
+                                $resize = $current_def->getResizeImageResizeFlag();
+                                $this->send($resize, 'resize');
+                            
+                                $zoom = $current_def->getZoomFromThumbnail();
+                                $this->send($zoom, 'zoom');
                         
-                        $zoom = $current_def->getZoomFromThumbnail();
-                        $this->send($zoom, 'zoom');
-                        
-                        $trs = $current_def->getThumbnailRelativeSize();
-                        $this->send($trs, 'relative_size');
+                                $trs = $current_def->getThumbnailRelativeSize();
+                                $this->send($trs, 'relative_size');
+                            
+                            }else{
+                            
+                                $mw = $current_def->getManualWidth();
+                                $this->send($mw, 'manual_width');
+                            
+                                $this->send($attached_asset->getWidth(), 'attached_asset_default_width');
+                            
+                            }
+                            
+                        }
                         
                         $alignment = $current_def->getAlignment();
                         $this->send($alignment, 'alignment');
@@ -2476,7 +2491,7 @@ class Assets extends SmartestSystemApplication{
     			    $asset_type = $types_data[$assettype_code];
 
         			$this->send($formTemplateInclude, "formTemplateInclude");
-        			$this->setTitle('Define Attachment: '.$attachment_name);
+        			$this->setTitle('Define attachment: '.$attachment_name);
         			$this->send($asset_type, 'asset_type');
         			$this->send($asset, 'asset');
 
@@ -2510,25 +2525,40 @@ class Assets extends SmartestSystemApplication{
 	        if(!$current_def->getTextFragmentId()){
 	            $current_def->setTextFragmentId($textfragment_id);
 	        }
-	        
-	        $current_def->setAttachedAssetId((int) $this->getRequestParameter('attached_file_id'));
-	        $current_def->setAttachmentName($attachment_name);
-            // var_dump($this->getRequestParameter('attached_file_zoom'));
-	        $current_def->setResizeImageResizeFlag(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_resize')));
-            $current_def->setZoomFromThumbnail(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_zoom')));
-	        $current_def->setThumbnailRelativeSize((int) $this->getRequestParameter('thumbnail_relative_size'));
-	        $current_def->setCaption(htmlentities($this->getRequestParameter('attached_file_caption')));
-	        $current_def->setAlignment(SmartestStringHelper::toVarName($this->getRequestParameter('attached_file_alignment')));
-	        $current_def->setCaptionAlignment(SmartestStringHelper::toVarName($this->getRequestParameter('attached_file_caption_alignment')));
-	        $current_def->setFloat(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_float')));
-	        $current_def->setBorder(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_border')));
+            
+            if($this->getRequestParameter('attachment_file_type') == 'none'){
+                
+                $current_def->setAttachedAssetId(null);
+                
+            }else{
+                
+                if($this->getRequestParameter('attachment_file_type') == 'image'){
+    	            $current_def->setAttachedAssetId((int) $this->getRequestParameter('attached_file_id_img'));
+        	        $current_def->setResizeImageResizeFlag(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_resize')));
+                    $current_def->setZoomFromThumbnail(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_zoom')));
+        	        $current_def->setThumbnailRelativeSize((int) $this->getRequestParameter('thumbnail_relative_size'));
+                }elseif($this->getRequestParameter('attachment_file_type') == 'embed'){
+                    $current_def->setAttachedAssetId((int) $this->getRequestParameter('attached_file_id_embed'));
+                    if(strlen($this->getRequestParameter('attached_embed_width'))){
+                        $current_def->setManualWidth($this->getRequestParameter('attached_embed_width'));
+                    }
+                }
+                
+    	        $current_def->setAttachmentName($attachment_name);
+                // var_dump($this->getRequestParameter('attached_file_zoom'));
+    	        $current_def->setCaption(htmlentities($this->getRequestParameter('attached_file_caption')));
+    	        $current_def->setAlignment(SmartestStringHelper::toVarName($this->getRequestParameter('attached_file_alignment')));
+    	        $current_def->setCaptionAlignment(SmartestStringHelper::toVarName($this->getRequestParameter('attached_file_caption_alignment')));
+    	        $current_def->setFloat(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_float')));
+    	        $current_def->setBorder(SmartestStringHelper::toRealBool($this->getRequestParameter('attached_file_border')));
+                
+            }
 	        
 	        $current_def->save();
 	        
 	    }else{
 	        $this->addUserMessage('The textfragment ID was not recognized.', SmartestUserMessage::ERROR);
 	    }
-	    
 	    
 	    $this->formForward();
 	    
