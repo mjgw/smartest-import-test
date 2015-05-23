@@ -73,7 +73,7 @@ class SmartestBasicRenderer extends SmartestEngine{
                         }
                         
                         if($this->_request_data->g('action') == "renderEditableDraftPage" || ($this->_request_data->g('action') == "pageFragment" && $this->getDraftMode())){
-            			    $attachment['edit_link'] = "<a title=\"Click to edit definition for attachment: ".$name."\" href=\"".$this->_request_data->g('domain')."assets/defineAttachment?attachment=".$name."&amp;asset_id=".$asset->getId()."&amp;from=pagePreviewDirectEdit\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Attach a different file--></a>";
+            			    $attachment['edit_link'] = "<a class=\"sm-edit-button\" title=\"Click to edit definition for attachment: ".$name."\" href=\"".$this->_request_data->g('domain')."assets/defineAttachment?attachment=".$name."&amp;asset_id=".$asset->getId()."&amp;from=pagePreviewDirectEdit\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Attach a different file--></a>";
             		    }else{
             			    $attachment['edit_link'] = "<!--edit link-->";
             		    }
