@@ -42,8 +42,8 @@
       <div class="edit-form-row">
         <div class="form-section-label">What to do with {$sub_model.plural_name|lower}</div>
         <select name="sub_model_items[{$sub_model.id}]">
-          <option value="CHANGED">Re-publish any modified {$sub_model.plural_name|lower} that are already live</option>
-          <option value="ALL">Publish all this {$item._model.name|lower}'s {$sub_model.plural_name|lower}</option>
+          <option value="CHANGED"{if $recommended_sub_model_publish_mode == 'CHANGED'} selected="selected"{/if}>Re-publish any modified {$sub_model.plural_name|lower} that are already live</option>
+          <option value="ALL"{if $recommended_sub_model_publish_mode == 'ALL'} selected="selected"{/if}>Publish all this {$item._model.name|lower}'s {$sub_model.plural_name|lower}</option>
           <option value="NONE">Do nothing with this {$item._model.name|lower}'s {$sub_model.plural_name|lower}</option>
         </select>
       </div>

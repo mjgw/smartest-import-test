@@ -2018,6 +2018,9 @@ class Items extends SmartestSystemApplication{
                 
                 if($item->getModel()->hasSubModels()){
                     $this->send($item->getModel()->getSubModels(), 'sub_models');
+                    $recommended_sub_model_publish_mode = (!$item->isPublished() || !$item->getItem()->getLastPublished()) ? 'ALL' : 'CHANGED';
+                    // var_dump($recommended_sub_model_publish_mode);
+                    $this->send($recommended_sub_model_publish_mode, 'recommended_sub_model_publish_mode');
                 }else{
                     $this->send(array(), 'sub_models');
                 }
