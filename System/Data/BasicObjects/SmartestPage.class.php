@@ -198,17 +198,23 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
     
     public function __postHydrationAction(){
         
-        if(!$this->_page_info){
-	        $this->_page_info = new SmartestParameterHolder("Settings for model '".$this->_properties['name']."'");
-        }
+        /*  */
         
-		$s = unserialize($this->getSettings());
+    }
+    
+    public function initializeInfoFields(){
+        
+        if(!is_object($this->_page_info)){
+            
+            $this->_page_info = new SmartestParameterHolder("Info fields for page '".$this->_properties['title']."'");
+            
+            $s = unserialize($this->getSettings());
 		
-		if(is_array($s)){
-		    $this->_page_info->loadArray($s);
-	    }else{
-	        $this->_page_info->loadArray(array());
-	    }
+            if(is_array($s)){
+                $this->_page_info->loadArray($s);
+            }
+            
+        }
         
     }
 	
@@ -223,15 +229,21 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
     
 	public function setInfoField($field, $new_data){
 	    
+        $this->initializeInfoFields();
 	    $field = SmartestStringHelper::toVarName($field);
 	    // URL Encoding is being used to work around a bug in PHP's serialize/unserialize. No actual URLS are necessarily in use here:
 	    $this->_page_info->setParameter($field, rawurlencode(utf8_decode($new_data)));
-	    $this->_modified_properties['settings'] = SmartestStringHelper::sanitize(serialize($this->_page_info->getArray()));
+        $serialized_settings = SmartestStringHelper::sanitize(serialize($this->_page_info->getArray()));
+	    $this->_modified_properties['settings'] = $serialized_settings;
+        // current settings are also updated
+        $this->_properties['settings'] = $serialized_settings;
 	    
 	}
 	
 	public function getInfoField($field){
 	    
+        $this->initializeInfoFields();
+        
 	    $field = SmartestStringHelper::toVarName($field);
 	    
 	    if($this->_page_info->hasParameter($field)){
@@ -239,6 +251,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    }else{
 	        return null;
 	    }
+        
 	}
 	
 	public function getMasterTemplate(){
