@@ -27,10 +27,10 @@
       <div class="form-section-label-full">Upload an image</div>
       <div class="edit-form-row">
         <div class="form-section-label">Give this image a label</div>
-        <input type="text" name="asset_label" value="" id="asset-label" />
+        <input type="text" name="asset_label" value="{$suggested_label}" id="asset-label" />
       </div>
       <!--<div class="edit-form-row">
-        <div class="form-section-label">Credit, if this a photo</div>
+        <div class="form-section-label">Credit, if this is a photo</div>
         <input type="text" name="asset_credit" value="" id="asset-credit" />
       </div>-->
       <div class="edit-form-row" id="choose-file-row">
@@ -51,6 +51,7 @@
   <script type="text/javascript">// <![CDATA[
   
   var currentAssetId = {if $current_asset_id}{$current_asset_id}{else}null{/if};
+  var purpose = '{$for}';
   inputId = '{$input_id}';
   
   {literal}
@@ -69,7 +70,8 @@
       new Ajax.Updater(inputId+'-thumbnail-area', url, {
         parameters: {
           asset_id: clickedThumbnail.readAttribute('data-assetid'),
-          input_id: inputId
+          input_id: inputId,
+          'for': purpose
         }
       });
       $(inputId).fire('image:chosen');
@@ -150,7 +152,8 @@
         new Ajax.Updater(inputId+'-thumbnail-area', sm_domain+'ajax:assets/getReplacementThumbnailForMiniImageBrowser', {
           parameters: {
             asset_id: jsonResponse.asset_id,
-            input_id: inputId
+            input_id: inputId,
+            'for': purpose
           }
         });
       

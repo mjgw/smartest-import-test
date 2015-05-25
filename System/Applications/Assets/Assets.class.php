@@ -2851,6 +2851,8 @@ class Assets extends SmartestSystemApplication{
                         }
                     }
                     
+                    $this->send("User profile picture for ".$user->getFullName()." - ".date('M d Y'), 'suggested_label');
+                    
                 }
                 
             }else{

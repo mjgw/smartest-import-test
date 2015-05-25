@@ -374,8 +374,8 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
             	        // default values from xml are set above.
             	        
             	        // next, set values from asset
-            	        if(isset($asset_params[$key]) && strlen($asset_params[$key])){
-            	            $v = $asset_params[$key];
+            	        if($asset_params->hasParameter($key) && strlen($asset_params->getParameter($key))){
+            	            $v = $asset_params->getParameter($key);
             	        }
             	        
             	        // then, override any values that already exist

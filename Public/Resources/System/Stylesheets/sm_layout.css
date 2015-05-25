@@ -64,6 +64,16 @@ div#user-info{
     background-repeat:no-repeat;
 }
 
+#user-profile-form-profile-pic-holder{
+    width:200px;
+    height:200px;
+    overflow:hidden;
+    border-radius:110px;
+    -webkit-border-radius:110px;
+    -moz-border-radius:110px;
+    border:1px solid #999;
+}
+
 #smartest-frame{
     position:relative;
     min-height:100%;

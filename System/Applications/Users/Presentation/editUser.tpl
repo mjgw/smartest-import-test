@@ -25,6 +25,11 @@
   <input type="hidden"  name="user_id" value="{$user.id}" >
   
   <div class="edit-form-row">
+    <div class="form-section-label">Profile picture</div>
+    {image_select name="user_profile_pic_id" id="user-profile-pic-id" value=$user.profile_pic for="user_profile_pic" user_id=$user.id}
+  </div>
+  
+  <div class="edit-form-row">
     <div class="form-section-label">First name </div>
     <input type="text" name="user_firstname" id="ifn" value="{$user.firstname}" />
     <div class="form-hint">A first name is required</div>

@@ -881,14 +881,20 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	}
     
 	public function getDefaultParameterValues(){
+        
+        $ph = new SmartestParameterHolder('Asset default parameter values');
+        
 	    if($data = @unserialize($this->getParameterDefaults())){
-            return $data;
-	    }else{
-            /* var_dump($this->getParameterDefaults());
-	        return $this->getParameterDefaults(); */
-            return array();
+            $ph->loadArray($data);
 	    }
+        
+        return $ph;
+        
 	}
+    
+    public function getDefaultParameterValue($value_name){
+        $this->getDefaultParameterValues()->getParameter($value_name);
+    }
 	
 	public function getDescription(){
 	    return $this->getField('search_field');

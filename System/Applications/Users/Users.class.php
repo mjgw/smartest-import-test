@@ -269,121 +269,121 @@ class Users extends SmartestSystemApplication{
     	
 	}
 	
-	public function editUserProfilePic(){
-	    
-	    if($this->getRequestParameter('user_id') == $this->getUser()->getId() || $this->getUser()->hasToken('modify_other_user_details')){
-		
-		    $user = new SmartestUser;
-		
-    		if($user->find($this->getRequestParameter('user_id'))){
-    		    
-    		    $this->send($user, 'user');
-    		    $uh = new SmartestUsersHelper;
-    		    
-    		    if($g = $uh->getUserProfilePicsGroup()){
-    		        $this->send($g->getMembersForUser($user->getId(), $this->getSite()->getId()), 'assets');
-    		    }else{
-    		        $helper = new SmartestAssetsLibraryHelper;
-            	    $this->send($helper->getAttachableFiles($this->getSite()->getId()), 'assets');
-    		    }
-                
-                if(!is_file(SM_ROOT_DIR.'Public/Resources/Images/default_user_profile_pic.jpg')){
-                    if(is_writable(SM_ROOT_DIR.'Public/Resources/Images/')){
-                        SmartestFileSystemHelper::copy(SM_ROOT_DIR.'System/Install/Samples/default_user_profile_pic.jpg', SM_ROOT_DIR.'Public/Resources/Images/default_user_profile_pic.jpg');
-                    }
-                }
-    		    
-            }else{
-                $this->addUserMessageToNextRequest("The user ID was not recognised.", SmartestUserMessage::ERROR);
-                $this->formForward();
-            }
-            
-            $this->send($this->getUser()->hasToken('modify_user_permissions'), 'show_tokens_edit_tab');
-        
-        }else{
-            
-            $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.", SmartestUserMessage::ACCESS_DENIED);
-            $this->formForward();
-            
-        }
-	    
-	}
+// 	public function editUserProfilePic(){
+// 	    
+// 	    if($this->getRequestParameter('user_id') == $this->getUser()->getId() || $this->getUser()->hasToken('modify_other_user_details')){
+// 		
+// 		    $user = new SmartestUser;
+// 		
+//     		if($user->find($this->getRequestParameter('user_id'))){
+//     		    
+//     		    $this->send($user, 'user');
+//     		    $uh = new SmartestUsersHelper;
+//     		    
+//     		    if($g = $uh->getUserProfilePicsGroup()){
+//     		        $this->send($g->getMembersForUser($user->getId(), $this->getSite()->getId()), 'assets');
+//     		    }else{
+//     		        $helper = new SmartestAssetsLibraryHelper;
+//             	    $this->send($helper->getAttachableFiles($this->getSite()->getId()), 'assets');
+//     		    }
+//                 
+//                 if(!is_file(SM_ROOT_DIR.'Public/Resources/Images/default_user_profile_pic.jpg')){
+//                     if(is_writable(SM_ROOT_DIR.'Public/Resources/Images/')){
+//                         SmartestFileSystemHelper::copy(SM_ROOT_DIR.'System/Install/Samples/default_user_profile_pic.jpg', SM_ROOT_DIR.'Public/Resources/Images/default_user_profile_pic.jpg');
+//                     }
+//                 }
+//     		    
+//             }else{
+//                 $this->addUserMessageToNextRequest("The user ID was not recognised.", SmartestUserMessage::ERROR);
+//                 $this->formForward();
+//             }
+//             
+//             $this->send($this->getUser()->hasToken('modify_user_permissions'), 'show_tokens_edit_tab');
+//         
+//         }else{
+//             
+//             $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.", SmartestUserMessage::ACCESS_DENIED);
+//             $this->formForward();
+//             
+//         }
+// 	    
+// 	}
 	
-	public function saveUserProfilePic(){
-	    
-	    if($this->getRequestParameter('user_id') == $this->getUser()->getId() || $this->getUser()->hasToken('modify_other_user_details')){
-		
-		    $user = new SmartestUser;
-		
-    		if($user->find($this->getRequestParameter('user_id'))){
-    		    
-    		    if($this->getRequestParameter('profile_pic_asset_id') == 'NEW' && SmartestUploadHelper::uploadExists('new_picture_input')){
-    		        
-    		        $alh = new SmartestAssetsLibraryHelper;
-    	            $upload = new SmartestUploadHelper('new_picture_input');
-                    $upload->setUploadDirectory(SM_ROOT_DIR.'System/Temporary/');
-                    $types = $alh->getPossibleTypesBySuffix($upload->getDotSuffix());
-
-                    if(count($types)){
-                        $t = $types[0]['type']['id'];
-
-                        $ach = new SmartestAssetCreationHelper($t);
-                        $ach->createNewAssetFromFileUpload($upload, "User profile picture for ".$user->getFullName().' - '.date('M d Y'));
-
-                        $file = $ach->finish();
-                        $file->setShared(1);
-                        $file->setIsSystem(1);
-                        $file->setIsHidden(1);
-                        $file->setUserId($user->getId());
-                        $file->save();
-
-                        $user->setProfilePicAssetId($file->getId());
-                        $user->save();
-                        
-                        $uh = new SmartestUsersHelper;
-
-            		    if($g = $uh->getUserProfilePicsGroup()){
-
-                            $g->addAssetById($file->getId(), false);    
-                        
-                        }
-                        
-                        $this->addUserMessageToNextRequest("Your profile picture was successfully uploaded", SmartestUserMessage::SUCCESS);
-                        
-                        $this->formForward();
-                        
-                    }
-    		        
-    		    }else if(is_numeric($this->getRequestParameter('profile_pic_asset_id'))){
-    		        $a = new SmartestAsset;
-    		        if($a->find($this->getRequestParameter('profile_pic_asset_id'))){
-    		            $user->setProfilePicAssetId($this->getRequestParameter('profile_pic_asset_id'));
-    		            $user->save();
-                        $this->addUserMessageToNextRequest('Your profile picture has been successfully changed.', SmartestUserMessage::SUCCESS);
-    		            $this->formForward();
-    		        }else{
-                        $this->addUserMessageToNextRequest('The file you selected could not be found.', SmartestUserMessage::WARNING);
-    		            $this->formForward();
-    		        }
-		        }else{
-		            
-		        }
-    		    
-            }else{
-                $this->addUserMessageToNextRequest("The user ID was not recognised.", SmartestUserMessage::ERROR);
-                $this->formForward();
-            }
-            
-            $this->send($this->getUser()->hasToken('modify_user_permissions'), 'show_tokens_edit_tab');
-        
-        }else{
-            
-            $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.", SmartestUserMessage::ACCESS_DENIED);
-            $this->formForward();
-            
-        }
-	    
-	}
+// 	public function saveUserProfilePic(){
+// 	    
+// 	    if($this->getRequestParameter('user_id') == $this->getUser()->getId() || $this->getUser()->hasToken('modify_other_user_details')){
+// 		
+// 		    $user = new SmartestUser;
+// 		
+//     		if($user->find($this->getRequestParameter('user_id'))){
+//     		    
+//     		    if($this->getRequestParameter('profile_pic_asset_id') == 'NEW' && SmartestUploadHelper::uploadExists('new_picture_input')){
+//     		        
+//     		        $alh = new SmartestAssetsLibraryHelper;
+//     	            $upload = new SmartestUploadHelper('new_picture_input');
+//                     $upload->setUploadDirectory(SM_ROOT_DIR.'System/Temporary/');
+//                     $types = $alh->getPossibleTypesBySuffix($upload->getDotSuffix());
+// 
+//                     if(count($types)){
+//                         $t = $types[0]['type']['id'];
+// 
+//                         $ach = new SmartestAssetCreationHelper($t);
+//                         $ach->createNewAssetFromFileUpload($upload, "User profile picture for ".$user->getFullName().' - '.date('M d Y'));
+// 
+//                         $file = $ach->finish();
+//                         $file->setShared(1);
+//                         $file->setIsSystem(1);
+//                         $file->setIsHidden(1);
+//                         $file->setUserId($user->getId());
+//                         $file->save();
+// 
+//                         $user->setProfilePicAssetId($file->getId());
+//                         $user->save();
+//                         
+//                         $uh = new SmartestUsersHelper;
+// 
+//             		    if($g = $uh->getUserProfilePicsGroup()){
+// 
+//                             $g->addAssetById($file->getId(), false);    
+//                         
+//                         }
+//                         
+//                         $this->addUserMessageToNextRequest("Your profile picture was successfully uploaded", SmartestUserMessage::SUCCESS);
+//                         
+//                         $this->formForward();
+//                         
+//                     }
+//     		        
+//     		    }else if(is_numeric($this->getRequestParameter('profile_pic_asset_id'))){
+//     		        $a = new SmartestAsset;
+//     		        if($a->find($this->getRequestParameter('profile_pic_asset_id'))){
+//     		            $user->setProfilePicAssetId($this->getRequestParameter('profile_pic_asset_id'));
+//     		            $user->save();
+//                         $this->addUserMessageToNextRequest('Your profile picture has been successfully changed.', SmartestUserMessage::SUCCESS);
+//     		            $this->formForward();
+//     		        }else{
+//                         $this->addUserMessageToNextRequest('The file you selected could not be found.', SmartestUserMessage::WARNING);
+//     		            $this->formForward();
+//     		        }
+// 		        }else{
+// 		            
+// 		        }
+//     		    
+//             }else{
+//                 $this->addUserMessageToNextRequest("The user ID was not recognised.", SmartestUserMessage::ERROR);
+//                 $this->formForward();
+//             }
+//             
+//             $this->send($this->getUser()->hasToken('modify_user_permissions'), 'show_tokens_edit_tab');
+//         
+//         }else{
+//             
+//             $this->addUserMessageToNextRequest("You don't have permission to modify users other than yourself.", SmartestUserMessage::ACCESS_DENIED);
+//             $this->formForward();
+//             
+//         }
+// 	    
+// 	}
 	
 	public function transferTokens($get, $post){
     	
@@ -484,6 +484,32 @@ class Users extends SmartestSystemApplication{
     		            // attempt at changing the username without having permission
     		        }
 		        }
+                
+                if($this->requestParameterIsSet('user_profile_pic_id') && strlen($this->getRequestParameter('user_profile_pic_id'))){
+                    
+                    $file = new SmartestAsset;
+                    
+                    if( $file->find($this->getRequestParameter('user_profile_pic_id'))){
+                        
+                        $user->setProfilePicAssetId($file->getId());
+                        
+                        if($user->getId() == $this->getUser()->getId()){
+                            $this->getUser()->setProfilePicAssetId($file->getId());
+                            $this->getUser()->refreshProfilePic();
+                        }
+                        
+                        $uh = new SmartestUsersHelper;
+                        
+                    }
+                    
+                }else{
+                    $user->setProfilePicAssetId(null);
+                    
+                    if($user->getId() == $this->getUser()->getId()){
+                        $this->getUser()->setProfilePicAssetId(null);
+                        $this->getUser()->refreshProfilePic();
+                    }
+                }
     		    
     		    if(isset($post['password']) && strlen($post['password']) && $post['password'] == $post['passwordconfirm']){
     		        $user->setPasswordWithSalt($post['password'], SmartestStringHelper::random(40));
@@ -501,7 +527,11 @@ class Users extends SmartestSystemApplication{
     	        }
 	        
     	        $user->save();
-	        
+                
+                if($user->getId() == $this->getUser()->getId()){
+	                $this->getUser()->refreshFromDatabase();
+                }
+            
     		}else{
     		    $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
     		}
@@ -666,9 +696,25 @@ class Users extends SmartestSystemApplication{
 	        $this->getUser()->setWebsite($this->getRequestParameter('user_website'));
         }
         
+        // var_dump($this->getRequestParameter('profile_pic_asset_id'));
+        // exit;
+        
+        if($this->requestParameterIsSet('profile_pic_asset_id') && strlen($this->getRequestParameter('profile_pic_asset_id'))){
+            
+            $file = new SmartestAsset;
+            
+            if($file->find($this->getRequestParameter('profile_pic_asset_id'))){
+                $this->getUser()->setProfilePicAssetId($file->getId());
+            }
+            
+        }else{
+            $this->getUser()->setProfilePicAssetId(null);
+        }
+        
         $this->getUser()->setPreferredUiLanguage($this->getRequestParameter('user_language'));
         $this->getUser()->setBio($this->getRequestParameter('user_bio'));
 	    $this->getUser()->save();
+        $this->getUser()->refreshProfilePic();
 	    
 	    $this->addUserMessageToNextRequest('Your user profile has been updated.', SmartestUserMessage::SUCCESS);
 	    $this->redirect('/smartest/profile');

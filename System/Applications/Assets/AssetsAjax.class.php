@@ -412,6 +412,10 @@ class AssetsAjax extends SmartestSystemApplication{
                 $this->send(true, 'found_asset');
                 $this->send($asset, 'asset');
                 
+                if($this->requestParameterIsSet('for')){
+                    $this->send(SmartestStringHelper::toVarName($this->getRequestParameter('for')), 'for');
+                }
+                
             }else{
                 $this->send(false, 'found_asset');
             }
@@ -495,6 +499,34 @@ class AssetsAjax extends SmartestSystemApplication{
                                     if($group->find($placeholder->getFilterValue())){
                                         $group->addAssetById($asset->getId(), false);
                                     }
+                                }
+                            }
+                        }
+                        
+                        case 'user_profile_pic':
+                        
+                        if($user_id = $this->getRequestParameter('user_id')){
+                            
+                            $assetSimpleObj->user_id = $this->getRequestParameter('user_id');
+                            
+                            $user = new SmartestSystemUser;
+                            
+                            if($user->find($user_id)){
+                                
+                                // $user->setProfilePicAssetId($asset->getId());
+                                // $user->save();
+                                
+                                $asset->setSiteId($this->getSite()->getId());
+                                $asset->setShared(1);
+                                $asset->setIsSystem(1);
+                                $asset->setIsHidden(1);
+                                $asset->setUserId($user->getId());
+                                $asset->save();
+                                
+                                $uh = new SmartestUsersHelper;
+
+                    		    if($g = $uh->getUserProfilePicsGroup()){
+                                    $g->addAssetById($asset->getId(), true);
                                 }
                             }
                         }

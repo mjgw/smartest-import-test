@@ -558,6 +558,26 @@ class SmartestDataObject implements ArrayAccess{
         }
 	    
 	}
+    
+    public function refreshFromDatabase(){
+        
+        if($this->_properties['id']){
+            
+            $sql = $this->getRetrievalSqlQuery((int) $this->_properties['id'], 'id');
+            
+	        $this->_last_query = $sql;
+	        $result = $this->database->queryToArray($sql, true);
+            
+		    if(count($result)){
+                $this->hydrate($result[0]);
+                return true;
+		    }else{
+			    return false;
+		    }
+            
+        }
+        
+    }
 	
 	public function findBy($field, $value, $site_id='', $include_trash_items=false){
 	    

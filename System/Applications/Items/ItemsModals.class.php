@@ -294,9 +294,9 @@ class ItemsModals extends SmartestSystemApplication{
             	        // default values from xml are set above.
             	        
             	        // next, set values from asset
-            	        if(isset($asset_params[$key]) && strlen($asset_params[$key])){
-            	            $params[$key]['value'] = $asset_params[$key];
-            	            $params[$key]['asset_default'] = $asset_params[$key];
+            	        if($asset_params->hasParameter($key) && strlen($asset_params->getParameter($key))){
+            	            $params[$key]['value'] = $asset_params->getParameter($key);
+            	            $params[$key]['asset_default'] = $asset_params->getParameter($key);
             	        }
             	        
             	        // then, override any values that already exist
@@ -306,8 +306,6 @@ class ItemsModals extends SmartestSystemApplication{
         	        }
         	        
         	        $this->send($params, 'params');
-        	        
-        	        // print_r($params);
 	                
 	            }
 	            

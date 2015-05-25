@@ -361,6 +361,22 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
         }
         
     }
+    
+    public function refreshProfilePic(){
+        
+        $asset = new SmartestRenderableAsset;
+        
+        if($asset->find($this->getProfilePicAssetId(), true)){
+            
+            $this->_profile_pic_asset = $asset;
+            
+            if($this->getRequest()->getAction() == 'renderEditableDraftPage'){
+                $asset->setDraftMode(true);
+            }
+            
+        }
+        
+    }
 	
 	public function sendEmail($subject, $message, $from=""){
 	    

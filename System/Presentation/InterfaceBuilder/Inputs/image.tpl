@@ -1,7 +1,11 @@
 <div style="float:left">
   <div id="{$_input_data.id}-thumbnail-area">
   {if $value && $value.id}
+    {if $_input_data.for == "user_profile_pic"}
+    <div id="user-profile-form-profile-pic-holder" style="background-size:200px 200px;background-image:url({$value.image.400x400.web_path})"></div>
+    {else}
     <img src="{$value.image.constrain_400x400.web_path}" alt="{$value.label}" style="width:{$value.image.constrain_200x200.width};height:{$value.image.constrain_200x200.height}px" id="{$_input_data.id}-thumbnail">
+    {/if}
     <div class="image-picker-caption">{$value.label} ({$value.url}), {$value.type_info.label}, {$value.image.width}x{$value.image.height}</div>
   {else}
     <div class="image-picker-caption">No file is selected</div>
