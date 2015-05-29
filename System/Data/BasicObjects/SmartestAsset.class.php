@@ -13,6 +13,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     protected $_set_textfragment_id_on_save = false;
     protected $_absolute_uri_object;
     protected $_thumbnail_asset = null;
+    protected $_default_parameter_values = null;
     
     public function __toArray($include_object=false, $include_owner=false){
         
@@ -882,18 +883,37 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     
 	public function getDefaultParameterValues(){
         
-        $ph = new SmartestParameterHolder('Asset default parameter values');
+        if(!$this->_default_parameter_values instanceof SmartestParameterHolder){
+            
+            $ph = new SmartestParameterHolder('Asset default parameter values');
         
-	    if($data = @unserialize($this->getParameterDefaults())){
-            $ph->loadArray($data);
-	    }
+    	    if($data = unserialize($this->getParameterDefaults())){
+                $ph->loadArray($data);
+    	    }
         
-        return $ph;
+            $this->_default_parameter_values = $ph;
+            
+        }
+        
+        return $this->_default_parameter_values;
         
 	}
     
     public function getDefaultParameterValue($value_name){
-        $this->getDefaultParameterValues()->getParameter($value_name);
+        return $this->getDefaultParameterValues()->getParameter($value_name);
+    }
+    
+    public function setDefaultParameterValue($name, $value){
+        $this->getDefaultParameterValues()->setParameter($name, $value);
+        $this->_modified_properties['parameter_defaults'] = SmartestStringHelper::sanitize(serialize($this->_default_parameter_values->getArray()));
+    }
+    
+    public function getCredit(){
+        return $this->getDefaultParameterValues()->getParameter('credit');
+    }
+    
+    public function setCredit($credit){
+        return $this->setDefaultParameterValue('credit', $credit);
     }
 	
 	public function getDescription(){

@@ -451,6 +451,12 @@ class AssetsAjax extends SmartestSystemApplication{
                     $ach->createNewAssetFromFileUpload($upload, $this->getRequestParameter('asset_label'));
                     $asset = $ach->finish();
                     
+                    if(strlen($this->getRequestParameter('asset_credit'))){
+                        // throw new SmartestException($this->getRequestParameter('asset_credit'));
+                        $asset->setCredit($this->getRequestParameter('asset_credit'));
+                        $asset->save();
+                    }
+                    
                     $assetSimpleObj = new stdClass;
                     $assetSimpleObj->asset_id = $asset->getId();
                     $assetSimpleObj->asset_webid = $asset->getWebId();

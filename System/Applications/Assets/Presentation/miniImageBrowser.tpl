@@ -1,6 +1,6 @@
 <div id="modal-work-area">
-  <div class="instruction">Select or upload an image</div>
   
+  <div class="instruction">Select or upload an image</div>
   <div class="warning" id="no-filereader-warning" style="display:none">To upload images here, you'll need an up-to-date browser that supports the FileReader and FormData APIs.</div>
   
   <ul class="file-thumbnails" id="image-list">
@@ -29,10 +29,10 @@
         <div class="form-section-label">Give this image a label</div>
         <input type="text" name="asset_label" value="{$suggested_label}" id="asset-label" />
       </div>
-      <!--<div class="edit-form-row">
+      <div class="edit-form-row">
         <div class="form-section-label">Credit, if this is a photo</div>
         <input type="text" name="asset_credit" value="" id="asset-credit" />
-      </div>-->
+      </div>
       <div class="edit-form-row" id="choose-file-row">
         <div class="form-section-label">Choose an image file (JPEG, PNG or GIF)</div>
         <input type="file" name="asset_file" id="asset-file" />
@@ -97,15 +97,8 @@
   
   {literal}
   
-  $('new-image-upload-cancel-button').observe('click', function(e){
-    e.stop();
-    $('image-list').show();
-    $('image-uploader').hide();
-    MODALS.updateScroller();
-  });
-  
-  $('new-image-upload-button').observe('click', function(e){
-    
+  var startUpload = function(e){
+    // e is an Event object
     e.stop();
     
     if($F('asset-label').length && $F('asset-file').length){
@@ -119,6 +112,7 @@
     
       formdata.append("asset_file", file);
       formdata.append("asset_label", $F('asset-label'));
+      formdata.append("asset_credit", $F('asset-credit'));
     
       $$('input.purpose_inputs').each(function(ipt){
         formdata.append(ipt.name, ipt.value);
@@ -204,7 +198,23 @@
       
     }
     
+  }
+  
+  $('new-image-upload-cancel-button').observe('click', function(e){
+    e.stop();
+    $('image-list').show();
+    $('image-uploader').hide();
+    MODALS.updateScroller();
   });
+  
+  $('new-image-upload-form').observe('keypress', function(e){
+    if(e.keyCode == 13){
+      e.stop(e);
+      startUpload();
+    }
+  });
+  
+  $('new-image-upload-button').observe('click', startUpload);
   
   {/literal}
   

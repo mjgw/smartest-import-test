@@ -699,20 +699,21 @@ ul.item_property_actions{
 }
 
 ul.item_property_actions li a{
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc;
     border-radius:4px;
     -webkit-border-radius:4px;
-    -moz-border-radius:4px;
-		color:#999;
+    -moz-border-radius:4px; */
+	color:#999;
+    transition:all 0.2s;
 }
 
 ul.item_property_actions li a:hover{
-    background-color:#eee;
-		text-decoration:none;
+    color:#68849E;
+	text-decoration:none;
 }
 
 ul.item_property_actions li a i{
-	font-size:1.3em;
+	font-size:1.5em;
 }
 
 ul.checkbox-array-list{

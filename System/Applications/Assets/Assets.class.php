@@ -1667,6 +1667,8 @@ class Assets extends SmartestSystemApplication{
 		    
 		    // $this->setFormReturnUri();
             
+            // print_r($asset->getDefaultParameterValues());
+            
             $data = $asset;
 		    
 		    $comments = $asset->getComments();
@@ -1690,7 +1692,7 @@ class Assets extends SmartestSystemApplication{
 		    if(isset($data['type_info']['supports_exif']) && SmartestStringHelper::toRealBool($data['type_info']['supports_exif'])){
 		        // echo "hello";
 		        if($exif_data = $asset->getImage()->getExifData()){
-		            // var_dump($exif_data);
+		            var_dump($exif_data);
 		            $this->send(true, 'show_exif_panel');
 	            }else{
 	                $this->send(false, 'show_exif_panel');
@@ -1905,6 +1907,25 @@ class Assets extends SmartestSystemApplication{
 	    }
 		
 	}
+    
+    public function editFileParametersModal(){
+        
+		$asset = new SmartestAsset;
+	
+		if($asset->find($this->getRequestParameter('asset_id'))){
+		    
+            $assettype_code = $asset->getType();
+			$types_data = SmartestDataUtility::getAssetTypes();
+            
+            if(array_key_exists($assettype_code, $types_data)){
+                
+                $this->send($asset, 'asset');
+                
+            }
+            
+		}
+        
+    }
 	
 	public function editTextFragmentSource($get, $post){
 

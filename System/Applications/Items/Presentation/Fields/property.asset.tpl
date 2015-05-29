@@ -7,18 +7,18 @@
     <ul class="item_property_actions">
       
       {if is_array($value.type_info)}
-        <li><a href="javascript:;" id="edit-asset-button-{$property.id}" title="Edit this file"><i class="fa fa-pencil"></i></a>
+        <li><a href="#edit-file-instance-params" id="edit-asset-button-{$property.id}" title="Edit this file"><i class="fa fa-pencil"></i></a>
         <script type="text/javascript">
-        $('edit-asset-button-{$property.id}').observe('click', function(){literal}{{/literal}window.location='{$domain}assets/editAsset?from=item_edit&asset_id='+$('{$input_id}').value+'&item_id={$item.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}'{literal}}{/literal});
-        $('edit-asset-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit the selected file');{literal}}{/literal});
+        $('edit-asset-button-{$property.id}').observe('click', function(){literal}{{/literal}MODALS.load('assets/editFileParametersModal?asset_id='+$F('{$input_id}'), 'Image parameters');{literal}}{/literal});
+        $('edit-asset-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit the selected image\'s parameters');{literal}}{/literal});
         $('edit-asset-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
         </script></li>
       {/if}
     
       {if is_array($value.type_info) && count($value.type_info.param)}
-        <li><a href="#edit-file-params" id="edit-params-button-{$property.id}" title="Edit display parameters for this instance of this file"><i class="fa fa-sliders"></i></a>
+        <li><a href="#edit-file-instance-params" id="edit-params-button-{$property.id}" title="Edit display parameters for this instance of this file"><i class="fa fa-sliders"></i></a>
           <script type="text/javascript">
-          $('edit-params-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit display parameters for this instance');{literal}}{/literal});
+          $('edit-params-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit display parameters for this instance of the image');{literal}}{/literal});
           $('edit-params-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
           $('edit-params-button-{$property.id}').observe('click', function(e){ldelim}e.stop();MODALS.load('{$section}/editAssetData?item_id={$item.id}&property_id={$property.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}', 'Contextual file display parameters'){rdelim});
           </script></li>
@@ -31,9 +31,12 @@
         $('edit-file-notes-button-{$property.id}').observe('click', function(e){literal}{{/literal}MODALS.load('assets/assetCommentStream?asset_id='+$('{$input_id}').value, 'Notes on file '+$('{$_input_data.id}-thumbnail').alt); e.stop();{literal}}{/literal});
         </script></li>
         
+        <li style="padding-top:2px"><span class="form-hint" id="file-property-tooltip-{$property.id}"></span></li>
+        
     </ul>
 {else}
-  {asset_select id=$input_id name=$name value=$value options=$property._options required=$property.required}
+
+{asset_select id=$input_id name=$name value=$value options=$property._options required=$property.required}
 
 {if strlen($property.hint)}<div class="form-hint">{$property.hint}</div>{/if}
 
@@ -57,11 +60,18 @@
       {/if}
     {/if}
     
-    {if $value.id && is_array($value.type_info)}
-      <li><a href="javascript:;" id="edit-asset-button-{$property.id}" title="Edit this file"><i class="fa fa-pencil"></i></a>
+    {if $value.id && is_array($value.type_info) && isset($value.type_info.editable) && _b($value.type_info.editable)}
+      <li><a href="#edit-file" id="edit-asset-button-{$property.id}" title="Edit this file"><i class="fa fa-pencil"></i></a>
       <script type="text/javascript">
-      $('edit-asset-button-{$property.id}').observe('click', function(){literal}{{/literal}window.location='{$domain}assets/editAsset?from=item_edit&asset_id='+$('{$input_id}').value+'&item_id={$item.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}'{literal}}{/literal});
+      $('edit-asset-button-{$property.id}').observe('click', function(e){literal}{{/literal}e.stop();window.location='{$domain}assets/editAsset?from=item_edit&asset_id='+$('{$input_id}').value+'&item_id={$item.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}'{literal}}{/literal});
       $('edit-asset-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit the selected file');{literal}}{/literal});
+      $('edit-asset-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
+      </script></li>
+    {elseif $value.id && is_array($value.type_info) && ((!isset($value.type_info.editable) || !_b($value.type_info.editable)) && count($value.type_info.param))}
+      <li><a href="#edit-file-param" id="edit-asset-button-{$property.id}" title="Edit this file"><i class="fa fa-pencil"></i></a>
+      <script type="text/javascript">
+      $('edit-asset-button-{$property.id}').observe('click', function(e){literal}{{/literal}e.stop();window.location='{$domain}assets/editAsset?from=item_edit&asset_id='+$('{$input_id}').value+'&item_id={$item.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}'{literal}}{/literal});
+      $('edit-asset-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit the selected file\'s display parameters');{literal}}{/literal});
       $('edit-asset-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
       </script></li>
     {/if}
@@ -84,7 +94,7 @@
         </script></li>
     {/if}
     
-    <li style="padding-top:6px"><span class="form-hint" id="file-property-tooltip-{$property.id}"></span></li>
+    <li style="padding-top:2px"><span class="form-hint" id="file-property-tooltip-{$property.id}"></span></li>
     
   </ul>
 

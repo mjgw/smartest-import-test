@@ -661,7 +661,7 @@ div#footer{
 
 ul.item_property_actions{
     margin:0px;
-    padding:0 0 0 198px;
+    padding:5px 0 10px 198px;
     height:31px;
     clear:left;
 }
@@ -672,7 +672,8 @@ ul.item_property_actions li{
 }
 
 ul.item_property_actions li a{
-    padding:4px;
+    /* padding:4px; */
+    padding:0 4px 0 0;
     display:block;
 }
 
@@ -815,6 +816,11 @@ ul.apps.small li a.label{
                  
 #html-preview div.column-width-4{
     width:23%;
+}
+
+#html-preview img{
+    max-width:100%!important;
+    height:auto;
 }
 
 /** Other list styles **/

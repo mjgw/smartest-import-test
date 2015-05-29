@@ -1,7 +1,7 @@
 <div id="modal-work-area">
   <h3>File display parameters</h3>
   
-  <div class="instruction">How should this {$asset_type.label} look on {$model.name} &quot;{$item.name}&quot;</div>
+  <div class="instruction">How should this {$asset_type.label} look when connected to {$model.name|strtolower} &quot;{$item.name}&quot; as property &quot;{$property.name}&quot;</div>
   
   <form action="{$domain}ipv:{$section}/updateAssetData" method="post" id="edit-asset-data-form">
   
