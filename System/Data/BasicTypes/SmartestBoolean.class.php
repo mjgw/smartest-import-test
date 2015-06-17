@@ -53,7 +53,7 @@ class SmartestBoolean implements SmartestBasicType, ArrayAccess, SmartestStorabl
     }
     
     public function offsetExists($offset){
-        return in_array($offset, array('value', 'storedValue', 'int', 'bool', 'string', 'cssdisplayblock', 'cssdisplayinline', 'english'));
+        return in_array($offset, array('value', 'bool', 'raw', 'storedValue', 'stored_value', 'truefalse', 'int', 'numeric', 'bool', 'string', 'cssdisplayblock', 'cssdisplayinline', 'english', 'not', 'invert'));
     }
     
     public function offsetGet($offset){
@@ -63,6 +63,7 @@ class SmartestBoolean implements SmartestBasicType, ArrayAccess, SmartestStorabl
             case "raw":
             return $this->getValue();
             case 'storedValue':
+            case 'stored_value':
             case 'string':
             return $this->__toString();
             case 'english':
