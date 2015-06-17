@@ -115,6 +115,10 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             case "size":
             return $this->getSize();
             
+            case "raw_size":
+            case "size_raw":
+            return $this->getSize(true);
+            
             case "modified":
             return $this->getModified();
             
@@ -144,16 +148,16 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             
             case "image":
             case "img":
-            return $this->isImage() ? $this->getImage() : null;
+            return $this->isBinaryImage() ? $this->getImage() : null;
             
             case "width":
-            return $this->isImage() ? $this->getWidth() : null;
+            return $this->getWidth();
             
             case "height":
-            return $this->isImage() ? $this->getHeight() : null;
+            return $this->getHeight();
             
             case "dimensions":
-            return $this->isImage() ? $this->getWidth().' x '.$this->getHeight() : null;
+            return $this->getWidth().' x '.$this->getHeight();
             
             case "word_count":
             case "wordcount":
@@ -637,6 +641,8 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    }else{
 	        if($this->isWebAccessible()){
 	            return new SmartestExternalUrl('http://'.$this->getSite()->getDomain().$this->getFullWebPath());
+	        }else{
+	            return null;
 	        }
 	    }
 	    
@@ -1000,6 +1006,21 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         
 	    parent::save();
 	    
+        $placeholders_usages = $this->getPlaceholderUsages($site_id);
+        $ipv_usages = $this->getItemPropertyUsages($site_id);
+        
+        if(count($ipv_usages)){
+            foreach($ipv_usages as $ipvu){
+                $ipvu->getItem()->touch();
+            }
+        }
+        
+        if(count($placeholders_usages)){
+            foreach($placeholders_usages as $phu){
+                $phu->getPage()->touch();
+            }
+        }
+        
 	    if($this->usesTextFragment()){
 	    
 	        if($this->_set_textfragment_asset_id_on_save){

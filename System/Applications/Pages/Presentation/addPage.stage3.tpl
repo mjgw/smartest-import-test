@@ -13,6 +13,12 @@
         <td style="background-color:#fff" valign="top">URL:</td>
         <td style="background-color:#fff" valign="top"><code>{$domain}{$new_page_url}</code></td>
       </tr>
+      {if _b($newPage.parent)}
+      <tr>
+        <td style="background-color:#fff" valign="top">Parent page:</td>
+        <td style="background-color:#fff" valign="top">{$newPage.parent.title}</td>
+      </tr>
+      {/if}
       {if is_numeric($newPage.dataset_id) && $newPage.type == "ITEMCLASS"}
       <tr>
         <td style="background-color:#fff" valign="top">Represents model:</td>

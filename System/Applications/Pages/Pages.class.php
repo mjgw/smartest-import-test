@@ -514,7 +514,7 @@ class Pages extends SmartestSystemApplication{
     		}else if(strpos($placeholder_name, '_js') !== false || strpos($placeholder_name, 'javascript') !== false){
         		$suggested_type = 'SM_ASSETCLASS_JAVASCRIPT';
         		$this->send(true, 'type_suggestion_automatic');
-        	}else if(strpos($placeholder_name, '_txt') !== false || strpos($placeholder_name, 'text') !== false || strpos($placeholder_name, 'quote') !== false){
+        	}else if(strpos($placeholder_name, '_txt') !== false || strpos($placeholder_name, 'text') !== false || strpos($placeholder_name, 'txt') !== false || strpos($placeholder_name, 'quote') !== false){
             	$suggested_type = 'SM_ASSETCLASS_RICH_TEXT';
             	$this->send(true, 'type_suggestion_automatic');
             }else{
@@ -1420,7 +1420,7 @@ class Pages extends SmartestSystemApplication{
 			SmartestSession::get('__newPage')->setChangesApproved(0);
 			SmartestSession::get('__newPage')->setSearchField(htmlentities(strip_tags($this->getRequestParameter('page_search_field')), ENT_COMPAT, 'UTF-8'));
 			
-			if(strlen($this->getRequestParameter('page_url')) && substr($this->getRequestParameter('page_url'), 0, 18) != 'website/renderPage'){
+            if(strlen($this->getRequestParameter('page_url')) && substr($this->getRequestParameter('page_url'), 0, 18) != 'website/renderPage'){
 			    SmartestSession::get('__newPage')->clearUnsavedUrls();
                 SmartestSession::get('__newPage')->addUrl($this->getRequestParameter('page_url')); 
 			    $url = $this->getRequestParameter('page_url');
@@ -1428,8 +1428,6 @@ class Pages extends SmartestSystemApplication{
 		        
 		    } 
 			
-            // echo SmartestSession::get('__newPage')->getType();
-            
             if(SmartestSession::get('__newPage')->getType() == 'NORMAL'){
 			    SmartestSession::get('__newPage')->setDraftTemplate($this->getRequestParameter('page_draft_template'));
 			    SmartestSession::get('__newPage')->setDescription(strip_tags($this->getRequestParameter('page_description')));
@@ -1469,8 +1467,11 @@ class Pages extends SmartestSystemApplication{
 			}
 			
 			$type_template = strtolower(SmartestSession::get('__newPage')->getType());
-			
 			$newPage = SmartestSession::get('__newPage')->__toArray();
+            
+            if($newPage['parent']){
+                $newPage['parent'] = SmartestSession::get('__newPage')->getParentPage();
+            }
 			
 			$urlObj = new SmartestPageUrl;
 			

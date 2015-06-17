@@ -23,6 +23,7 @@ class SmartestUserAppBuilder extends SmartestBasicRenderer{
     // Unlike with SmartestWebPageBuilder this function is optional:
     public function assignPage($page){
         $this->page = $page;
+        $this->_tpl_vars['this'] = new SmartestPageRenderingDataRequestHandler($this->page);
         if(!defined('SM_CMS_PAGE_SITE_ID')){
             define('SM_CMS_PAGE_SITE_ID', $page->getSiteId());
         }

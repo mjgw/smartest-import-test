@@ -75,7 +75,7 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
                 $this->_search_info = new SmartestParameterHolder('Search query and results');
                 $this->_search_info->setParameter('results', new SmartestArray($this->_page->getResults()));
                 $this->_search_info->setParameter('num_results', count($this->_page->getResults()));
-                $this->_search_info->setParameter('query', $this->_page->getSearchQuery());
+                $this->_search_info->setParameter('query', strip_tags($this->_page->getSearchQuery()));
                 $this->_search_info->setParameter('time_taken', new SmartestNumeric($this->_page->getLastSearchTimeTaken()));
                 
             }

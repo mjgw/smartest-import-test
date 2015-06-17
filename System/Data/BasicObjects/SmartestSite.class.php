@@ -233,7 +233,7 @@ class SmartestSite extends SmartestBaseSite{
             }
 
             foreach($items as $i){
-
+                
                 $key = $i->getDate();
                 
                 if($key instanceof SmartestDateTime){
@@ -259,7 +259,7 @@ class SmartestSite extends SmartestBaseSite{
             // echo count($master_array);
             
             // print_r($this->database->getDebugInfo());
-
+            
             return $master_array;
             
         }else{

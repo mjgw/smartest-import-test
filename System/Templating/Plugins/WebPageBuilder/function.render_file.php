@@ -35,6 +35,24 @@ function smarty_function_render_file($params, &$smartest_engine){
             return $smartest_engine->raiseError('&lt;?sm:render_file:?&gt; must be provided with a SmartestRenderableAsset object or valid asset ID. Unknown asset ID given.');
         }
     
+    }elseif(isset($params['name'])){
+        
+        $asset = new SmartestRenderableAsset;
+        
+        if($asset->findBy('stringid', $params['name'])){
+            
+            foreach($params as $key=>$value){
+                if($key != 'name' && $key != 'asset'){
+                    $asset->setSingleAdditionalRenderDataParameter($key, $value);
+                }
+            }
+            
+            return $asset->render($smartest_engine->getDraftMode());
+            
+        }else{
+            return $smartest_engine->raiseError('Unknown asset name given.');
+        }
+    
     }else{
         
         $type = gettype($params['object']);

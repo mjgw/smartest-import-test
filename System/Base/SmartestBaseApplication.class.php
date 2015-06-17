@@ -105,9 +105,9 @@ class SmartestBaseApplication extends QuinceBase{
 	        
 	        $s = SmartestYamlHelper::fastLoad($this->getActionLocalisationFilePath());
 	        
-	        if(isset($s['strings'])){
+            if(isset($s['strings'])){
 	            $this->_l10n_action_strings = $s['strings'];
-	            $this->send($this->_l10n_action_strings, '_l10n_action_strings');
+                $this->send($this->_l10n_action_strings, '_l10n_action_strings');
 	        }
 	        
 	    }else if(method_exists($this, 'getEnglishActionLocalisationFilePath') && is_file($this->getEnglishActionLocalisationFilePath())){
@@ -223,6 +223,18 @@ class SmartestBaseApplication extends QuinceBase{
 		}
 	    
 	}
+    
+    protected function getApplicationDirectory(){
+        return $this->getRequest()->getMeta('_module_dir');
+    }
+    
+    protected function getConfigurationDirectory(){
+        return $this->getApplicationDirectory().'Configuration/';
+    }
+    
+    protected function getPresentationDirectory(){
+        return $this->getApplicationDirectory().'Presentation/';
+    }
 	
 	private function _loadApplicationSpecificResources(){
 	    
@@ -569,7 +581,7 @@ class SmartestBaseApplication extends QuinceBase{
     // TODO: Deprecate this and implement FS#172 (http://bugs.vsclabs.com/task/172)
     protected function loadApplicationClass($class){
         
-        $dir = SM_CONTROLLER_MODULE_DIR.'Library/';
+        $dir = $this->getApplicationDirectory().'Library/';
         
         if(substr($class, -4) != '.php'){
             $class = $class.'.class.php';
@@ -603,7 +615,7 @@ class SmartestBaseApplication extends QuinceBase{
             }
         }else{
             // We could either be referring to a user-created library or to a system library (but without using the 'Smartest' prefix, ie 'ManyToMany' for SmartestManyToManyHelper)
-            if(is_dir(SM_CONTROLLER_MODULE_DIR.'Library/Helpers/'.$helper.'.helper') && class_exists($full_helper)){
+            if(is_dir($this->getApplicationDirectory().'Library/Helpers/'.$helper.'.helper') && class_exists($full_helper)){
                 return true;
             }else if(is_dir(SM_ROOT_DIR.'Library/Helpers/'.$helper.'.helper') && class_exists($full_helper)){
                 return true;

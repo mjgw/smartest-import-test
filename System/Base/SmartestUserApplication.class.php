@@ -172,5 +172,16 @@ class SmartestUserApplication extends SmartestBaseApplication{
 	protected function getDefaultBackgroundPage(){
 	    return $this->_default_background_page;
 	}
+    
+    protected function loadConfigurationFile($file_name){
+        // Handles the reading of YAML and INI files in the Configuration/ sub-directory
+        if(is_file($this->getApplicationDirectory().'Configuration/'.$file_name)){
+            if(strtolower(SmartestFileSystemHelper::getDotSuffix($file_name)) == 'yml'){
+                return SmartestYamlHelper::fastLoad($this->getApplicationDirectory().'Configuration/'.$file_name);
+            }elseif(strtolower(SmartestFileSystemHelper::getDotSuffix($file_name)) == 'ini'){
+                return parse_ini_file($this->getApplicationDirectory().'Configuration/'.$file_name);
+            }
+        }
+    }
 
 }

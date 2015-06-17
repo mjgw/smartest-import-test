@@ -206,6 +206,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        return new SmartestString($this->getName());
 	    }
         
+	    if($offset == '_php_class'){
+	        return get_class($this);
+	    }
+        
         if(is_array($this->_many_to_one_sub_models) && array_key_exists($offset, $this->_many_to_one_sub_models)){
             return new SmartestArray($this->getSubModelItems($this->_many_to_one_sub_models[$offset]));
         }
@@ -578,7 +582,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    }else{
 		    // gotta get that from the database too
 		    $properties_sql = "SELECT * FROM ItemProperties WHERE itemproperty_itemclass_id='".$this->_model_id."' AND itemproperty_varname !='hydrate'";
-		    $properties_result = $this->database->queryToArray($sql);
+		    $properties_result = $this->database->queryToArray($properties_sql);
 		    SmartestCache::save('model_properties_'.$this->_model_id, $result, -1, true);
 	    }
 	    
@@ -1474,6 +1478,11 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    $this->publish();
 	    
 	}
+    
+    public function touch(){
+        $this->_item->setLastModified(time());
+        $this->_item->save();
+    }
 	
 	public function getSaveErrors(){
 	    return $this->_save_errors;

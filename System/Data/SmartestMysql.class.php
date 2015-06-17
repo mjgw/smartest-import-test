@@ -209,7 +209,7 @@ class SmartestMysql{
 		    
 	        }else{
 	            
-	            throw new SmartestException("Unsupported ".$this->getQueryType($querystring)." query type in SmartestMysql::queryToArray(). Use SmartestMysql::rawQuery()", SM_ERROR_DB);
+	            throw new SmartestException("Unsupported '".$this->getQueryType($querystring)."' query type in query '".$querystring."' SmartestMysql::queryToArray(). Use SmartestMysql::rawQuery()", SM_ERROR_DB);
 	            
 	        }
 		
