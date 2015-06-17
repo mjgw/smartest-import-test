@@ -536,7 +536,7 @@ type:
       - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 480}
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 360}
       - {name: auto_start, label: "Auto start", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
-      - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
+      - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, default:true, required: false}
 
   SM_ASSETTYPE_QUICKTIME_MOVIE:
     id: SM_ASSETTYPE_QUICKTIME_MOVIE
@@ -562,7 +562,7 @@ type:
       - {name: width, label: "Width", type: SM_DATATYPE_NUMERIC, required: true, default: 480}
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 360}
       - {name: auto_start, label: "Auto start", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
-      - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, default:false, required: false}
+      - {name: show_controller, label: "Show controller", type: SM_DATATYPE_BOOLEAN, default:true, required: false}
 
     
   SM_ASSETTYPE_FLASH_VIDEO:

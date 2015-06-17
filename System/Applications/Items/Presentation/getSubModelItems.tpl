@@ -62,6 +62,7 @@
   
   <ul class="actions-list" id="non-specific-actions">
     <li><b>{$sub_model.plural_name}</b></li>
+    <li class="permanent-action"><a href="{$domain}datamanager/addItem?class_id={$sub_model.id}&amp;parent_item_id={$item.id}"><img border="0" src="{$domain}Resources/Icons/add.png" /> Add {$sub_model.name|lower}</a></li>
     {if $sub_model.manual_order}<li class="permanent-action"><a href="{$domain}datamanager/setSubModelItemOrder?item_id={$item.id}&amp;sub_model_id={$sub_model.id}"><img border="0" src="{$domain}Resources/Icons/arrow_switch.png"> Change order</a></li>{/if}
     <li class="permanent-action"><a href="#" onclick="MODALS.load('datamanager/modelInfo?class_id={$sub_model.id}', 'Model info');"><img border="0" src="{$domain}Resources/Icons/information.png" /> Model info</a></li>
     <li class="permanent-action"><a href="{$domain}datamanager/editModel?class_id={$sub_model.id}&amp;return_to_item_id={$item.id}"><img border="0" src="{$domain}Resources/Icons/pencil.png" /> Edit model</a></li>

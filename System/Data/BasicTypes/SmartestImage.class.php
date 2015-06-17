@@ -510,6 +510,10 @@ class SmartestImage extends SmartestFile{
     
     public function getResizedVersionFromPercentage($percentage){
         
+        if($percentage == 100){
+            return $this;
+        }
+        
         $file = $this->getResizeFilenameFromPercentage($percentage);
         $url = 'Resources/System/Cache/Images/'.$file;
         $full_path = SM_ROOT_DIR.'Public/'.$url;

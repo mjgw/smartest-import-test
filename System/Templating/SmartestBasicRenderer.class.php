@@ -289,17 +289,22 @@ class SmartestBasicRenderer extends SmartestEngine{
                 }
             }
             
-            if(isset($path)){
-                $path = (!in_array($path, array('file', 'full'))) ? 'none' : $path;
-                if($path == 'none'){
+            if(isset($render_data['_hide_edit_button']) && $render_data['_hide_edit_button']){
+                
+            }else{
+                if(isset($path)){
+                    $path = (!in_array($path, array('file', 'full'))) ? 'none' : $path;
+                    if($path == 'none'){
+                        $edit_link = $this->renderEditAssetButton($this->_asset->getId(), $render_data);
+                    }
+                }else{
+                    $path = 'none';
                     $edit_link = $this->renderEditAssetButton($this->_asset->getId(), $render_data);
                 }
-            }else{
-                $path = 'none';
-                $edit_link = $this->renderEditAssetButton($this->_asset->getId(), $render_data);
-            }
 	        
-	        $content .= $edit_link;
+    	        $content .= $edit_link;
+            }
+            
             return $content;
             
         }else{

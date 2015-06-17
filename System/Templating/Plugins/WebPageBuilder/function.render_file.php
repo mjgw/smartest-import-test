@@ -2,6 +2,8 @@
 
 function smarty_function_render_file($params, &$smartest_engine){
     
+    $edit_button_in_draft = (isset($params['editbutton']) && !SmartestStringHelper::toRealBool($params['editbutton'])) ? false : true;
+    
     if(isset($params['asset']) && ($params['asset'] instanceof SmartestRenderableAsset)){
     
         // $smartest_engine->_renderAssetObject($params['object'], $params);
@@ -13,7 +15,7 @@ function smarty_function_render_file($params, &$smartest_engine){
             }
         }
         
-        return $asset->render($smartest_engine->getDraftMode());
+        return $asset->render($smartest_engine->getDraftMode(), $edit_button_in_draft);
     
     }elseif(isset($params['id']) && is_numeric($params['id'])){
         
@@ -27,7 +29,7 @@ function smarty_function_render_file($params, &$smartest_engine){
                 }
             }
             
-            return $asset->render($smartest_engine->getDraftMode());
+            return $asset->render($smartest_engine->getDraftMode(), $edit_button_in_draft);
             
         }else{
             return $smartest_engine->raiseError('&lt;?sm:render_file:?&gt; must be provided with a SmartestRenderableAsset object or valid asset ID. Unknown asset ID given.');

@@ -113,7 +113,7 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	    return $matches[$position];
 	}
 	
-	public function render($draft_mode='unset'){
+	public function render($draft_mode='unset', $edit_button_in_draft=true){
 	    
         if($draft_mode === 'unset'){
 	        $draft_mode = $this->_draft_mode;
@@ -126,6 +126,10 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	    if(!($this->_render_data->hasParameter('html_id') && strlen($this->_render_data->getParameter('html_id')))){
 	        $this->_render_data->setParameter('html_id', SmartestStringHelper::toSlug($this->_type_info['label']).'-'.substr($this->getWebId(), 0, 8));
 	    }
+        
+        if(!$edit_button_in_draft){
+            $this->_render_data->setParameter('_hide_edit_button', true);
+        }
 	    
         if($this->getId()){
 	        
