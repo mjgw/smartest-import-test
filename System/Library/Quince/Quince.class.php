@@ -847,6 +847,8 @@ class Quince{
 	protected $_num_redirects = 0;
 	protected $_current_request;
 	protected $_current_action;
+    protected $_use_manual_domain = false;
+    protected $_manual_domain = '/';
 	
 	public $module_shortnames;
 	
@@ -896,6 +898,11 @@ class Quince{
         self::$default_content_type = $config['default_content_type'];
         self::$use_namespaces = $config['use_namespaces'];
         
+        if(isset($config['domain'])){
+            $this->_use_manual_domain = true;
+            $this->_manual_domain = $config['domain'];
+        }
+        
     }
     
     private function removeQueryString($url){
@@ -934,123 +941,130 @@ class Quince{
 	    }
 	    */
 	    
-	    // TAKE ALL THE BITS OF THE REQUEST_URI THAT AREN'T IN THE DOCUMENT_ROOT AND MAKE THEM THE DOMAIN
+        if($this->_use_manual_domain){
+            
+            $r->setDomain($this->_manual_domain);
+            $r->setRequestString(substr($url, 1));
+            
+        }else{
+            
+    	    // TAKE ALL THE BITS OF THE REQUEST_URI THAT AREN'T IN THE DOCUMENT_ROOT AND MAKE THEM THE DOMAIN
 	    
-	    $test_url = $url{(strlen($url)-1)} == '/' ? substr($url, 0, -1) : $url;
+    	    $test_url = $url{(strlen($url)-1)} == '/' ? substr($url, 0, -1) : $url;
 	    
-	    // Calculate the domain
-	    $dr = realpath($_SERVER["DOCUMENT_ROOT"]).'/';
-	    $hdp = explode('/', $test_url);
+    	    // Calculate the domain
+    	    $dr = realpath($_SERVER["DOCUMENT_ROOT"]).'/';
+    	    $hdp = explode('/', $test_url);
         
-        array_shift($hdp);
-        $possible_dir = implode('/', $hdp).'/';
-        
-        // MultiViews support: look for URLS like index.php/module/action
-		// $fc_filename = basename($_SERVER['SCRIPT_FILENAME']);
-		// $fc_filename_len = strlen($fc_filename)+1;
-		
-		while(!is_dir($dr.$possible_dir)){
-            array_pop($hdp);
+            array_shift($hdp);
             $possible_dir = implode('/', $hdp).'/';
-        }
         
-        /* if(substr($possible_dir, 0, $fc_filename_len) == '/'.$fc_filename){
-		    $possible_dir .= $fc_filename.'/';
-		    $url = substr($url, $fc_filename_len);
-		} */
+            // MultiViews support: look for URLS like index.php/module/action
+    		// $fc_filename = basename($_SERVER['SCRIPT_FILENAME']);
+    		// $fc_filename_len = strlen($fc_filename)+1;
+		
+    		while(!is_dir($dr.$possible_dir)){
+                array_pop($hdp);
+                $possible_dir = implode('/', $hdp).'/';
+            }
         
-        if($possible_dir == '/'){
-            $r->setDomain('/');
-            $r->setRequestString(substr($url, 1));
-        }else{
-            $r->setDomain('/'.$possible_dir);
-            $r->setRequestString(substr($url, strlen($possible_dir)+1));
-        }
+            /* if(substr($possible_dir, 0, $fc_filename_len) == '/'.$fc_filename){
+    		    $possible_dir .= $fc_filename.'/';
+    		    $url = substr($url, $fc_filename_len);
+    		} */
         
-        return $r;
-        
-        /* if(is_dir($dr.$possible_dir)){
-            $r->setDomain('/'.$possible_dir);
-            $r->setRequestString(substr($url, strlen($possible_dir)+1));
-        }else{
-            $r->setDomain('/');
-            $r->setRequestString(substr($url, 1));
-        } */
-        
-        /* if($f === false){
-            throw new QuinceException("Domain could not be calculated: Document root not found in current working directory");
-        }else{
-            if($f > 0){
-                $docroot = substr($cwd, 0, $f).$_SERVER["DOCUMENT_ROOT"];
+            if($possible_dir == '/'){
+                $r->setDomain('/');
+                $r->setRequestString(substr($url, 1));
             }else{
-                $docroot = $_SERVER["DOCUMENT_ROOT"];
+                $r->setDomain('/'.$possible_dir);
+                $r->setRequestString(substr($url, strlen($possible_dir)+1));
             }
-        } */
         
-        /* if(strlen($cwd) == strlen($docroot)){
+            /* if(is_dir($dr.$possible_dir)){
+                $r->setDomain('/'.$possible_dir);
+                $r->setRequestString(substr($url, strlen($possible_dir)+1));
+            }else{
+                $r->setDomain('/');
+                $r->setRequestString(substr($url, 1));
+            } */
+        
+            /* if($f === false){
+                throw new QuinceException("Domain could not be calculated: Document root not found in current working directory");
+            }else{
+                if($f > 0){
+                    $docroot = substr($cwd, 0, $f).$_SERVER["DOCUMENT_ROOT"];
+                }else{
+                    $docroot = $_SERVER["DOCUMENT_ROOT"];
+                }
+            } */
+        
+            /* if(strlen($cwd) == strlen($docroot)){
             
-            $r->setRequestString('');
-	        $r->setDomain($url.'/');
-	        return $r;
+                $r->setRequestString('');
+    	        $r->setDomain($url.'/');
+    	        return $r;
 	        
-        }else if(strlen($cwd) > strlen($docroot)){
+            }else if(strlen($cwd) > strlen($docroot)){
             
-            $possible_domain = substr($cwd, strlen($docroot));
-            $start = strlen($possible_domain)+1;
+                $possible_domain = substr($cwd, strlen($docroot));
+                $start = strlen($possible_domain)+1;
             
-            if(substr($_SERVER['REQUEST_URI'], 0, $start) == $possible_domain.'/'){
-                $r->setDomain($possible_domain.'/');
-                $r->setRequestString(substr($url, $start));
-                return $r;
+                if(substr($_SERVER['REQUEST_URI'], 0, $start) == $possible_domain.'/'){
+                    $r->setDomain($possible_domain.'/');
+                    $r->setRequestString(substr($url, $start));
+                    return $r;
+                }
+            
+            } */
+        
+            // $num_folders = count($hdp);
+        
+            /* for($i=0;$i<$num_folders;$i++){
+                $try_path = '/'.implode('/', $hdp).'/';
+                // echo $try_path.' ';
+                $substr_start = strlen($try_path)*-1;
+                // print_r($hdp);
+                $request = array_pop($hdp).'/'.$request;
+                // echo $request;
+            
             }
+        
+            $argnum = 1;
+            $count = (count($hdp)-1);
+            $ds = array();
+        
+            for($i=0;$i<$count;++$i){
+                $ds[] = '/'.implode('/', array_reverse(array_slice($hdp, 0, ($argnum * -1)))).'/';
+                ++$argnum;
+            }
+        
+            $ds = array_reverse($ds);
+            $r->setRequestString(substr($url, 1));
+            $r->setDomain('/');
+        
+            // Loop through the directory paths until one matches
+            foreach($ds as $try){
             
-        } */
-        
-        // $num_folders = count($hdp);
-        
-        /* for($i=0;$i<$num_folders;$i++){
-            $try_path = '/'.implode('/', $hdp).'/';
-            // echo $try_path.' ';
-            $substr_start = strlen($try_path)*-1;
-            // print_r($hdp);
-            $request = array_pop($hdp).'/'.$request;
-            // echo $request;
+                $dlen = strlen($try);
+            
+                if(substr($url, 0, $dlen) == $try){
+                
+                    $r->setRequestString(substr($url, $dlen));
+                    $r->setDomain($try);
+                
+                    if(substr($r->getRequestString(), 0, $fc_filename_len) == $fc_filename){
+            		    $r->setDomain($r->getDomain().$fc_filename);
+            		    $r->setRequestString(substr($r->getRequestString(), $fc_filename_len));
+            		}
+                
+                    return $r;
+                }
+            } */
             
         }
         
-        $argnum = 1;
-        $count = (count($hdp)-1);
-        $ds = array();
-        
-        for($i=0;$i<$count;++$i){
-            $ds[] = '/'.implode('/', array_reverse(array_slice($hdp, 0, ($argnum * -1)))).'/';
-            ++$argnum;
-        }
-        
-        $ds = array_reverse($ds);
-        $r->setRequestString(substr($url, 1));
-        $r->setDomain('/');
-        
-        // Loop through the directory paths until one matches
-        foreach($ds as $try){
-            
-            $dlen = strlen($try);
-            
-            if(substr($url, 0, $dlen) == $try){
-                
-                $r->setRequestString(substr($url, $dlen));
-                $r->setDomain($try);
-                
-                if(substr($r->getRequestString(), 0, $fc_filename_len) == $fc_filename){
-        		    $r->setDomain($r->getDomain().$fc_filename);
-        		    $r->setRequestString(substr($r->getRequestString(), $fc_filename_len));
-        		}
-                
-                return $r;
-            }
-        } */
-        
-        return $r;
+	    return $r;
 	}
 	
 	public function getUrlFor($route_name){

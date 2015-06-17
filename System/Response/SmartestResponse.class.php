@@ -300,7 +300,7 @@ class SmartestResponse{
 		    exit();
 		}
 		
-		try{
+        try{
 		    if(isset($GLOBALS['_site']) && is_object($GLOBALS['_site'])){
 		        SmartestQuery::init(true, $GLOBALS['_site']->getId());
 	        }else{
@@ -395,6 +395,7 @@ class SmartestResponse{
                 // Otherwise, as EU compliance is not activated, start the session
                 SmartestSession::start();
             }
+            
         }else if($this->isSystemClass()){
             
             if(is_file(SM_ROOT_DIR.'Configuration/admin_domains.yml')){
@@ -439,7 +440,7 @@ class SmartestResponse{
 		
 		$rp->setParameter('action', $this->_controller->getCurrentRequest()->getAction());
 		$rp->setParameter('domain', $this->_controller->getCurrentRequest()->getDomain());
-		$rp->setParameter('namespace', $this->_controller->getCurrentRequest()->getNamespace());
+        $rp->setParameter('namespace', $this->_controller->getCurrentRequest()->getNamespace());
 		$rp->setParameter('request_string', $_SERVER['REQUEST_URI']);
 		
 		$params = new SmartestParameterHolder('Request parameters');
@@ -458,7 +459,7 @@ class SmartestResponse{
 		SmartestPersistentObject::set('request_data', $rp);
 	    $h = new SmartestRequestUrlHelper;
 	    
-	    try{
+        try{
 	    
     	    // Make sure site is always looked up
     	    if($this->isWebsitePage()){
@@ -493,6 +494,7 @@ class SmartestResponse{
             $e->redirect();
         }
 	    
+        
 	    // Start Smarty
 	    if($this->isSystemClass()){
 		    $templateLayerContext = 'InterfaceBuilder';
@@ -517,9 +519,9 @@ class SmartestResponse{
 		$this->_smarty->assign("sm_user_agent_json", $this->_browser->getSimpleClientSideObjectAsJson());
 		$this->_smarty->assign("sm_user_agent", $this->_browser);
 		
-		SmartestPersistentObject::set('presentationLayer', $this->_smarty);
+        SmartestPersistentObject::set('presentationLayer', $this->_smarty);
 		
-		if(is_dir($this->_controller->getCurrentRequest()->getMeta('_module_dir').'Library/')){
+        if(is_dir($this->_controller->getCurrentRequest()->getMeta('_module_dir').'Library/')){
 	        $existing_include_path = get_include_path();
 	        $ip_array = explode(constant('PATH_SEPARATOR'), $existing_include_path);
 	        $ip_array[] = $this->_controller->getCurrentRequest()->getMeta('_module_dir').'Library/';
@@ -528,28 +530,27 @@ class SmartestResponse{
 	    }
 	    
 	    SmartestHelper::loadApplicationHelpers();
-		
-		// Push controller and execute the user action
+        // Push controller and execute the user action
 		try{
 		    $this->_controller->dispatch(Quince::CURRENT_URL, false);
 		}catch(QuinceException $e){
-		    $this->errorFromException(new SmartestException('Quince error: '.$e->getMessage()));
+            $this->errorFromException(new SmartestException('Quince error: '.$e->getMessage()));
 		}catch(SmartestException $e){
 		    $this->errorFromException($e);
 		}
-		
-		SmartestPersistentObject::get('timing_data')->setParameter('overhead_time', microtime(true));
+        
+        SmartestPersistentObject::get('timing_data')->setParameter('overhead_time', microtime(true));
 		
 		// Once things like forwarding have calmed down, initialize the templates that are actually going to be used, and make final controller data available for template layer
 		
-		$this->initializeTemplates();
+        $this->initializeTemplates();
 		
 		$metas = new SmartestParameterHolder('Application metadata');
 		$metas->loadArray($this->_controller->getCurrentRequest()->getMetas());
 		
-		$rp->setParameter('action', $this->_controller->getCurrentRequest()->getAction());
-		$rp->setParameter('domain', $this->_controller->getCurrentRequest()->getDomain());
-		$rp->setParameter('namespace', $this->_controller->getCurrentRequest()->getNamespace());
+        $rp->setParameter('action', $this->_controller->getCurrentRequest()->getAction());
+        $rp->setParameter('domain', $this->_controller->getCurrentRequest()->getDomain());
+        $rp->setParameter('namespace', $this->_controller->getCurrentRequest()->getNamespace());
 		
 		$params = new SmartestParameterHolder('Request parameters');
 		$params->loadArray($this->_controller->getCurrentRequest()->getRequestParameters());
@@ -642,7 +643,7 @@ class SmartestResponse{
 	
 	protected function initializeTemplates(){
 		
-		if($subfolder = $this->_controller->getCurrentRequest()->getMeta('presentation_subfolder')){
+        if($subfolder = $this->_controller->getCurrentRequest()->getMeta('presentation_subfolder')){
 		    if(!SmartestStringHelper::endsWith($subfolder, '/')){
 		        $subfolder .= '/';
 		    }

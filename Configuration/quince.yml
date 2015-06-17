@@ -8,6 +8,7 @@ quince:
   use_namespaces: true
   default_content_type: text/html
   default_charset: UTF-8
+  domain: /
   modules:
     config: Configuration/quince.yml
     storage:
