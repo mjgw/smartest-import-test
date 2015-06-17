@@ -2574,7 +2574,12 @@ class Items extends SmartestSystemApplication{
     		$models = $du->getModels(false, $this->getSite()->getId(), true);
 		    $this->send($models, 'models');
             
-            $this->send(json_encode(reset($models)->getPropertyVarnames()), 'first_model_property_varnames_json');
+            if(count($models)){
+                $this->send(json_encode(reset($models)->getPropertyVarnames()), 'first_model_property_varnames_json');
+                $this->send(true, 'allow_sub_models');
+            }else{
+                $this->send(false, 'allow_sub_models');
+            }
             
             $site_lib_dir = SM_ROOT_DIR.'Sites/'.$this->getSite()->getDIrectoryName().'/Library/';
             $site_om_dir = $site_lib_dir.'ObjectModel/';

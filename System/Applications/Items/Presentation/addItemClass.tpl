@@ -1,6 +1,8 @@
 <script language="javascript">
 
+{if $allow_sub_models}
 var parentModelProperties = {$first_model_property_varnames_json};
+{/if}
 
 {literal}
 var setPlural = true;
@@ -73,6 +75,7 @@ var checkParentModelPropertyName = function(){
   <input id="plural" onkeyup="turnOffAutoPlural()" type="text" name="itemclass_plural_name" style="width:200px" /><span class="form-hint">ie "Articles", "Cars", "People"</span>
 </div>
 
+{if $allow_sub_models}
 <div class="edit-form-row">
   <div class="form-section-label">Role</div>
   <select name="itemclass_role" id="model-role-select">
@@ -81,6 +84,9 @@ var checkParentModelPropertyName = function(){
   </select>
   <div class="form-hint">Leave this as it is if you are unsure. You can rename this field later.</div>
 </div>
+{else}
+<input type="hidden" name="itemclass_role" value="freestanding" />
+{/if}
 
 <div id="constituent-model-options" style="display:none">
   <div class="edit-form-row">
@@ -167,6 +173,7 @@ var checkParentModelPropertyName = function(){
 
 </div>
 
+{if $allow_sub_models}
 <script type="text/javascript">
 {literal}
   
@@ -195,3 +202,4 @@ var checkParentModelPropertyName = function(){
   
 {/literal}
 </script>
+{/if}

@@ -7,7 +7,7 @@
 <h3>Items</h3>
 
 {if empty($models)}
-  <div class="special-box">No models yet. {if $allow_create_models}Click <a href="{$domain}{$section}/addItemClass?createmetapage=true">here</a> to create one. {/if}{help id="datamanager:models"}What are models?{/help}</div>
+  <div class="special-box">No models yet. {if $allow_create_models}<a href="{$domain}{$section}/addItemClass?createmetapage=true" class="button">Click here</a> to create one. {/if}{help id="datamanager:models"}What are models?{/help}</div>
 {else}
   
   {load_interface file="items_front_tabs.tpl"}
