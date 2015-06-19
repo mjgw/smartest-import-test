@@ -253,23 +253,24 @@ class SmartestAssetCreationHelper{
 	        
 	        $intended_file_name = SM_ROOT_DIR.$this->_asset_type['storage']['location'].$filename;
 	        $final_file_name = SmartestFileSystemHelper::getUniqueFileName($intended_file_name);
-	        
-	        if(is_file($new_temp_file)){
             
-	            if(SmartestFileSystemHelper::move($new_temp_file, $final_file_name)){
+            if(SmartestFileSystemHelper::save($final_file_name, SmartestStringHelper::sanitize($textarea_contents), true)){
+            
+	            // if(SmartestFileSystemHelper::move($new_temp_file, $final_file_name)){
 	                $this->_asset->setUrl(basename($final_file_name));
 	                chmod($final_file_name, 0666);
+                    $everything_ok = true;
 		            return true;
-		        }else{
+                /* }else{
 		            $everything_ok = false;
 		            $message = sprintf("Could not move %s to %s. Please check file permissions on directory ".$this->_asset_type['storage']['location'].".", basename($new_temp_file), basename($final_file_name));
 		            throw new SmartestAssetCreationException($message);
 		            SmartestLog::getInstance('site')->log($message, SmartestLog::ERROR);
 		            SmartestLog::getInstance('site')->log("File that failed to move to final location is still stored at: ".$new_temp_file, SmartestLog::NOTICE);
-		        }
+		        } */
 	        
             }else{
-                SmartestLog::getInstance('site')->log("Temporary upload ".$new_temp_file." was unexpectedly not created.", SmartestLog::ERROR);
+                SmartestLog::getInstance('site')->log("File upload ".$final_file_name." was unexpectedly not completed. Please check file permissions at ".$this->_asset_type['storage']['location'], SmartestLog::ERROR);
             }
 	    }
 	    

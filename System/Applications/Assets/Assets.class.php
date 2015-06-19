@@ -1665,11 +1665,7 @@ class Assets extends SmartestSystemApplication{
 
 		if($asset->find($asset_id)){
 		    
-		    // $this->setFormReturnUri();
-            
-            // print_r($asset->getDefaultParameterValues());
-            
-            $data = $asset;
+		    $data = $asset;
 		    
 		    $comments = $asset->getComments();
 		    $this->send($comments, 'comments');
@@ -1690,9 +1686,7 @@ class Assets extends SmartestSystemApplication{
 		    // var_dump(SmartestStringHelper::toRealBool($data['type_info']['supports_exif']));
 		    
 		    if(isset($data['type_info']['supports_exif']) && SmartestStringHelper::toRealBool($data['type_info']['supports_exif'])){
-		        // echo "hello";
 		        if($exif_data = $asset->getImage()->getExifData()){
-		            var_dump($exif_data);
 		            $this->send(true, 'show_exif_panel');
 	            }else{
 	                $this->send(false, 'show_exif_panel');
