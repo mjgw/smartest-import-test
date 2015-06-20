@@ -389,6 +389,9 @@ class SmartestResponse{
             // if compliance mode is on, make starting the session and setting the cookie contingent on having permission to do so
             if(SmartestStringHelper::toRealBool($this->getGlobalPreference('enable_eu_cookie_compliance'))) {
                 if($_COOKIE['SMARTEST_COOKIE_CONSENT'] == '1'){
+                    // extend the life of the cookie
+                    setcookie("SMARTEST_COOKIE_CONSENT", '1', time()+90*24*60*60);
+                    // start the session
                     SmartestSession::start();
                 }
             }else{
