@@ -7,6 +7,7 @@ class Users extends SmartestSystemApplication{
 		$this->setFormReturnUri();
 		$this->setFormReturnDescription('user accounts');
 		$this->setTitle('User accounts');
+        $this->requireOpenProject();
 		
 		$h = new SmartestUsersHelper;
 		

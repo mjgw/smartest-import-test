@@ -6,11 +6,11 @@
 
   <input type="hidden" name="page_id" value="{$pageInfo.id}" />
   <input type="hidden" name="page_webid" value="{$pageInfo.webid}" />
-  {if $is_valid_item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+  {if $is_item_page && $is_valid_item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
 
   <div id="edit-form-layout">
 
-{if $is_valid_item}
+{if $is_item_page && $is_valid_item}
     <div class="modal-error" style="display:none" id="urls-error">*</div>
     
     <div class="edit-form-row">
@@ -41,7 +41,7 @@
       </div>
     </div>
     
-{if $is_valid_item}
+{if $is_item_page && $is_valid_item}
     <div class="edit-form-row">
       <div class="form-section-label">Applies to</div>
       <select name="page_url_type" id="page-url-type">
@@ -62,7 +62,9 @@
   </div>
 
   </form>
-  
+
+{if $is_item_page}
+
 {if $is_valid_item}
   <script type="text/javascript">
 {literal}
@@ -92,6 +94,24 @@
   });
 {/literal}
   </script>
+{/if}
+
+{else}
+
+  <script type="text/javascript">
+{literal}
+  $('save-button').observe('click', function(evt){
+    if($F('page-url-string').charAt(0)){
+      saveNewPageUrl();
+      $('urls-error').hide();
+    }else{
+      $('urls-error').update("The URL field cannot be blank");
+      $('urls-error').appear({duration:0.3});
+    }
+  });
+{/literal}
+  </script>
+
 {/if}
 
 </div>

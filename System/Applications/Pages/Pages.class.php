@@ -4368,7 +4368,13 @@ class Pages extends SmartestSystemApplication{
 		            }
 		            
 		        }
+                
+                $item_page = true;
 		        
+		    }else{
+		        
+                $item_page = false;
+                
 		    }
             
             // $ishomepage = $this->getRequestParameter('ishomepage');
@@ -4376,6 +4382,7 @@ class Pages extends SmartestSystemApplication{
 		    $page_info = $page;
 		    $site = $page->getSite();
 		    $this->send($is_valid_item, 'is_valid_item');
+            $this->send($item_page, 'is_item_page');
 		    // $page_info['site'] = $page->getSite();
 		    
 		    $this->send($page_info, "pageInfo");
