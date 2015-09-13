@@ -1643,6 +1643,9 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        
 	        case "is_tag_page":
 	        return $this->isTagPage();
+            
+	        case "is_home_page":
+	        return $this->isHomePage();
 	        
 	        case "child_pages":
 	        return $this->getPageChildrenForWeb();
