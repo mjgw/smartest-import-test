@@ -2951,7 +2951,7 @@ class Items extends SmartestSystemApplication{
     		            if(($data_type['valuetype'] == 'foreignkey' || $data_type['valuetype'] == 'manytomany') && isset($data_type['filter']['typesource'])){
     		                
     		                if(is_file($data_type['filter']['typesource']['template'])){
-    		                    $this->send(new SmartestArray(SmartestDataUtility::getForeignKeyFilterOptions($data_type_code)), 'foreign_key_filter_options');
+    		                    $this->send(new SmartestArray(SmartestDataUtility::getForeignKeyFilterOptions($data_type_code, $this->getSite()->getId())), 'foreign_key_filter_options');
     		                    $this->send(SM_ROOT_DIR.$data_type['filter']['typesource']['template'], 'filter_select_template');
     		                }else{
     		                    $this->send($data_type['filter']['typesource']['template'], 'intended_file');

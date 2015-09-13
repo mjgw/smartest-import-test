@@ -77,6 +77,8 @@ class SmartestExternalUrl implements SmartestBasicType, ArrayAccess, SmartestSto
             case 'url':
             case 'string':
             return $this->__toString();
+            case 'is_valid':
+            return SmartestStringHelper::isValidExternalUri($this->_value);
         }
     }
     

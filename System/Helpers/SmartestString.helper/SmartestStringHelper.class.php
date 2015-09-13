@@ -8,9 +8,9 @@ require_once(SM_ROOT_DIR.'System/Library/Textile/classTextile.php');
 
 class SmartestStringHelper extends SmartestHelper{
     
-    const EMAIL_ADDRESS = '/[A-Z0-9._%-]+@[A-Z0-9-]+\.[\w]{2,4}/i';
-    const US_ZIP_CODE = '/(\d{5})(-\d{4})?/';
-    const UK_POST_CODE = '/([A-Z][A-Z]?\d\d?[A-Z]?)\s*(\d[A-Z][A-Z])?/i';
+    const EMAIL_ADDRESS = '/^[A-Z0-9._%-]+@[A-Z0-9-]+\.[\w]{2,4}/i';
+    const US_ZIP_CODE = '/^(\d{5})(-\d{4})?/';
+    const UK_POST_CODE = '/^([A-Z][A-Z]?\d\d?[A-Z]?)\s*(\d[A-Z][A-Z])?/i';
     
     public static function convertObject($data){
         if(is_object($data)){
@@ -735,7 +735,7 @@ class SmartestStringHelper extends SmartestHelper{
 	}
 	
 	public static function isValidExternalUri($string){
-		return preg_match('/^https?:\/\//i', $string);
+		return preg_match('/^https?:\/\/.{4,}/i', $string);
 	}
 	
 	public static function parseNameValueString($string){

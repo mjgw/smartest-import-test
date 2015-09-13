@@ -5,9 +5,7 @@ class SmartestEmailAddress extends SmartestString{
     protected $_name;
     
     public function formatIsValid(){
-        
         return SmartestStringHelper::isEmailAddress($this->_string);
-        
     }
     
     public function getDisplayName(){

@@ -32,6 +32,8 @@ class SmartestCmsLinkHelper extends SmartestHelper{
             if($markup_attributes){
                 $link->applyMarkupAttributes($markup_attributes);
             }
+        }else if($to instanceof SmartestEmailAddress || SmartestStringHelper::isEmailAddress($to)){
+            $link = self::createMailToLinkFromEmail($to, $markup_attributes);
         }else{
             $properties = SmartestLinkParser::parseSingle($to);
             $link = new SmartestCmsLink($properties, $markup_attributes);
@@ -82,6 +84,29 @@ class SmartestCmsLinkHelper extends SmartestHelper{
         $properties = new SmartestParameterHolder('Link to author page');
         $properties->setParameter('from_author', true);
         $properties->setParameter('author', $author);
+        
+        $link = new SmartestCmsLink($properties, $markup_attributes);
+        
+        return $link;
+        
+    }
+    
+    public static function createMailToLinkFromEmail($email, $markup_attributes){
+        
+        if(!$email instanceof SmartestEmailAddress){
+            
+            if(is_object($email)){
+                $email = new SmartestEmailAddress($email->__toString());
+            }else{
+                $email = new SmartestEmailAddress($email);
+            }
+            
+        }
+        
+        $properties = new SmartestParameterHolder('Link to email address');
+        $properties->setParameter('from_email', true);
+        $properties->setParameter('email', $email);
+        $properties->setParameter('namespace', 'mailto');
         
         $link = new SmartestCmsLink($properties, $markup_attributes);
         

@@ -150,6 +150,8 @@
             'for': purpose
           }
         });
+        
+        $(inputId).fire('image:chosen');
       
         MODALS.hideViewer();
 

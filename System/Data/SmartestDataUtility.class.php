@@ -23,7 +23,7 @@ class SmartestDataUtility{
         
     }
     
-    public function getModels($simple = false, $site_id='', $force_regenerate=false){
+    public function getModels($simple = false, $site_id=null, $force_regenerate=false){
 	    
 	    if(is_numeric($site_id)){
 	        $cache_name = 'models_query_site_'.$site_id;
@@ -248,7 +248,7 @@ class SmartestDataUtility{
 		}
 	}
 	
-	public function getDataSetsAsArrays($simple = false, $site_id='', $get_contents=false){
+	public function getDataSetsAsArrays($simple = false, $site_id=null, $get_contents=false){
 	    
 	    $sets = $this->getDataSets($simple, $site_id);
 	    $arrays = array();
@@ -264,7 +264,7 @@ class SmartestDataUtility{
 	    return $arrays;
 	}
 	
-	public static function getForeignKeyFilterOptions($data_type_code){
+	public static function getForeignKeyFilterOptions($data_type_code, $site_id=null){
 	    
 	    $data_types = self::getDataTypes();
 	    
@@ -286,7 +286,13 @@ class SmartestDataUtility{
             	    $options['placeholder_types'] = SmartestDataUtility::getAssetClassTypes(true);
 
             	    return $options;
+                    
+                }elseif($t == 'smartest:models'){
             	    
+                    $du = new SmartestDataUtility;
+                    $options = $du->getModels(false, $site_id);
+                    return $options;
+                    
 	            }else{
 	                
 	                $database = SmartestDatabase::getInstance('SMARTEST');
@@ -502,9 +508,9 @@ class SmartestDataUtility{
         
     }
 	
-	public static function getDataTypes($usage_filter='', $refresh=false, $save=true){
+	public static function getDataTypes($usage_filter=null, $refresh=false, $save=true){
 	    
-	    if(self::$data_types && !$refresh){
+	    if(self::$data_types && !$refresh && !$usage_filter){
 	        
 	        return self::$data_types;
 	        
@@ -564,8 +570,8 @@ class SmartestDataUtility{
     	            }
 	            
     	        }
-	        
-    	        if($usage_filter){
+	            
+                if($usage_filter){
     	            $usages = explode(',', $raw_type['usage']);
     	            if(in_array($usage_filter, $usages)){
     	                $types[$raw_type['id']] = $raw_type;
@@ -575,7 +581,7 @@ class SmartestDataUtility{
                 }
     	    }
     	    
-            if($save){
+            if($save && !$usage_filter){
                 self::$data_types = $types;
             }
 	    

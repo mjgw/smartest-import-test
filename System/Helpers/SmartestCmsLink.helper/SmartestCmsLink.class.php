@@ -90,6 +90,10 @@ class SmartestCmsLink extends SmartestHelper{
           
             $this->setDestinationFromProvidedAuthor($this->_destination_properties->getParameter('author'));
         
+        }else if($this->_destination_properties->getParameter('from_email')){
+            
+            $this->setDestinationFromProvidedEmail($this->_destination_properties->getParameter('email'));
+        
         }else{
             
             if($this->_render_data->hasParameter('metapage')){
@@ -421,6 +425,18 @@ class SmartestCmsLink extends SmartestHelper{
         
     }
     
+    public function setDestinationFromProvidedEmail(SmartestEmailAddress $email){
+        
+        $this->setNamespace('mailto');
+        $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
+        
+        $this->setType(SM_LINK_TYPE_MAILTO);
+        $this->addClass('sm-link-mailto');
+        
+        $this->_destination = $email;
+        
+    }
+    
     public function getSiteId(){
         
         if(defined('SM_CMS_PAGE_SITE_ID')){
@@ -722,7 +738,7 @@ class SmartestCmsLink extends SmartestHelper{
     
     public function shouldOmitAnchorTag($draft_mode=false){
         // return !$this->_preview_mode && ($this->isInternalPage() && $this->shouldGoCold() && is_object($this->_host_page) && $this->_page->getId() == $this->_host_page->getId());
-        if(!$this->_destination_properties->getParameter('from_item') && !$this->_destination_properties->getParameter('from_page') && !$this->_destination_properties->getParameter('from_tag') && !$this->_destination_properties->getParameter('from_author') && (!$this->_destination_properties->getParameter('destination') || $this->_destination_properties->getParameter('destination') == '#')){
+        if(!$this->_destination_properties->getParameter('from_item') && !$this->_destination_properties->getParameter('from_page') && !$this->_destination_properties->getParameter('from_tag') && !$this->_destination_properties->getParameter('from_author') && !$this->_destination_properties->getParameter('from_email') && (!$this->_destination_properties->getParameter('destination') || $this->_destination_properties->getParameter('destination') == '#')){
             return true;
         }else{
             if($this->getHostPage()){
@@ -790,8 +806,10 @@ class SmartestCmsLink extends SmartestHelper{
     
     public function getContent($draft_mode=false){
         
-        if($this->_preset_content_markup){
+        // echo "getting content";
         
+        if($this->_preset_content_markup){
+            
             return $this->_preset_content_markup;
         
         }elseif($this->_render_data->hasParameter('with')){
@@ -937,7 +955,7 @@ class SmartestCmsLink extends SmartestHelper{
         }else{
             // otherwise guess
             
-			$fa_prefix = $this->_render_data->hasParameter('fa_iconname') ? '<i class="fa fa-'.SmartestStringHelper::toSlug($this->_render_data->getParameter('fa_iconname')).'"> </i>' : '';
+            $fa_prefix = $this->_render_data->hasParameter('fa_iconname') ? '<i class="fa fa-'.SmartestStringHelper::toSlug($this->_render_data->getParameter('fa_iconname')).'"> </i>' : '';
 						
             if($this->getType() == SM_LINK_TYPE_EXTERNAL){
                 

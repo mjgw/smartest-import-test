@@ -454,7 +454,6 @@ class AssetsAjax extends SmartestSystemApplication{
                     if(strlen($this->getRequestParameter('asset_credit'))){
                         // throw new SmartestException($this->getRequestParameter('asset_credit'));
                         $asset->setCredit($this->getRequestParameter('asset_credit'));
-                        $asset->save();
                     }
                     
                     $assetSimpleObj = new stdClass;
@@ -462,6 +461,9 @@ class AssetsAjax extends SmartestSystemApplication{
                     $assetSimpleObj->asset_webid = $asset->getWebId();
                     $assetSimpleObj->asset_label = $asset->getLabel();
                     $assetSimpleObj->asset_url = $asset->getUrl();
+                    
+                    $asset->setSiteId($this->getSite()->getId());
+                    $asset->save();
                     
                 }
                 
@@ -573,6 +575,9 @@ class AssetsAjax extends SmartestSystemApplication{
                     $assetSimpleObj->asset_webid = $asset->getWebId();
                     $assetSimpleObj->asset_label = $asset->getLabel();
                     $assetSimpleObj->asset_url = $asset->getUrl();
+                    
+                    $asset->setSiteId($this->getSite()->getId());
+                    $asset->save();
                     
                     if($this->requestParameterIsSet('for')){
                     

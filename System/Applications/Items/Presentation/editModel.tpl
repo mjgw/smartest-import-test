@@ -89,6 +89,7 @@
       
       {if count($metapages)}
       <div class="edit-form-row">
+        {if !$model.default_metapage_id}<div class="warning">{/if}
         <div class="form-section-label">Default meta-page</div>
         {if $can_edit_model}
         <select name="itemclass_default_metapage_id">
@@ -97,6 +98,7 @@
           <option value="{$page.id}"{if $model.default_metapage_id == $page.id} selected="selected"{/if}>{$page.title}</option>
           {/foreach}
         </select>
+        {if !$model.default_metapage_id}</div>{/if}
         {else}
         {foreach from=$metapages item="page"}
           {if $model.default_metapage_id == $page.id}{$page.title}{/if}
