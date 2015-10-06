@@ -1717,6 +1717,9 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             case "section":
             return $this->getSectionPage();
             
+            case "is_section_page":
+            return SmartestStringHelper::toRealBool($this->getIsSection());
+            
             case "empty":
             return !$this->getId();
             

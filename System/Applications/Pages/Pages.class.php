@@ -4721,7 +4721,7 @@ class Pages extends SmartestSystemApplication{
     
     	    $pg = new SmartestPageGroup;
     
-    	    if(!$pg->hydrateBy('name', $name) && !$pg->hydrateBy('label', $name)){
+    	    if(!$pg->findBy('name', $name, $this->getSite()->getId()) && !$pg->findBy('label', $name, $this->getSite()->getId())){
 	        
     	        $pg->setName($name);
     	        $pg->setLabel($label);

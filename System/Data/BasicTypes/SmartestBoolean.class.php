@@ -67,6 +67,7 @@ class SmartestBoolean implements SmartestBasicType, ArrayAccess, SmartestStorabl
             case 'string':
             return $this->__toString();
             case 'english':
+            case 'yesno':
             return $this->getValue() ? 'Yes' : 'No';
             case 'truefalse':
             return $this->getValue() ? 'true' : 'false';

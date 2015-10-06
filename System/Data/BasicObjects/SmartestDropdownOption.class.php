@@ -172,6 +172,9 @@ class SmartestDropdownOption extends SmartestBaseDropdownOption implements Smart
             case "dropdown":
             return $this->getDropdown();
             
+            case "empty":
+            return !is_object($this->getValueObject()) || !$this->getValueObject()->isPresent();
+            
         }
         
         // var_dump($value = $this->getValueObject());
