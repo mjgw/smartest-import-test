@@ -62,6 +62,7 @@ class SmartestEmailAddress extends SmartestString{
             
             case 'mailto_link_contents':
             case 'mailto_string':
+            case 'link_contents':
             return 'mailto:'.$this->_string;
             
         }

@@ -993,21 +993,24 @@ class SmartestDataUtility{
 	    
 	    if($object = self::getBlankObjectForDataType($as_type, $fk_filter)){
 	        
-	        if($object instanceof SmartestStorableValue){
+            if($object instanceof SmartestStorableValue){
 	            
 	            if($object->hydrateFromStorableFormat($value)){
 	                return $object;
 	            }else{
-	                // object couldn't be hydrated
+                    if(strlen(trim($value))){
+	                    // object couldn't be hydrated
+                        throw new SmartestException("Object of class ".get_class($object)." could not be hydrated from raw value '".$value."'.");
+                    }
 	            }
 	            
 	        }else{
-	            throw new SmartestException("Class ".get_class($object)." must implement interface SmartestStorableValue");
+	            throw new SmartestException("Class ".get_class($object)." specified as class for type '".$as_type."' must implement interface SmartestStorableValue");
 	        }
 	        
 	    }else{
 	        
-	        throw new SmartestException("Could not objectize value ".$value." as type '".$as_type."'");
+	        throw new SmartestException("Could not retrieve blank object for specified type: '".$as_type."' (intended value '".$value."')");
 	        
 	    }
 	    

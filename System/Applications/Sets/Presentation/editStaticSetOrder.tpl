@@ -96,10 +96,16 @@
   
   <ul class="actions-list">
     <li><b>Options</b></li>
-    {if $request_parameters.item_id && $request_parameters.from}<li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>{/if}
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/previewSet?set_id={$set.id}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}'"><img border="0" src="{$domain}Resources/Icons/folder_magnify.png"> Browse set contents</a></li>
+    {if $request_parameters.page_id && $request_parameters.from == 'preview'}
+      <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/preview?page_id={$request_parameters.page_id}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return page preview</a></li>
+    {elseif $request_parameters.page_id && $request_parameters.from == 'fullPreview'}
+      <li class="permanent-action"><a href="#" onclick="window.location='{$domain}website/renderEditableDraftPage?page_id={$request_parameters.page_id}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}&amp;hide_newwin_link=true'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return page preview</a></li>
+	  {elseif $request_parameters.item_id && $request_parameters.from != 'preview' && $request_parameters.from != 'fullPreview'}
+      <li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>
+    {/if}
+    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/previewSet?set_id={$set.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}'"><img border="0" src="{$domain}Resources/Icons/folder_magnify.png"> Browse set contents</a></li>
     <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/deleteSetConfirm?set_id={$set.id}'"><img border="0" src="{$domain}Resources/Icons/package_delete.png"> Delete this set</a></li>
-		<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/editSet?set_id={$set.id}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}'"><img border="0" src="{$domain}Resources/Icons/pencil.png"> Edit this set</a></li>
+		<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/editSet?set_id={$set.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}'"><img border="0" src="{$domain}Resources/Icons/pencil.png"> Edit this set</a></li>
   </ul>
   
 </div>

@@ -664,9 +664,23 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                     return $this->raiseError("Item set with name '".$identifier."' could not be found.");
                 }
             }
-        
+            
+            $url = $this->_request_data->g('domain').'sets/editStaticSetOrder?set_id='.$set->getId();
+            
+            if($this->page){
+                if(isset($_GET['hide_newwin_link']) && $_GET['hide_newwin_link'] = 'true'){
+                    $url .= '&amp;from=fullPreview&amp;page_id='.$this->page->getWebId();
+                }else{
+                    $url .= '&amp;from=preview&amp;page_id='.$this->page->getWebId();
+                }
+            }
+            
+            if($this->getPage() instanceof SmartestItemPage){
+                $url .= '&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
+            }
+            
             if($set->getType('STATIC')){
-                $html = '<a class="sm-edit-button" href="'.$this->_request_data->g('domain').'sets/editStaticSetOrder?set_id='.$set->getId().'" target="_top"><img src="'.$this->_request_data->g('domain').'Resources/Icons/arrow_switch.png" alt="" /></a>';
+                $html = '<a class="sm-edit-button" href="'.$url.'" target="_top"><img src="'.$this->_request_data->g('domain').'Resources/Icons/arrow_switch.png" alt="" /></a>';
                 return $html;
             }else{
                 return $this->raiseError("Item set '".$set->getLabel()."' is not static and cannot be ordered manually.");

@@ -158,7 +158,7 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             case "titlecase_strict":
             return SmartestStringHelper::toTitleCase($this->_string, true);
             case "_php_class":
-            return __CLASS__;
+            return get_class($this);
             default:
             if(preg_match('/^truncate_(\d+)$/', $offset, $matches)){
                 return SmartestStringHelper::truncate($this->_string, $matches[1]);
