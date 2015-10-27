@@ -34,7 +34,7 @@ class SmartestCmsItemsHelper{
     
     public function hydrateMixedListFromIdsArray($ids, $draft_mode=false, $keep_ids=false){
         
-        $results = $this->getSquareDbDataFromIdsArray($ids);
+        $results = $this->getSquareDbDataFromIdsArray($ids, null, $draft_mode);
         $items = array();
         
         // print_r($ids);
@@ -125,7 +125,7 @@ class SmartestCmsItemsHelper{
         
     }
     
-    public function getRawDbDataFromIdsArray($ids, $model_id=''){
+    public function getRawDbDataFromIdsArray($ids, $model_id='', $draft_mode=false){
         
         if(!count($ids)){
             // If no IDs are given, don't bother running a query
@@ -139,28 +139,37 @@ class SmartestCmsItemsHelper{
             if(count($r)){
                 // The model has properties
                 $sql = "SELECT * FROM Items, ItemPropertyValues WHERE Items.item_deleted !=1 AND Items.item_id=ItemPropertyValues.itempropertyvalue_item_id AND Items.item_id IN ('".implode("','", $ids)."') AND Items.item_itemclass_id='".$model_id."'";
+                if(!$draft_mode){
+                    $sql .= " AND item_public='TRUE'";
+                }
                 return $this->database->queryToArray($sql);
             }else{
                 // The model does not have properties
                 $sql = "SELECT * FROM Items WHERE Items.item_deleted !=1 AND Items.item_id IN ('".implode("','", $ids)."') AND Items.item_itemclass_id='".$model_id."'";
+                if(!$draft_mode){
+                    $sql .= " AND item_public='TRUE'";
+                }
                 return $this->database->queryToArray($sql);
             }
         }else{
             // a model is not specified
             $sql = "SELECT * FROM Items, ItemPropertyValues WHERE Items.item_deleted !=1 AND Items.item_id=ItemPropertyValues.itempropertyvalue_item_id AND Items.item_id IN ('".implode("','", $ids)."')";
+            if(!$draft_mode){
+                $sql .= " AND item_public='TRUE'";
+            }
             return $this->database->queryToArray($sql);
         }
         
     }
     
-    public function getSquareDbDataFromIdsArray($ids, $model_id=''){
+    public function getSquareDbDataFromIdsArray($ids, $model_id='', $draft_mode=false){
         
         $included_item_ids = array();
         $items = array();
         
         // print_r($ids);
         
-        foreach($this->getRawDbDataFromIdsArray($ids, $model_id) as $result){
+        foreach($this->getRawDbDataFromIdsArray($ids, $model_id, $draft_mode) as $result){
             
             $items[$result['item_id']][$result['itempropertyvalue_property_id']] = $result;
             
