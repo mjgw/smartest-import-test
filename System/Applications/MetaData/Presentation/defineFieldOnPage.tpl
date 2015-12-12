@@ -20,6 +20,8 @@
       </select>
       {elseif $field_type == 'SM_DATATYPE_BOOLEAN'}
       {boolean name="field_content" id="field-value" value=$value}
+      {elseif $field_type == 'SM_DATATYPE_INTERNAL_LINK'}
+      {internal_link_select name="field_content" id="field-value" value=$value}
       {elseif $field_type == 'SM_DATATYPE_ASSET_GALLERY'}
       <select name="field_content">
         {foreach from=$options item="option"}

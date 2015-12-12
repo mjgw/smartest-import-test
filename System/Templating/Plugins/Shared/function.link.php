@@ -13,7 +13,12 @@ function smarty_function_link($params, &$smartest_engine){
 		$ph = new SmartestParameterHolder('Raw Link Params: '.$params['to']);
 	    $ph->loadArray($params);
 	    
-		$link = SmartestCmsLinkHelper::createLink($params['to'], $ph);
+        if($params['to'] instanceof SmartestCmsLink){
+            $link = $params['to'];
+            $link->applyMarkupAttributes($params);
+        }else{
+            $link = SmartestCmsLinkHelper::createLink($params['to'], $ph);
+        }
 		
 		if(isset($GLOBALS['CURRENT_PAGE'])){
 		    $link->setHostPage($GLOBALS['CURRENT_PAGE']);
@@ -35,6 +40,8 @@ function smarty_function_link($params, &$smartest_engine){
 		    return $smartest_engine->raiseError($link->getErrorMessage());
 		}
 		
+        // var_dump($smartest_engine->getDraftMode());
+        
 		return $link->render($smartest_engine->getDraftMode());
 		
 	}else{

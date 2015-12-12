@@ -40,10 +40,10 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             }
         }
 	    
-	    if($this->isImage()){
+	    // if($this->isImage()){
             $data['width'] = $this->getWidth();
             $data['height'] = $this->getHeight();
-        }
+        // }
         
         if($include_object){
             $data['_object'] = $this;

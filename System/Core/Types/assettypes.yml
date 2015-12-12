@@ -671,6 +671,7 @@ type:
     class: SmartestAsset
     html_friendly: false
     parsable: false
+    icon: page_white.png
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD

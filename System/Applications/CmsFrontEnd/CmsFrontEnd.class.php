@@ -40,6 +40,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	public function renderPageFromUrl(){
 		
 		define('SM_AJAX_CALL', false);
+        define('SM_DRAFT_MODE', false);
         
         if($this->lookupSiteDomain()){
 		    
@@ -97,6 +98,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	public function renderPageFromId($get){
 		
 		define('SM_AJAX_CALL', false);
+        define('SM_DRAFT_MODE', false);
         
         if($this->lookupSiteDomain()){
 		    
@@ -209,6 +211,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	public function renderEditableDraftPage($get){
 		
 		define('SM_AJAX_CALL', false);
+        define('SM_DRAFT_MODE', true);
 		
 		define('SM_OPTIONS_ALLOW_CONTAINER_EDIT_PREVIEW_SCREEN', $this->getUser()->hasToken('edit_containers_in_preview', false));
 		

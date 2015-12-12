@@ -261,5 +261,59 @@ class PagesAjax extends SmartestSystemApplication{
         }
 	    
 	}
+    
+    public function addPageDownload(){
+        
+        $page = new SmartestPage;
+        
+        if($page->smartFind($this->getRequestParameter('page_id'))){
+            
+            $asset = new SmartestAsset;
+            
+            if($asset->find($this->getRequestParameter('asset_id'))){
+                
+                $dl = $page->addDownloadById($asset->getId(), strip_tags($this->getRequestParameter('download_label')));
+                header('Content-Type: application/json; charset=UTF8');
+                echo $dl->__toJson();
+                exit;
+                
+            }
+            
+        }
+        
+    }
+    
+    public function removePageDownload(){
+        
+        $page = new SmartestPage;
+        
+        if($page->smartFind($this->getRequestParameter('page_id'))){
+            
+            $asset = new SmartestAsset;
+            
+            if($asset->find($this->getRequestParameter('asset_id'))){
+                
+                $page->removeDownloadById($asset->getId());
+                header('Content-Type: application/json; charset=UTF8');
+                echo json_encode(array('success'=>true));
+                exit;
+                
+            }else{
+                
+                header('Content-Type: application/json; charset=UTF8');
+                echo json_encode(array('success'=>false, 'reason'=>'asset'));
+                exit;
+                
+            }
+            
+        }else{
+            
+            header('Content-Type: application/json; charset=UTF8');
+            echo json_encode(array('success'=>false, 'reason'=>'page'));
+            exit;
+            
+        }
+        
+    }
 
 }

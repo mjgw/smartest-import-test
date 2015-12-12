@@ -225,6 +225,39 @@ ul.round-buttons-list li a.selected{
     color:#FFF;
 }
 
+ul.basic-files-list{
+    list-style-type:none;
+    margin:0px;
+    padding:0px;
+}
+
+ul.basic-files-list li{
+    margin:0 0 5px 0;
+}
+
+ul.basic-files-list li img{
+    display:inline-block;
+    margin:0 5px 0 0;
+}
+
+ul.basic-files-list li span.file-label{
+    
+}
+
+ul.basic-files-list li a.icon-button{
+    display:inline-block;
+    box-sizing:border-box;
+    margin:0 2px 0 3px;
+    padding:2px;
+    color:#fff;
+    background-color:#68849E;
+    width:20px;
+    height:20px;
+    text-align:center;
+    font-size:1.1em;
+    border-radius:11px;
+}
+
 #top-strip{
 	background-color:#222;
 }

@@ -110,11 +110,28 @@ class SmartestCmsLink extends SmartestHelper{
     
     public function applyMarkupAttributes($markup_attributes){
         
+        // print_r($this->_markup_attributes);
+        
         if($this->_markup_attributes){
+            
+            if($this->_markup_attributes->hasParameter('class')){
+                if(isset($markup_attributes['class'])){
+                    // print_r($markup_attributes['class']);
+                    $new_classes = $markup_attributes['class'];
+                    unset($markup_attributes['class']);
+                    foreach(explode(' ', $new_classes) as $classname){
+                        $this->addClass($classname);
+                    }
+                }
+            }
+            
             $this->_markup_attributes->absorb($this->getSeparatedAttributes($markup_attributes)->getParameter('html'));
+            
         }else{
             $this->_markup_attributes = $this->getSeparatedAttributes($markup_attributes)->getParameter('html');
         }
+        
+        // print_r($this->_markup_attributes['class']);
         
         if($this->_render_data){
             $this->_render_data->absorb($this->getSeparatedAttributes($markup_attributes)->getParameter('other'));
@@ -498,6 +515,12 @@ class SmartestCmsLink extends SmartestHelper{
             // class not applied
             return false;
         }
+        
+    }
+    
+    public function getClasses(){
+        
+        return explode(' ', $this->getMarkupAttribute('class'));
         
     }
     
@@ -1185,7 +1208,15 @@ class SmartestCmsLink extends SmartestHelper{
         
     }
     
-    public function render($draft_mode=false, $ama='', $link_content=null){
+    public function render($draft_mode='SM_CMS_LINK_DRAFT_MODE_AUTO', $ama='', $link_content=null){
+        
+        if($draft_mode == 'SM_CMS_LINK_DRAFT_MODE_AUTO'){
+            if(defined('SM_DRAFT_MODE')){
+                $draft_mode = constant('SM_DRAFT_MODE');
+            }else{
+                $draft_mode = false;
+            }
+        }
         
         if($this->getType() == SM_LINK_TYPE_EXTERNAL){
             

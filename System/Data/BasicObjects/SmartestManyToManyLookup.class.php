@@ -74,6 +74,19 @@ class SmartestManyToManyLookup extends SmartestBaseManyToManyLookup{
 		$this->_modified_properties['context_data'] = $serialized_data;
 	}
     
+    public function __toSimpleObject(){
+        
+        $obj = parent::__toSimpleObject();
+        $obj->context_data = new stdClass;
+        
+        foreach($this->getContextData() as $n => $v){
+            $obj->context_data->$n = $v;
+        }
+        
+        return $obj;
+        
+    }
+    
     public function save(){
         if(!isset($this->_modified_properties['context_data'])){
             $this->setContextData(null);

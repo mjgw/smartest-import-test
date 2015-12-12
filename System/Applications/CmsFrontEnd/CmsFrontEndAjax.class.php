@@ -107,6 +107,8 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     		}else{
     		    $draft_mode = false;
     		}
+            
+            define('SM_DRAFT_MODE', $draft_mode);
     		
     		if(isset($type_index[$page_webid])){
     		    if($type_index[$page_webid] == 'ITEMCLASS' && $this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){

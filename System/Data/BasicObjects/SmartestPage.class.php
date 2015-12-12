@@ -23,6 +23,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	protected $_placeholders;
 	protected $_itemspaces = array();
     protected $_asset_class_definitions_retrieved = false;
+    protected $_page_downloads = array();
 	
 	protected $_new_urls = array();
 	protected $displayPagesIndex = 0;
@@ -1731,6 +1732,12 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             case "json_info_url":
             return $this->getJsonInfoUrl();
             
+            case 'downloads':
+            if(!count($this->_page_downloads)){
+                $this->_page_downloads = $this->getPageDownloads();
+            }
+            return new SmartestArray($this->_page_downloads);
+            
 	        
 	    }
 	    
@@ -2303,6 +2310,49 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    $q->delete();
 	    
 	}
+    
+    public function getPageDownloads(){
+        
+	    $q = new SmartestManyToManyQuery('SM_MTMLOOKUP_PAGE_DOWNLOADS');
+	    $q->setTargetEntityByIndex(1);
+	    $q->addQualifyingEntityByIndex(2, $this->_properties['id']);
+	    
+	    $q->addSortField('Assets.asset_label');
+	    
+	    $result = $q->retrieve();
+	    
+	    return $result;
+        
+    }
+    
+    public function addDownloadById($asset_id, $label=""){
+        
+	    $asset_id = (int) $asset_id;
+	    
+	    $link = new SmartestManyToManyLookup;
+	    $link->setEntityForeignKeyValue(2, $this->_properties['id']);
+	    $link->setEntityForeignKeyValue(1, $asset_id);
+        $link->setLabel($label);
+	    $link->setType('SM_MTMLOOKUP_PAGE_DOWNLOADS');
+	    
+	    $link->save();
+        
+        return $link;
+        
+    }
+    
+    public function removeDownloadById($asset_id){
+        
+	    $asset_id = (int) $asset_id;
+	    
+	    $q = new SmartestManyToManyQuery('SM_MTMLOOKUP_PAGE_DOWNLOADS');
+	    $q->setTargetEntityByIndex(1);
+	    $q->addQualifyingEntityByIndex(2, $this->_properties['id']);
+	    $q->addForeignTableConstraint('Assets.asset_id', $asset_id);
+	    
+	    $q->delete();
+        
+    }
 	
 	public function getContainerDefinition($container_name){
 	    

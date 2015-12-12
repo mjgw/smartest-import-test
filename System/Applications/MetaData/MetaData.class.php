@@ -116,22 +116,22 @@ class MetaData extends SmartestSystemApplication{
         			// $pageproperty_name = $this->getRequestParameter('assetclass_id');
         			// $pageproperty_id = $this->manager->database->specificQuery("pageproperty_id", "pageproperty_name", $this->getRequestParameter('assetclass_id'), "PageProperties");
         			// $field->hydrateBy();
-        			$lookup_field = 'pageproperty_name';
+        			$lookup_field = 'name';
         			$value = $this->getRequestParameter('assetclass_id');
         		}else{
         			// $pageproperty_id = $this->getRequestParameter('pageproperty_id');
         			// $pageproperty_name = $this->manager->database->specificQuery("pageproperty_name", "pageproperty_id", $pageproperty_id, "PageProperties");
-        			$lookup_field = 'pageproperty_id';
+        			$lookup_field = 'id';
         			$value = $this->getRequestParameter('pageproperty_id');
         		}
 		    
-    		    $db = SmartestPersistentObject::get('db:main');
-    		    $sql = "SELECT * FROM PageProperties WHERE ".$lookup_field."='".$value."' AND pageproperty_site_id='".$page->getSiteId()."'";
-    		    $result = $db->queryToArray($sql);
+    		    // $db = SmartestPersistentObject::get('db:main');
+    		    // $sql = "SELECT * FROM PageProperties WHERE ".$lookup_field."='".$value."' AND pageproperty_site_id='".$page->getSiteId()."'";
+    		    // $result = $db->queryToArray($sql);
 		    
-        		if(count($result)){
+        		if($field->findBy($lookup_field, $value, $page->getSiteId())){
 		        
-    		        $field->hydrate($result[0]);
+    		        // $field->hydrate($result[0]);
 		        
         		    $def = new SmartestPageFieldDefinition;
             		$def->loadForUpdate($field, $page);
@@ -148,7 +148,7 @@ class MetaData extends SmartestSystemApplication{
                         $this->send($options, 'options');
         		    }
     		    
-        		    $this->send($def->getDraftValue(), 'value');
+        		    $this->send(SmartestDataUtility::objectize($def->getDraftValue(), $field->getType()), 'value');
         		    $this->send($field->getName(), 'field_name');
         		    $this->send($field->getType(), 'field_type');
         		    $this->send($field->getId(), 'field_id');

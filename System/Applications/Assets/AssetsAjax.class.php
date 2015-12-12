@@ -280,6 +280,33 @@ class AssetsAjax extends SmartestSystemApplication{
         
     }
     
+    public function assetInfoJson(){
+        
+        $asset = new SmartestAsset;
+        
+        if($asset->find($this->getRequestParameter('asset_id'))){
+            
+            /* $obj = new stdClass;
+            
+            if($asset->isBinaryImage()){
+                $obj->width = $asset->getWidth();
+                $obj->height = $asset->getHeight();
+                $obj->is_image = true;
+            }else{
+                $obj->width = $asset->getWidth();
+                $obj->is_image = false;
+            }
+            
+            $obj->type = $asset->getType(); */
+            
+            header('Content-Type: application/json; charset=UTF8');
+            echo json_encode($asset->__toArray());
+            exit;
+            
+        }
+        
+    }
+    
     public function updateGalleryOrder(){
         
         $group = new SmartestAssetGroup;

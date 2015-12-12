@@ -43,6 +43,10 @@ class SmartestRenderableSingleItemTemplateAsset extends SmartestAsset implements
     	    
     	    return $content;
             
+        }else{
+            
+            return 'no item';
+            
         }
         
     }

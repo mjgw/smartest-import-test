@@ -34,6 +34,8 @@ class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, Smart
         $this->_loadDestination();
         $extra_markup_attributes = $this->getSeparatedAttributes($this->_destination_properties)->getParameter('html');
         
+        // $this->addClass('sm-link-internal');
+        
         if($this->_destination_properties->hasParameter('hash')){
             $this->_hash = $this->_destination_properties->getParameter('hash');
         }

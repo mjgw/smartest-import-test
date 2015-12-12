@@ -4816,5 +4816,56 @@ class Pages extends SmartestSystemApplication{
 	    $this->formForward();
 	    
 	}
+    
+    public function pageDownloads(){
+        
+		$page_webid = $this->getRequestParameter('page_id');
+		
+		$helper = new SmartestPageManagementHelper;
+		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
+		
+		if(isset($type_index[$page_webid])){
+		    if(($type_index[$page_webid] == 'ITEMCLASS' || $type_index[$page_webid] == 'SM_PAGETYPE_ITEMCLASS' || $type_index[$page_webid] == 'SM_PAGETYPE_DATASET') && $this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
+		        $page = new SmartestItemPage;
+		    }else{
+		        $page = new SmartestPage;
+		    }
+		}else{
+		    $page = new SmartestPage;
+		}
+		
+		if($page->smartFind($page_webid)){
+		    
+            $this->send($page, 'page');
+            $editable = $page->isEditableByUserId($this->getUser()->getId());
+    		$this->send($editable, 'page_is_editable');
+            
+            $file_ids = array();
+            
+            $downloads = $page->getPageDownloads();
+            $this->send($downloads, 'downloads');
+            
+            if(count($downloads)){
+                foreach($downloads as $d){
+                    $file_ids[] = $d->getAssetId();
+                }
+                $this->send(implode(',', $file_ids), 'connected_file_ids');
+            }else{
+                $this->send('', 'connected_file_ids');
+            }
+            
+            // echo count($downloads);
+            
+            // $this->redirect('@websitemanager:basic_info?page_id='.$page->getWebid());
+            
+		}
+        
+    }
+    
+    public function addPageDownload(){
+        
+        
+        
+    }
 
 }
