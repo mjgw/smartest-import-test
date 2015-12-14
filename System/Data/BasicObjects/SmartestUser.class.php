@@ -724,6 +724,185 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    
 	}
     
+    
+    //////////////////////// TAGS ////////////////////////
+    
+	public function getTags(){
+	    
+	    $sql = "SELECT * FROM Tags, TagsObjectsLookup WHERE TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND TagsObjectsLookup.taglookup_object_id='".$this->_properties['id']."' AND TagsObjectsLookup.taglookup_type='SM_ITEM_TAG_LINK' ORDER BY Tags.tag_name";
+	    $result = $this->database->queryToArray($sql);
+	    $ids = array();
+	    $tags = array();
+	    
+	    foreach($result as $ta){
+	        if(!in_array($ta['taglookup_tag_id'], $ids)){
+	            $ids[] = $ta['taglookup_tag_id'];
+	            $tag = new SmartestTag;
+	            $tag->hydrate($ta);
+	            $tags[] = $tag;
+	        }
+	    }
+	    
+	    return $tags;
+	    
+	}
+	
+	public function getTagsAsCommaSeparatedString(){
+	    
+	    $tags = $this->getTags();
+	    $labels_array = array();
+	    
+	    foreach($tags as $t){
+	        $labels_array[] = $t->getLabel();
+	    }
+	    
+	    return implode(', ', $labels_array);
+	    
+	}
+    
+    public function tag($tag_identifier){
+        
+	    if(is_numeric($tag_identifier)){
+	        
+	        $tag = new SmartestTag;
+	        
+	        if(!$tag->find($tag_identifier)){
+	            // kill it off if they are supplying a numeric ID which doesn't match a tag
+	            return false;
+	        }
+	        
+	    }else{
+	        
+	        $tag_name = SmartestStringHelper::toSlug($tag_identifier);
+	        
+	        $tag = new SmartestTag;
+
+    	    if(!$tag->findBy('name', $tag_name)){
+                // create tag
+    	        $tag->setLabel($tag_identifier);
+    	        $tag->setName($tag_name);
+    	        $tag->save();
+    	    }
+	    }
+	    
+	    $sql = "INSERT INTO TagsObjectsLookup (taglookup_tag_id, taglookup_object_id, taglookup_type) VALUES ('".$tag->getId()."', '".$this->_properties['id']."', 'SM_USER_TAG_LINK')";
+	    $this->database->rawQuery($sql);
+	    return true;
+        
+    }
+    
+    public function untag($tag_identifier){
+        
+	    if(is_numeric($tag_identifier)){
+	        
+	        $tag = new SmartestTag;
+	        
+	        if(!$tag->hydrate($tag_identifier)){
+	            // kill it off if they are supplying a numeric ID which doesn't match a tag
+	            return false;
+	        }
+	        
+	    }else{
+	        
+	        $tag_name = SmartestStringHelper::toSlug($tag_identifier);
+	        
+	        $tag = new SmartestTag;
+
+    	    if(!$tag->hydrateBy('name', $tag_name)){
+                return false;
+    	    }
+	    }
+	    
+	    $sql = "DELETE FROM TagsObjectsLookup WHERE taglookup_object_id='".$this->_properties['id']."' AND taglookup_tag_id='".$tag->getId()."' AND taglookup_type='SM_USER_TAG_LINK'";
+	    $this->database->rawQuery($sql);
+	    return true;
+        
+    }
+    
+	public function addTagWithId($tag_id){
+	    
+        $tag_id = (int) $tag_id;
+	    $sql = "INSERT INTO TagsObjectsLookup (taglookup_tag_id, taglookup_object_id, taglookup_type) VALUES ('".$tag_id."', '".$this->_properties['id']."', 'SM_USER_TAG_LINK')";
+	    $this->database->rawQuery($sql);
+	    return true;
+	    
+	}
+    
+	public function hasTag($tag_identifier){
+	    
+	    if(is_numeric($tag_identifier)){
+	        $sql = "SELECT * FROM TagsObjectsLookup WHERE taglookup_type='SM_USER_TAG_LINK' AND taglookup_object_id='".$this->_properties['id']."' AND taglookup_tag_id='".$tag->getId()."'";
+	    }else{
+	        $tag_name = SmartestStringHelper::toSlug($tag_identifier);
+	        $sql = "SELECT * FROM TagsObjectsLookup, Tags WHERE taglookup_type='SM_USER_TAG_LINK' AND taglookup_object_id='".$this->_properties['id']."' AND TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND Tags.tag_name='".$tag_name."'";
+	    }
+	    
+	    return (bool) count($this->database->queryToArray($sql));
+	    
+	}
+    
+	public function createOrConnectTags($new_tag_strings_array, $title_case=true){
+	    
+	    if(!is_array($new_tag_strings_array) || !count($new_tag_strings_array)){
+	        return false;
+	    }
+	    
+	    // 1. Find out which tags already exist
+	    
+	    // create array with slugs as keys, raw values as values
+	    $useful_array = array();
+	    
+	    foreach($new_tag_strings_array as $string){
+	        $useful_array[SmartestStringHelper::toSlug($string, true)] = $string;
+	    }
+	    
+	    
+	    $new_tag_slugs = array();
+	    
+	    foreach($new_tag_strings_array as $nts){
+	        $new_tag_slugs[] = SmartestStringHelper::toSlug($nts, true);
+	    }
+	    
+	    $sql = "SELECT * FROM Tags WHERE tag_type='SM_TAGTYPE_TAG' AND tag_name IN ('".implode("','", $new_tag_slugs)."')";
+	    $result = $this->database->queryToArray($sql);
+	    $existing_tags = array();
+	    
+	    foreach($result as $row){
+	        $t = new SmartestTag;
+	        $t->hydrate($row);
+	        $existing_tags[$row['tag_name']] = $t;
+	    }
+	    
+	    
+	    // 2. Cycle through requested tags, attaching those which already exist and creating and attaching those that don't
+	    foreach($useful_array as $requested_tag_slug => $requested_tag_label){
+	        if(isset($existing_tags[$requested_tag_slug])){
+	            // The tag exists
+	            $this->addTagWithId($existing_tags[$requested_tag_slug]->getId());
+	        }else{
+	            
+	            if(strlen($requested_tag_label) && strlen($requested_tag_slug)){ // Prevent blanks
+	            
+    	            // The tag does not exist, so make it
+    	            $new_tag = new SmartestTag;
+	            
+    	            if($title_case){
+    	                $new_tag->setLabel(SmartestStringHelper::toTitleCase($requested_tag_label));
+                    }else{
+                        $new_tag->setLabel($requested_tag_label);
+                    }
+                
+    	            $new_tag->setName($requested_tag_slug);
+    	            $new_tag->save();
+    	            $this->addTagWithId($new_tag->getId());
+	            
+                }
+	            
+	        }
+	    }
+	    
+	}
+    
     //////////////////////// NEW USER PROFILE STUFF/////////////////////////
     
     public function getProfile($service_name='_default'){

@@ -1563,6 +1563,15 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    return true;
 	    
 	}
+    
+	public function addTagWithId($tag_id){
+	    
+        $tag_id = (int) $tag_id;
+	    $sql = "INSERT INTO TagsObjectsLookup (taglookup_tag_id, taglookup_object_id, taglookup_type) VALUES ('".$tag_id."', '".$this->_properties['id']."', 'SM_ASSET_TAG_LINK')";
+	    $this->database->rawQuery($sql);
+	    return true;
+	    
+	}
 	
 	public function untag($tag_identifier){
 	    
@@ -1589,6 +1598,19 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    $sql = "DELETE FROM TagsObjectsLookup WHERE taglookup_object_id='".$this->_properties['id']."' AND taglookup_tag_id='".$tag->getId()."' AND taglookup_type='SM_ASSET_TAG_LINK'";
 	    $this->database->rawQuery($sql);
 	    return true;
+	    
+	}
+    
+	public function hasTag($tag_identifier){
+	    
+	    if(is_numeric($tag_identifier)){
+	        $sql = "SELECT * FROM TagsObjectsLookup WHERE taglookup_type='SM_ASSET_TAG_LINK' AND taglookup_object_id='".$this->_properties['id']."' AND taglookup_tag_id='".$tag->getId()."'";
+	    }else{
+	        $tag_name = SmartestStringHelper::toSlug($tag_identifier);
+	        $sql = "SELECT * FROM TagsObjectsLookup, Tags WHERE taglookup_type='SM_ASSET_TAG_LINK' AND taglookup_object_id='".$this->_properties['id']."' AND TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND Tags.tag_name='".$tag_name."'";
+	    }
+	    
+	    return (bool) count($this->database->queryToArray($sql));
 	    
 	}
     
