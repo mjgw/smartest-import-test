@@ -154,7 +154,7 @@
   $(propertyId).observe('needs:update', function(){
     var newValue = $(propertyId).readAttribute('data-linktype')+':'+$(propertyId).readAttribute('data-target-id');
     $(propertyId).value = newValue;
-    alert(newValue);
+    // alert(newValue);
   });
   
 {/literal}
