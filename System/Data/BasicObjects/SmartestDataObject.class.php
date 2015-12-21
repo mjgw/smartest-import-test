@@ -771,6 +771,7 @@ class SmartestDataObject implements ArrayAccess{
 		    }else{
     			$this->_properties['id'] = $id;
     			$this->_came_from_database = true;
+                $this->refreshDataStructure();
     		}
 		    
 		    $this->clearChanges();

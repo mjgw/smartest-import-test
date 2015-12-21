@@ -325,12 +325,18 @@ Smartest.UI.SelectMenu = Class.create({
 
 Smartest.UI.OptionSet = Class.create({
     
-    initialize: function(formId, inputId, optionClass, listId){
+    initialize: function(formId, inputId, optionClass, listId, clickCallback){
         
         var sfi = this.setFormId.bind(this);
         var spii = this.setPrimaryInputId.bind(this);
         this.optionClass = optionClass;
         var sli = this.setListId.bind(this);
+        
+        if(typeof clickCallback == 'function'){
+            this.clickCallback = clickCallback;
+        }else{
+            this.clickCallback = function(){}
+        }
         
         document.observe('dom:loaded', function(){
             spii(inputId);
@@ -426,9 +432,12 @@ Smartest.UI.OptionSet = Class.create({
     	    });
     	}
     	
-    	this.lastItemId = id;
     	this.lastItemCategoryName = this.currentCategoryName;
     	this.primaryInput.value = id;
+        
+        this.clickCallback(id, this.lastItemId);
+        
+        this.lastItemId = id;
     	
     	return false;
     	

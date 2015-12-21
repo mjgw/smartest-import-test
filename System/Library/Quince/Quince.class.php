@@ -626,8 +626,8 @@ class QuinceUtilities{
 	}
 	
 	public static function getAliasUrlRequiredArguments($alias_url){
-	    preg_match_all('/:([\w_]+)/', $alias_url, $matches);
-	    return $matches[1];
+	    preg_match_all('/(:|\$)([\w_]+)/', $alias_url, $matches);
+	    return $matches[2];
 	}
 	
 	public static function buildQueryString($vars){
@@ -666,6 +666,8 @@ class QuinceRouter{
                     $matches[2] = $f_matches[1];
                     $matches[3] = $f_matches[2];
                     $matches[4] = $f_matches[3];
+                }else{
+                    // Provided string is not a route
                 }
             }
         }
@@ -703,7 +705,7 @@ class QuinceRouter{
             
                 foreach($route_required_params as &$rp){
                     if(isset($params[$rp])){
-                        $url = str_replace(':'.$rp, $params[$rp], $url);
+                        $url = preg_replace('/(:|\$)'.$rp.'/', $params[$rp], $url);
                         unset($params[$rp]);
                         unset($rp);
                     }else{

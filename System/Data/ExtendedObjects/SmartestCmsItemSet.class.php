@@ -12,6 +12,7 @@ class SmartestCmsItemSet extends SmartestSet implements SmartestSetApi, Smartest
     protected $_model = null;
     protected $_retrieve_mode = 9;
     protected $_constituent_item_chaining = false;
+    protected $_feed_description_asset;
     
     public function __objectConstruct(){
         // This prevents SmartestSet::__objectConstruct from being called, so do not delete.
@@ -935,5 +936,114 @@ class SmartestCmsItemSet extends SmartestSet implements SmartestSetApi, Smartest
 	public function isAggregable(){
 	    return $this->getModel()->hasFeedProperties();
 	}
+    
+    public function setSyndicateAsRSS($flag){
+        $current_site_id = $this->getCurrentSiteId();
+        $this->setSettingValue('syndicate_as_rss_site_'.$current_site_id, (int) (bool) $flag);
+    }
+    
+    public function getSyndicateAsRSS(){
+        $current_site_id = $this->getCurrentSiteId();
+        return (bool) $this->getSettingValue('syndicate_as_rss_site_'.$current_site_id);
+    }
+    public function setSyndicateAsAtom($flag){
+        $current_site_id = $this->getCurrentSiteId();
+        $this->setSettingValue('syndicate_as_atom_site_'.$current_site_id, (int) (bool) $flag);
+    }
+    
+    public function getSyndicateAsAtom(){
+        $current_site_id = $this->getCurrentSiteId();
+        return (bool) $this->getSettingValue('syndicate_as_atom_site_'.$current_site_id);
+    }
+    
+    public function setSyndicateAsITunes($flag){
+        $current_site_id = $this->getCurrentSiteId();
+        $this->setSettingValue('syndicate_as_itunes_site_'.$current_site_id, (int) (bool) $flag);
+    }
+    
+    public function getSyndicateAsITunes(){
+        $current_site_id = $this->getCurrentSiteId();
+        return (bool) $this->getSettingValue('syndicate_as_itunes_site_'.$current_site_id);
+    }
+    
+    public function setRssChannelImageId($id){
+        $current_site_id = $this->getCurrentSiteId();
+        $this->setSettingValue('rss_channel_image_id_site_'.$current_site_id, (int) $id);
+    }
+    
+    public function getRssChannelImageId(){
+        $current_site_id = $this->getCurrentSiteId();
+        return $this->getSettingValue('rss_channel_image_id_site_'.$current_site_id);
+    }
+    
+    public function getRssChannelImage(){
+        $a = new SmartestRenderableAsset;
+        if($a->find($this->getRssChannelImageId())){
+            return $a;
+        }
+    }
+    
+    public function getFeedAuthor(){
+        $ph = new SmartestPreferencesHelper;
+        $current_site_id = $this->getCurrentSiteId();
+        if(strlen($this->getSettingValue('feed_channel_author_site_'.$current_site_id))){
+            return $this->getSettingValue('feed_channel_author_site_'.$current_site_id);
+        }else if(strlen($ph->getGlobalPreference('site_organisation_name', null, $current_site_id))){
+            return $ph->getGlobalPreference('site_organisation_name', null, $current_site_id);
+        }
+    }
+    
+    public function setFeedAuthor($author){
+        $current_site_id = $this->getCurrentSiteId();
+        $this->setSettingValue('feed_channel_author_site_'.$current_site_id, $author);
+    }
+    
+    public function getFeedDescriptionTextAssetId(){
+        $current_site_id = $this->getCurrentSiteId();
+        if(is_numeric($this->getSettingValue('feed_description_asset_id_site_'.$current_site_id))){
+            return $this->getSettingValue('feed_description_asset_id_site_'.$current_site_id);
+        }else{
+            $h = new SmartestAssetCreationHelper('SM_ASSETTYPE_RICH_TEXT');
+            $h->createNewAssetFromTextArea('', 'Feed Description for set '.$this->getLabel().', site ID '.$current_site_id);
+            $a = $h->finish();
+            $a->setIsSystem(1);
+            $a->setIsHidden(1);
+            $a->save();
+            $this->_feed_description_asset = $a;
+            $this->setSettingValue('feed_description_asset_id_site_'.$current_site_id, $a->getId());
+            $this->save();
+            return $a->getId();
+        }
+    }
+    
+    public function getFeedDescriptionTextAsset(){
+        $id = $this->getFeedDescriptionTextAssetId();
+        if(is_object($this->_feed_description_asset)){
+            return $this->_feed_description_asset;
+        }else{
+            $a = new SmartestAsset;
+            if($a->find($id)){
+                $this->_feed_description_asset = $a;
+                return $this->_feed_description_asset;
+            }else{
+                // there was an asset ID, but no matching asset. Unlikely.
+            }
+        }
+    }
+    
+    public function getFeedDescription(){
+        if(is_object($this->getFeedDescriptionTextAsset())){
+            return $this->getFeedDescriptionTextAsset()->getContent();
+        }else{
+            return '';
+        }
+    }
+    
+    public function setFeedDescription($text){
+        if(is_object($this->getFeedDescriptionTextAsset())){
+            $this->getFeedDescriptionTextAsset()->setContent($text);
+            $this->getFeedDescriptionTextAsset()->save();
+        }
+    }
 
 }

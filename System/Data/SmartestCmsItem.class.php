@@ -716,10 +716,26 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	}
 	
 	public function getDate(){
-	    if($this->getDraftMode()){
-            return $this->getItem()->getCreated();
+        if(isset($this->_varnames_lookup['date_published'])){
+            
+            $v = $this->getPropertyValueByNumericKey($this->_varnames_lookup['date_published'], $this->getDraftMode(), true);
+            
+            if($v instanceof SmartestDateTime){
+                return $v->getUnixFormat();
+            }else{
+        	    if($this->getDraftMode()){
+                    return $this->getItem()->getCreated();
+                }else{
+                    return $this->getItem()->getLastPublished();
+                }
+            }
+            
         }else{
-            return $this->getItem()->getLastPublished();
+    	    if($this->getDraftMode()){
+                return $this->getItem()->getCreated();
+            }else{
+                return $this->getItem()->getLastPublished();
+            }
         }
 	}
 	

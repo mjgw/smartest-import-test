@@ -133,7 +133,27 @@ class SmartestModel extends SmartestBaseModel{
 	    
 	}
     
-    public function getPropertiesForReorder(){
+    public function getPropertiesWithDatatype($type_codes){
+        
+        if(!is_array($type_codes)){
+            $type_codes = array($type_codes);
+        }
+        
+	    $sql = "SELECT * FROM ItemProperties WHERE itemproperty_itemclass_id='".$this->_properties['id']."' AND itemproperty_datatype IN ('".implode("','", $type_codes)."') ORDER BY itemproperty_order_index ASC";
+	    $result = $this->database->queryToArray($sql);
+        $properties = array();
+        
+	    foreach($result as $db_property){
+			$property = new SmartestItemProperty;
+			$property->hydrate($db_property);
+			$properties[] = $property;
+		}
+        
+        return $properties;
+        
+    }
+	
+	public function getPropertiesForReorder(){
 	    
 	    $this->buildPropertyMap();
 	    $props = array();
@@ -354,6 +374,12 @@ class SmartestModel extends SmartestBaseModel{
 	        case "colour":
 	        return $this->getColor();
 	        
+            case "item_name_field_origin":
+            return $this->getItemNameFieldOrigin();
+            
+            case "item_name_field_derive_format":
+            return $this->getItemNameFieldDeriveFormat();
+            
 	        case "item_name_field_name":
             case "infn":
 	        return $this->getItemNameFieldName();
@@ -601,12 +627,27 @@ class SmartestModel extends SmartestBaseModel{
         
     }
     
-    public function getItemIds($site_id='', $mode=9){
+    public function getItemIdsWithQueryMode($site_id='', $mode=9, $query=''){
         
         $sql = "SELECT item_id FROM Items WHERE item_itemclass_id='".$this->_properties['id']."' AND item_deleted != 1";
         
         if($mode > 5){
             $sql .= " AND Items.item_public='TRUE'";
+        }
+        
+        if(strlen($query)){
+            
+            $words = explode(' ', $query);
+            
+            $sql .= ' AND (';
+            $conditions = array();
+            
+            foreach($words as $w){
+                $conditions[] = "(item_name LIKE '%".$w."%' OR item_search_field LIKE '%".$w."%')";
+            }
+            
+            $sql .= implode(' AND ', $conditions).')';
+            
         }
         
         if(in_array($mode, array(1,4,7,10))){
@@ -636,17 +677,83 @@ class SmartestModel extends SmartestBaseModel{
         
     }
     
-    public function getItems($site_id='', $mode=9){
+    public function getItemIds($site_id='', $status=7, $query=''){
+        
+        $sql = "SELECT item_id FROM Items WHERE item_itemclass_id='".$this->_properties['id']."' AND item_deleted != '1'";
+        
+        if($status > 0 && $status < 4){
+            $sql .= " AND Items.item_public='FALSE'";
+        }elseif($status > 3 && $status < 7){
+            $sql .= " AND Items.item_public='TRUE'";
+        }
+        
+        if(strlen($query)){
+            
+            $words = explode(' ', $query);
+            
+            $sql .= ' AND (';
+            $conditions = array();
+            
+            foreach($words as $w){
+                $conditions[] = "(item_name LIKE '%".$w."%' OR item_search_field LIKE '%".$w."%')";
+            }
+            
+            $sql .= implode(' AND ', $conditions).')';
+            
+        }
+        
+        if(in_array($status, array(8))){
+	    
+	        $sql .= " AND Items.item_is_archived='1'";
+	    
+        }else if(in_array($status, array(7))){
+            
+            $sql .= " AND Items.item_is_archived !='1'";
+            
+        }
+        
+        if(in_array($status, array(2,5,9))){
+	        
+            if($status == 5){
+                $sql .= " AND Items.item_modified > Items.item_last_published";
+            }
+            
+            $sql .= " AND Items.item_changes_approved = '0'";
+	    
+        }else if(in_array($status, array(3,6,10))){
+            
+            $sql .= " AND Items.item_changes_approved = '1'";
+            
+        }
+        
+        if(is_numeric($site_id)){
+            $sql .= " AND item_site_id='".$site_id."'";
+        }
+        
+        $sql .= " ORDER BY item_name";
+        
+        $result = $this->database->queryToArray($sql);
+        $ids = array();
+        
+        foreach($result as $db_array){
+            $ids[] = $db_array['item_id'];
+        }
+        
+        return $ids;
+        
+    }
+    
+    public function getItems($site_id='', $mode=7){
         return $this->getAllItems($site_id, $mode);
     }
     
-    public function getAllItems($site_id='', $mode=9){
+    public function getAllItems($site_id='', $status=7, $query=''){
         
         // Retrieve all item IDs
-        $ids = $this->getItemIds($site_id, $mode);
+        $ids = $this->getItemIds($site_id, $status, $query);
         
         // Define whether items should be set to draft mode or not
-        if(in_array($mode, array(0,1,2,6,7,8))){
+        if(in_array($status, array(0,1,2,3))){
 		    $set_item_draft_mode = true;
 		}else{
 		    $set_item_draft_mode = false;
@@ -654,6 +761,7 @@ class SmartestModel extends SmartestBaseModel{
         
         // Create new set from the item IDs
         $set = new SmartestSortableItemReferenceSet($this, $set_item_draft_mode);
+        $set->setDraftMode(-1);
         $set->loadItemIds($ids);
         
         // Sort the items by their default sort property, or by name if this is not defined
@@ -1156,6 +1264,30 @@ class SmartestModel extends SmartestBaseModel{
         
         return $this->setSettingValue('color', $sf);
         
+    }
+    
+    public function getItemNameFieldOrigin(){
+        $raw = $this->getSettingValue('item_name_field_origin');
+        if(!$raw) $raw = 'manual';
+        return new SmartestString($raw);
+    }
+    
+    public function setItemNameFieldOrigin($info){
+        $c = new SmartestString($info);
+        $sf = $c->getStorableFormat();
+        return $this->setSettingValue('item_name_field_origin', $sf);
+    }
+    
+    public function getItemNameFieldDeriveFormat(){
+        $raw = $this->getSettingValue('item_name_field_derive_formal');
+        if(!$raw) $raw = '';
+        return new SmartestString($raw);
+    }
+    
+    public function setItemNameFieldDeriveFormat($info){
+        $c = new SmartestString($info);
+        $sf = $c->getStorableFormat();
+        return $this->setSettingValue('item_name_field_derive_formal', $sf);
     }
     
     public function getItemNameFieldName(){

@@ -151,6 +151,19 @@ class SmartestUsersHelper extends SmartestHelper{
         
     }
     
+    public function getUserIdsOnSite($site_id){
+        
+        $users = $this->getUsersOnSite($site_id);
+        $user_ids = array();
+        
+        foreach($users as $u){
+            $user_ids[] = $u->getId();
+        }
+        
+        return $user_ids;
+        
+    }
+    
     public function getUsersOnSiteAsArrays($site_id){
         
         $users = $this->getUsersOnSite($site_id);

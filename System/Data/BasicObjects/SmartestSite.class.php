@@ -525,6 +525,20 @@ class SmartestSite extends SmartestBaseSite{
         
     }
     
+    public function getOrganisationName(){
+        $ph = new SmartestPreferencesHelper;
+        return $ph->getGlobalPreference('site_organisation_name', null, $this->getId());
+    }
+    
+    public function setOrganisationName($name){
+        $ph = new SmartestPreferencesHelper;
+        return $ph->setGlobalPreference('site_organisation_name', $name, null, $this->getId());
+    }
+    
+    public function getOrganizationName(){
+        return $this->getOrganisationName();
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){

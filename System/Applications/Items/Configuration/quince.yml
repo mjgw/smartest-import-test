@@ -20,7 +20,7 @@ module:
       url: /smartest/model/new
     browse_model:
       action: getItemClassMembers
-      url: /smartest/items/:plural_name
+      url: /smartest/items/$plural_name
       params:
         use_plural_name: true
     new_item:

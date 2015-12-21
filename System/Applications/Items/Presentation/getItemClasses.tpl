@@ -21,7 +21,10 @@
 <ul class="options-grid" id="options_grid">
   {if $allow_create_models}<li class="add">
     <a href="{$domain}smartest/model/new" class="add"><i>+</i>Build a new model</a>
-  </li>{/if}
+  </li>{elseif $allow_create_new_items}
+  <li class="add">
+      <a href="{$domain}datamanager/addItem" class="add"><i>+</i>Add a new...</a>
+    </li>{/if}
 {foreach from=$models key="key" item="itemClass"}
   <li ondblclick="window.location='{$domain}smartest/items/{$itemClass.varname}'">
     <a id="model_{$itemClass.id}" class="option" href="{dud_link}" onclick="modelList.setSelectedItem('{$itemClass.id}', 'model', {literal}{{/literal}updateFields: {literal}{{/literal}'model_name_field': '{$itemClass.name|summary:"29"|escape:quotes}', 'model_plural_name_field': '{$itemClass.plural_name|summary:"29"|escape:quotes}'{literal}}{/literal}{literal}}{/literal});">

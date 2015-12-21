@@ -17,6 +17,10 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
     protected $_asset_ids = array();
     protected $_asset_lookup_attempted = array();
     
+    protected $_users = array();
+    protected $_user_ids = array();
+    protected $_user_lookup_attempted = array();
+    
     protected $_is_attached = false; // Used when building the tags screen
     
     protected $_filters = array();
@@ -329,6 +333,81 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
     }
     
+    public function getUsers(){
+        
+        if(!$this->_user_lookup_attempted){
+        
+            $sql = "SELECT Users.* FROM TagsObjectsLookup, Users WHERE taglookup_tag_id='".$this->getId()."' AND taglookup_object_id=user_id AND taglookup_type='SM_USER_TAG_LINK'";
+            
+            /* if(is_numeric($site_id)){
+                $sql .= " AND (asset_site_id='".$site_id."' OR asset_shared=1)";
+            } */
+                
+            // echo $sql;
+            
+            $result = $this->database->queryToArray($sql);
+            
+            $users = array();
+        
+            foreach($result as $user_array){
+                
+                $user = new SmartestUser;
+                $user->hydrate($user_array);
+                $users[] = $user;
+                
+                if($user->getId() && !in_array($user->getId(), $this->_user_ids)){
+                    $this->_user_ids[] = $user->getId();
+                }
+                
+            }
+            
+            $this->_user_lookup_attempted = true;
+            $this->_users = $users;
+            
+        }
+        
+        return $this->_users;
+        
+    }
+    
+    public function getSystemUsers($site_id=null){
+        
+        if(!$this->_user_lookup_attempted['site_'.$site_id]){
+        
+            $sql = "SELECT Users.* FROM TagsObjectsLookup, Users WHERE taglookup_tag_id='".$this->getId()."' AND taglookup_object_id=user_id AND taglookup_type='SM_USER_TAG_LINK'";
+            
+            if(is_numeric($site_id)){
+                $uh = new SmartestUsersHelper;
+                $user_ids = $uh->getUserIdsOnSite($site_id);
+                $sql .= " AND Users.user_id IN ('".implode("','", $user_ids)."')";
+            }
+            
+            $result = $this->database->queryToArray($sql);
+            
+            $assets = array();
+        
+            foreach($result as $user_array){
+                
+                $user = new SmartestSystemUser;
+                $user->hydrate($user_array);
+                $users[] = $user;
+                
+                if($user->getId() && !in_array($user->getId(), $this->_user_ids)){
+                    $this->_user_ids[] = $user->getId();
+                }
+                
+            }
+            
+            $this->_user_lookup_attempted['site_'.$site_id] = true;
+            $this->_users = $users;
+            
+        }
+        
+        return $this->_assets;
+        
+        
+    }
+    
     public function hasPage($page_id){
         
         // make sure pages have been retrieved
@@ -377,7 +456,7 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         $master_array = array();
         
         $du = new SmartestDataUtility;
-        $du->getModelsWIthMetapageOnSiteId($site_id);
+        $du->getModelsWithMetapageOnSiteId($site_id);
         
         $pages = $this->getPages($site_id, $draft);
         $items = $this->getItems($site_id, $draft, true);
@@ -471,6 +550,25 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             // Model-specific tagged items retrieval by model name
             return new SmartestArray($this->_getItems($this->getCurrentSiteId(), $models[$offset], false));
         }
+        
+    }
+    
+    public function save(){
+        
+        if(strlen(trim($this->getLabel())) && strlen(trim($this->getName()))){
+            return parent::save();
+        }else{
+            return false;
+        }
+        
+    }
+    
+    public function delete(){
+        
+        // Delete Lookups
+        $sql = "DELETE FROM TagsObjectsLookup WHERE taglookup_tag_id='".$this->getId()."'";
+        $this->database->rawQuery($sql);
+        parent::delete();
         
     }
     

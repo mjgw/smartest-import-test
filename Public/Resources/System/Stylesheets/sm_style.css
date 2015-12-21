@@ -145,6 +145,11 @@ div.special-box a.button:hover{
     background-color:#fff;
 }*/
 
+span.null-notice{
+    color:#999;
+    font-style:italic;
+}
+
 div.special-box a.sm-help-link{
     background-color:#fff;
     text-decoration:none;
@@ -792,6 +797,21 @@ a.tag.selected:hover, label.checkbox-array.selected:hover, ul.checkbox-array-lis
     text-decoration:none;
     color:#fff;
     background-color:#FF9900;
+}
+
+ul.checkbox-array-list li label a.tag-icon-button{
+    color:#999;
+    -webkit-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+    margin-left:3px;
+}
+
+ul.checkbox-array-list li label a.tag-icon-button:hover{
+    color:#FF9900;
+}
+
+ul.checkbox-array-list li label a.tag-icon-button i{
+    font-size:1.1em;
 }
 
 a.sm-top-bar-button{

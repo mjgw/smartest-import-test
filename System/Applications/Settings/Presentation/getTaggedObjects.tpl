@@ -28,6 +28,15 @@
     {/foreach}
   </ul>
   {/if}
+  
+  {if !users._empty}
+  <h4>Users</h4>
+  <ul>
+    {foreach from=$users item="users"}
+    <li style="list-style-image:url('{$user.small_icon}')"> <a href="{$user.action_url}">{$user.fullname}</a></li>
+    {/foreach}
+  </ul>
+  {/if}
 
 </div>
 

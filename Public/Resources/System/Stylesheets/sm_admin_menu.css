@@ -114,16 +114,17 @@
 }
 
 #admin-menu ul li a{
-    padding-left:10px;
-		/* display:table-cell;
-		vertical-align:middle; */
-		display:block;
-		height:30px;
+    padding-left:12px;
+	/* display:table-cell;
+	vertical-align:middle; */
+	display:block;
+	height:30px;
 }
 
 #admin-menu ul li a span.option-holder i{
 	/* padding-top:3px; */
 	display:inline-block;
+    min-width:18px;
 }
 
 #admin-menu ul li a span.option-holder{

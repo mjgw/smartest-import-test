@@ -295,13 +295,15 @@ class Pages extends SmartestSystemApplication{
     	                $page->setPrincipalItem($item);
     	                $this->send($item, 'item');
     	            }
+	            }else{
+	                $this->send($page->getTags(), 'page_tags');
 	            }
     	        
     	        $this->send(false, 'require_item_select');
     	        $editorContent = $page;
     	        $this->send(new SmartestBoolean(true), 'link_urls');
-    		
-            	if($this->getUser()->hasToken('modify_page_properties')){
+                
+                if($this->getUser()->hasToken('modify_page_properties')){
 		
             		$site_id = $this->getSite()->getId();
             		$page_id = $page->getId();

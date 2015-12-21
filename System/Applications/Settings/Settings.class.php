@@ -79,6 +79,8 @@ class Settings extends SmartestSystemApplication{
                     $this->send(SmartestStringHelper::toRealBool($distinguish_old_pcs), 'responsive_distinguish_old_pcs');
                 // }
                 
+                $this->send($this->getSite()->getOrganisationName(), 'site_organisation');
+                
                 $this->send($logos, 'logo_assets');
             
                 $this->setTitle("Edit Site Settings");
@@ -115,6 +117,7 @@ class Settings extends SmartestSystemApplication{
     	        $site->setTitleFormat($this->getRequestParameter('site_title_format'));
     	        $site->setDomain(SmartestStringHelper::toValidDomain(preg_replace('/^https?:\/\//i', '', $this->getRequestParameter('site_domain'))));
     	        $site->setAdminEmail($this->getRequestParameter('site_admin_email'));
+                $site->setOrganisationName($this->getRequestParameter('site_organisation_name'));
                 $site->setLanguageCode($this->getRequestParameter('site_language'));
     	        $this->addUserMessageToNextRequest('Your site settings have been updated.', SmartestUserMessage::SUCCESS);
     	        $site->save();
@@ -450,6 +453,8 @@ class Settings extends SmartestSystemApplication{
 	        $this->send(new SmartestArray($tag->getSimpleItems($this->getSite()->getId(), true)), 'items');
 	        $this->send(new SmartestArray($tag->getPages($this->getSite()->getId())), 'pages');
 	        $this->send(new SmartestArray($tag->getAssets($this->getSite()->getId())), 'assets');
+            $this->send(new SmartestArray($tag->getUsers($this->getSite()->getId())), 'users');
+            // echo count($tag->getUsers($this->getSite()->getId()));
 	    }else{
 	        $objects = array();
 	        $this->addUserMessage("This tag does not exist.", SmartestUserMessage::WARNING);

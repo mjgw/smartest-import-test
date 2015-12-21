@@ -247,6 +247,15 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
             
             case "info":
             return $this->_user_info;
+            
+            case 'tags':
+            return new SmartestArray($this->getTags());
+            
+            case 'action_url':
+            return $this->getActionUrl();
+            
+            case 'small_icon':
+            return $this->getSmallIconUrl();
 	        
 	        default:
             if(parent::offsetExists($offset)){
@@ -729,7 +738,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
     
 	public function getTags(){
 	    
-	    $sql = "SELECT * FROM Tags, TagsObjectsLookup WHERE TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND TagsObjectsLookup.taglookup_object_id='".$this->_properties['id']."' AND TagsObjectsLookup.taglookup_type='SM_ITEM_TAG_LINK' ORDER BY Tags.tag_name";
+	    $sql = "SELECT * FROM Tags, TagsObjectsLookup WHERE TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND TagsObjectsLookup.taglookup_object_id='".$this->_properties['id']."' AND TagsObjectsLookup.taglookup_type='SM_USER_TAG_LINK' ORDER BY Tags.tag_name";
 	    $result = $this->database->queryToArray($sql);
 	    $ids = array();
 	    $tags = array();
@@ -828,6 +837,15 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    
 	}
     
+	public function removeTagWithId($tag_id){
+	    
+        $tag_id = (int) $tag_id;
+	    $sql = "DELETE FROM TagsObjectsLookup WHERE taglookup_object_id='".$this->_properties['id']."' AND taglookup_tag_id='".$tag_id."' AND taglookup_type='SM_USER_TAG_LINK'";
+	    $this->database->rawQuery($sql);
+	    return true;
+	    
+	}
+    
 	public function hasTag($tag_identifier){
 	    
 	    if(is_numeric($tag_identifier)){
@@ -902,6 +920,23 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    }
 	    
 	}
+    
+	public function getActionUrl(){
+	    
+	    // return $this->_request->getDomain().'assets/editAsset?asset_id='.$this->getId();
+	    return $this->_request->getDomain().'users/editUser?user_id='.$this->getId();
+	    
+	}
+    
+    public function getSmallIconUrl(){
+        
+        if($this->getProfilePic()->getId()){
+            return $this->getProfilePic()->getImage()->getSquareVersion(16)->getWebPath();
+        }else{
+            return $this->_request->getDomain().'Resources/Icons/user.png';
+        }
+        
+    }
     
     //////////////////////// NEW USER PROFILE STUFF/////////////////////////
     

@@ -1683,8 +1683,6 @@ class Assets extends SmartestSystemApplication{
 		        $this->send(false, 'allow_source_edit');
 		    }
 		    
-		    // var_dump(SmartestStringHelper::toRealBool($data['type_info']['supports_exif']));
-		    
 		    if(isset($data['type_info']['supports_exif']) && SmartestStringHelper::toRealBool($data['type_info']['supports_exif'])){
 		        if($exif_data = $asset->getImage()->getExifData()){
 		            $this->send(true, 'show_exif_panel');
@@ -1703,6 +1701,8 @@ class Assets extends SmartestSystemApplication{
 		        $this->send(false, 'show_attachments');
 		    }
 		    
+            $tags = $asset->getTags();
+            $this->send($tags, 'asset_tags');
 		    $this->send($data, 'asset'); 
 		    $this->send($asset->getPossibleOwners(), 'potential_owners');
 		    

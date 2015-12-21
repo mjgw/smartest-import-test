@@ -166,8 +166,8 @@
     </type>
     
     <type id="SM_DATATYPE_BOOLEAN" valuetype="string">
-        <label>Boolean</label>
-        <description>A simple true/false value.</description>
+        <label>True/False</label>
+        <description>A simple boolean (true/false) value.</description>
         <usage>field,itemproperty</usage>
         <class>SmartestBoolean</class>
         <long>false</long>

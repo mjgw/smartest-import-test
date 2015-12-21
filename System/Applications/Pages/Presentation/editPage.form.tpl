@@ -31,7 +31,21 @@
 <div class="instruction">Edit page meta information.</div>
 
 {if $show_deleted_warning}
-  <div class="warning">Warning: This page is currently in the trash.</div>
+  <div class="warning" id="page-trash-warning">Warning: This page is currently in the trash. <a class="button" id="restore-page-button" href="#restore">Restore</a></div>
+  <script type="text/javascript">
+  var pageId = {$page.id};
+  {literal}
+  $('restore-page-button').observe('click', function(evt){
+    evt.stop();
+    new Ajax.Request(sm_domain+'ajax:websitemanager/restoreTrashedPage', {
+      parameters: 'page_id='+pageId,
+      onSuccess: function(response){
+        $('page-trash-warning').fade({duration: 0.4});
+      }
+    });
+  });
+  {/literal}
+  </script>
 {/if}
 
 <form id="updatePage" name="updatePage" action="{$domain}smartest/page/update" method="post" style="margin:0px">
@@ -198,7 +212,7 @@
       
     var pageId = {$page.id};
     var pageWebId = '{$page.webid}';
-    {if $item.id}var itemId = {$item.id};{/if}
+    {if $item.id}var pageId = {$item.id};{/if}
     var deleteUrl = '{$domain}{$section}/deletePageUrl';
     var makeDefaultUrl = '{$domain}{$section}/setPageDefaultUrl';
     var updaterUrl = '{$domain}ajax:websitemanager/pageUrls';
@@ -224,7 +238,7 @@
               },
               onComplete: function(){
                 new Ajax.Updater('page-urls', updaterUrl, {
-                  parameters: {page_id: pageId{/literal}{if $item.id}, item_id: itemId{/if}, responseTableLinks: {$link_urls.truefalse}{literal}},
+                  parameters: {page_id: pageId{/literal}{if $item.id}, item_id: pageId{/if}, responseTableLinks: {$link_urls.truefalse}{literal}},
                   onSuccess: function(response) {
                     setTimeout(addListeners, 30);
                   }
@@ -251,7 +265,7 @@
               },
               onComplete: function(){
                 new Ajax.Updater('page-urls', updaterUrl, {
-                  parameters: {page_id: pageId{/literal}{if $item.id}, item_id: itemId{/if}, responseTableLinks: {$link_urls.truefalse}{literal}},
+                  parameters: {page_id: pageId{/literal}{if $item.id}, item_id: pageId{/if}, responseTableLinks: {$link_urls.truefalse}{literal}},
                   onSuccess: function(response) {
                     setTimeout(addListeners, 50);
                   }
@@ -277,7 +291,7 @@
   	
     <script type="text/javascript">
     
-    var newUrlUrl = '{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&item_id={$item.id}{/if}';
+    var newUrlUrl = '{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&page_id={$item.id}{/if}';
     
     {literal}
     $('new-url-button').observe('click', function(e){
@@ -307,6 +321,209 @@
   {/if}
   
   {/if}
+  
+    {if $page.type == "NORMAL"}
+    <div class="edit-form-row">
+      <div class="form-section-label">Tags</div>
+      <div class="edit-form-sub-row">
+        <ul class="checkbox-array-list" id="page-tags-list">
+  {foreach from=$page_tags item="tag"}
+          <li data-tagid="{$tag.id}"><label>{$tag.label} <a href="#remove-tag" class="tag-icon-button delete-tag"><i class="fa fa-times"></i></a></label></li>
+  {/foreach}
+        </ul>
+        <span class="null-notice" id="no-tags-notice"{if count($page.tags)} style="display:none"{/if}>No tags attached to this page</span>
+        <div class="v-spacer half"></div>
+        <input type="text" name="page_add_tag" value="Add a tag..." id="page-add-tag-textbox" class="unfilled" />
+        <div class="autocomplete" id="tags-autocomplete"></div>
+      </div>
+    
+      <script type="text/javascript">
+    
+      var pageId = {$page.id};
+    
+      {literal}
+    
+      var tagsInUse = {};
+    
+      var removeTagFromClick = function(evt){
+      
+        evt.stop();
+        var a = Event.element(evt);
+        var li = a.up(2);
+        var tagId = li.readAttribute('data-tagid');
+      
+        if(tagsInUse.hasOwnProperty('tag_'+tagId)){
+        
+          // remove tag by ID
+          new Ajax.Request(sm_domain+'ajax:websitemanager/unTagPage', {
+        
+            parameters: 'tag_id='+tagId+'&page_id='+pageId,
+            onSuccess: function(response) {
+              // hide tag
+              li.fade({
+                duration: 0.3,
+                afterfinish: function(){
+                    li.remove();
+                    // console.log(tagsInUse.size());
+                    $('no-tags-notice').appear({duration: 0.3});
+                  }
+              });
+              var key = 'tag_'+tagId;
+              delete(tagsInUse[key]);
+            
+            }
+          
+          });
+        
+        }else{
+        
+        
+        
+        }
+        
+      }
+    
+      $$('#page-tags-list li').each(function(li){
+        var tkey = 'tag_'+li.readAttribute('data-tagid');
+        tagsInUse[tkey] = true;
+      });
+    
+      $$('#page-tags-list li label a.tag-icon-button.delete-tag').each(function(a){
+        a.observe('click', removeTagFromClick);
+      });
+    
+      $('page-add-tag-textbox').observe('focus', function(){
+          if(($('page-add-tag-textbox').getValue() == 'Add a tag...') || $('page-add-tag-textbox').getValue() == ''){
+              $('page-add-tag-textbox').removeClassName('unfilled');
+              $('page-add-tag-textbox').setValue('');
+          }
+      });
+    
+      $('page-add-tag-textbox').observe('blur', function(){
+          if(($('page-add-tag-textbox').getValue() == 'Add a tag...') || $('page-add-tag-textbox').getValue() == ''){
+              $('page-add-tag-textbox').addClassName('unfilled');
+              $('page-add-tag-textbox').setValue('Add a tag...');
+          }
+      });
+    
+      new Ajax.Autocompleter('page-add-tag-textbox', "tags-autocomplete", sm_domain+"ajax:settings/tagsAutoComplete", {
+      
+        paramName: "string",
+        minChars: 3,
+        delay: 50,
+        width: 300,
+      
+        afterUpdateElement : function(text, li) {
+        
+          var tagName = li.readAttribute('data-label');
+          var tagId = li.readAttribute('data-id');
+        
+          if(tagId == 'new-tag'){
+          
+            new Ajax.Request(sm_domain+'ajax:settings/createNewTag', {
+            
+              parameters: 'new_tag_label='+li.readAttribute('data-label'),
+              onSuccess: function(response){
+              
+                newTag = response.responseJSON;
+                // console.log(newTag);
+              
+                new Ajax.Request(sm_domain+'ajax:websitemanager/tagPage', {
+          
+                  parameters: 'tag_id='+newTag.id+'&page_id='+pageId,
+                  onSuccess: function(useNewTagResponse) {
+          
+                    var i = new Element('i', {'class': 'fa fa-times'});
+                    var a = new Element('a', {'class': 'tag-icon-button delete-tag'});
+                    var label = new Element('label');
+                    label.update(newTag.label+' ');
+          
+                    var tag_li = new Element('li');
+                    tag_li.writeAttribute('data-tagid', newTag.id);
+          
+                    a.appendChild(i);
+                    a.observe('click', removeTagFromClick);
+          
+                    label.appendChild(a);
+                    tag_li.appendChild(label);
+          
+                    $('page-tags-list').appendChild(tag_li);
+          
+                    if($('no-tags-notice').visible()){
+                      $('no-tags-notice').hide();
+                    }
+            
+                    var tkey = 'tag_'+newTag.id;
+                    tagsInUse[tkey] = true;
+              
+                    $('page-add-tag-textbox').value = "";
+                    $('page-add-tag-textbox').blur();
+          
+                  }
+           
+                });
+              
+              }
+            
+            })
+          
+          }else{
+          
+            $('page-add-tag-textbox').value = "";
+            $('page-add-tag-textbox').blur();
+          
+            if(tagsInUse.hasOwnProperty('tag_'+tagId)){
+          
+              // That tag is already in use here
+          
+            }else{
+          
+              new Ajax.Request(sm_domain+'ajax:websitemanager/tagPage', {
+          
+                parameters: 'tag_id='+tagName+'&page_id='+pageId,
+                onSuccess: function(response) {
+          
+                  var i = new Element('i', {'class': 'fa fa-times'});
+                  var a = new Element('a', {'class': 'tag-icon-button delete-tag'});
+                  var label = new Element('label');
+                  label.update(tagName+' ');
+            
+                  var tag_li = new Element('li');
+                  tag_li.writeAttribute('data-tagid', li.readAttribute('data-id'));
+            
+                  a.appendChild(i);
+                  a.observe('click', removeTagFromClick);
+            
+                  label.appendChild(a);
+                  tag_li.appendChild(label);
+            
+                  $('page-tags-list').appendChild(tag_li);
+            
+                  if($('no-tags-notice').visible()){
+                    $('no-tags-notice').hide();
+                  }
+              
+                  var tkey = 'tag_'+tag_li.readAttribute('data-tagid');
+                  tagsInUse[tkey] = true;
+          
+                }
+           
+              });
+            
+            }
+        
+          }
+        
+        }
+      
+      });
+    
+      {/literal}
+      
+      </script>
+    
+    </div>
+    {/if}
   
   {if !$ishomepage}
   <div class="edit-form-row">
@@ -380,7 +597,7 @@
   {/if}{* if the page is not a special page *}
     
     <div class="buttons-bar">
-      {url_for assign="publish_action"}@publish_page?page_id={$page.webid}{if $item}item_id={$item.id}{/if}{/url_for}
+      {url_for assign="publish_action"}@publish_page?page_id={$page.webid}{if $item}page_id={$item.id}{/if}{/url_for}
       {save_buttons publish_action=$publish_action}
     </div>
   

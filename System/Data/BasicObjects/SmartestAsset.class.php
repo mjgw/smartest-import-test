@@ -221,6 +221,9 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             case "mime_type":
             return $this->getMimeType();
             
+            case "tags":
+            return $this->getTags();
+            
         }
         
         return parent::offsetGet($offset);
@@ -1611,6 +1614,26 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    }
 	    
 	    return (bool) count($this->database->queryToArray($sql));
+	    
+	}
+    
+	public function getTags(){
+	    
+	    $sql = "SELECT * FROM Tags, TagsObjectsLookup WHERE TagsObjectsLookup.taglookup_tag_id=Tags.tag_id AND TagsObjectsLookup.taglookup_object_id='".$this->_properties['id']."' AND TagsObjectsLookup.taglookup_type='SM_ASSET_TAG_LINK' ORDER BY Tags.tag_name";
+	    $result = $this->database->queryToArray($sql);
+	    $ids = array();
+	    $tags = array();
+	    
+	    foreach($result as $ta){
+	        if(!in_array($ta['taglookup_tag_id'], $ids)){
+	            $ids[] = $ta['taglookup_tag_id'];
+	            $tag = new SmartestTag;
+	            $tag->hydrate($ta);
+	            $tags[] = $tag;
+	        }
+	    }
+	    
+	    return $tags;
 	    
 	}
     

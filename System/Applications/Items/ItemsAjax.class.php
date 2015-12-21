@@ -286,7 +286,7 @@ class ItemsAjax extends SmartestSystemApplication{
                             $dataset = new SmartestCmsItemSet();
                             if($dataset->find($dataset_id)){
                                 if($dataset->getItemclassId() == $model->getId()){
-                                    $dataset->setRetrieveMode(SM_STATUS_CURRENT);
+                                    $dataset->setRetrieveMode(SM_QUERY_ALL_DRAFT_CURRENT);
                                     if($dataset->getType() == 'STATIC'){
                                         $dataset->addItem($new_item->getId());
                                     }else if($dataset->getType() == 'DYNAMIC'){

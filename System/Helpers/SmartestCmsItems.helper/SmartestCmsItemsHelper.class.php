@@ -32,6 +32,22 @@ class SmartestCmsItemsHelper{
         
     }
     
+    /* public function statusToMode($status){
+        
+        switch($status){
+            
+            case SM_STATUS_ALL:
+            
+            case SM_STATUS_HIDDEN:
+            
+        }
+        
+    } */
+    
+    public function modeToStatus($mode){
+        
+    }
+    
     public function hydrateMixedListFromIdsArray($ids, $draft_mode=false, $keep_ids=false){
         
         $results = $this->getSquareDbDataFromIdsArray($ids, null, $draft_mode);
@@ -82,27 +98,27 @@ class SmartestCmsItemsHelper{
     
     protected function _hydrateUniformListFromIdsArray($ids, $model_id, $draft_mode=false){
 
-           $results = $this->getSquareDbDataFromIdsArray($ids, $model_id, $draft_mode);
-           $items = array();
-           
-           if($model = $this->getModelFromId($model_id)){
+       $results = $this->getSquareDbDataFromIdsArray($ids, $model_id, $draft_mode);
+       $items = array();
+       
+       if($model = $this->getModelFromId($model_id)){
 
-               $class_name = $model->getClassName();
+           $class_name = $model->getClassName();
 
-               foreach($results as $item_id => $result){
+           foreach($results as $item_id => $result){
 
-                   $item = new $class_name();
-                   $item->hydrateFromRawDbRecord($result);
-                   $item->setDraftMode($draft_mode);
-                   $items[$item->getId()] = $item;
-
-               }
+               $item = new $class_name();
+               $item->hydrateFromRawDbRecord($result);
+               $item->setDraftMode($draft_mode);
+               $items[$item->getId()] = $item;
 
            }
 
-           return $items;
-
        }
+
+       return $items;
+    
+    }
     
     public function hydrateUniformListFromIdsArray($ids, $model_id, $draft_mode=false){
         
@@ -132,6 +148,8 @@ class SmartestCmsItemsHelper{
             return array();
         }
         
+        // var_dump($draft_mode);
+        
         if(is_numeric($model_id)){
             // a model is specified
             $pre_sql = "SELECT itemproperty_id FROM ItemProperties WHERE itemproperty_itemclass_id='".$model_id."'";
@@ -139,14 +157,14 @@ class SmartestCmsItemsHelper{
             if(count($r)){
                 // The model has properties
                 $sql = "SELECT * FROM Items, ItemPropertyValues WHERE Items.item_deleted !=1 AND Items.item_id=ItemPropertyValues.itempropertyvalue_item_id AND Items.item_id IN ('".implode("','", $ids)."') AND Items.item_itemclass_id='".$model_id."'";
-                if(!$draft_mode){
+                if($draft_mode == 0){
                     $sql .= " AND item_public='TRUE'";
                 }
                 return $this->database->queryToArray($sql);
             }else{
                 // The model does not have properties
                 $sql = "SELECT * FROM Items WHERE Items.item_deleted !=1 AND Items.item_id IN ('".implode("','", $ids)."') AND Items.item_itemclass_id='".$model_id."'";
-                if(!$draft_mode){
+                if($draft_mode == 0){
                     $sql .= " AND item_public='TRUE'";
                 }
                 return $this->database->queryToArray($sql);
@@ -154,7 +172,7 @@ class SmartestCmsItemsHelper{
         }else{
             // a model is not specified
             $sql = "SELECT * FROM Items, ItemPropertyValues WHERE Items.item_deleted !=1 AND Items.item_id=ItemPropertyValues.itempropertyvalue_item_id AND Items.item_id IN ('".implode("','", $ids)."')";
-            if(!$draft_mode){
+            if($draft_mode !== 0){
                 $sql .= " AND item_public='TRUE'";
             }
             return $this->database->queryToArray($sql);

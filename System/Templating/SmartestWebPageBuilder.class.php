@@ -737,7 +737,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 $url .= '&amp;from=pagePreview&amp;page_id='.$this->_request_data->g('request_parameters')->g('page_id');
             }
             
-            $html = '<a class="sm-edit-button" href="'.$url.'" target="_top" title="Edit itemspace '.$itemspace_name.'"><img src="'.$this->_request_data->g('domain').'Resources/Icons/arrow_refresh_blue.png" alt="Edit itemspace'.$itemspace_name.'" /></a>';
+            $html = '<a class="sm-edit-button" href="'.$url.'" target="_top" title="Edit itemspace '.$itemspace_name.'"><img src="'.$this->_request_data->g('domain').'Resources/System/Images/itemspace-switch.png" style="width:16px;height:16px" alt="Edit itemspace'.$itemspace_name.'" /></a>';
         }else{
             $html = '';
         }

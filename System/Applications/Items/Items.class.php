@@ -42,6 +42,8 @@ class Items extends SmartestSystemApplication{
 		
 		$recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId());
         $this->send($recent, 'recent_items');
+        
+        $this->send($this->getUser()->hasToken('add_items'), 'allow_create_new_items');
 		
 	}
     
@@ -174,12 +176,14 @@ class Items extends SmartestSystemApplication{
   	    $this->setFormReturnUri();
   	    
   	    if(is_numeric($this->getRequestParameter('mode'))){
-  	        $mode = (int) $this->getRequestParameter('mode');
+  	        $status = (int) $this->getRequestParameter('mode');
   	    }else{
-  	        $mode = SM_STATUS_CURRENT;
+  	        $status = SM_STATUS_CURRENT;
   	    }
+        
+        // $mode = 
   	    
-  	    $model = new SmartestModel;
+        $model = new SmartestModel;
   	    
   	    if($this->getRequestParameter('use_plural_name')){
   	        $found_model = $model->findBy('varname', $this->getRequestParameter('plural_name'), $this->getSite()->getId());
@@ -246,16 +250,16 @@ class Items extends SmartestSystemApplication{
   	        }
   	        
   	        $all_items = $model->getSimpleItems($this->getSite()->getId(), 0);
-  	        $items = $model->getSimpleItems($this->getSite()->getId(), $mode, $query);
+  	        $items = $model->getAllItems($this->getSite()->getId(), $status, $query);
   	        $allow_create_new = ($this->getUser()->hasToken('add_items') && $class_exists);
   	        
   	        $items_exist = (bool) count($all_items);
-  	        
-  	        $this->send($items_exist, 'items_exist');
+            
+            $this->send($items_exist, 'items_exist');
   	        $this->setTitle($model->getPluralName());
   	        $this->send($allow_create_new, 'allow_create_new');
   	        $this->send($items, 'items');
-  	        $this->send($mode, 'mode');
+  	        $this->send($status, 'mode');
   	        $this->send(count($items), 'num_items');
   	        $this->send($model, 'model');
   	        $this->send($query, 'query');
@@ -1348,6 +1352,25 @@ class Items extends SmartestSystemApplication{
   	        $this->send($allow_create_new, 'allow_create_new');
   	        
   	        $this->send($model->getAvailablePrimaryProperties(), 'available_primary_properties');
+            
+            $name_origin_properties = $model->getPropertiesWithDatatype(array('SM_DATATYPE_SL_TEXT', 'SM_DATATYPE_NUMERIC', 'SM_DATATYPE_DROPDOWN_MENU', 'SM_DATATYPE_TIMESTAMP', 'SM_DATATYPE_DATE', 'SM_DATATYPE_TWITTER_ACCT', 'SM_DATATYPE_SINGLE_TAG'));
+            
+            if(count($name_origin_properties)){
+                
+                $name_origin_var_names  = array();
+            
+                foreach($name_origin_properties as $p){
+                    $name_origin_var_names[] = '$'.$p->getVarName();
+                }
+                
+                $this->send($name_origin_var_names, 'name_origin_var_names');
+                $this->send(implode(", ", $name_origin_var_names), 'name_origin_var_names_joined');
+                $this->send(true, 'name_origin_properties_available');
+                
+            }else{
+                $this->send(false, 'name_origin_properties_available');
+            }
+            
 	        
 	    }else{
 	        $this->addUserMessageToNextRequest("The model ID was not recognized.", SmartestUserMessage::ERROR);
@@ -1387,6 +1410,11 @@ class Items extends SmartestSystemApplication{
                 // if($this->getUser()->hasToken('edit_model')){
                     
                 $model->setItemNameFieldName($this->getRequestParameter('itemclass_item_name_field_name'));
+                $model->setItemNameFieldOrigin($this->getRequestParameter('itemclass_name_origin'));
+                
+                if($this->getRequestParameter('itemclass_name_origin') == 'derive'){
+                    $model->setItemNameFieldDeriveFormat($this->getRequestParameter('itemclass_name_derive_format'));
+                }
                 
                 if(is_numeric($this->getRequestParameter('itemclass_default_description_property_id')) && $this->getRequestParameter('itemclass_default_description_property_id') > 1){
                     $model->setDefaultDescriptionPropertyId($this->getRequestParameter('itemclass_default_description_property_id'));
@@ -2295,7 +2323,20 @@ class Items extends SmartestSystemApplication{
                     
                 }
                 
+            }else{
+                
+                // echo "did not find model";
+                
+        		$du = new SmartestDataUtility;
+        		$models = $du->getModels(false, $this->getSite()->getId(), true);
+                $this->send($models, 'models');
+                $this->send(true, 'require_choose_model');
+                
+                return;
+                
             }
+            
+            $this->send(false, 'require_choose_model');
             
             $model = new SmartestModel;
             // echo $this->getRequestParameter('use_plural_name');

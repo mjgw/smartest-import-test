@@ -46,9 +46,21 @@ module:
       action: downloadAsset
       params:
         use_file_mime: true
-    feed:
-      url: /feeds/:set_name/rss
-      action: getDataSetRssFeed
+    set_rss_feed:
+      url: /feeds/rss/:nonce/:set_name.xml
+      action: getDataSetFeed
+      params:
+        format: rss
+    set_atom_feed:
+      url: /feeds/atom/:nonce/:set_name.xml
+      action: getDataSetFeed
+      params:
+        format: atom
+    set_itunes_feed:
+      url: /feeds/itunes/:nonce/:set_name.xml
+      action: getDataSetFeed
+      params:
+        format: itunes
     author:
       url: /author/:username
       action: getAuthorProfile

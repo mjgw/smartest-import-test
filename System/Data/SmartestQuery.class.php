@@ -205,13 +205,15 @@ class SmartestQuery{
 		return $new_array;
 	}
 	
-	private function createResultSet($conditions, $set_item_draft_mode){
+	private function createResultSet($conditions, $set_item_draft_mode, $mode){
 		
 		$ids_array = array();
 		
 		$class_name = $this->_model->getClassName();
-		
-		$ds = new SmartestSortableItemReferenceSet($this->_model, $set_item_draft_mode);
+        $draft_mode = ($mode > 5) ? 0 : -1;
+        
+        $ds = new SmartestSortableItemReferenceSet($this->_model, $set_item_draft_mode);
+        $ds->setDraftMode($draft_mode);
 		
 		if(count($this->conditions)){
 		    
@@ -360,7 +362,7 @@ class SmartestQuery{
 			
 			}
 		
-		    return $this->createResultSet($this->conditions, $set_item_draft_mode);
+		    return $this->createResultSet($this->conditions, $set_item_draft_mode, $mode);
 		    
 		}else{
 		    
@@ -394,7 +396,7 @@ class SmartestQuery{
 		    
 		    // echo $sql;
 		    $result = $this->database->queryToArray($sql);
-		    return $this->createResultSet(array(), $draft);
+		    return $this->createResultSet(array(), $draft, $mode);
 		    
 		}
 

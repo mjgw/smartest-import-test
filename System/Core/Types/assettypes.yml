@@ -752,23 +752,6 @@ type:
       template: System/Presentation/WebPageBuilder/display.download.tpl
       
 # Templates
-  SM_ASSETTYPE_CONTAINER_TEMPLATE:
-    id: SM_ASSETTYPE_CONTAINER_TEMPLATE
-    template_type: SM_CONTAINER_TEMPLATE
-    category: templates
-    label: Container template
-    description: Template used to define containers
-    editable: true
-    model_specific: sometimes
-    icon: layout.png
-    class: SmartestTemplateAsset
-    allow_convert_to: [SM_ASSETTYPE_ITEMSPACE_TEMPLATE, SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE]
-    storage: 
-      type: file
-      location: Presentation/Layouts/
-    suffix:
-      - {mime: application/octet-stream, _content: tpl}
-      
   SM_ASSETTYPE_MASTER_TEMPLATE:
     id: SM_ASSETTYPE_MASTER_TEMPLATE
     template_type: SM_PAGE_MASTER_TEMPLATE
@@ -783,6 +766,23 @@ type:
     storage: 
       type: file
       location: Presentation/Masters/
+    suffix:
+      - {mime: application/octet-stream, _content: tpl}
+
+  SM_ASSETTYPE_CONTAINER_TEMPLATE:
+    id: SM_ASSETTYPE_CONTAINER_TEMPLATE
+    template_type: SM_CONTAINER_TEMPLATE
+    category: templates
+    label: Container template
+    description: Template used to define containers
+    editable: true
+    model_specific: sometimes
+    icon: layout.png
+    class: SmartestTemplateAsset
+    allow_convert_to: [SM_ASSETTYPE_ITEMSPACE_TEMPLATE, SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE]
+    storage: 
+      type: file
+      location: Presentation/Layouts/
     suffix:
       - {mime: application/octet-stream, _content: tpl}
       

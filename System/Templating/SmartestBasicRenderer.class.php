@@ -87,7 +87,7 @@ class SmartestBasicRenderer extends SmartestEngine{
                         }
                         
                         if($this->_request_data->g('action') == "renderEditableDraftPage" || ($this->_request_data->g('action') == "pageFragment" && $this->getDraftMode())){
-            			    $attachment['edit_link'] = "<a class=\"sm-edit-button\" title=\"Click to edit definition for attachment: ".$name."\" href=\"".$this->_request_data->g('domain')."assets/defineAttachment?attachment=".$name."&amp;asset_id=".$asset->getId()."&amp;from=pagePreviewDirectEdit\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Attach a different file--></a>";
+            			    $attachment['edit_link'] = "<a class=\"sm-edit-button\" title=\"Click to edit definition for attachment: ".$name."\" href=\"".$this->_request_data->g('domain')."assets/defineAttachment?attachment=".$name."&amp;asset_id=".$asset->getId()."&amp;from=pagePreviewDirectEdit\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/attachment-switch.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Attach a different file--></a>";
             		    }else{
             			    $attachment['edit_link'] = "<!--edit link-->";
             		    }
@@ -351,12 +351,12 @@ class SmartestBasicRenderer extends SmartestEngine{
 		        if($this->_request_data->g('request_parameters')->hasParameter('page_id')) $edit_url .= '&page_id='.$this->_request_data->g('request_parameters')->getParameter('page_id');
 		        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit file: ".$asset->getUrl()." (".$asset->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/edit-pencil-standard.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this asset--></a>";
 		    }else{
-		        $edit_link = "<!--edit link-->";
+		        $edit_link = '<!--edit link-->';
 	        }
 	    
         }else{
             
-            $edit_link = "<!--no edit link-->";
+            $edit_link = '';
         }
         
         return $edit_link;

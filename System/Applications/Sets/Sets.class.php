@@ -295,6 +295,7 @@ class Sets extends SmartestSystemApplication{
 	            
 	        }
 	        
+            $this->send($set->getModel()->hasMetaPageOnSiteId($this->getSite()->getId()), 'has_metapage');
 	        $this->send($set->getModel()->isShared() && ($set->getSiteId() == $this->getSite()->getId()), 'show_shared');
 	        $this->send($set->getModel(), 'model');
 	        $this->send($formTemplateInclude, 'formTemplateInclude');
@@ -319,8 +320,9 @@ class Sets extends SmartestSystemApplication{
 	            $this->send($conditions, 'conditions');
 	            $this->send($set, 'set');
 	            $this->send($set->getModel()->getProperties(), 'properties');
+                $this->send($set->getModel()->hasMetaPageOnSiteId($this->getSite()->getId()), 'has_metapage');
 	        }else{
-	            $this->addUserMessage('The set is not dynamic', SmartestUserMessage::ERROR);
+	            $this->addUserMessage('The set is not dynamic', SmartestUserMessage::ERROR, true);
 	        }
 	        
 	    }else{
@@ -594,6 +596,7 @@ class Sets extends SmartestSystemApplication{
 	        $this->send($set, 'set');
 	        $this->send($set->getMembers(SM_QUERY_ALL_DRAFT, null, $this->getSIte()->getId()), 'items');
 	        $this->send($this->getApplicationPreference('reorder_static_set_num_cols'), 'num_cols');
+            $this->send($set->getModel()->hasMetaPageOnSiteId($this->getSite()->getId()), 'has_metapage');
 	        
 	    }else{
 	        $this->addUserMessageToNextRequest("The set ID was not recognised.", SM_USER_MESSAGE_ERROR);
@@ -695,6 +698,7 @@ class Sets extends SmartestSystemApplication{
     	    $this->send($items, 'items');
     	    $this->send(count($items), 'count');
     	    $this->send($set, 'set');
+            $this->send($set->getModel()->hasMetaPageOnSiteId($this->getSite()->getId()), 'has_metapage');
     	    
     	    $model = new SmartestModel;
     	    
@@ -755,7 +759,50 @@ class Sets extends SmartestSystemApplication{
 	    
 	    if($set->find($set_id)){
 	        
+            if(!strlen($set->getFeedNonce())){
+                $set->setFeedNonce(SmartestStringHelper::random(16));
+                $set->save();
+            }
+            
             $this->send($set, 'set');
+            $this->send($set->getModel()->hasMetaPageOnSiteId($this->getSite()->getId()), 'has_metapage');
+            
+            $this->send($set->getSyndicateAsRSS(), 'set_syndicate_as_rss');
+            $this->send($set->getSyndicateAsAtom(), 'set_syndicate_as_atom');
+            $this->send($set->getSyndicateAsItunes(), 'set_syndicate_as_itunes');
+            
+            $this->send($set->getRssChannelImage(), 'set_rss_feed_image');
+            $this->send($set->getFeedAuthor(), 'set_feed_author');
+            $this->send($set->getFeedDescription(), 'set_feed_description_contents');
+            
+	    }
+        
+    }
+    
+    public function updateSetSyndication(){
+        
+	    $set_id = $this->getRequestParameter('set_id');
+	    $set = new SmartestCmsItemSet;
+	    
+	    if($set->find($set_id)){
+	        
+            $this->addUserMessageToNextRequest('Syndication settings were successfully updated for the set \''.$set->getLabel().'\'', SmartestUserMessage::SUCCESS);
+            
+            $set->setSyndicateAsRSS(SmartestStringHelper::toRealBool($this->getRequestParameter('set_syndicate_as_rss')));
+            $set->setSyndicateAsAtom(SmartestStringHelper::toRealBool($this->getRequestParameter('set_syndicate_as_atom')));
+            $set->setSyndicateAsItunes(SmartestStringHelper::toRealBool($this->getRequestParameter('set_syndicate_as_itunes')));
+            
+            $set->setRssChannelImageId($this->getRequestParameter('rss_channel_image_id'));
+            $set->setFeedAuthor($this->getRequestParameter('set_feed_author'));
+            $set->setFeedDescription($this->getRequestParameter('set_feed_description_text'));
+            
+            if(!strlen($set->getFeedNonce())){
+                $set->setFeedNonce(SmartestStringHelper::random(16));
+            }
+            
+            $set->save();
+            
+            $this->redirect('/sets/syndicateSet?set_id='.$set->getId());
             
 	    }
         

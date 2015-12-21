@@ -16,6 +16,22 @@
       </div>
       
       <div class="edit-form-row">
+        <div class="form-section-label">Build-in 'name' field value</div>
+        <div style="float:left">
+          <select name="itemclass_name_origin">
+            <option value="manual"{if $model.item_name_field_origin == 'manual'} selected="selected"{/if}>Manual input (default)</option>
+            {if $name_origin_properties_available}<option value="derive"{if $model.item_name_field_origin == 'derive'} selected="selected"{/if}>Derive from other properties</option>{/if}
+            <option value="method"{if $model.item_name_field_origin == 'method'} selected="selected"{/if}>Custom getName() method</option>
+          </select>
+          <div id="itemclass-name-derive-format-holder" style="display:{if $model.item_name_field_origin == 'derive'}block{else}none{/if}">
+            <input type="text" name="itemclass_name_derive_format" value="{$model.item_name_field_derive_format}" />
+            <br /><span class="form-hint">A combination of the following properties by name: {$name_origin_var_names_joined}</span>
+          </div>
+        </div>
+        <div class="breaker"></div>
+      </div>
+      
+      <div class="edit-form-row">
         <div class="form-section-label">Build-in 'name' field title</div>
         {if $allow_infn_edit}<input type="text" name="itemclass_item_name_field_name" value="{$model.item_name_field_name}" /><div class="form-hint">Usually something like 'name', 'title', 'headline', 'label'</div>{else}{$model.item_name_field_name}{/if}
       </div>

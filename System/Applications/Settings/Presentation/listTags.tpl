@@ -1,24 +1,56 @@
 <div id="work-area">
 <h3>Tags</h3>
 
-<div class="special-box"><a href="{$domain}smartest/settings" class="button"><i class="fa fa-chevron-circle-left"></i>Click here</a> to return to settings.</div>
+{* <div class="special-box"><a href="{$domain}smartest/settings" class="button"><i class="fa fa-chevron-circle-left"></i>Click here</a> to return to settings.</div> *}
 
-<div class="instruction">Tags exist across all your sites. Some lags may not make sense for certain sites, but they can be ignored.</div>
+<div class="instruction">Tags exist across all your sites. Some tags may not make sense for certain sites, but they can be ignored.</div>
 
 {if count($tags)}
 
+<ul class="checkbox-array-list" id="tags-list">
 {foreach from=$tags item="tag" key="key"}
-<a class="tag" href="{$domain}smartest/tagged/{$tag.name}" data-tag="{$tag.name}">{$tag.label}</a>
+  <li data-tagid="{$tag.id}" data-taglabel="{$tag.label}"><label>{$tag.label}<a href="#tag-info" data-tag="{$tag.name}" class="tag-info tag-icon-button"><i class="fa fa-info-circle"></i></a><a href="#tag-delete" data-tag="{$tag.name}" class="tag-delete tag-icon-button"><i class="fa fa-times"></i></a></label></li>
 {/foreach}
+</ul>
 
 <script type="text/javascript">
 {literal}
-$$('a.tag').each(function(tagLink){
+
+$$('#tags-list li label a.tag-info').each(function(tagLink){
   tagLink.observe('click', function(evt){
+    // console.log(tagLink.up(1));
     evt.stop();
-    MODALS.load('settings/getTaggedObjects?tag='+tagLink.readAttribute('data-tag'), 'Objects tagged with &lsquo;'+tagLink.innerHTML+'&rsquo;');
+    var tagLabel = tagLink.up(1).readAttribute('data-taglabel');
+    MODALS.load('settings/getTaggedObjects?tag='+tagLink.readAttribute('data-tag'), 'Objects tagged with &lsquo;'+tagLabel+'&rsquo;');
   });
 });
+
+$$('#tags-list li label a.tag-delete').each(function(tagLink){
+  tagLink.observe('click', function(evt){
+    // console.log(tagLink.up(1));
+    evt.stop();
+    
+    var tagLabel = tagLink.up(1).readAttribute('data-taglabel');
+    var tagID = tagLink.up(1).readAttribute('data-tagid');
+    
+    if(confirm('Really delete tag "'+tagLabel+'"?')){
+      new Ajax.Request(sm_domain+'ajax:settings/deleteTagById', {
+        
+        parameters: 'tag_id='+tagID,
+        onSuccess: function(response) {
+          // hide tag
+          /* li.fade({duration: 0.3, afterfinish: function(){li.remove()}});
+          $('no-tags-notice').appear({duration: 0.3}); */
+          tagLink.up(1).fade();
+        }
+      
+      });
+      
+    }
+    // MODALS.load('settings/getTaggedObjects?tag='+tagLink.readAttribute('data-tag'), 'Objects tagged with &lsquo;'+tagLabel+'&rsquo;');
+  });
+});
+
 {/literal}
 </script>
 

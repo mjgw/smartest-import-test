@@ -54,7 +54,18 @@
 
 <div id="work-area">
 
-{* <h3><a href="{$domain}smartest/models">Items</a> &gt; <a href="{$domain}{$section}/getItemClassMembers?class_id={$model.id}">{$model.plural_name}</a> &gt; Add a new {$model.name|strtolower}</h3> *}
+{if $require_choose_model}
+<h3>What would you like to create?</h3>
+
+<ul class="apps small">
+{foreach from=$models key="key" item="model"}
+  <li>
+    <a class="icon" href="{$domain}{$section}/addItem?class_id={$model.id}"><i class="fa fa-cube"></i></a>
+    <a class="label" href="{$domain}{$section}/addItem?class_id={$model.id}">{$model.name}</a></li>
+{/foreach}
+</ul>
+
+{else}
 <h3>Add a new {$model.name|strtolower}</h3>
 
 {if $request_parameters.for == 'ipv'}
@@ -162,11 +173,6 @@
 </div>
 
 </form>
+{/if}
 
-</div>
-
-<div id="actions-area">
-
-
-  
 </div>

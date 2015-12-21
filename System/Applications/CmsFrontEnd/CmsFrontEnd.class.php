@@ -385,7 +385,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
     	        
     	        $rss = new SmartestRssOutputHelper($objects);
     	        $rss->setTitle($this->_site->getName()." | ".$tag->getLabel());
-    	        $rss->send();
+                $rss->send();
     	        
     	    }else{
     	        // echo "page not found";
@@ -400,6 +400,71 @@ class CmsFrontEnd extends SmartestSystemApplication{
         }
 	    
 	}
+    
+    public function getDataSetFeed(){
+        
+        if($this->lookupSiteDomain()){
+            
+	        define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
+		    define('SM_CMS_PAGE_SITE_UNIQUE_ID', $this->_site->getUniqueId());
+            
+            $set = new SmartestCmsItemSet;
+            if($set->findBy('name', SmartestStringHelper::toVarName($this->getRequestParameter('set_name')))){
+                
+                if($set->getFeedNonce() == $this->getRequestParameter('nonce')){
+                    
+                    switch($this->getRequestParameter('format')){
+                    
+                        case "rss":
+                        if($set->getSyndicateAsRSS()){
+                            $members = $set->getMembers();
+                            $rss = new SmartestRssOutputHelper($members);
+            	            $rss->setTitle($this->_site->getName()." | ".$set->getLabel());
+                            $rss->setAuthor($set->getFeedAuthor());
+                            $rss->setDescription($set->getFeedDescription());
+            	            $rss->send();
+                        }else{
+                            exit;
+                        }
+                        break;
+                    
+                        case "atom":
+                        if($set->getSyndicateAsAtom()){
+                            $members = $set->getMembers();
+                            $atom = new SmartestRssOutputHelper($members);
+            	            $atom->setTitle($this->_site->getName()." | ".$set->getLabel());
+                            $atom->setAuthor($set->getFeedAuthor());
+                            $atom->setDescription($set->getFeedDescription());
+            	            $atom->sendAtom();
+                        }else{
+                            exit;
+                        }
+                        break;
+                    
+                        case "itunes":
+                        if($set->getSyndicateAsITunes()){
+                            $members = $set->getMembers();
+                            $atom = new SmartestRssOutputHelper($members);
+            	            $atom->setTitle($this->_site->getName()." | ".$set->getLabel());
+                            $atom->setAuthor($set->getFeedAuthor());
+                            $atom->setDescription($set->getFeedDescription());
+            	            $atom->sendItunes();
+                        }else{
+                            exit;
+                        }
+                        break;
+                    
+                    }
+                    
+                }
+                
+            }else{
+                exit;
+            }
+        
+        }
+        
+    }
 	
 	public function downloadAsset($get){
 	    

@@ -97,13 +97,14 @@ var checkParentModelPropertyName = function(){
 {/foreach}
     </select>
   </div>
-  <div class="edit-form-row">
+  <input type="hidden" name="itemclass_parent_model_rel" value="mt1">
+  {* <div class="edit-form-row">
     <div class="form-section-label">Relationship</div>
     <select name="itemclass_parent_model_rel" id="main-model-relationship-select">
       <option value="mt1">Many-to-one</option>
       <option value="mtm">Many-to-many</option>
     </select>
-  </div>
+  </div> *}
   <div class="edit-form-row">
     <div class="form-section-label">Parent model property name</div>
     <input type="text" name="itemclass_parent_model_property_name" value="" id="itemclass-parent-model-property-name" onkeyup="parentModelPropertyNameUpdate()" />

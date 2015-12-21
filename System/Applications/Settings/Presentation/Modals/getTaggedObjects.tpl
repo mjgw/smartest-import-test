@@ -29,8 +29,17 @@
   </ul>
   {/if}
   
-  {if $items._empty && $assets._empty && $pages._empty}
-  <div class="special-box">This tag is not connected to any items, files or pages yet.</div>
+  {if !$users._empty}
+  <h4>Users</h4>
+  <ul class="basic-list">
+    {foreach from=$users item="user"}
+    <li style="list-style-image:url('{$user.small_icon}')"> <a href="{$user.action_url}">{$user.full_name}</a></li>
+    {/foreach}
+  </ul>
+  {/if}
+  
+  {if $items._empty && $assets._empty && $pages._empty && $users._empty}
+  <div class="special-box">This tag is not connected to any items, files, pages or users yet.</div>
   {/if}
 
 </div>

@@ -16,3 +16,9 @@ module:
       url: /smartest/tagged/:tag
   meta:
     system: true
+  namespaces:
+    ajax:
+      class: SettingsAjax
+      meta:
+        template: _blank.tpl # Can also be 'none'
+        presentation_subfolder: Ajax/

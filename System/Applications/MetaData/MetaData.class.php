@@ -135,19 +135,25 @@ class MetaData extends SmartestSystemApplication{
 		        
         		    $def = new SmartestPageFieldDefinition;
             		$def->loadForUpdate($field, $page);
+                    
+                    // var_dump($def->getDraftValue());
+                    // echo $field->getType();
         		
             		if($field->getType() == 'SM_DATATYPE_DROPDOWN_MENU'){
         		        $dropdown_id = $field->getForeignKeyFilter();
         		        $dropdown = new SmartestDropdown;
         		        $dropdown->find($dropdown_id);
-        		        $options = $dropdown->getOptions();
-        		        $this->send($options, 'options');
+        		        // $options = $dropdown->getOptions();
+                        // print_r(reset($dropdown->getOptions()));
+        		        $this->send($dropdown->getOptions(), 'options');
         		    }else if($field->getType() == 'SM_DATATYPE_ASSET_GALLERY'){
         		        $alh = new SmartestAssetsLibraryHelper;
                         $options = $alh->getGalleryAssetGroups($this->getSite()->getId());
                         $this->send($options, 'options');
         		    }
-    		    
+    		        
+                    // print_r(SmartestDataUtility::objectize($def->getDraftValue(), $field->getType()));
+                    
         		    $this->send(SmartestDataUtility::objectize($def->getDraftValue(), $field->getType()), 'value');
         		    $this->send($field->getName(), 'field_name');
         		    $this->send($field->getType(), 'field_type');

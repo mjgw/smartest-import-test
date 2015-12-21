@@ -221,7 +221,7 @@ class SmartestAssetCreationHelper{
         $this->_asset->setCreated(time());
         $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label));
         $this->_asset->setLabel($asset_label);
-        $this->_asset->setUserId(SmartestSession::get('user')->getId());
+        $this->_asset->setUserId(is_object(SmartestSession::get('user')) ? SmartestSession::get('user')->getId() : '0');
         $this->_asset->setType($this->_asset_type['id']);
         
         $suffixes = $this->_alh->getAllSuffixesForType($this->_asset_type['id']);

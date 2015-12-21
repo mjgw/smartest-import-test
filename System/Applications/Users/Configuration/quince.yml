@@ -33,3 +33,9 @@ module:
     edit_my_password:
       action: setMyPassword
       url: /smartest/account/password
+  namespaces:
+    ajax:
+      class: UsersAjax
+      meta:
+        template: _blank.tpl # Can also be 'none'
+        presentation_subfolder: Ajax/

@@ -25,6 +25,11 @@
 </div>
 
 <div class="edit-form-row">
+  <div class="form-section-label">Organisation name</div>
+  <input type="text" name="site_organisation_name" value="{$site_organisation}"/><div class="form-hint">Optional. Used for credits and attribution. This is the name of the entity your site is about, rather than the name of the site.</div>
+</div>
+
+<div class="edit-form-row">
   <div class="form-section-label">Page title format</div>
   <input type="text" name="site_title_format" value="{$site.title_format}" /><div class="form-hint">This will take effect on your pages the next time they are published</div>
 </div>

@@ -315,5 +315,31 @@ class PagesAjax extends SmartestSystemApplication{
         }
         
     }
+    
+    public function restoreTrashedPage(){
+        
+        $page = new SmartestPage;
+        
+        if($page->smartFind($this->getRequestParameter('page_id'))){
+            
+            $page->setDeleted('FALSE');
+            
+            if(is_object($page->getParentPage()) && SmartestStringHelper::toRealBool($page->getParentPage()->getDeleted())){
+                $page->setParent($this->getSite()->getTopPageId());
+            }
+            
+            $page->save();
+            
+            header('Content-Type: application/json; charset=UTF8');
+            echo json_encode(array('success'=>true));
+            exit;
+            
+        }else{
+            header('Content-Type: application/json; charset=UTF8');
+            echo json_encode(array('success'=>false, 'reason'=>'page'));
+            exit;
+        }
+        
+    }
 
 }

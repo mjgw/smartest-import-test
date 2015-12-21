@@ -72,6 +72,8 @@ define('SM_STATUS_LIVE_APPROVED',   6); // the default for published pages
 
 define('SM_STATUS_CURRENT',         7);
 define('SM_STATUS_ARCHIVED',        8);
+define('SM_STATUS_CHANGED',         9); // all items that have been changed, regardless if public or hidden
+define('SM_STATUS_APPROVED',        10); // all items that have been approved, regardless if public or hidden
 
 define('SM_CONTEXT_GENERAL',              100);
 define('SM_CONTEXT_SYSTEM_UI',            101);

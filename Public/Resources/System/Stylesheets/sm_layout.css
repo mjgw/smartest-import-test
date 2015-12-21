@@ -28,6 +28,10 @@ div.v-spacer{
     height:20px;
 }
 
+div.v-spacer.half{
+    height:10px;
+}
+
 #top-strip{
     position:absolute;
     /* top:0px;

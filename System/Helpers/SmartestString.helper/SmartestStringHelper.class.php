@@ -1096,3 +1096,7 @@ class SmartestStringHelper extends SmartestHelper{
 function _b($v){
     return SmartestStringHelper::toRealBool($v);
 }
+
+function _bo($v){
+    return new SmartestBoolean(SmartestStringHelper::toRealBool($v));
+}

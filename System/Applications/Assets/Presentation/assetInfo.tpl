@@ -100,6 +100,210 @@
         </td>
       </tr>
       {/if}
+      
+      <tr>
+        <td valign="top" class="field-name">Tags</td>
+        <td>
+          
+        <ul class="checkbox-array-list" id="asset-tags-list">
+  {foreach from=$asset_tags item="tag"}
+          <li data-tagid="{$tag.id}"><label>{$tag.label} <a href="#remove-tag" class="tag-icon-button delete-tag"><i class="fa fa-times"></i></a></label></li>
+  {/foreach}
+        </ul>
+        
+        <span class="null-notice" id="no-tags-notice"{if count($asset_tags)} style="display:none"{/if}>No tags attached to this page</span>
+        <div class="v-spacer half"></div>
+        <input type="text" name="page_add_tag" value="Add a tag..." id="asset-add-tag-textbox" class="unfilled" />
+        <div class="autocomplete" id="tags-autocomplete"></div>
+    
+        <script type="text/javascript">
+        
+          var assetId = {$asset.id};
+        
+          {literal}
+        
+          var tagsInUse = {};
+        
+          var removeTagFromClick = function(evt){
+          
+            evt.stop();
+            var a = Event.element(evt);
+            var li = a.up(2);
+            var tagId = li.readAttribute('data-tagid');
+          
+            if(tagsInUse.hasOwnProperty('tag_'+tagId)){
+            
+              // remove tag by ID
+              new Ajax.Request(sm_domain+'ajax:assets/unTagAsset', {
+            
+                parameters: 'tag_id='+tagId+'&asset_id='+assetId,
+                onSuccess: function(response) {
+                  // hide tag
+                  li.fade({
+                    duration: 0.3,
+                    afterfinish: function(){
+                        li.remove();
+                        // console.log(tagsInUse.size());
+                        $('no-tags-notice').appear({duration: 0.3});
+                      }
+                  });
+                  var key = 'tag_'+tagId;
+                  delete(tagsInUse[key]);
+                
+                }
+              
+              });
+            
+            }else{
+            
+            
+            
+            }
+            
+          }
+        
+          $$('#asset-tags-list li').each(function(li){
+            var tkey = 'tag_'+li.readAttribute('data-tagid');
+            tagsInUse[tkey] = true;
+          });
+        
+          $$('#asset-tags-list li label a.tag-icon-button.delete-tag').each(function(a){
+            a.observe('click', removeTagFromClick);
+          });
+        
+          $('asset-add-tag-textbox').observe('focus', function(){
+              if(($('asset-add-tag-textbox').getValue() == 'Add a tag...') || $('asset-add-tag-textbox').getValue() == ''){
+                  $('asset-add-tag-textbox').removeClassName('unfilled');
+                  $('asset-add-tag-textbox').setValue('');
+              }
+          });
+        
+          $('asset-add-tag-textbox').observe('blur', function(){
+              if(($('asset-add-tag-textbox').getValue() == 'Add a tag...') || $('asset-add-tag-textbox').getValue() == ''){
+                  $('asset-add-tag-textbox').addClassName('unfilled');
+                  $('asset-add-tag-textbox').setValue('Add a tag...');
+              }
+          });
+        
+          new Ajax.Autocompleter('asset-add-tag-textbox', "tags-autocomplete", sm_domain+"ajax:settings/tagsAutoComplete", {
+          
+            paramName: "string",
+            minChars: 3,
+            delay: 50,
+            width: 300,
+          
+            afterUpdateElement : function(text, li) {
+            
+              var tagName = li.readAttribute('data-label');
+              var tagId = li.readAttribute('data-id');
+            
+              if(tagId == 'new-tag'){
+              
+                new Ajax.Request(sm_domain+'ajax:settings/createNewTag', {
+                
+                  parameters: 'new_tag_label='+li.readAttribute('data-label'),
+                  onSuccess: function(response){
+                  
+                    newTag = response.responseJSON;
+                    // console.log(newTag);
+                  
+                    new Ajax.Request(sm_domain+'ajax:assets/tagAsset', {
+              
+                      parameters: 'tag_id='+newTag.id+'&asset_id='+assetId,
+                      onSuccess: function(useNewTagResponse) {
+              
+                        var i = new Element('i', {'class': 'fa fa-times'});
+                        var a = new Element('a', {'class': 'tag-icon-button delete-tag'});
+                        var label = new Element('label');
+                        label.update(newTag.label+' ');
+              
+                        var tag_li = new Element('li');
+                        tag_li.writeAttribute('data-tagid', newTag.id);
+              
+                        a.appendChild(i);
+                        a.observe('click', removeTagFromClick);
+              
+                        label.appendChild(a);
+                        tag_li.appendChild(label);
+              
+                        $('asset-tags-list').appendChild(tag_li);
+              
+                        if($('no-tags-notice').visible()){
+                          $('no-tags-notice').hide();
+                        }
+                
+                        var tkey = 'tag_'+newTag.id;
+                        tagsInUse[tkey] = true;
+                  
+                        $('asset-add-tag-textbox').value = "";
+                        $('asset-add-tag-textbox').blur();
+              
+                      }
+               
+                    });
+                  
+                  }
+                
+                })
+              
+              }else{
+              
+                $('asset-add-tag-textbox').value = "";
+                $('asset-add-tag-textbox').blur();
+              
+                if(tagsInUse.hasOwnProperty('tag_'+tagId)){
+              
+                  // That tag is already in use here
+              
+                }else{
+              
+                  new Ajax.Request(sm_domain+'ajax:assets/tagAsset', {
+              
+                    parameters: 'tag_id='+tagName+'&asset_id='+assetId,
+                    onSuccess: function(response) {
+              
+                      var i = new Element('i', {'class': 'fa fa-times'});
+                      var a = new Element('a', {'class': 'tag-icon-button delete-tag'});
+                      var label = new Element('label');
+                      label.update(tagName+' ');
+                
+                      var tag_li = new Element('li');
+                      tag_li.writeAttribute('data-tagid', li.readAttribute('data-id'));
+                
+                      a.appendChild(i);
+                      a.observe('click', removeTagFromClick);
+                
+                      label.appendChild(a);
+                      tag_li.appendChild(label);
+                
+                      $('asset-tags-list').appendChild(tag_li);
+                
+                      if($('no-tags-notice').visible()){
+                        $('no-tags-notice').hide();
+                      }
+                  
+                      var tkey = 'tag_'+tag_li.readAttribute('data-tagid');
+                      tagsInUse[tkey] = true;
+              
+                    }
+               
+                  });
+                
+                }
+            
+              }
+            
+            }
+          
+          });
+        
+          {/literal}
+          
+          </script>
+    
+        </td>
+      </tr>
+      
       <tr>
         <td valign="middle" class="field-name">Owner:</td>
         <td>

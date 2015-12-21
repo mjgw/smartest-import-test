@@ -15,7 +15,7 @@
       {if $field_type == 'SM_DATATYPE_DROPDOWN_MENU'}
       <select name="field_content">
         {foreach from=$options item="option"}
-        <option value="{$option.value}"{if $option.value == $value} selected="selected"{/if}>{$option.label}</option>
+        <option value="{$option.value}"{if $option.value == $value.value} selected="selected"{/if}>{$option.label}</option>
         {/foreach}
       </select>
       {elseif $field_type == 'SM_DATATYPE_BOOLEAN'}

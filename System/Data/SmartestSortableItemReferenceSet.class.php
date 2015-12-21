@@ -10,12 +10,13 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
 	protected $_items_retrieval_attempted = false;
 	protected $_sort_field = '';
 	protected $_sort_field_direction = 'ASC';
-	protected $_is_draft = false;
+	protected $_set_item_draft_mode = 0;
+    protected $_is_draft = 0;
 	protected $database;
 	
 	public function __construct(SmartestModel $model, $set_item_draft_mode=false){
 		$this->_model = $model;
-		$this->_is_draft = $set_item_draft_mode;
+		$this->_set_item_draft_mode = $set_item_draft_mode;
 		$this->database = SmartestPersistentObject::get('db:main');
 	}
 	
@@ -28,7 +29,11 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
 	}
 	
 	public function getDraftMode(){
-	    return $this->_is_draft();
+	    return $this->_is_draft;
+	}
+    
+	public function setDraftMode($mode){
+	    $this->_is_draft = (int) $mode;
 	}
 	
 	private function getSimpleIdsArray($array){
@@ -338,6 +343,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
 		}
 		
 		$h = new SmartestCmsItemsHelper;
+        // var_dump($this->_is_draft);
 		$this->_items = $h->hydrateUniformListFromIdsArrayPreservingOrder($ids, $this->_model->getId(), $this->_is_draft);
 		
 		$this->_items_retrieval_attempted = true;
