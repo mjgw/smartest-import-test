@@ -336,7 +336,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                                 $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$ph->getName()."&amp;page_id=".$this->page->getWebid();
                             }
                         
-                            $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Swap this file--></a>";
+                            $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/placeholder-switch.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this file--></a>";
                             return $edit_link;
                         
                         }
@@ -491,7 +491,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                         }else{
                             $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$placeholder->getPlaceholder()->getName()."&amp;page_id=".$this->page->getWebid();
                         }
-    			        $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for placeholder: ".$placeholder->getPlaceholder()->getLabel()." (".$placeholder->getPlaceholder()->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Swap this file--></a>";
+    			        $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for placeholder: ".$placeholder->getPlaceholder()->getLabel()." (".$placeholder->getPlaceholder()->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/placeholder-switch.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this file--></a>";
     			        // $edit_link .= "<a title=\"Click to clear definition for placeholder: ".$placeholder->getPlaceholder()->getLabel()." (".$placeholder->getPlaceholder()->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Swap this file--></a>";
     		        }else{
     			        $edit_link = "<!--edit link-->";
@@ -525,7 +525,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                                 $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$ph->getName()."&amp;page_id=".$this->page->getWebid();
                             }
                         
-                            $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Swap this file--></a>";
+                            $edit_link = "<a class=\"sm-edit-button\" title=\"Click to choose or upload a file for for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/fill-empty-placeholder.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this file--></a>";
                             return $edit_link;
                         
                         }
@@ -640,7 +640,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             }else if($this->_request_data->g('request_parameters')->g('page_id')){
                 $url .= '&amp;from=pagePreview&amp;page_webid='.$this->_request_data->g('request_parameters')->g('page_id');
             }
-            $html = '<a class="sm-edit-button" href="'.$url.'" target="_top" title="Edit item ID '.$item_id.'"><img src="'.$this->_request_data->g('domain').'Resources/Icons/package_small.png" alt="Edit item ID '.$item_id.'" /></a>';
+            $html = '<a class="sm-edit-button" href="'.$url.'" target="_top" title="Edit item ID '.$item_id.'"><img src="'.$this->_request_data->g('domain').'Resources/System/Images/edit-pencil-magenta.png" style="width:16px;height:16px" alt="Edit item ID '.$item_id.'" /></a>';
         }else{
             $html = '';
         }
@@ -680,7 +680,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             }
             
             if($set->getType('STATIC')){
-                $html = '<a class="sm-edit-button" href="'.$url.'" target="_top"><img src="'.$this->_request_data->g('domain').'Resources/Icons/arrow_switch.png" alt="" /></a>';
+                $html = '<a class="sm-edit-button" href="'.$url.'" target="_top"><img src="'.$this->_request_data->g('domain').'Resources/System/Images/switch-order.png" style="width:16px;height:16px" alt="" /></a>';
                 return $html;
             }else{
                 return $this->raiseError("Item set '".$set->getLabel()."' is not static and cannot be ordered manually.");
@@ -781,7 +781,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             if($this->getPage()->getSite()->fieldExists($field_name)/* $this->_tpl_vars['this']->getFieldDefinitions()->hasParameter($field_name) */){
         
                 if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
-    		        $markup = "<a class=\"sm-edit-button\" title=\"Click to edit definitions for field: ".$field_name."\" href=\"".$this->_request_data->g('domain')."metadata/defineFieldOnPage?page_id=".$this->getPage()->getWebid()."&amp;assetclass_id=".$field_name."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\">&nbsp;<img src=\"".$this->_request_data->g('domain')."Resources/Icons/pencil.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
+    		        $markup = "<a class=\"sm-edit-button\" title=\"Click to define field: ".$field_name."\" href=\"".$this->_request_data->g('domain')."metadata/defineFieldOnPage?page_id=".$this->getPage()->getWebid()."&amp;assetclass_id=".$field_name."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\">&nbsp;<img src=\"".$this->_request_data->g('domain')."Resources/System/Images/edit-pencil-blue.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /></a>";
     	        }
 	    
             }
