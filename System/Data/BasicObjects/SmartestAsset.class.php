@@ -166,6 +166,11 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             case "text_length":
             return $this->getTextLength();
             
+            case "text_length_no_tags":
+            case "text_length_no_html":
+            case "text_length_without_html":
+            return $this->getTextLengthWithoutHTML();
+            
             case "credit":
             return $this->isImage() ? $data['default_parameters']['credit'] : null;
             
@@ -360,6 +365,16 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    
 	    if($this->usesTextFragment()){
 	        return $this->getTextFragment()->getLength();
+	    }else{
+	        return 0;
+	    }
+	    
+	}
+    
+	public function getTextLengthWithoutHTML(){
+	    
+	    if($this->usesTextFragment()){
+	        return $this->getTextFragment()->getLengthWithoutHTML();
 	    }else{
 	        return 0;
 	    }

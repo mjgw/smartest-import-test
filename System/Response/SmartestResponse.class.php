@@ -162,6 +162,7 @@ class SmartestResponse{
         	'System/Data/SmartestParameterHolderValuePresenceChecker.class.php',
         	'System/Data/SmartestDataObjectHelper.class.php',
         	'System/Data/SmartestRandomNumberGenerator.class.php',
+            'System/Data/SmartestTemplateNumberCalculator.class.php',
         	'System/Base/SmartestSiteActions.class.php',
         	'System/Data/SmartestPageRenderingDataRequestHandler.class.php',
         	'System/Data/SmartestPageNavigationDataRequestHandler.class.php',

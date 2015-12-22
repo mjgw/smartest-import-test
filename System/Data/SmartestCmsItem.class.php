@@ -1259,8 +1259,45 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
                     $sql = "SELECT item_id FROM Items, ItemProperties, ItemPropertyValues WHERE item_deleted !=1 AND item_itemclass_id=itemproperty_itemclass_id AND itempropertyvalue_item_id=item_id AND itempropertyvalue_property_id = itemproperty_id AND ".$field."='".$this->getId()."' AND itemproperty_id='".$this->_properties[$key]->getForeignKeyFilter()."'";
                     $result = $this->database->queryToArray($sql);
                     
-                    foreach($result as $r){
-                        $ids[] = $r['item_id'];
+                    // The following code attempts to sort the items by their default sort order
+                    
+                    $foreign_property_id = $this->_properties[$key]->getForeignKeyFilter();
+                    $foreign_property = new SmartestItemProperty;
+                    
+                    if($foreign_property->find($foreign_property_id)){
+                        
+                        $foreign_model_id = $foreign_property->getItemClassId();
+                        
+                        $model = new SmartestModel;
+                        
+                        if($draft){
+                            $rdm = -1; // -1 is the draft-agnostic (both draft and live) mode for SmartestSortableItemReferenceSet (1 returns only draft objects)
+                        }else{
+                            $rdm = 0;
+                        }
+                        
+                        if($model->find($foreign_model_id)){
+                            
+                            $s = new SmartestSortableItemReferenceSet($model, $draft);
+                            $s->setDraftMode($rdm);
+                            
+                            foreach($result as $r){
+                                $s->insertItemId($r['item_id']);
+                            }
+                            
+                            $s->sort();
+                            $ids = $s->getItemIds();
+                            
+                        }else{
+                            foreach($result as $r){
+                                $ids[] = $r['item_id'];
+                            }
+                        }
+                        
+                    }else{
+                        foreach($result as $r){
+                            $ids[] = $r['item_id'];
+                        }
                     }
                     
                     $obj = new $class;

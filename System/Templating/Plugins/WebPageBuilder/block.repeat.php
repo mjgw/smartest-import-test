@@ -108,6 +108,7 @@ function smarty_block_repeat($params, $content, &$smartest_engine, &$repeat){
 	    $smartest_engine->assign("repeated_item_object", $item); // legacy support
 	    $smartest_engine->assign("key", $index);
 	    $smartest_engine->assign("iteration", $index+1);
+        $smartest_engine->assign("key_calc", new SmartestTemplateNumberCalculator($index));
 	    
 	    if($custom_key_name){
 	        $smartest_engine->assign($custom_key_name, $index);

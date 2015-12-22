@@ -54,7 +54,7 @@ a img{
     border:0px;
 }
 
-a.button, input[type="button"], input[type="submit"]{
+a.button, input[type="button"], input[type="submit"], a.editor_cancel_link.editor_cancel{
     
     color:#fff!important;
     background-color:#68849E;
@@ -85,7 +85,7 @@ a.button i:first-child{
     margin-left:4px;
 } */
 
-a.button:hover, input[type="button"]:hover, input[type="submit"]:hover{
+a.button:hover, input[type="button"]:hover, input[type="submit"]:hover, a.editor_cancel_link.editor_cancel:hover{
     text-decoration:none;
     /* border-color:#ccc; */
     

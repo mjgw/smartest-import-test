@@ -278,6 +278,10 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
         return strlen($this->_properties['content']);
     }
     
+    public function getLengthWithoutHTML(){
+        return strlen(strip_tags($this->_properties['content']));
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){
