@@ -488,6 +488,7 @@ type:
       - {name: height, label: "Height", type: SM_DATATYPE_NUMERIC, required: true, default: 360}
       - {name: show_title_player_actions, label: "Show title and player actions", type: SM_DATATYPE_BOOLEAN, required: false, default: true}
       - {name: enhanced_privacy_mode, label: "Enhanced privacy mode", type: SM_DATATYPE_BOOLEAN, required: false, default: true}
+      - {name: show_related_videos, label: "Show related videos afterwards", type: SM_DATATYPE_BOOLEAN, required: true, default: false}
 
   SM_ASSETTYPE_VIMEO_CLIP:
     id: SM_ASSETTYPE_VIMEO_CLIP

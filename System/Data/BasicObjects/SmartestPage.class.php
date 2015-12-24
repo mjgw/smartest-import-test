@@ -2183,6 +2183,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             }else{
                 $def = new SmartestPlaceholderDefinition;
                 $def->hydrateFromGiantArray($def_array);
+                $def->setAssetDraftMode($this->getDraftMode());
                 // $this->_placeholders[$def_array['assetclass_name']] = $def;
                 $this->_placeholders->setParameter($def_array['assetclass_name'], $def);
             }

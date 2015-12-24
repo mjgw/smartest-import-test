@@ -246,5 +246,9 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
         return parent::offsetGet($offset);
         
     }
+    
+    public function setAssetDraftMode($draft){
+        $this->getAsset()->setDraftMode($draft);
+    }
 
 }
