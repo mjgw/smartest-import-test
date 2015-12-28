@@ -546,6 +546,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    $ids_array = $this->getRelatedItemIds($draft_mode);
 	    
 	    $ds = new SmartestSortableItemReferenceSet($this->getModel(), $draft_mode);
+        $ds->setDraftMode($draft_mode ? -1 : 0);
     
         foreach($ids_array as $item_id){
 	        $ds->insertItemId($item_id);
@@ -629,6 +630,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    if($model->hydrate($model_id)){
 	    
 	        $ds = new SmartestSortableItemReferenceSet($model, $draft_mode);
+            $ds->setDraftMode($draft_mode ? -1 : 0);
 	    
 	        foreach($ids_array as $item_id){
 		        $ds->insertItemId($item_id);

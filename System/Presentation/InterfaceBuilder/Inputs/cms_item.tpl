@@ -7,50 +7,65 @@
       {if $_input_data.show_new_field}<option value="NEW">New...</option>{/if}
   </select>{if $_input_data.show_new_field}<span id="{$_input_data.id}-container-{$_input_data.host_item_id}-loading"></span>{/if}
   
-  {if $_input_data.show_new_field}<div id="{$_input_data.id}-new-item-form-holder" style="padding-top:5px;display:none">
+  {if $_input_data.show_new_field}<div id="{$_input_data.id}-new-item-form-holder" style="padding-top:5px;display:none" class="edit-form-sub-row">
     <input type="text" name="{$_input_data.id}_new_item_name" id="{$_input_data.id}-new-item-name" />
-    <input type="button" id="{$_input_data.id}-new-item-save-button" value="save" disabled="disabled" />
+    <input type="button" id="{$_input_data.id}-new-item-save-button" value="Save" disabled="disabled" />
+    <input type="button" id="{$_input_data.id}-new-item-cancel-button" value="Cancel" />
   </div>{/if}
   
 </div>
 
-{if $_input_data.show_new_field}<script type="text/javascript">
-  $('{$_input_data.id}').observe('change', function(){ldelim}
-    if(this.value == 'NEW'){ldelim}
-      $('{$_input_data.id}-new-item-form-holder').show();
-      $('{$_input_data.id}-new-item-name').activate();
-    {rdelim}else{ldelim}
-      $('{$_input_data.id}-new-item-form-holder').hide();
-    {rdelim}
-  {rdelim});
+{if $_input_data.show_new_field}
+
+<script type="text/javascript">
+
+{literal}(function(ID, propertyID, hostItemId){
+
+  $(ID).observe('change', function(){
+    if(this.value == 'NEW'){
+      $(ID+'-new-item-form-holder').show();
+      $(ID+'-new-item-name').activate();
+    }else{
+      $(ID+'-new-item-form-holder').hide();
+    }
+  });
   
-  $('{$_input_data.id}-new-item-save-button').observe('click', function(){ldelim}
+  $(ID+'-new-item-save-button').observe('click', function(){
     // submit
-    new Smartest.IPVItemCreator({ldelim}name: $('{$_input_data.id}-new-item-name').value, property_id: '{$_input_data.property_id}', host_item_id: '{$_input_data.host_item_id}'{rdelim});
-  {rdelim});
+    new Smartest.IPVItemCreator({name: $(ID+'-new-item-name').value, property_id: propertyID, host_item_id: hostItemId});
+  });
   
-  $('{$_input_data.id}-new-item-name').observe('keyup', function(e){ldelim}
+  $(ID+'-new-item-cancel-button').observe('click', function(){
+    // cancel
+    $(ID+'-new-item-form-holder').hide();
+    $(ID+'-new-item-name').blur();
+    $(ID).selectedIndex = 0;
+  });
+  
+  $(ID+'-new-item-name').observe('keyup', function(e){
     
-    if(this.value.charAt(1)){ldelim}
-      $('{$_input_data.id}-new-item-save-button').disabled = false;
-    {rdelim}else{ldelim}
-      $('{$_input_data.id}-new-item-save-button').disabled = true;
-    {rdelim}
+    if(this.value.charAt(1)){
+      $(ID+'-new-item-save-button').disabled = false;
+    }else{
+      $(ID+'-new-item-save-button').disabled = true;
+    }
       
-  {rdelim});
+  });
   
-  $('{$_input_data.id}-new-item-name').observe('keypress', function(e){ldelim}
+  $(ID+'-new-item-name').observe('keypress', function(e){
     
-    if(e.keyCode == 13){ldelim}
-      if(this.value.charAt(1)){ldelim}
+    if(e.keyCode == 13){
+      if(this.value.charAt(1)){
         // submit
-        new Smartest.IPVItemCreator({ldelim}name: $('{$_input_data.id}-new-item-name').value, property_id: '{$_input_data.property_id}', host_item_id: '{$_input_data.host_item_id}'{rdelim});
+        new Smartest.IPVItemCreator({name: $(ID+'-new-item-name').value, property_id: propertyID, host_item_id: hostItemId});
         e.stop();
-      {rdelim}else{ldelim}
+      }else{
         // do nothing
         e.stop();
-      {rdelim}
-    {rdelim}
-  {rdelim});
+      }
+    }
+  });
+  
+}){/literal}('{$_input_data.id}', '{$_input_data.property_id}', '{$_input_data.host_item_id}');
   
 </script>{/if}

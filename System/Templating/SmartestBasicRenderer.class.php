@@ -6,6 +6,8 @@ class SmartestBasicRenderer extends SmartestEngine{
     protected $_image; // used when rendering a plain old image
     protected $draft_mode = false;
     protected $_other_pages;
+    protected $_preferences_helper;
+    protected $_hide_edit_buttons = false;
     
     public function __construct($pid){
         
@@ -19,6 +21,9 @@ class SmartestBasicRenderer extends SmartestEngine{
 		$this->_tpl_vars['sm_draft_mode'] = false;
 		
 		$this->_other_pages = new SmartestParameterHolder('Pages besides the main page');
+        
+        $this->_preferences_helper = new SmartestPreferencesHelper;
+        $this->_hide_edit_buttons = (bool) $this->_preferences_helper->getApplicationPreference('hide_preview_edit_buttons', 'com.smartest.CmsFrontEnd', SmartestSession::get('user')->getId(), SM_CMS_PAGE_SITE_ID);
         
     }
     
@@ -87,7 +92,9 @@ class SmartestBasicRenderer extends SmartestEngine{
                         }
                         
                         if($this->_request_data->g('action') == "renderEditableDraftPage" || ($this->_request_data->g('action') == "pageFragment" && $this->getDraftMode())){
-            			    $attachment['edit_link'] = "<a class=\"sm-edit-button\" title=\"Click to edit definition for attachment: ".$name."\" href=\"".$this->_request_data->g('domain')."assets/defineAttachment?attachment=".$name."&amp;asset_id=".$asset->getId()."&amp;from=pagePreviewDirectEdit\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/attachment-switch.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Attach a different file--></a>";
+            			    $attachment['edit_link'] = "<a class=\"sm-edit-button\" title=\"Click to edit definition for attachment: ".$name."\" href=\"".$this->_request_data->g('domain')."assets/defineAttachment?attachment=".$name."&amp;asset_id=".$asset->getId()."&amp;from=pagePreviewDirectEdit\" style=\"text-decoration:none;font-size:11px";
+                            if($this->_hide_edit_buttons) $attachment['edit_link'] .= ';display:none';
+                            $attachment['edit_link'] .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/attachment-switch.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Attach a different file--></a>";
             		    }else{
             			    $attachment['edit_link'] = "<!--edit link-->";
             		    }
@@ -349,7 +356,9 @@ class SmartestBasicRenderer extends SmartestEngine{
 		        $edit_url = $this->_request_data->g('domain')."assets/editAsset?asset_id=".$asset->getId()."&amp;from=pagePreview";
 		        if($this->_request_data->g('request_parameters')->hasParameter('item_id')) $edit_url .= '&item_id='.$this->_request_data->g('request_parameters')->getParameter('item_id');
 		        if($this->_request_data->g('request_parameters')->hasParameter('page_id')) $edit_url .= '&page_id='.$this->_request_data->g('request_parameters')->getParameter('page_id');
-		        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit file: ".$asset->getUrl()." (".$asset->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/edit-pencil-standard.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this asset--></a>";
+		        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit file: ".$asset->getUrl()." (".$asset->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
+                if($this->_hide_edit_buttons) $edit_link .= ';display:none';
+                $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/edit-pencil-standard.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this asset--></a>";
 		    }else{
 		        $edit_link = '<!--edit link-->';
 	        }

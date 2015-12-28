@@ -7,17 +7,19 @@ body{
 	
 div.smartest_preview_top_bar{
     
-	color:#333;
+	color:#666;
 	background-color:#fff;
 	
 	position:absolute;
 	top:0px;
 	left:0px;
 	width:100%;
+    height:30px;
 	
 	border:0px;
 	border-bottom:1px solid #999;
-	padding:8px;
+	padding:7px;
+    box-sizing:border-box;
 	z-index:999;
 	
 	filter: alpha(opacity=90);
@@ -25,14 +27,15 @@ div.smartest_preview_top_bar{
 	-moz-opacity:0.9;
 	
 	vertical-align:middle;
-	font-family:verdana,sans-serif;
+	font-family:'source-sans',verdana,sans-serif;
 	font-size:11px;
 	text-align:left
   
 }
 
-div.smartest_preview_top_bar a{
-    color:#F4842A!important;
+div.smartest_preview_top_bar a.smartest-preview-button{
+    /* color:#F4842A!important; */
+    margin-left:10px;
 }
 	
 body>div.smartest_preview_top_bar{
@@ -47,4 +50,152 @@ span.smartest-preview-hint{
 span.smartest-preview-warning{
     font-style:italic;
     color:#F4842A;
+}
+
+#smartest-preview-bar-inner{
+    /* display:table-cell;
+    vertical-align:middle;
+    border:1px solid #f00; */
+    display:inline-block;
+}
+
+#sm-preview-hidden{
+    
+	color:#333;
+	background-color:#fff;
+    
+	filter: alpha(opacity=90);
+	opacity: 0.9;
+	-moz-opacity:0.9;
+    
+    border-bottom:1px solid #999;
+    border-left:1px solid #999;
+    
+	position:fixed;
+	top:0px;
+	right:0px;
+    
+    padding:7px;
+    width:30px;
+    height:30px;
+    box-sizing:border-box;
+    
+    border-bottom-left-radius:10px;
+    -webkit-border-bottom-left-radius:10px;
+    
+}
+
+#smartest-preview-edit-item{
+    display:inline-block;
+    float:right;
+    width:16px;
+    height:16px;
+    background-image:url('../Images/edit-item-icon.png');
+}
+
+#sm-edit-button-toggle{
+    display:inline-block;
+    float:right;
+    width:16px;
+    height:16px;
+}
+
+#sm-edit-button-toggle.showing{
+    background-image:url('../Images/edit-buttons-showing.png');
+}
+
+#sm-edit-button-toggle.hidden{
+    background-image:url('../Images/edit-buttons-hidden.png');
+}
+
+#smartest-preview-return-topages{
+    display:inline-block;
+    float:right;
+    width:16px;
+    height:16px;
+    background-image:url('../Images/return-to-pages.png');
+}
+
+#smartest-preview-liberate-link{
+    display:inline-block;
+    float:right;
+    width:16px;
+    height:16px;
+    background-image:url('../Images/full-screen-preview.png');
+}
+
+#smartest-preview-collapse-link{
+    display:inline-block;
+    float:right;
+    width:16px;
+    height:16px;
+    background-image:url('../Images/return-to-preview.png');
+}
+
+#hide-preview-bar-link{
+    display:inline-block;
+    float:right;
+    width:16px;
+    height:16px;
+    background-image:url('../Images/hide-edit-bar-out.png');
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#show-preview-bar-link{
+    display:block;
+    width:16px;
+    height:16px;
+    background-image:url('../Images/show-edit-bar-out.png');
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx) {
+    
+    #smartest-preview-edit-item{
+        background-size:16px 16px;
+        background-image:url('../Images/edit-item-icon-2x.png');
+    }
+    
+    #sm-edit-button-toggle.showing{
+        background-size:16px 16px;
+        background-image:url('../Images/edit-buttons-showing-2x.png');
+    }
+
+    #sm-edit-button-toggle.hidden{
+        background-size:16px 16px;
+        background-image:url('../Images/edit-buttons-hidden-2x.png');
+    }
+    
+    #smartest-preview-return-topages{
+        background-size:16px 16px;
+        background-image:url('../Images/return-to-pages-2x.png');
+    }
+    
+    #smartest-preview-liberate-link{
+        background-size:16px 16px;
+        background-image:url('../Images/full-screen-preview-2x.png');
+    }
+    
+    #smartest-preview-collapse-link{
+        background-size:16px 16px;
+        background-image:url('../Images/return-to-preview-2x.png');
+    }
+    
+    #hide-preview-bar-link{
+        background-image:url('../Images/hide-edit-bar-out-2x.png');
+        background-size:16px 16px;
+    }
+
+    #show-preview-bar-link{
+        background-image:url('../Images/show-edit-bar-out-2x.png');
+        background-size:16px 16px;
+    }
+    
 }

@@ -325,7 +325,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
 	    
 	} */
 	
-	public function getItems($limit=null, $start=null){
+	public function getItems($limit=null, $start=null, $draft_mode=null){
 	        
         $cardinality = 0;
         
@@ -341,10 +341,11 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
 		if($limit > 0){
 		    $ids = array_slice($ids, 0, $limit);
 		}
+        
+        $draft = is_null($draft_mode) ? $this->_is_draft : $draft_mode;
 		
 		$h = new SmartestCmsItemsHelper;
-        // var_dump($this->_is_draft);
-		$this->_items = $h->hydrateUniformListFromIdsArrayPreservingOrder($ids, $this->_model->getId(), $this->_is_draft);
+        $this->_items = $h->hydrateUniformListFromIdsArrayPreservingOrder($ids, $this->_model->getId(), $draft);
 		
 		$this->_items_retrieval_attempted = true;
         
@@ -448,6 +449,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
         
         if($set->getModelId() == $this->getModelId()){
             $s = new SmartestSortableItemReferenceSet($this->_model, $this->_is_draft);
+            $s->setDraftMode($this->_is_draft ? -1 : 0);
             $s->loadItemIds($ids_array, true);
             return $s;
         }else{
@@ -490,6 +492,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
         
         if($set->getModelId() == $this->getModelId()){
             $s = new SmartestSortableItemReferenceSet($this->_model, $this->_is_draft);
+            $s->setDraftMode($this->_is_draft ? -1 : 0);
             $s->loadItemIds($ids_array, true);
             return $s;
         }else{
@@ -504,6 +507,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
         
         if($set->getModelId() == $this->getModelId()){
             $s = new SmartestSortableItemReferenceSet($this->_model, $this->_is_draft);
+            $s->setDraftMode($this->_is_draft ? -1 : 0);
             $s->loadItemIds($ids_array, true);
             return $s;
         }else{

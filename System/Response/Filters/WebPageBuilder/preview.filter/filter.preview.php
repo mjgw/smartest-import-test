@@ -35,6 +35,15 @@ function smartest_filter_preview($html, $filter){
         $r->assign('page_webid', $request_data->getParameter('request_parameters')->getParameter('page_id'));
         $r->assign('hide_liberate_link', SmartestStringHelper::toRealBool(SmartestPersistentObject::get('request_data')->getParameter('request_parameters')->getParameter('hide_newwin_link')));
         
+        // var_dump(SM_CMS_PAGE_SITE_ID);
+        $ph = new SmartestPreferencesHelper();
+        $hide_preview_bar = $ph->getApplicationPreference('hide_preview_bar', 'com.smartest.CmsFrontEnd', SmartestSession::get('user')->getId(), SM_CMS_PAGE_SITE_ID);
+        $hide_preview_edit_buttons = $ph->getApplicationPreference('hide_preview_edit_buttons', 'com.smartest.CmsFrontEnd', SmartestSession::get('user')->getId(), SM_CMS_PAGE_SITE_ID);
+        // var_dump($hide_preview_bar);
+        $r->assign('hide_preview_bar', (bool) $hide_preview_bar);
+        $r->assign('hide_preview_edit_buttons', new SmartestBoolean($hide_preview_edit_buttons));
+        // var_dump($hide_preview_edit_buttons);
+        
         if($request_data->getParameter('request_parameters')->hasParameter('item_id')){
             $item_id = (int) $request_data->getParameter('request_parameters')->getParameter('item_id');
             $item = new SmartestItem;

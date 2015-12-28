@@ -52,7 +52,7 @@ class SmartestWebPagePreparationHelper{
         
     }
     
-    public function build($draft_mode=''){
+    public function build($draft_mode=null){
         
         $b = $this->createBuilder();
         
@@ -72,6 +72,9 @@ class SmartestWebPagePreparationHelper{
         }else{
             $draft_mode = $this->_page->getDraftMode();
         }
+        
+        $b->assign('sm_draft_mode', $draft_mode);
+        $b->assign('sm_draft_mode_obj', new SmartestBoolean($draft_mode));
         
         $content = $b->renderPage($this->_page, $draft_mode);
         

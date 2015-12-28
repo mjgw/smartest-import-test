@@ -543,5 +543,121 @@ class ItemsAjax extends SmartestSystemApplication{
         }
         
     }
+    
+    public function updateItemsSelection(){
+        
+        if(is_numeric($this->getRequestParameter('item_id'))){
+        
+            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+            
+                if(is_numeric($this->getRequestParameter('property_id'))){
+            
+                    if($item->getModel()->hasPropertyWithId($this->getRequestParameter('property_id'))){
+                    
+                        $property = new SmartestItemProperty;
+                    
+                        if($property->find($this->getRequestParameter('property_id'))){
+                    
+                            if(is_array($this->getRequestParameter('items'))){
+                                $ids = array_keys($this->getRequestParameter('items'));
+                            }else{
+                                $ids = array();
+                            }
+                            
+                            $item->setPropertyValueByNumericKey($property->getId(), $ids);
+                            $item->save();
+                            
+                            // $this->addUserMessageToNextRequest("The attached items for this property were successfully updated.", SmartestUserMessage::SUCCESS);
+                            // $this->redirect('/smartest/item/edit/'.$item->getId());
+                    
+                        }else{
+                        
+                            // $this->addUserMessageToNextRequest("The property ID was not recognized.", SmartestUserMessage::ERROR);
+                        
+                        }
+                    
+                    }else{
+                    
+                        // $this->addUserMessageToNextRequest("The model '".$item->getModel()->getName()."' does not have a property with that ID.", SmartestUserMessage::ERROR);
+                    
+                    }
+            
+                }else{
+                
+                    // $this->addUserMessageToNextRequest("The property ID was in an invalid format.", SmartestUserMessage::ERROR);
+                
+                }
+            
+            }else{
+            
+                // $this->addUserMessageToNextRequest("The item ID was not recognized.", SmartestUserMessage::ERROR);
+            
+            }
+        
+        }else{
+        
+            // $this->addUserMessageToNextRequest("The item ID was in an invalid format.", SmartestUserMessage::ERROR);
+        
+        }
+    
+    }
+    
+    public function itemsSelectionPropertySummary(){
+        
+        if(is_numeric($this->getRequestParameter('item_id'))){
+        
+            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                
+                $item->setDraftMode(true);
+                
+                if(is_numeric($this->getRequestParameter('property_id'))){
+            
+                    if($item->getModel()->hasPropertyWithId($this->getRequestParameter('property_id'))){
+                    
+                        $property = new SmartestItemProperty;
+                    
+                        if($property->find($this->getRequestParameter('property_id'))){
+                    
+                            $this->send(false, 'error');
+                            $this->send($item->getPropertyValueByNumericKey($property->getId(), true), 'value');
+                            // $this->addUserMessageToNextRequest("The attached items for this property were successfully updated.", SmartestUserMessage::SUCCESS);
+                            // $this->redirect('/smartest/item/edit/'.$item->getId());
+                    
+                        }else{
+                        
+                            // $this->addUserMessageToNextRequest("The property ID was not recognized.", SmartestUserMessage::ERROR);
+                            $this->send(true, 'error');
+                        
+                        }
+                    
+                    }else{
+                    
+                        // $this->addUserMessageToNextRequest("The model '".$item->getModel()->getName()."' does not have a property with that ID.", SmartestUserMessage::ERROR);
+                        $this->send(true, 'error');
+                    
+                    }
+            
+                }else{
+                
+                    // $this->addUserMessageToNextRequest("The property ID was in an invalid format.", SmartestUserMessage::ERROR);
+                    $this->send(true, 'error');
+                    
+                }
+            
+            }else{
+            
+                // $this->addUserMessageToNextRequest("The item ID was not recognized.", SmartestUserMessage::ERROR);
+                $this->send(true, 'error');
+            
+            }
+        
+        }else{
+        
+            // $this->addUserMessageToNextRequest("The item ID was in an invalid format.", SmartestUserMessage::ERROR);
+            $this->send(true, 'error');
+        
+        }
+        
+    }
 
 }

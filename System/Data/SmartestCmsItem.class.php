@@ -1150,9 +1150,8 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
             
             // Create new set from the item IDs
             $set = new SmartestSortableItemReferenceSet($m, $set_item_draft_mode);
+            $set->setDraftMode($this->getDraftMode() ? -1 : 0);
             $set->loadItemIds($ids);
-            
-            // print_r($ids);
         
             // Sort the items by their default sort property, or by name if this is not defined
             if($default_property_id = $m->getDefaultSortPropertyId()){
@@ -1391,8 +1390,8 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        
 	        // var_dump(get_class($this->_properties[$key]->getData()));
 	        // echo $key;
-	        
-	        $this->_properties[$key]->getData()->setContent($raw_value);
+            
+            $this->_properties[$key]->getData()->setContent($raw_value);
 	        // print_r($this->_properties[$key]->getData()->getDraftContent());
 	        
 	        // return $this->_properties[$key]->getData()->setContent($raw_value);
@@ -1482,7 +1481,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            $this->_item->setSlug(SmartestStringHelper::toSlug($this->_item->getName()));
 	        }
 	        
-            $this->_item->setLastModified(time());
+            $this->_item->setModified(time());
 	        $this->_item->save();
             
             foreach($this->getModel()->getProperties() as $prop){

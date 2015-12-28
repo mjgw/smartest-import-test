@@ -23,7 +23,7 @@
       <input type="hidden" name="item_id" value="{$item.id}" />
       <input type="hidden" name="model_id" value="{$model.id}" />
     
-      <ul class="modal-basic-list" style="border:1px solid #ccc">
+      <ul class="basic-list icons items">
       
         {foreach from=$items item="related_item"}
           {if $related_item.id == $item.id}<!--Skipped item "{$related_item.name}"-->{else}<li><input type="checkbox" name="items[{$related_item.id}]" id="item_{$related_item.id}"{if in_array($related_item.id, $related_ids)} checked="checked"{/if} /> <label for="item_{$related_item.id}">{$related_item.name.xmlentities}</label></li>{/if}
@@ -70,7 +70,7 @@
     
     <input type="hidden" name="item_id" value="{$item.id}" />
     
-    <ul class="modal-basic-list" style="border:1px solid #ccc">
+    <ul class="basic-list icons pages">
       {foreach from=$pages item="relatable_page"}
       
       {if $relatable_page.type == 'NORMAL' && $relatable_page.id != $page.id}

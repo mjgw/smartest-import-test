@@ -2,7 +2,7 @@
 
 class ItemPropertyValueEditor extends SmartestSystemApplication{
     
-    public function chooseItems(){
+    /* public function chooseItems(){
         
         $item = new SmartestCmsItem;
         
@@ -69,9 +69,9 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
             
         }
         
-    }
+    } */
     
-    public function updateItemsSelection(){
+    /* public function updateItemsSelection(){
         
         if(is_numeric($this->getRequestParameter('item_id'))){
             
@@ -93,12 +93,12 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
                         
                             $item->setPropertyValueByNumericKey($property->getId(), $ids);
                             $item->save();
-                            $this->addUserMessageToNextRequest("The attached items for this property were successfully updated.", SmartestUserMessage::SUCCESS);
-                            $this->redirect('/smartest/item/edit/'.$item->getId());
+                            // $this->addUserMessageToNextRequest("The attached items for this property were successfully updated.", SmartestUserMessage::SUCCESS);
+                            // $this->redirect('/smartest/item/edit/'.$item->getId());
                         
                         }else{
                             
-                            $this->addUserMessageToNextRequest("The property ID was not recognized.", SmartestUserMessage::ERROR);
+                            // $this->addUserMessageToNextRequest("The property ID was not recognized.", SmartestUserMessage::ERROR);
                             
                         }
                         
@@ -128,7 +128,7 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
         
         $this->formForward();
         
-    }
+    } */
     
     public function chooseFiles(){
         

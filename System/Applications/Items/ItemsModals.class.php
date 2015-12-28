@@ -51,21 +51,21 @@ class ItemsModals extends SmartestSystemApplication{
         		    $this->setTemporaryFormReturnUri($ruri);
                     
                 }else{
-                    $this->addUserMessageToNextRequest("Item and property are from different models", SmartestUserMessage::ERROR);
-                    $this->formForward();
+                    // $this->addUserMessageToNextRequest("Item and property are from different models", SmartestUserMessage::ERROR);
+                    // $this->formForward();
                 }
                 
             }else{
                 
-                $this->addUserMessageToNextRequest("The property ID was not recognized", SmartestUserMessage::ERROR);
-                $this->formForward();
+                // $this->addUserMessageToNextRequest("The property ID was not recognized", SmartestUserMessage::ERROR);
+                // $this->formForward();
                 
             }
             
         }else{
             
-            $this->addUserMessageToNextRequest("The item ID was not recognized", SmartestUserMessage::ERROR);
-            $this->formForward();
+            // $this->addUserMessageToNextRequest("The item ID was not recognized", SmartestUserMessage::ERROR);
+            // $this->formForward();
             
         }
         

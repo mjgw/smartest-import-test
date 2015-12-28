@@ -238,5 +238,17 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
         }
         
     }
+    
+    public function setPreviewBarVisibility(){
+        
+        $this->setApplicationPreference('hide_preview_bar', (int) (bool) $this->getRequestParameter('state'));
+        
+    }
+    
+    public function setPreviewEditButtonVisibility(){
+        
+        $this->setApplicationPreference('hide_preview_edit_buttons', (int) (bool) $this->getRequestParameter('state'));
+        
+    }
 
 }

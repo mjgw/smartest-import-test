@@ -58,6 +58,7 @@ class SmartestCmsItemsCollection extends SmartestArray implements SmartestSubmit
         if(parent::hydrateFromFormData($ids)){
             
             $h = new SmartestCmsItemsHelper;
+            // var_dump($ids);
             $data = $h->hydrateMixedListFromIdsArrayPreservingOrder($ids, $draft_mode);
             
             if(is_array($data)){

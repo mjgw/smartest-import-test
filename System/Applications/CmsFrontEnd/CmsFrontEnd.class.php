@@ -217,6 +217,8 @@ class CmsFrontEnd extends SmartestSystemApplication{
 		
 		$page_webid = $this->getRequestParameter('page_id');
 		
+        $this->send($this->getApplicationPreference('hide_preview_bar', 0), 'sm_hide_preview_bar');
+        
 		if($this->_site = $this->manager->getSiteByPageWebId($page_webid)){
 		    
 		    define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());

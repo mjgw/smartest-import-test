@@ -53,9 +53,6 @@ class SmartestCmsItemsHelper{
         $results = $this->getSquareDbDataFromIdsArray($ids, null, $draft_mode);
         $items = array();
         
-        // print_r($ids);
-        // echo count($results);
-        
         foreach($results as $item_id => $result){
             
             $first = reset($result);
@@ -148,8 +145,6 @@ class SmartestCmsItemsHelper{
             return array();
         }
         
-        // var_dump($draft_mode);
-        
         if(is_numeric($model_id)){
             // a model is specified
             $pre_sql = "SELECT itemproperty_id FROM ItemProperties WHERE itemproperty_itemclass_id='".$model_id."'";
@@ -172,9 +167,10 @@ class SmartestCmsItemsHelper{
         }else{
             // a model is not specified
             $sql = "SELECT * FROM Items, ItemPropertyValues WHERE Items.item_deleted !=1 AND Items.item_id=ItemPropertyValues.itempropertyvalue_item_id AND Items.item_id IN ('".implode("','", $ids)."')";
-            if($draft_mode !== 0){
+            if($draft_mode == 0){
                 $sql .= " AND item_public='TRUE'";
             }
+            // echo $sql;
             return $this->database->queryToArray($sql);
         }
         

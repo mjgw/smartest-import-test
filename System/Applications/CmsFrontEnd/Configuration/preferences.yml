@@ -1,0 +1,3 @@
+prefs:
+  hide_preview_bar: {user_specific: true, site_specific: false, default: 0, description: Should the option bar at the top of the preview be hidden?}
+  hide_preview_edit_buttons: {user_specific: true, site_specific: false, default: 0, description: Should edit buttons in the preview be hidden?}

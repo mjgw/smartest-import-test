@@ -93,6 +93,21 @@ a.button:hover, input[type="button"]:hover, input[type="submit"]:hover, a.editor
     color:#68849E!important;
 }
 
+input[type="button"]:disabled, input[type="submit"]:disabled, a.button.disabled{
+    background-color:#ddd;
+    border-color:#ccc;
+    cursor:default;
+}
+
+div.buttons-bar input[type="button"]:disabled, div.buttons-bar input[type="submit"]:disabled, div.buttons-bar a.button.disabled{
+    background-color:#bbb;
+    border-color:#aaa;
+}
+
+input[type="button"]:disabled:hover, input[type="submit"]:disabled:hover, a.button.disabled:hover{
+    color:#fff!important;
+}
+
 a.button.small{
     padding:1px 6px;
     font-size:11px;

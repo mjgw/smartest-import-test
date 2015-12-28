@@ -182,9 +182,15 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
                     $r->setCentralEntityByIndex($this->getProperty()->getManyToManyRelationshipItemEntityIndex());
                     $r->setTargetEntityByIndex($this->getProperty()->getManyToManyRelationshipMappedObjectEntityIndex());
                     
+                    // var_dump($draft);
+                    
                     if(!$draft){
                         $r->addConstraint('Items.item_public', 'TRUE');
                     }
+                    
+                    // print_r($r->getIds($mode));
+                    
+                    // echo $class;
                     
                     // fix goes here
                     
@@ -439,6 +445,8 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
             $r->setCentralEntityByIndex($this->getProperty()->getManyToManyRelationshipItemEntityIndex());
             $r->setTargetEntityByIndex($this->getProperty()->getManyToManyRelationshipMappedObjectEntityIndex());
             $r->updateTo($raw_data);
+            
+            // $output = SmartestLog::getInstance('system')->log(print_r($this->getProperty()->getManyToManyRelationshipType(), 1));
             
         }else{
             

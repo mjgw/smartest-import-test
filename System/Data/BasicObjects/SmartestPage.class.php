@@ -2021,6 +2021,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    if($model->find($model_id)){
 	    
 	        $ds = new SmartestSortableItemReferenceSet($model, $this->getDraftMode());
+            $ds->setDraftMode($this->getDraftMode() ? -1 : 0);
 	    
 	        foreach($ids_array as $item_id){
 		        $ds->insertItemId($item_id);

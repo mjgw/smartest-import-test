@@ -832,14 +832,37 @@ ul.apps.small li a.label{
 ul.basic-list{
     list-style-type:disc;
     padding:10px;
-    margin:15px;
+    margin:5px;
     margin-top:5px;
     padding-top:0px;
-    margin-left:40px!important;
+    /* margin-left:40px; */
+}
+
+ul.basic-list.icons{
+    list-style-type:none;
 }
 
 ul.basic-list li{
     padding:4px;
+}
+
+ul.basic-list li input[type="checkbox"]{
+    margin-right:10px;
+}
+
+ul.basic-list.icons li{
+    padding:4px 4px 4px 22px;
+    background-size:16px 16px;
+    background-position:0% 50%;
+    background-repeat:no-repeat;
+}
+
+ul.basic-list.icons.pages li{
+    background-image:url(../Images/edit-page-icon-2x.png);
+}
+
+ul.basic-list.icons.items li{
+    background-image:url(../Images/edit-item-icon-2x.png);
 }
 
 ul.scroll-list{
