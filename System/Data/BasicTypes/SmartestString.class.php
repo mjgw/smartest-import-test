@@ -10,7 +10,7 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
     
     public function __toString(){
         if(defined('SM_CMS_PAGE_CONSTRUCTION_IN_PROGRESS') && constant('SM_CMS_PAGE_CONSTRUCTION_IN_PROGRESS') && defined('SM_CMS_PAGE_ID') && !SmartestStringHelper::containsEscapedEntities($this->_string)){
-            return (string) SmartestStringHelper::toXmlEntities($this->_string);
+            return (string) str_replace('///', '<br />', SmartestStringHelper::toXmlEntities($this->_string));
         }else{
             return (string) $this->_string;
         }
