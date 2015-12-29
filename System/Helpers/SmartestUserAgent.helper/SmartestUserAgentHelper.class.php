@@ -401,6 +401,10 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
             case "supported":
             return (SM_USERAGENT_TYPE == SM_USERAGENT_NORMAL);
             
+            case "is_supported_browser_v":
+            case "is_supported_browser_obj":
+            return new SmartestBoolean(SM_USERAGENT_TYPE == SM_USERAGENT_NORMAL);
+            
             case "is_unsupported_browser":
             return (SM_USERAGENT_TYPE == SM_USERAGENT_UNSUPPORTED_BROWSER);
             

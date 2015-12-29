@@ -19,11 +19,11 @@ class SmartestBasicRenderer extends SmartestEngine{
 		$this->right_delimiter = ':?'.'>';
 		$this->caching = false;
 		$this->_tpl_vars['sm_draft_mode'] = false;
+        $this->_tpl_vars['sm_draft_mode_obj'] = new SmartestBoolean(false);
 		
 		$this->_other_pages = new SmartestParameterHolder('Pages besides the main page');
         
         $this->_preferences_helper = new SmartestPreferencesHelper;
-        $this->_hide_edit_buttons = (bool) $this->_preferences_helper->getApplicationPreference('hide_preview_edit_buttons', 'com.smartest.CmsFrontEnd', SmartestSession::get('user')->getId(), SM_CMS_PAGE_SITE_ID);
         
     }
     
@@ -32,8 +32,15 @@ class SmartestBasicRenderer extends SmartestEngine{
     }
     
     public function setDraftMode($mode){
+        
         $this->draft_mode = SmartestStringHelper::toRealBool($mode);
         $this->_tpl_vars['sm_draft_mode'] = $this->draft_mode;
+        $this->_tpl_vars['sm_draft_mode_obj'] = new SmartestBoolean($this->draft_mode);
+        
+        if($this->draft_mode){
+            $this->_hide_edit_buttons = (bool) $this->_preferences_helper->getApplicationPreference('hide_preview_edit_buttons', 'com.smartest.CmsFrontEnd', SmartestSession::get('user')->getId(), SM_CMS_PAGE_SITE_ID);
+        }
+        
     }
     
     public function assignAsset(SmartestAsset $asset){
@@ -77,7 +84,6 @@ class SmartestBasicRenderer extends SmartestEngine{
                                 $attachment->setAttachedAssetAdditionalRenderDataParameter('width', $attachment->getManualWidth());
                                 if($attachment['asset']->getHeight() && $attachment['asset']->getWidth() && is_numeric($attachment['asset']->getHeight())){
                                     $new_height = $attachment['asset']->getHeight()*$attachment->getManualWidth()/$attachment['asset']->getWidth();
-                                    // echo $attachment['asset']->getHeight()*$attachment->getManualWidth()/$attachment['asset']->getWidth();
                                     $attachment->setAttachedAssetAdditionalRenderDataParameter('height', $new_height);
                                 }
                             }elseif($attachment['asset']->getWidth()){
@@ -130,6 +136,7 @@ class SmartestBasicRenderer extends SmartestEngine{
         }
         
         if(is_array($render_data) || $render_data instanceof SmartestParameterHolder){
+            
         }else{
             $render_data = array();
         }

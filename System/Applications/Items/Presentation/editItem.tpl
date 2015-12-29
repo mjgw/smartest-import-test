@@ -32,6 +32,10 @@
 {/if}
 </div>
 
+{if !count($metapages)}
+<div class="warning">No {help id="websitemanager:metapages"}meta-pages{/help} have been created for displaying {$item._model.plural_name|strtolower}. {$item._model.plural_name} will only be visible in lists on other pages.</div>
+{/if}
+
 {if $item.has_metapage && count($metapages)}
 
 <div class="special-box">
@@ -313,8 +317,6 @@
     {/foreach}
   </select>
 </div>
-{else}
-<div class="warning">Warning: No meta-pages have been created for displaying {$item._model.plural_name|strtolower}. {$item._model.plural_name} will only be visible in lists on other pages.</div>
 {/if}
 
 <div class="edit-form-row">

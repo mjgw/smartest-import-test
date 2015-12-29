@@ -291,7 +291,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             if($this->getPage() instanceOf SmartestItemPage) $edit_link .= "&amp;item_id=".$this->getPage()->getSimpleItem()->getId();
             $edit_link .= " style=\"text-decoration:none;font-size:11px";
             if($this->_hide_edit_buttons) $edit_link .= 'display:none';
-            $edit_link .= "\" target=\"_top\">&nbsp;<img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_red.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
+            $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_red.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
             return $edit_link;
             
         }else{
