@@ -25,6 +25,10 @@ class SmartestBasicRenderer extends SmartestEngine{
         
         $this->_preferences_helper = new SmartestPreferencesHelper;
         
+        if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
+            $this->_hide_edit_buttons = (bool) $this->_preferences_helper->getApplicationPreference('hide_preview_edit_buttons', 'com.smartest.CmsFrontEnd', SmartestSession::get('user')->getId(), SM_CMS_PAGE_SITE_ID);
+        }
+        
     }
     
     public function getDraftMode(){
@@ -36,10 +40,6 @@ class SmartestBasicRenderer extends SmartestEngine{
         $this->draft_mode = SmartestStringHelper::toRealBool($mode);
         $this->_tpl_vars['sm_draft_mode'] = $this->draft_mode;
         $this->_tpl_vars['sm_draft_mode_obj'] = new SmartestBoolean($this->draft_mode);
-        
-        if($this->draft_mode){
-            $this->_hide_edit_buttons = (bool) $this->_preferences_helper->getApplicationPreference('hide_preview_edit_buttons', 'com.smartest.CmsFrontEnd', SmartestSession::get('user')->getId(), SM_CMS_PAGE_SITE_ID);
-        }
         
     }
     
