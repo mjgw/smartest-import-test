@@ -102,7 +102,7 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
             $helper = new SmartestPageManagementHelper;
     		$type_index = $helper->getPageTypesIndex($this->_site->getId()); // ID needed
     		
-    		if($this->getRequestParameter('draft') && SmartestStringHelper::toRealBool($this->getRequestParameter('draft')) && $this->_auth->getUserIsLoggedIn()){
+    		if($this->requestParameterIsSet('draft') && SmartestStringHelper::toRealBool($this->getRequestParameter('draft')) && $this->_auth->getUserIsLoggedIn()){
     		    $draft_mode = true;
     		}else{
     		    $draft_mode = false;

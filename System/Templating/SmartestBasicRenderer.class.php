@@ -25,7 +25,7 @@ class SmartestBasicRenderer extends SmartestEngine{
         
         $this->_preferences_helper = new SmartestPreferencesHelper;
         
-        if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
+        if($this->_request_data->g('action') == "renderEditableDraftPage" || ($this->_request_data->g('action') == "pageFragment" && SmartestSession::isRegistered() && is_object(SmartestSession::get('user')) && $this->_request_data->g('request_parameters')->hasParameter('draft') && SmartestStringHelper::toRealBool($this->_request_data->g('request_parameters')->getParameter('draft')))){
             $this->_hide_edit_buttons = (bool) $this->_preferences_helper->getApplicationPreference('hide_preview_edit_buttons', 'com.smartest.CmsFrontEnd', SmartestSession::get('user')->getId(), SM_CMS_PAGE_SITE_ID);
         }
         

@@ -154,9 +154,11 @@ class SmartestCmsLink extends SmartestHelper{
         // var_dump($this->_destination_properties->getParameter('destination'));
         
         if(strlen($this->_destination_properties->getParameter('destination'))){
-        
+            
+            $target_string = end(explode(':', $this->_destination_properties->getParameter('destination')));
+            
             $du = new SmartestDataUtility;
-            $model_names = array_keys($du->getModelNamesLowercase());
+            $model_names = array_keys($du->getModelNamesLowercase($this->getSiteId()));
         
             if(in_array($ns, array('page', 'metapage', 'item', 'image', 'img', 'asset', 'file', 'download', 'dl', 'tag', 'tag_page', 'user', 'author', 'mailto', 'quince'))){
             
@@ -165,18 +167,31 @@ class SmartestCmsLink extends SmartestHelper{
                     case "page":
                     $this->setType(SM_LINK_TYPE_PAGE);
                     $this->addClass('sm-link-internal');
+                    
+                    if(is_numeric($target_string) || strlen($target_string) == 36){
+                        $this->addClass('sm-link-auto');
+                    }else{
+                        $this->addClass('sm-link-manual');
+                    }
+                    
                     break;
                     
                     case "item":
                     $this->addClass('sm-link-internal');
                     $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_FORM);
                     $this->setType(SM_LINK_TYPE_INTERNAL_ITEM);
+                    
+                    if(is_numeric($target_string)){
+                        $this->addClass('sm-link-auto');
+                    }
+                    
                     break;
                     
                     case "metapage":
                     $this->setType(SM_LINK_TYPE_METAPAGE);
                     $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
                     $this->addClass('sm-link-internal');
+                    $this->addClass('sm-link-auto');
                     break;
                 
                     case "image":
@@ -223,6 +238,7 @@ class SmartestCmsLink extends SmartestHelper{
                 $this->setType(SM_LINK_TYPE_METAPAGE);
                 $this->setNamespace($ns);
                 $this->addClass('sm-link-internal');
+                $this->addClass('sm-link-manual');
                 $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_USER);
             
                 return true;
@@ -325,6 +341,15 @@ class SmartestCmsLink extends SmartestHelper{
         return $this->_markup_attributes->clearParameter($attribute_name);
     }
     
+    // TODO: Easily set and get HTML Data Attributes
+    public function setHtml5DataAttribute($name, $value){
+        
+    }
+    
+    public function getHtml5DataAttribute($name){
+        
+    }
+    
     public function getDestinationProperties(){
         return $this->_destination_properties;
     }
@@ -392,6 +417,7 @@ class SmartestCmsLink extends SmartestHelper{
             
             $d->setPrincipalItem($item);
             $this->addClass('sm-link-internal');
+            $this->addClass('sm-link-from-object');
         
             $this->_destination = $d;
             
@@ -400,6 +426,7 @@ class SmartestCmsLink extends SmartestHelper{
             $d = $item->getMetaPage();
             $d->setPrincipalItem($item);
             $this->addClass('sm-link-internal');
+            $this->addClass('sm-link-from-object');
         
             $this->_destination = $d;
         
@@ -415,6 +442,7 @@ class SmartestCmsLink extends SmartestHelper{
         $this->setNamespace('page');
         $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
         $this->addClass('sm-link-internal');
+        $this->addClass('sm-link-from-object');
         
         $this->_destination = $page;
         
@@ -426,6 +454,7 @@ class SmartestCmsLink extends SmartestHelper{
         $this->setNamespace('tag');
         $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
         $this->addClass('sm-link-internal');
+        $this->addClass('sm-link-from-object');
         
         $this->_destination = $tag;
         
@@ -437,6 +466,7 @@ class SmartestCmsLink extends SmartestHelper{
         $this->setNamespace('author');
         $this->_destination_properties->setParameter('format', SM_LINK_FORMAT_AUTO);
         $this->addClass('sm-link-internal');
+        $this->addClass('sm-link-from-object');
         
         $this->_destination = $user;
         

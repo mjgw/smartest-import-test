@@ -688,6 +688,26 @@ type:
       - {mime: application/x-iso9660-image, _content: iso}
     render:
       template: System/Presentation/WebPageBuilder/display.download.tpl
+      
+  SM_ASSETTYPE_VCARD:
+    id: SM_ASSETTYPE_VCARD
+    category: other
+    label: VCF Contact File
+    description: A contact card in VCARD Format
+    class: SmartestAsset
+    html_friendly: false
+    parsable: false
+    icon: page_white.png
+    input_options:
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
+      - SM_ASSETINPUTTYPE_FTP_UPLOAD
+    storage: 
+      type: file
+      location: Documents/Downloads/
+    suffix:
+      - {mime: text/vcard, _content: vcf}
+    render:
+      template: System/Presentation/WebPageBuilder/display.download.tpl
   
   SM_ASSETTYPE_MS_WORD:
     id: SM_ASSETTYPE_MS_WORD
