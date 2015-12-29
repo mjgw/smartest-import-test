@@ -200,7 +200,9 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     			    if(constant("SM_OPTIONS_ALLOW_CONTAINER_EDIT_PREVIEW_SCREEN")){
     			        
 		                if(is_object($container_def->getTemplate())){
-        			        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit template: ".$container_def->getTemplate()->getUrl()."\" href=\"".$this->_request_data->g('domain')."templates/editTemplate?template=".$container_def->getTemplate()->getId()."&amp;type=SM_ASSETTYPE_CONTAINER_TEMPLATE&amp;from=pagePreview\" style=\"text-decoration:none;font-size:11px\" target=\"_top\">&nbsp;<img src=\"".$this->_request_data->g('domain')."Resources/Icons/pencil.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this template--></a>";
+        			        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit template: ".$container_def->getTemplate()->getUrl()."\" href=\"".$this->_request_data->g('domain')."templates/editTemplate?template=".$container_def->getTemplate()->getId()."&amp;type=SM_ASSETTYPE_CONTAINER_TEMPLATE&amp;from=pagePreview\" style=\"text-decoration:none;font-size:11px";
+                            if($this->_hide_edit_buttons) $edit_link .= ';display:none;';
+                            $edit_link .= "\" target=\"_top\">&nbsp;<img src=\"".$this->_request_data->g('domain')."Resources/Icons/pencil.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this template--></a>";
         			    }
 	                    
                         $edit_link .= $this->renderEditContainerButton($container_name);
@@ -286,11 +288,11 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     public function renderEditContainerButton($container_name){
         
         if($this->getDraftMode()){
-        
-            $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for container: ".$container_name."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineContainer?assetclass_id=".$container_name."&amp;page_id=".$this->page->getWebid()."&amp;from=pagePreview";
+            
+            $edit_link = "<a class=\"sm-edit-button marker1\" title=\"Click to edit definition for container: ".$container_name."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineContainer?assetclass_id=".$container_name."&amp;page_id=".$this->page->getWebid()."&amp;from=pagePreview";
             if($this->getPage() instanceOf SmartestItemPage) $edit_link .= "&amp;item_id=".$this->getPage()->getSimpleItem()->getId();
-            $edit_link .= " style=\"text-decoration:none;font-size:11px";
-            if($this->_hide_edit_buttons) $edit_link .= 'display:none';
+            $edit_link .= '" style="text-decoration:none;font-size:11px';
+            if($this->_hide_edit_buttons) $edit_link .= ';display:none';
             $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_red.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
             return $edit_link;
             
@@ -959,7 +961,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             
             if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
 			    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definitions for embedded list: ".$list->getName()."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineList?assetclass_id=".$list->getName()."&amp;page_id=".$this->getPage()->getWebid()."\" style=\"text-decoration:none;font-size:11px";
-                if($this->_hide_edit_buttons) $edit_link .= ' style="display:none"';
+                if($this->_hide_edit_buttons) $edit_link .= ';display:none';
                 $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_blue.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this list--></a>\n\n";
 		    }else{
 			    $edit_link = "<!--edit link-->";
