@@ -154,6 +154,35 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    return $this->getFullName();
 	    
 	}
+    
+    public function __toJsonSafeSimpleObject(){
+        
+	    $obj = $this->__toSimpleObject();
+        unset($obj->password);
+        unset($obj->password_salt);
+        unset($obj->password_last_changed);
+        unset($obj->password_change_required);
+        unset($obj->activation_key);
+        unset($obj->register_date);
+        unset($obj->last_visit);
+        unset($obj->is_smartest_account);
+        unset($obj->type);
+        unset($obj->oauth_service_id);
+        unset($obj->answers_to_user_id);
+        unset($obj->oauth_consumer_token);
+        unset($obj->oauth_consumer_secret);
+        unset($obj->oauth_access_token);
+        unset($obj->oauth_access_token_secret);
+        return $obj;
+        
+    }
+    
+	public function __toJson(){
+	    
+	    $obj = $this->__toJsonSafeSimpleObject();
+	    return json_encode($obj);
+	    
+	}
 	
 	public function getFullName(){
 	    
@@ -536,6 +565,14 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
             $this->setPasswordLastChanged(time());
             return true;
         }
+    }
+    
+    public function getOrganisationName(){
+        return $this->getOrganizationName();
+    }
+    
+    public function setOrganisationName($name){
+        return $this->setOrganizationName($name);
     }
     
     public function setInfoValue($field, $new_data){

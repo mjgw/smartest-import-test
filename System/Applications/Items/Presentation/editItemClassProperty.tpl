@@ -75,7 +75,7 @@
     <div class="edit-form-row">
         <div class="form-section-label">Required</div>
         <input type="checkbox" name="itemproperty_required" id="is-required" value="TRUE"  {if $property.required == "TRUE"} checked="checked"{/if}/><label for="is-required"> Check if required</label>
-        <div class="form-hint">Making a property required means the item cannot be published unless a value value has been entered</div>
+        <div class="form-hint">Making a property required means the item cannot be published unless a value has been entered</div>
     </div>
     
     <div class="edit-form-row">

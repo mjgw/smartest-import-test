@@ -383,8 +383,6 @@ class SmartestResponse{
 	    SmartestPersistentObject::set('controller', $this->_controller);
 	    $this->_controller->getCurrentRequest()->getUserActionObject()->give('_auth', $this->_authentication);
 	    
-        // var_dump($this->isSystemClass());
-        
         if($this->isWebsitePage()){
             
             // if compliance mode is on, make starting the session and setting the cookie contingent on having permission to do so
@@ -724,8 +722,8 @@ class SmartestResponse{
 		    $this->_smarty->assign('sm_messages', self::$user_messages);
 	    }
         
-		$cth = 'Content-Type: '.$this->_controller->getCurrentRequest()->getContentType().'; charset='.$this->_controller->getCurrentRequest()->getCharSet();
-	    header($cth);
+        $cth = 'Content-Type: '.$this->_controller->getCurrentRequest()->getContentType().'; charset='.$this->_controller->getCurrentRequest()->getCharSet();
+        header($cth);
 	    
         if($this->_display_enabled){
 	        echo $this->fetch();

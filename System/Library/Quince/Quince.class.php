@@ -510,6 +510,29 @@ class QuinceBase{
         return $this->_request;
     }
     
+    protected function setContentType($mime_type='text/html'){
+        $this->_request->setContentType($mime_type);
+    }
+    
+    protected function setCharset($charset='utf-8'){
+        $this->_request->setCharset($charset);
+    }
+    
+    protected function sendContentTypeHeader($mime_type=false, $charset=false){
+        
+        if($mime_type){
+            $this->setContentType($mime_type);
+        }
+        
+        if($charset){
+            $this->setCharset($charset);
+        }
+        
+        $cth = 'Content-Type: '.$this->_request->getContentType().'; charset='.$this->_request->getCharSet();
+	    header($cth);
+        
+    }
+    
     protected function __moduleConstruct(){}
     public function __pre(){}
     public function __post(){}

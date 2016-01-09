@@ -25,7 +25,7 @@
 </div>
 
 <div class="edit-form-row">
-  <div class="form-section-label">Organisation name</div>
+  <div class="form-section-label">Organization name</div>
   <input type="text" name="site_organisation_name" value="{$site_organisation}"/><div class="form-hint">Optional. Used for credits and attribution. This is the name of the entity your site is about, rather than the name of the site.</div>
 </div>
 

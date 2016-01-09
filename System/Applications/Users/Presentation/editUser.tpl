@@ -69,6 +69,11 @@
   </div>
   
   <div class="edit-form-row">
+    <div class="form-section-label">Organization name{if $_site.organization}, if not <strong>{$_site.organization}</strong>{/if}</div>
+    <input type="text" name="user_orginaization_name" value="{$user.organization_name}" />
+  </div>
+  
+  <div class="edit-form-row">
     <div class="form-section-label">Tags</div>
     <div class="edit-form-sub-row">
       <ul class="checkbox-array-list" id="user-tags-list">

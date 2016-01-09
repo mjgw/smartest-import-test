@@ -525,18 +525,22 @@ class SmartestSite extends SmartestBaseSite{
         
     }
     
-    public function getOrganisationName(){
+    public function getOrganizationName(){
         $ph = new SmartestPreferencesHelper;
         return $ph->getGlobalPreference('site_organisation_name', null, $this->getId());
     }
     
-    public function setOrganisationName($name){
+    public function setOrganizationName($name){
         $ph = new SmartestPreferencesHelper;
         return $ph->setGlobalPreference('site_organisation_name', $name, null, $this->getId());
     }
     
-    public function getOrganizationName(){
-        return $this->getOrganisationName();
+    public function getOrganisationName(){
+        return $this->getOrganizationName();
+    }
+    
+    public function setOrganisationName($name){
+        $this->setOrganizationName($name);
     }
     
     public function offsetGet($offset){
@@ -570,6 +574,12 @@ class SmartestSite extends SmartestBaseSite{
             case "home_page":
             case "homepage":
             return $this->getHomePage();
+            
+            case "organization":
+            case "organisation":
+            case "organization_name":
+            case "organisation_name":
+            return $this->getOrganisationName();
             
             case "pages_list":
             return $this->getPagesList();

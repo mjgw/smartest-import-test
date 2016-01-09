@@ -23,6 +23,11 @@ function smarty_function_day_input($params, &$smartest_engine){
             $input->setParameter('value', null);
         }
         
+        // TODO: fill these defaults in properly
+        $input->setParameter('default_day', date("d"));
+        $input->setParameter('default_month', date("m"));
+        $input->setParameter('default_year', date("Y"));
+        
         $smartest_engine->assign('_input_data', $input);
         $smartest_engine->run(SM_ROOT_DIR.'System/Presentation/InterfaceBuilder/Inputs/date.tpl', array());
         

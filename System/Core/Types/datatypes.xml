@@ -11,7 +11,7 @@
         <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/sl_text.tpl" />
         <parameters>
-          <param name="autocomplete" label="Auto-complete" type="SM_DATATYPE_BOOLEAN" default="true" usage="field,itemproperty" />
+          <param name="autocomplete" label="Auto-complete" type="SM_DATATYPE_BOOLEAN" default="true" usage="itemproperty" />
           <param name="require_unique" label="Require unique values" type="SM_DATATYPE_BOOLEAN" default="false" usage="itemproperty" />
         </parameters>
     </type>
@@ -141,7 +141,7 @@
         <input template="System/Presentation/InterfaceBuilder/Inputs/numeric.tpl" />
         <parameters>
           <param name="num_decimal_places" label="Number of decimal places" type="SM_DATATYPE_NUMERIC" default="true" usage="field,itemproperty" />
-          <param name="require_unique" label="Require unige values" type="SM_DATATYPE_BOOLEAN" default="false" usage="itemproperty" />
+          <param name="require_unique" label="Require unique values" type="SM_DATATYPE_BOOLEAN" default="false" usage="itemproperty" />
         </parameters>
     </type>
     
@@ -252,6 +252,17 @@
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.date.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/date.tpl" />
+        
+        <parameters>
+          <param name="resolution" label="Resolution" type="SM_DATATYPE_SL_TEXT" default="SM_DATERESOLUTION_DAY" usage="field,itemproperty">
+            <options>
+              <SM_DATERESOLUTION_VARIABLE>Variable</SM_DATERESOLUTION_VARIABLE>
+              <SM_DATERESOLUTION_DAY>Day</SM_DATERESOLUTION_DAY>
+              <SM_DATERESOLUTION_MONTH>Month</SM_DATERESOLUTION_MONTH>
+              <SM_DATERESOLUTION_YEAR>Year</SM_DATERESOLUTION_YEAR>
+            </options>
+          </param>
+        </parameters>
         
     </type>
     

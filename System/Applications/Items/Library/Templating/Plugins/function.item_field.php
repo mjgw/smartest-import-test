@@ -23,6 +23,8 @@ function smarty_function_item_field($params, &$smarty){
                 $input_data->setParameter('name', 'item['.$params['property']['id'].']');
             }
             
+            $input_data->setParameter('property', $params['property']);
+            
             // echo $input_data->getParameter('name');
             
             $input_data->setParameter('required', SmartestStringHelper::toRealBool($params['property']['required']));

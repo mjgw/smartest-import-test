@@ -227,7 +227,7 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             
         }
         
-        $sql = "SELECT Items.item_id FROM TagsObjectsLookup, Items WHERE taglookup_tag_id='".$this->getId()."' AND taglookup_object_id=item_id AND taglookup_type='SM_ITEM_TAG_LINK' AND Items.item_deleted='0'";
+        $sql = "SELECT DISTINCT Items.item_id FROM TagsObjectsLookup, Items WHERE taglookup_tag_id='".$this->getId()."' AND taglookup_object_id=item_id AND taglookup_type='SM_ITEM_TAG_LINK' AND Items.item_deleted='0'";
         
         if($site_id && is_numeric($site_id)){
             $sql .= ' AND Items.item_site_id=\''.$site_id.'\'';

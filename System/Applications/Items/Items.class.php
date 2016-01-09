@@ -250,7 +250,7 @@ class Items extends SmartestSystemApplication{
   	        }
   	        
   	        $all_items = $model->getSimpleItems($this->getSite()->getId(), 0);
-  	        $items = $model->getAllItems($this->getSite()->getId(), $status, $query);
+  	        $items = $model->getSimpleItems($this->getSite()->getId(), $status, $query);
   	        $allow_create_new = ($this->getUser()->hasToken('add_items') && $class_exists);
   	        
   	        $items_exist = (bool) count($all_items);
@@ -1555,7 +1555,7 @@ class Items extends SmartestSystemApplication{
 		$item_id = $this->getRequestParameter('item_id');
 		
 		$item = SmartestCmsItem::retrieveByPk($item_id);
-		
+        
         if(is_object($item)){
 	        
             if(($item->getItem()->getCreatedbyUserid() != $this->getUser()->getId()) && !$this->getUser()->hasToken('modify_items')){

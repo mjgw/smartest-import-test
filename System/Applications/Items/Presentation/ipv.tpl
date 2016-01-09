@@ -6,7 +6,7 @@
   Raw stored value: <code>{$raw_value}</code><br /><br />
   String value: <code>{$value}</code><br /><br />
   Will be saved as: <code>{$ipv.storable_format}</code><br /><br />
-  Switch mode: <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}&amp;mode=draft">Draft</a> | <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}&amp;mode=live">Live</a><br />
+  Switch mode: <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}&amp;mode=draft" class="button small">Draft</a> <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}&amp;mode=live" class="button small">Live</a><br />
   <div style="text-align:left"><pre>{$output}</pre></div>
 </div>
 

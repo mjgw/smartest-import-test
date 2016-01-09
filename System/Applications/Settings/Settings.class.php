@@ -79,7 +79,7 @@ class Settings extends SmartestSystemApplication{
                     $this->send(SmartestStringHelper::toRealBool($distinguish_old_pcs), 'responsive_distinguish_old_pcs');
                 // }
                 
-                $this->send($this->getSite()->getOrganisationName(), 'site_organisation');
+                $this->send($this->getSite()->getOrganizationName(), 'site_organisation');
                 
                 $this->send($logos, 'logo_assets');
             

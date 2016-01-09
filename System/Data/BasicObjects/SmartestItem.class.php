@@ -226,6 +226,18 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
             $this->setSiteId($this->getCurrentSiteId());
         }
         
+        if(!$this->_came_from_database){
+            if(!isset($this->_modified_properties['created'])){
+                $this->setField('created', time());
+            }
+            if(!isset($this->_modified_properties['createdat_ip'])){
+                $this->setField('createdat_ip', $_SERVER['REMOTE_ADDR']);
+            }
+            if(!isset($this->_modified_properties['createdby_userid']) && is_object(SmartestSession::get('user')) && SmartestSession::get('user') instanceof SmartestUser){
+                $this->setField('createdby_userid', SmartestSession::get('user')->getId());
+            }
+        }
+        
         $this->setModified(time());
         
 	    parent::save();

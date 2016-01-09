@@ -476,6 +476,8 @@ class Users extends SmartestSystemApplication{
     		    $user->setLastname($post['user_lastname']);
     		    $user->setEmail($post['email']);
     		    $user->setWebsite($post['user_website']);
+                $user->setOrganizationName($post['user_orginaization_name']);
+                
     		    $user->setBio(addslashes($post['user_bio']));
     		    
     		    if($this->getRequestParameter('thing_that_aint_u5ern4me') && SmartestStringHelper::toUsername($this->getRequestParameter('thing_that_aint_u5ern4me')) && SmartestStringHelper::toUsername($this->getRequestParameter('thing_that_aint_u5ern4me')) != $user->getUsername()){
