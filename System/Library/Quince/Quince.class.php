@@ -705,7 +705,6 @@ class QuinceRouter{
             if(strlen($matches[3])){
                 $new_params = array();
                 parse_str($matches[4], $new_params);
-                // print_r($new_params);
                 $params = array_merge($params, $new_params);
             }
         
@@ -717,7 +716,7 @@ class QuinceRouter{
             }
         
             if(isset($route['url'])){
-                // var_dump($this->_request);
+                
                 if($namespace == 'default'){
                     $url = $this->_request->getDomain().substr($route['url'], 1);
                 }else{
@@ -725,10 +724,11 @@ class QuinceRouter{
                 }
             
                 $route_required_params = QuinceUtilities::getAliasUrlRequiredArguments($route['url']);
-            
+                
                 foreach($route_required_params as &$rp){
                     if(isset($params[$rp])){
-                        $url = preg_replace('/(:|\$)'.$rp.'/', $params[$rp], $url);
+                        $params[$rp] = str_replace('$', '\$', $params[$rp]);
+                        $url = preg_replace('/:'.$rp.'/', $params[$rp], $url);
                         unset($params[$rp]);
                         unset($rp);
                     }else{
@@ -739,7 +739,7 @@ class QuinceRouter{
                 if(count($params)){
                     $url .= '?'.$this->toUrlParameterString($params);
                 }
-            
+                
                 return str_replace('+_NSS+', ':', $url);
             
             }else{
