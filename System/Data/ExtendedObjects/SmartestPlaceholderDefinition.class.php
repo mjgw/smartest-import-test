@@ -6,6 +6,7 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
     protected $_asset;
     protected $_page;
     protected $_is_linkable = false;
+    protected $_is_draft_definition = false;
     
 	protected function __objectConstruct(){
 		

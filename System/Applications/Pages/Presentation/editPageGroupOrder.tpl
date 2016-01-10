@@ -68,8 +68,15 @@
 </div>
 
 <div id="actions-area">
+  {if $request_parameters.from == 'pagePreview' && $request_parameters.page_id}
   <ul class="actions-list" id="non-specific-actions">
-    <li><b>Page groups</b></li>
+    <li><strong>Editing</strong></li>
+    <li class="permanent-action"><a href="javascript:cancelForm()" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt=""> Return to preview</a></li>
+  </ul>
+  {/if}
+  
+  <ul class="actions-list" id="non-specific-actions">
+    <li><strong>Page groups</strong></li>
     <li class="permanent-action"><a href="{$domain}smartest/pagegroup/new" class="right-nav-link"><img src="{$domain}Resources/Icons/add.png" border="0" alt=""> Create another page group</a></li>
     <li class="permanent-action"><a href="{$domain}smartest/pagegroups" class="right-nav-link"><img src="{$domain}Resources/Icons/page.png" border="0" alt=""> Back to page groups</a></li>
     <li class="permanent-action"><a href="{$domain}smartest/pages" class="right-nav-link"><img src="{$domain}Resources/Icons/page.png" border="0" alt=""> Back to pages</a></li>

@@ -310,7 +310,8 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
 	        
 	        case 'unix':
 	        case 'raw':
-	        return $this->getUnixFormat();
+            case 'value':
+	        return (int) $this->getUnixFormat();
 	        
 	        case 'mysql_day':
 	        return date('Y-m-d', $this->_value);

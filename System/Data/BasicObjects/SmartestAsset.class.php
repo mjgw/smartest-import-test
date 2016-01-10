@@ -1027,6 +1027,8 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         $placeholders_usages = $this->getPlaceholderUsages($site_id);
         $ipv_usages = $this->getItemPropertyUsages($site_id);
         
+        ////// Touch any pages where this asset is used, so theycan be identified as potentially needing republishing //////
+        
         if(count($ipv_usages)){
             foreach($ipv_usages as $ipvu){
                 $ipvu->getItem()->touch();
@@ -1052,13 +1054,6 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
                     parent::save();
 	            }
 	        }
-            
-            // echo 'Fragment ID according to Asset: '.$this->getFragmentId();
-            // echo 'Fragment ID according to fragment: '.$this->getTextFragment()->getId();
-            // echo 'Asset ID according to Asset:'.$this->getId();
-            // echo 'Asset ID according to fragment:'.$this->getTextFragment()->getAssetId();
-            // 
-            // exit;
             
             /* if($tf->getId()){
 	            // the textfragment already exists in the database

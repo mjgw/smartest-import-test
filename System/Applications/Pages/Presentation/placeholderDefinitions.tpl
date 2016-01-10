@@ -21,7 +21,7 @@
     {foreach from=$definitions item="definition"}
     <tr style="background-color:#{cycle values="fff,eee"}">
       <td style="width:100px">{$definition.page.title}</td>
-      <td><img src="{$definition.asset.small_icon}" alt="" /> {$definition.asset.url} (<a href="{$domain}assets/previewAsset?asset_id={$definition.asset.id}">view</a>)</td>
+      <td><img src="{$definition.asset.small_icon}" alt="" /> {$definition.asset.url} <a href="{$domain}assets/previewAsset?asset_id={$definition.asset.id}" class="button small">view</a></td>
     </tr>
     {/foreach}
   </table>

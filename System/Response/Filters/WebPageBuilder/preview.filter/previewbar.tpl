@@ -43,6 +43,10 @@
       req.open("GET", URL, true);
       req.send();
       
+      if(window.Smartest_adjustLayout && typeof window.Smartest_adjustLayout == 'function'){
+        window.Smartest_adjustLayout(false);
+      }
+      
   }
   
   var showEditButtons = function(){
@@ -59,6 +63,10 @@
         var req = new XMLHttpRequest();
         req.open("GET", URL, true);
         req.send();
+        
+        if(window.Smartest_adjustLayout && typeof window.Smartest_adjustLayout == 'function'){
+          window.Smartest_adjustLayout(true);
+        }
 
     }
     
@@ -90,8 +98,6 @@
         req.open("GET", URL, true);
         req.send();
         
-        // alert(URL);
-        
     });
     
     document.getElementById('show-preview-bar-link').addEventListener('click', function(event){
@@ -105,8 +111,6 @@
         var req = new XMLHttpRequest();
         req.open("GET", URL, true);
         req.send();
-        
-        // alert(URL);
         
     });
     

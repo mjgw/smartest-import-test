@@ -1284,7 +1284,7 @@ class SmartestCmsLink extends SmartestHelper{
             $contents = $this->getContent();
         } */
         
-        if($draft_mode && ($this->getType() == SM_LINK_TYPE_PAGE || $this->getType() == SM_LINK_TYPE_INTERNAL_ITEM || $this->getType() == SM_LINK_TYPE_METAPAGE || $this->getType() == SM_LINK_TYPE_TAG || $this->getType() == SM_LINK_TYPE_AUTHOR) && $url != '#'){
+        if($draft_mode && ($this->getType() == SM_LINK_TYPE_PAGE || $this->getType() == SM_LINK_TYPE_INTERNAL_ITEM || $this->getType() == SM_LINK_TYPE_METAPAGE || $this->getType() == SM_LINK_TYPE_TAG || $this->getType() == SM_LINK_TYPE_AUTHOR) /* && $url != '#' */){
             $this->_markup_attributes->setParameter('target', '_top');
         }
         

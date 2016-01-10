@@ -14,10 +14,14 @@
     var published = ($('item_'+newID).readAttribute('data-published') == 'true') ? true : false;
     if(published){
       $('item-unpublish-option').show();
-      $('item-publish-option').hide();
+      // $('item-publish-option').hide();
+      // $('item-publish-option').show();
+      $('item-publish-option-link').update('Re-publish');
     }else{
       $('item-unpublish-option').hide();
-      $('item-publish-option').show();
+      // $('item-publish-option').show();
+      // $('item-publish-option').show();
+      $('item-publish-option-link').update('Publish');
     }
     
   });
@@ -172,7 +176,7 @@ function openPage(pageAction){
   <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/information.png"> <a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id='+itemList.lastItemId+'&amp;enable_ajax=1', '{$model.name} info');">{$model.name} info</a></li>
   <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/lock_open.png"> <a href="{dud_link}" onclick="itemList.workWithItem('releaseItem');">Release</a></li>
   {if $has_metapages}<li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/eye.png"> <a href="{dud_link}" onclick="itemList.workWithItem('preview');">Preview</a></li>{/if}
-  <li class="permanent-action" id="item-publish-option" style="display:none"><img border="0" src="{$domain}Resources/Icons/page_lightning.png"> <a href="{dud_link}" onclick="itemList.workWithItem('publishItem');">Publish</a></li>
+  <li class="permanent-action" id="item-publish-option"><img border="0" src="{$domain}Resources/Icons/page_lightning.png"> <a href="{dud_link}" onclick="itemList.workWithItem('publishItem');" id="item-publish-option-link">Publish</a></li>
   <li class="permanent-action" id="item-unpublish-option" style="display:none"><img border="0" src="{$domain}Resources/Icons/page_code.png"> <a href="{dud_link}" onclick="itemList.workWithItem('unpublishItem');">Un-Publish</a></li>
   <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/accept.png"> <a href="{dud_link}" onclick="itemList.workWithItem('addTodoItem');">Add new to-do</a></li>
   <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/page_code.png"> <a href="{dud_link}" onclick="itemList.workWithItem('toggleItemArchived');"><span class="archive_action_name" id="archive-action-name">Archive/Un-archive<span></a></li>

@@ -39,11 +39,11 @@ class Pages extends SmartestSystemApplication{
 	        
 	        $page = new SmartestPage;
 	        
-	        if($page->hydrate($this->getRequestParameter('page_id'))){
+	        if($page->smartFind($this->getRequestParameter('page_id'))){
 	            
 	            $page->setDraftMode(true);
-	            
-	            if($this->getUser()->hasToken('modify_page_properties')){
+                
+                if($this->getUser()->hasToken('modify_page_properties')){
 	            
 	                if($page->getIsHeld() && $page->getHeldBy() && $page->getHeldBy() != $this->getUser()->getId() && !$this->getUser()->hasToken('edit_held_pages')){
     	                
@@ -88,7 +88,7 @@ class Pages extends SmartestSystemApplication{
         			    $this->getUser()->addRecentlyEditedPageById($page->getId(), $this->getSite()->getId());
 		            
 			            // $this->redirect('/'.$this->getRequest()->getModule().'/editPage?page_id='.$page->getWebid());
-			            $this->redirect('@websitemanager:basic_info?page_id='.$page->getWebid());
+                        $this->redirect('@websitemanager:basic_info?page_id='.$page->getWebid());
     			        
     		        }
 		        
@@ -241,7 +241,7 @@ class Pages extends SmartestSystemApplication{
 		
 		$page_webid = $this->getRequestParameter('page_id');
 		
-		$helper = new SmartestPageManagementHelper;
+        $helper = new SmartestPageManagementHelper;
 		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
 		
 		if(isset($type_index[$page_webid])){
@@ -466,7 +466,8 @@ class Pages extends SmartestSystemApplication{
 	    
         }else{
             $this->addUserMessageToNextRequest('The page ID was not recognized.', SmartestUserMessage::ERROR, true);
-            $this->redirect("/smartest/pages");
+            echo "fail";
+            // $this->redirect("/smartest/pages");
         }
 		
 	}
@@ -1677,7 +1678,7 @@ class Pages extends SmartestSystemApplication{
                 $page->setCacheInterval($this->getRequestParameter('page_cache_interval'));
             }
             
-            $page->setLastModified(time());
+            $page->setModified(time());
             
             if($page->getType() == 'NORMAL'){
                 if(!$this->getSite()->pageIdIsSpecial($page->getId())){

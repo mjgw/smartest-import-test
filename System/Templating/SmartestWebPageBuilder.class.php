@@ -477,6 +477,8 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                         // Second parameter here is for whether blank values should be skipped when passing render data. As of revision 716, blank values entered on the define placeholder creen DO override other values, including asset and type defaults
                         // $asset->setAdditionalRenderData($render_data, true);
                         $asset->setAdditionalRenderData($render_data);
+                        
+                        // print_r($render_data);
         	            
         	            $html = $asset->render($this->getDraftMode());
         	            
@@ -486,6 +488,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         	                $link_properties = SmartestLinkParser::parseSingle($render_data['link_href']);
         	                $link = new SmartestCmsLink($link_properties, array());
         	                $image = $asset->getImage();
+                            // print_r($render_data);
         	                $image->setAdditionalRenderData($render_data);
         	                $link->setImageAsContent($image);
         	                
@@ -729,6 +732,44 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             }else{
                 return $this->raiseError("Item set '".$set->getLabel()."' is not static and cannot be ordered manually.");
             }
+        
+        }else{
+            
+            return '';
+            
+        }
+        
+    }
+    
+    public function renderReorderPageGroupButton($identifier){
+        
+        if($this->getDraftMode()){
+        
+            $g = new SmartestPageGroup;
+        
+            if(is_numeric($identifier)){
+                if(!$g->find($identifier)){
+                    return $this->raiseError("Page group with ID '".$identifier."' could not be found.");
+                }
+            }else{
+                if(!$g->findBy('name', $identifier)){
+                    return $this->raiseError("Page group with name '".$identifier."' could not be found.");
+                }
+            }
+            
+            // First, the URL that the user should be taken to on clicking the button
+            $url = $this->_request_data->g('domain').'websitemanager/editPageGroupOrder?group_id='.$g->getId().'&amp;from=pagePreview&amp;page_id='.$this->getPage()->getWebId();
+            if($this->getPage() instanceof SmartestItemPage){
+                $url .= '&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
+            }
+            
+            // And then the HTML for the button itself
+            $html = '<a class="sm-edit-button" href="'.$url.'" target="_top"';
+            if($this->_hide_edit_buttons) $html .= ' style="display:none"';
+            $html .= '><img src="'.$this->_request_data->g('domain').'Resources/System/Images/switch-order.png" style="width:16px;height:16px" alt="" /></a>';
+            
+            return $html;
+            
         
         }else{
             

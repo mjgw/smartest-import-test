@@ -588,10 +588,10 @@ class SmartestDataObject implements ArrayAccess{
 		}
 	    
 	    $sql = $this->getRetrievalSqlQuery($value, $field, $site_id, $include_trash_items);
-	    // echo $sql;
+	    
 	    $result = $this->database->queryToArray($sql);
 	    $this->_last_query = $sql;
-	    
+        
 	    if(count($result)){
 	
 		    foreach($result[0] as $name => $value){
@@ -607,8 +607,9 @@ class SmartestDataObject implements ArrayAccess{
             if(method_exists($this, '__postHydrationAction')){
                 $this->__postHydrationAction();
             }
-		    
-		    return true;
+            
+            return true;
+            
 	    }else{
 		    return false;
 	    }

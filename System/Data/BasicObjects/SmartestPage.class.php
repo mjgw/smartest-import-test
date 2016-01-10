@@ -47,7 +47,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    if(is_numeric($id)){
 			// numeric_id
 			$field = 'id';
-		}else if(preg_match('/[a-zA-Z0-9\$-]{32}/', $id)){
+		}else if(preg_match('/^[\w\$-]{32}$/', $id)){
 			// 'webid'
 			$field = 'webid';
 		}else if(preg_match('/[a-zA-Z0-9_-]+/', $id)){
@@ -55,7 +55,11 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 			$field = 'name';
 		}
         
-		if($field && $id){
+        // var_dump(preg_match('/[a-zA-Z0-9\$-]{32}/', $id));
+        
+        // echo $id;
+        
+        if($field && $id){
 	        
             if($field == 'id'){
                 return parent::find($id);
@@ -1706,7 +1710,11 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             return $this->getActionUrl();
             
             case "modified":
+            // echo $this->_properties['modified'];
             return new SmartestDateTime($this->_properties['modified']);
+            
+            case "modified_raw":
+            return (int) $this->_properties['modified'];
             
             case "placeholders":
             if(!$this->_placeholders) $this->loadAssetClassDefinitions();

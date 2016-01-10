@@ -114,15 +114,26 @@
     <div class="form-section-label">Status</div>
       <div style="display:inline" class="text">
       {if $page.is_published == "TRUE"}
-    	  <strong>Live</strong> - Last published: {convert_timestamp format="h:i a, l jS F, Y" time=$page.last_published}{if $page.last_built}; Last built: {convert_timestamp format="h:i a, l jS F, Y" time=$page.last_built}{/if}
-    	  <a class="button" href="{$domain}{$section}/unPublishPage?page_id={$page.webid}">Un-publish</a>
+        <div style="display:inline" class="text">
+    	    <strong>Live</strong> - Last published: {convert_timestamp format="h:i a, l jS F, Y" time=$page.last_published}{if $page.last_built}; Last built: {convert_timestamp format="h:i a, l jS F, Y" time=$page.last_built}{/if}{if $page.type == "NORMAL"}{if $page.modified}; Last modified: {$page.modified}{/if}{/if}
+    	  </div>
+        <div class="edit-form-sub-row">
+          <a class="button" href="{$domain}{$section}/unPublishPage?page_id={$page.webid}">Un-publish</a>
+          <a class="button" href="{$domain}{$section}/publishPageConfirm?page_id={$page.webid}{if $page.type == "ITEMCLASS" && $page.item.id}&amp;item_id={$page.item.id}{/if}">Re-publish</a>
+        </div>
     	{else}
+        <div style="display:inline" class="text">
     	  {if $page.last_published == 0 }
     	  	<strong>Never Published</strong>
     	  {else}
-    	    <strong>Not Published</strong> <a href="{$domain}{$section}/pageAssets?page_id={$page.webid}">Go To Page Tree</a>
+    	    <strong>Not Published</strong>
     	  {/if}
-        {if $is_special_page}<p>This is a special page. Not being published means a part of your site's functionality may be unavailable to users.</p>{/if}
+        {if $page.type == "NORMAL" && $page.modified_raw} - Last modified: {$page.modified}{/if}
+        </div>
+        <div class="edit-form-sub-row">
+          <a class="button" href="{$domain}{$section}/publishPageConfirm?page_id={$page.webid}{if $page.type == "ITEMCLASS" && $page.item.id}&amp;item_id={$page.item.id}{/if}">Publish</a>
+          {if $is_special_page}<p>This is a special page. Not being published means a part of your site's functionality may be unavailable to users.</p>{/if}
+        </div>
     	{/if}</div>
   </div>
   
