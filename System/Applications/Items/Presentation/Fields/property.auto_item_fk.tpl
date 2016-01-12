@@ -2,12 +2,15 @@ Automatic property - {$value._count} object{if $value._count != 1}s{/if} retriev
 
 {if $value._count > 0}
 <div class="breaker"></div>
-<div id="auto-fk-ipv-items-{$property.id}-container" style="display:none">
-  <ul class="auto-fk-ipv-items" id="auto-fk-ipv-items-{$property.id}">
-    {foreach from=$value item="foreign_key_item"}
-      <li><i class="fa fa-cube"></i> {$foreign_key_item.name} <a class="button small" href="#{$foreign_key_item.slug}" data-itemid="{$foreign_key_item.id}" data-url="{$foreign_key_item.action_url}">Edit</a></li>  
-    {/foreach}
-  </ul>
+<div class="edit-form-sub-row">
+  <div id="auto-fk-ipv-items-{$property.id}-container" style="display:none">
+    <div class="v-spacer"></div>
+    <ul class="auto-fk-ipv-items" id="auto-fk-ipv-items-{$property.id}">
+      {foreach from=$value item="foreign_key_item"}
+        <li><i class="fa fa-cube"></i> {$foreign_key_item.name} <a class="button small" href="#{$foreign_key_item.slug}" data-itemid="{$foreign_key_item.id}" data-url="{$foreign_key_item.action_url}">Edit</a></li>  
+      {/foreach}
+    </ul>
+  </div>
 </div>
 
 <script>

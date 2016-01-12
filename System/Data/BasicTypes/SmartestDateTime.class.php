@@ -23,28 +23,27 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     public function __construct($date=''){
         if($date == self::NEVER){
             $this->_is_never = true;
-        }else if((bool) $date){
-            $this->setValue($date);
         }else{
-            $this->_value = time();
+            $this->setValue($date);
         }
     }
     
     public function setValue($v){
         
-        // print_r($v);
-        
         if($v == self::NOW){
             $this->_value = time();
             $this->_sync_value_to_now = true;
+            $this->_is_never = false;
             return true;
         }else if($v == self::NEVER || $v == '0' || !$v){
             $this->_is_never = true;
         }else if(is_array($v)){
             $this->setValueFromUserInputArray($v);
+            $this->_is_never = false;
             return true;
         }else if(is_numeric($v) && $v != '0'){
             $this->_value = (int) $v;
+            $this->_is_never = false;
             return true;
         }else if(strlen($v) == 19){ // this is the fastest way to check for the format YYYY-MM-DD hh:ii:ss
             $this->setValueFromUserInputArray(array(
@@ -55,6 +54,7 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
                 'M' => substr($v, 5, 2),
                 'D' => substr($v, 8, 2)
             ));
+            $this->_is_never = false;
             return true;
         }else{
             return $this->_value = strtotime($v);
@@ -86,8 +86,6 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     }
     
     public function getUnixFormat(){
-        
-        // var_dump($this->_is_never);
         
         if($this->_is_never){
             return 0;
@@ -219,6 +217,8 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
             $this->_is_never = true;
             $this->_value = 0;
             return true;
+        }else{
+            $this->_is_never = false;
         }
         
         if(!is_array($v)){
