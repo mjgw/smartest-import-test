@@ -138,7 +138,7 @@ class SmartestSite extends SmartestBaseSite{
     }
     
     public function pageIdIsSpecial($page_id){
-        return in_array($page_id, $this->getSpecialPageIds()->getParameters());
+        return strlen((string) $page_id) && in_array($page_id, $this->getSpecialPageIds()->getParameters());
     }
 	
 	public function getNormalPagesList($draft_mode=false, $return_plain_objects=false){
