@@ -7,32 +7,23 @@ class SmartestSet extends SmartestBaseSet{
     
     public function __objectConstruct(){
         
-	    if(!is_object($this->_set_settings)){
-	        $this->_set_settings = new SmartestParameterHolder("Settings for Set '".$this->_properties['label']."'");
-        }
-        
-		$s = unserialize($this->getInfo());
-		
-		if(is_array($s)){
-		    $this->_set_settings->loadArray($s);
-	    }else{
-	        $this->_set_settings->loadArray(array());
-	    }        
+	    
+         
     }
     
     public function __postHydrationAction(){
         
-	    /* if(!is_object($this->_set_settings)){
+        $s = unserialize($this->getInfo());
+		
+	    if(!is_object($this->_set_settings)){
 	        $this->_set_settings = new SmartestParameterHolder("Settings for Set '".$this->_properties['label']."'");
         }
         
-		$s = unserialize($this->getInfo());
-		
-		if(is_array($s)){
+        if(is_array($s)){
 		    $this->_set_settings->loadArray($s);
 	    }else{
 	        $this->_set_settings->loadArray(array());
-	    } */
+	    }   
         
     }
     
@@ -50,8 +41,10 @@ class SmartestSet extends SmartestBaseSet{
 	    
 	    $field = SmartestStringHelper::toVarName($field);
 	    // URL Encoding is being used to work around a bug in PHP's serialize/unserialize. No actual URLS are necessarily in use here:
-	    $this->_set_settings->setParameter($field, rawurlencode(utf8_decode($new_data)));
-	    $this->_modified_properties['info'] = SmartestStringHelper::sanitize(serialize($this->_set_settings->getArray()));
+	    if(is_object($this->_set_settings)){
+            $this->_set_settings->setParameter($field, rawurlencode(utf8_decode($new_data)));
+	        $this->_modified_properties['info'] = SmartestStringHelper::sanitize(serialize($this->_set_settings->getArray()));
+        }
 	    
 	}
 	
@@ -59,7 +52,7 @@ class SmartestSet extends SmartestBaseSet{
 	    
 	    $field = SmartestStringHelper::toVarName($field);
         
-        if($this->_set_settings->hasParameter($field)){
+        if(is_object($this->_set_settings) && $this->_set_settings->hasParameter($field)){
 	        return utf8_encode(stripslashes(rawurldecode($this->_set_settings->getParameter($field))));
 	    }else{
 	        return null;
