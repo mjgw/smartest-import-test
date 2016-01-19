@@ -13,9 +13,12 @@ class Users extends SmartestSystemApplication{
 		
 		if($this->getRequestParameter('_show_ordinary') && SmartestStringHelper::toRealBool($this->getRequestParameter('_show_ordinary'))){
 		    $users = $h->getOrdinaryUsers();
+            $this->send(false, 'show_site_access');
 		    $active_tab = "ordinary";
 		}else{
 		    $users = $h->getSystemUsers();
+            $this->send($h->getUserIdsOnSite($this->getSite()->getId()), 'user_ids_on_this_site');
+            $this->send(true, 'show_site_access');
 		    $active_tab = "system";
 		}
 		
@@ -202,6 +205,7 @@ class Users extends SmartestSystemApplication{
     		if($user->find($this->getRequestParameter('user_id'))){
     		    $this->setTitle('Edit user | '.$user->__toString());
     		    $this->send($user, 'user');
+                $this->send($user->getBioForEditor(), 'bio_text_editor_content');
             }else{
                 $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
                 $this->formForward();
@@ -472,13 +476,14 @@ class Users extends SmartestSystemApplication{
 		
     		if($user->find($this->getRequestParameter('user_id'))){
 		    
-    		    $user->setFirstname($post['user_firstname']);
-    		    $user->setLastname($post['user_lastname']);
-    		    $user->setEmail($post['email']);
-    		    $user->setWebsite($post['user_website']);
-                $user->setOrganizationName($post['user_orginaization_name']);
+    		    $user->setFirstname($this->getRequestParameter('user_firstname'));
+    		    $user->setLastname($this->getRequestParameter('user_lastname'));
+    		    $user->setEmail($this->getRequestParameter('email'));
+    		    $user->setWebsite($this->getRequestParameter('user_website'));
+                $user->setOrganizationName($this->getRequestParameter('user_organization_name'));
                 
-    		    $user->setBio(addslashes($post['user_bio']));
+    		    // $user->setBio(addslashes($post['user_bio']));
+                $user->updateBioTextAssetFromEditor($this->getRequestParameter('user_bio'));
     		    
     		    if($this->getRequestParameter('thing_that_aint_u5ern4me') && SmartestStringHelper::toUsername($this->getRequestParameter('thing_that_aint_u5ern4me')) && SmartestStringHelper::toUsername($this->getRequestParameter('thing_that_aint_u5ern4me')) != $user->getUsername()){
     		        if($this->getUser()->hasToken('modify_usernames')){
@@ -549,13 +554,13 @@ class Users extends SmartestSystemApplication{
 		
 	}
 	
-	public function uploadUserProfilePic(){
+	/* public function uploadUserProfilePic(){
 	    
-	    if($this->getRequestParemeter('user_id')){
+	    if($this->getRequestParameter('user_id')){
 	        
 	        $user = new SmartestSystemUser;
 	        
-	        if($user->find($this->getRequestParemeter('user_id'))){
+	        if($user->find($this->getRequestParameter('user_id'))){
 	            
 	            
 	            
@@ -565,7 +570,41 @@ class Users extends SmartestSystemApplication{
 	        
 	    }
 	    
-	}
+	} */
+    
+    public function grantUserCurrentSiteAccess(){
+        
+        if(($this->getRequestParameter('user_id') != $this->getUser()->getId() && $this->getUser()->hasToken('modify_user_permissions')) || ($this->getRequestParameter('user_id') == $this->getUser()->getId() && $this->getUser()->hasToken('modify_user_own_permissions'))){
+        
+            $user = new SmartestSystemUser;
+            
+            if($user->find($this->getRequestParameter('user_id'))){
+                if($user->getType() == 'SM_USERTYPE_SYSTEM_USER'){
+                    $user->addTokenById(21, $this->getSite()->getId());
+                }
+            }
+        
+        }
+        
+        $this->redirect('@users:home');
+    }
+    
+    public function revokeUserCurrentSiteAccess(){
+        
+        if(($this->getRequestParameter('user_id') != $this->getUser()->getId() && $this->getUser()->hasToken('modify_user_permissions')) || ($this->getRequestParameter('user_id') == $this->getUser()->getId() && $this->getUser()->hasToken('modify_user_own_permissions'))){
+        
+            $user = new SmartestSystemUser;
+            
+            if($user->find($this->getRequestParameter('user_id'))){
+                if($user->getType() == 'SM_USERTYPE_SYSTEM_USER'){
+                    $user->removeTokenById(21, $this->getSite()->getId());
+                }
+            }
+        
+        }
+        
+        $this->redirect('@users:home');
+    }
 	
 	///////////////////////////////// ROLES ////////////////////////////////////
 	
@@ -668,6 +707,7 @@ class Users extends SmartestSystemApplication{
 	    $this->send($this->getUser(), 'user');
 	    $this->send($this->getUser()->hasToken('allow_username_change'), 'allow_username_change');
 	    $this->send($this->getUser()->getTwitterHandle(), 'twitter_handle');
+        $this->send($this->getUser()->getBioForEditor(), 'bio_text_editor_content');
 	    $this->setTitle('Edit your profile');
 	    
 	}
@@ -690,6 +730,7 @@ class Users extends SmartestSystemApplication{
 	    }
 	    
 	    $this->getUser()->setLastName($this->getRequestParameter('user_lastname'));
+        $this->getUser()->setOrganizationName($this->getRequestParameter('user_organization_name'));
 	    
 	    if(SmartestStringHelper::isEmailAddress($this->getRequestParameter('user_email'))){
 	        $this->getUser()->setEmail($this->getRequestParameter('user_email'));
@@ -714,7 +755,8 @@ class Users extends SmartestSystemApplication{
         }
         
         $this->getUser()->setPreferredUiLanguage($this->getRequestParameter('user_language'));
-        $this->getUser()->setBio($this->getRequestParameter('user_bio'));
+        // $this->getUser()->setBio($this->getRequestParameter('user_bio'));
+        $this->getUser()->updateBioTextAssetFromEditor($this->getRequestParameter('user_bio'));
 	    $this->getUser()->save();
         $this->getUser()->refreshProfilePic();
 	    

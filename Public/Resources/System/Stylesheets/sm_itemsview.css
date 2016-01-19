@@ -214,6 +214,11 @@ ul.options-grid li a div.user-avatar-holder{
     background-color:#68849E;
 }
 
+ul.options-grid li.no-access{
+    opacity:0.5;
+    -webkit-opacity:50%;
+}
+
 /** New options grid for Images **/
 
 ul.options-grid.images{

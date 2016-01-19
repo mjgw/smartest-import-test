@@ -9,6 +9,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	protected $_user_info;
     protected $_user_info_modified;
     protected $_group_membership_checker;
+    protected $_bio_text_asset;
 	
 	protected function __objectConstruct(){
 	    
@@ -556,10 +557,76 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
         
     }
     
+    public function getBioTextAsset(){
+        
+        if(is_object($this->_bio_text_asset) && $this->_bio_text_asset instanceof SmartestAsset){
+            return $this->_bio_text_asset;
+        }
+        
+        $id = $this->getField('bio_asset_id');
+        $asset = new SmartestAsset;
+        
+        if(!is_numeric($id) || !$asset->find($id)){
+            
+            $this->_bio_text_asset = new SmartestAsset;
+            
+            $this->_bio_text_asset->setWebid(SmartestStringHelper::random(32));
+            $this->_bio_text_asset->setLabel('User profile bio for '.$this->getFullName());
+            $this->_bio_text_asset->setCreated(time());
+            $this->_bio_text_asset->setModified(time());
+            $this->_bio_text_asset->setStringId(SmartestStringHelper::toVarName('User profile bio for '.$this->getFullName()));
+            $this->_bio_text_asset->setUrl(SmartestStringHelper::toVarName('User profile bio for '.$this->getFullName()).'.html');
+            $this->_bio_text_asset->setUserId($this->getId());
+            $this->_bio_text_asset->setSiteId(0);
+            $this->_bio_text_asset->setShared(1);
+            $this->_bio_text_asset->setType('SM_ASSETTYPE_RICH_TEXT');
+            
+            if($this->getType() == 'SM_USERTYPE_SYSTEM_USER'){
+                $this->_bio_text_asset->setPublicStatusTrusted(1);
+            }else{
+                $this->_bio_text_asset->setPublicStatusTrusted(0);
+            }
+            
+            $this->_bio_text_asset->setIsHidden(1);
+            $this->_bio_text_asset->setIsSystem(1);
+            
+            $this->_bio_text_asset->save();
+            
+            $this->_bio_text_asset->getTextFragment()->setContent(SmartestStringHelper::sanitize(SmartestStringHelper::parseTextile(stripslashes($this->_properties['bio']))));
+            $this->_bio_text_asset->connectTextFragmentOnSave();
+            $this->_bio_text_asset->save();
+            
+            $this->setField('bio_asset_id', $asset->getId());
+            $sql = "UPDATE Users SET Users.user_bio_asset_id='".$this->_bio_text_asset->getId()."' WHERE Users.user_id='".$this->getId()."' LIMIT 1";
+            $this->database->rawQuery($sql);
+            
+        }else{
+            $this->_bio_text_asset = $asset;
+        }
+        
+        return $this->_bio_text_asset;
+        
+    }
+    
     public function getBio(){
         return stripslashes($this->_properties['bio']);
     }
-
+    
+    public function getBioForEditor(){
+        return $this->getBioTextAsset()->getContentForEditor();
+    }
+    
+    public function updateBioTextAssetFromEditor($content){
+        
+	    $content = SmartestStringHelper::unProtectSmartestTags($content);
+	    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
+        $content = SmartestStringHelper::sanitize($content);
+        
+	    $this->getBioTextAsset()->setContent($content);
+        $this->getBioTextAsset()->setModified(time());
+        $this->getBioTextAsset()->save();
+        
+    }
     
     protected function instantiateParameters(){
         if(!is_object($this->_parameters)){

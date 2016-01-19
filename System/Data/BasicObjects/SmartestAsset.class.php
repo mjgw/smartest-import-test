@@ -549,6 +549,41 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     	return $s;
     	
 	}
+    
+    public function getContentForEditor(){
+        
+        $asset_type = $this->getTypeInfo();
+        
+	    if($asset_type['storage']['type'] == 'database'){
+	        if($this->usesTextFragment()){
+	            $content = htmlspecialchars($this->getTextFragment()->getContent(), ENT_COMPAT, 'UTF-8');
+                // $this->send(true, 'show_publish');
+	        }else{
+	            // $this->send(false, 'show_publish');
+	        }
+        }else{
+            $file = SM_ROOT_DIR.$asset_type['storage'].$this->getUrl();
+            // $this->send(false, 'show_publish');
+            $content = htmlspecialchars(SmartestFileSystemHelper::load($this->getFullPathOnDisk()), ENT_COMPAT, 'UTF-8');
+        }
+    
+        /* if(isset($asset_type['source_editable']) && SmartestStringHelper::toRealBool($asset_type['source_editable'])){
+	        $this->send(true, 'allow_source_edit');
+	    }else{
+	        $this->send(false, 'allow_source_edit');
+	    } */
+    
+	    /* if(isset($asset_type['parsable']) && SmartestStringHelper::toRealBool($asset_type['parsable'])){
+	        $this->send(true, 'show_attachments');
+	    }else{
+	        $this->send(false, 'show_attachments');
+	    } */
+        
+        $content = trim(SmartestStringHelper::protectSmartestTags($content));
+    
+        return $content;
+        
+    }
 	
 	public function setContent($raw_content, $escapeslashes=true){
 	    
@@ -1047,7 +1082,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	            $this->getTextFragment()->setAssetId($this->getId());
 	        }
 	        
-	        if($this->_set_textfragment_asset_id_on_save || $this->_save_textfragment_on_save || !$tf->getId()){
+	        if($this->_set_textfragment_asset_id_on_save || $this->_save_textfragment_on_save || (is_object($tf) && !$tf->getId())){
 	            $this->getTextFragment()->save();
 	            if(($this->getFragmentId() != $this->getTextFragment()->getId() && $this->getTextFragment()->getId() > 0) || $this->_set_textfragment_id_on_save){
 	                $this->setFragmentId($this->getTextFragment()->getId());

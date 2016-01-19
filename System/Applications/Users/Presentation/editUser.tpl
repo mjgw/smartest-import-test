@@ -70,7 +70,7 @@
   
   <div class="edit-form-row">
     <div class="form-section-label">Organization name{if $_site.organization}, if not <strong>{$_site.organization}</strong>{/if}</div>
-    <input type="text" name="user_orginaization_name" value="{$user.organization_name}" />
+    <input type="text" name="user_organization_name" value="{$user.organization_name}" />
   </div>
   
   <div class="edit-form-row">
@@ -282,7 +282,9 @@
   
   <div class="edit-form-row">
     <div class="form-section-label">About the user </div>
-    <textarea name="user_bio" style="width:500px;height:60px">{$user.bio}</textarea>
+    <div class="edit-form-sub-row">
+      <textarea name="user_bio" style="width:500px;height:60px" id="user-bio-tinymce">{$bio_text_editor_content}</textarea>
+    </div>
   </div>
   
 {if $require_password_changes && $user.id != $_user.id}
@@ -337,4 +339,52 @@
 {/literal}
 
 </script>
+
 {/if}
+
+<script src="{$domain}Resources/System/Javascript/tinymce4/tinymce.min.js"></script>
+<script language="javascript" type="text/javascript">
+{literal}
+
+tinymce.init({
+    selector: "#user-bio-tinymce",
+    menubar: false,
+    plugins: [
+        "advlist autolink lists charmap print preview anchor",
+        "searchreplace visualblocks code fullscreen",
+        "media table contextmenu paste link wordcount"
+    ],
+    style_formats: [
+        {title: 'Headers', items: [
+            {title: 'h1', block: 'h1'},
+            {title: 'h2', block: 'h2'},
+            {title: 'h3', block: 'h3'},
+            {title: 'h4', block: 'h4'},
+            {title: 'h5', block: 'h5'},
+            {title: 'h6', block: 'h6'}
+        ]},
+
+        {title: 'Blocks', items: [
+            {title: 'p', block: 'p'},
+            {title: 'div', block: 'div'},
+            {title: 'pre', block: 'pre'}
+        ]},
+
+        {title: 'Containers', items: [
+            {title: 'section', block: 'section', wrapper: true, merge_siblings: false},
+            {title: 'article', block: 'article', wrapper: true, merge_siblings: false},
+            {title: 'blockquote', block: 'blockquote', wrapper: true},
+            {title: 'hgroup', block: 'hgroup', wrapper: true},
+            {title: 'aside', block: 'aside', wrapper: true},
+            {title: 'figure', block: 'figure', wrapper: true}
+        ]}
+    ],
+    
+    paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,p",
+    toolbar: "styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent"
+
+});
+  
+{/literal}
+
+</script>
