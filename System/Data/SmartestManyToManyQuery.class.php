@@ -79,7 +79,8 @@ class SmartestManyToManyQuery{
     
     public function getSortFieldsForQuery(){
         
-        if(empty($this->_sortFields)){
+        if(empty($this->_sortFields) || (array_key_exists(0, $this->_sortFields) && !$this->_sortFields[0])){
+            
             if($this->_type->getMethod() == 'SM_MTMLOOKUPMETHOD_NETWORK'){
                 
             }else{
@@ -94,6 +95,7 @@ class SmartestManyToManyQuery{
                 }
             }
         }else{
+            
             return implode(', ', $this->_sortFields);
         }
         
@@ -506,6 +508,13 @@ class SmartestManyToManyQuery{
         }
         
         return $objects;
+        
+    }
+    
+    public function quickCount(){
+        
+        $result = $this->database->queryToArray($this->buildQuery(true), true);
+        return count($result);
         
     }
     

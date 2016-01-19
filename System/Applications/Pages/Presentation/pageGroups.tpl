@@ -35,7 +35,7 @@
 <div id="actions-area">
   
   <ul class="actions-list" id="group-specific-actions" style="display:none">
-    <li><b>Selected Group</b></li>
+    <li><b>Selected group</b></li>
     <li class="permanent-action"><a href="#" onclick="return groups.workWithItem('editPageGroup');"><img border="0" src="{$domain}Resources/Icons/folder_edit.png"> Edit group</a></li>
     <li class="permanent-action"><a href="#" onclick="return groups.workWithItem('editPageGroupOrder');"><img border="0" src="{$domain}Resources/Icons/arrow_switch.png"> Change order</a></li>
     <li class="permanent-action"><a href="#" onclick="return groups.workWithItem('deletePageGroupConfirm');" ><img border="0" src="{$domain}Resources/Icons/folder_delete.png"> Delete group</a></li>

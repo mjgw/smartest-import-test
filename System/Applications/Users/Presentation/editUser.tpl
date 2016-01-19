@@ -74,6 +74,11 @@
   </div>
   
   <div class="edit-form-row">
+    <div class="form-section-label">Groups</div>
+    {if $user.all_groups._empty}<em>This user does not belong to any groups.</em>{else}{$user.all_groups}{/if}
+  </div>
+  
+  <div class="edit-form-row">
     <div class="form-section-label">Tags</div>
     <div class="edit-form-sub-row">
       <ul class="checkbox-array-list" id="user-tags-list">

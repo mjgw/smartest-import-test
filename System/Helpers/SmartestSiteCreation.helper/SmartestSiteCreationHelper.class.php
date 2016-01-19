@@ -91,6 +91,7 @@ class SmartestSiteCreationHelper{
 	    $error_page->setCreatedbyUserid($u->getId());
 	    $error_page->setOrderIndex(1024);
 	    $error_page->setIsPublished('TRUE');
+        $error_page->setMetaDescription('The page you requested could not be found.');
 	    $error_page->save();
 	    $site->setErrorPageId($error_page->getId());
 	    SmartestLog::getInstance('system')->log("Created and connected 404 page to new site (page ID {$error_page->getId()})", SM_LOG_DEBUG);

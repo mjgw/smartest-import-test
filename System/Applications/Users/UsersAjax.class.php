@@ -43,5 +43,32 @@ class UsersAjax extends SmartestSystemApplication{
         exit;
         
     }
+    
+    public function setUserGroupLabelFromInPlaceEditField(){
+        $g = new SmartestUserGroup;
+        
+        if($g->find($this->getRequestParameter('usergroup_id'))){
+            
+            $g->setLabel(strip_tags($this->getRequestParameter('new_label')));
+            $g->save();
+            echo $g->getLabel();
+            exit;
+            
+        }
+        
+    }
+    
+    public function setUserGroupNameFromInPlaceEditField(){
+        $g = new SmartestUserGroup;
+        
+        if($g->find($this->getRequestParameter('usergroup_id'))){
+            
+            $g->setName($this->getRequestParameter('new_name'));
+            $g->save();
+            echo $g->getName();
+            exit;
+            
+        }
+    }
 
 }

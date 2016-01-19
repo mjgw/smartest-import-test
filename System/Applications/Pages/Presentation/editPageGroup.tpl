@@ -1,7 +1,7 @@
-<script language="javascript">
+<script type="text/javascript">
 {literal}
 
-function setMode(mode){
+var setMode = function(mode){
 
 	document.getElementById('transferAction').value=mode;
 
@@ -17,8 +17,8 @@ function setMode(mode){
 	
 }
 
-function executeTransfer(){
-	document.transferForm.submit();
+var executeTransfer = function(){
+	$('transferForm').submit();
 }
 
 {/literal}
@@ -70,7 +70,7 @@ function executeTransfer(){
       
     </div>
     
-    <form action="{$domain}{$section}/transferPages" method="post" name="transferForm">
+    <form action="{$domain}{$section}/transferPages" method="post" id="transferForm">
     
     <input type="hidden" id="transferAction" name="transferAction" value="" />
     <input type="hidden" name="group_id" value="{$group.id}" />

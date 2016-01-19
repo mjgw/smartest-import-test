@@ -28,7 +28,7 @@
       <input type="password" name="oauth_consumer_secret" value="{$account.oauth_consumer_secret}" />
     </div>
 
-    {if $account.oauth_consumer_token && $account.oauth_consumer_secret && empty($account.oauth_access_token) && empty($account.oauth_access_token_secret)}<div class="special-box">To obtain valid access tokens for this account, <a href="{$domain}oauth/prepareAccessTokenRequestProcess?account_id={$account.id}">click here</a>.</div>{/if}
+    {if $account.oauth_consumer_token && $account.oauth_consumer_secret && empty($account.oauth_access_token) && empty($account.oauth_access_token_secret)}<div class="special-box">To obtain valid access tokens for this account, <a href="{$domain}oauth/prepareAccessTokenRequestProcess?account_id={$account.id}" class="button">click here</a></div>{/if}
 
     <div class="edit-form-row">
       <div class="form-section-label">Access Token</div>

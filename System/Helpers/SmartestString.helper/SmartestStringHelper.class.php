@@ -390,13 +390,11 @@ class SmartestStringHelper extends SmartestHelper{
 		    $was_object = false;
 		}
 	    
-        $non_capitalised_words = array('to', 'the', 'and', 'in', 'of', 'with', 'a', 'an', 'at');
+        $non_capitalised_words = array('to', 'the', 'and', 'in', 'of', 'with', 'a', 'an', 'at', 'these', 'those', 'by', 'from');
         $words = explode(' ', $string);
         
         $acronyms = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Languages/acronyms.yml');
         $acronyms = $acronyms['acronyms'];
-        
-        // print_r($acronyms);
         
         $new_string = '';
         $modified_words = array();

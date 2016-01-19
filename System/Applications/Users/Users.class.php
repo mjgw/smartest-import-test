@@ -660,6 +660,8 @@ class Users extends SmartestSystemApplication{
     	$this->formForward();
 		
 	}
+    
+    ////////////////////////////// USER's OWN PROFILE ///////////////////////////////
 	
 	public function editMyProfile(){
 	    
@@ -698,9 +700,6 @@ class Users extends SmartestSystemApplication{
 	    if($this->getRequestParameter('user_website') != 'http://'){
 	        $this->getUser()->setWebsite($this->getRequestParameter('user_website'));
         }
-        
-        // var_dump($this->getRequestParameter('profile_pic_asset_id'));
-        // exit;
         
         if($this->requestParameterIsSet('profile_pic_asset_id') && strlen($this->getRequestParameter('profile_pic_asset_id'))){
             
@@ -755,6 +754,92 @@ class Users extends SmartestSystemApplication{
     	    }
 	    }
 	}
+    
+    //////////////////////////////////// USER GROUPS ////////////////////////////////////
+    
+    public function listUserGroups(){
+        
+	    $this->setFormReturnUri();
+	    $this->setFormReturnDescription('user groups');
+        
+        $this->send('groups', 'active_tab');
+        $uh = new SmartestUsersHelper;
+        $this->send(new SmartestArray($uh->getUserGroups($this->getSite()->getId())), 'groups');
+        
+    }
+    
+    public function addUserGroup(){
+        
+        $this->send('Unnamed user group', 'start_name');
+        
+    }
+    
+    public function insertUserGroup(){
+        
+        $g = new SmartestUserGroup;
+        $g->setSiteId($this->getSite()->getId());
+        $g->setWebId(SmartestStringHelper::random(32));
+        $g->setLabel(strip_tags($this->getRequestParameter('user_group_label')));
+        $g->setAcceptedUserType($this->getRequestParameter('user_group_mode'));
+        $g->setSortField('SM_USERGROUPSORT_LASTNAME');
+        $g->save();
+        
+        $this->redirect('@edit_group?group_id='.$g->getId());
+        
+    }
+    
+    public function editUserGroup(){
+        
+        $g = new SmartestUserGroup;
+        
+        if($g->find($this->getRequestParameter('group_id'))){
+            
+            $this->send($g, 'group');
+            
+            $non_members = $g->getNonMembers();
+            $members = $g->getMembers();
+            
+            $this->send($non_members, 'non_members');
+            $this->send($members, 'members');
+            
+        }
+        
+    }
+    
+    public function transferUsers(){
+        
+        $g = new SmartestUserGroup;
+        
+        if($g->find($this->getRequestParameter('group_id'))){
+            
+            if($this->getRequestParameter('transferAction') == 'add'){
+                if(is_array($this->getRequestParameter('non_members'))){
+                    foreach($this->getRequestParameter('non_members') as $nmid){
+                        // echo "Add user ID ".$nmid." to group ID ".$g->getId().'<br />';
+                        $g->addUserById($nmid);
+                    }
+                }
+            }elseif($this->getRequestParameter('transferAction') == 'remove'){
+                if(is_array($this->getRequestParameter('members'))){
+                    // print_r($this->getRequestParameter('members'));
+                    foreach($this->getRequestParameter('members') as $mid){
+                        echo "Remove user ID ".$mid." from group ID ".$g->getId().'<br />';
+                        $g->removeUserById($mid);
+                    }
+                }
+            }
+            
+            $this->redirect('@edit_group?group_id='.$g->getId());
+            
+        }
+        
+    }
+    
+    public function deleteUserGroupConfirm(){
+        
+    }
+    
+    //////////////////////////////////// OTHER FUNCTIONALITY //////////////////////////////////
     
     public function userAssociatedContent(){
         

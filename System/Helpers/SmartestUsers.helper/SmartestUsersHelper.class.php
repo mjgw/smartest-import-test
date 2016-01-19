@@ -431,24 +431,46 @@ class SmartestUsersHelper extends SmartestHelper{
         
     }
     
+    /////////////////////////// GROUPS STUFF ///////////////////////////////
+    
+    public function getUserGroups($site_id=null, $filter=null){ // TODO: $filter needs implementing
+        
+        $sql = "SELECT * FROM Sets WHERE Sets.set_type='SM_SET_USERGROUP'";
+        
+        if(is_numeric($site_id)){
+            $sql .= " AND Sets.set_site_id='".$site_id."'";
+        }
+        
+        $result = $this->database->queryToArray($sql);
+        $groups = array();
+        
+        foreach($result as $r){
+            $g = new SmartestUserGroup;
+            $g->hydrate($r);
+            $groups[] = $g;
+        }
+        
+        return $groups;
+        
+    }
+    
     //////////////////////// NEW USER PROFILE STUFF/////////////////////////
     
     public function getProfileServices(){
-        
+        // Array of objects
     }
     
     public function getProfileServiceNames(){
-        
+        // Array of strings
     }
     
     public function userHasProfileForService($user_id, $service_name){
-        
-        
-        
+        // Boolean
     }
     
     public function getDefaultService(){
         
+        // Object
         // retrieves the default service or creates it if it does not exist
         // default service is never site-specific
         

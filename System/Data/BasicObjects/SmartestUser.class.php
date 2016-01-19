@@ -8,6 +8,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	protected $_parameters; // Only useful when the user is being stored in the session
 	protected $_user_info;
     protected $_user_info_modified;
+    protected $_group_membership_checker;
 	
 	protected function __objectConstruct(){
 	    
@@ -17,7 +18,6 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 		}
 		
 		$this->_preferences_helper = SmartestPersistentObject::get('prefs_helper');
-		
 		$this->_user_info = new SmartestDbStorageParameterHolder("User info");
 		
 	}
@@ -103,6 +103,29 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
         $this->_user_info->loadArray(unserialize($this->_properties['info']));
 	    
 	}
+    
+    public function getUserContextSiteId(){
+        
+        if(defined('SM_USER_CONTEXT_SITE_ID')){
+            return constant('SM_USER_CONTEXT_SITE_ID');
+        }
+        
+        if(isset($GLOBALS['_site']) && is_object($GLOBALS['_site'])){
+            $site_id = $GLOBALS['_site']->getId();
+        }else if($this->getRequest()->getModule() == 'website' && defined('SM_CMS_PAGE_SITE_ID')){
+	        // This is mostly for when objects are used on web pages
+            $site_id = constant('SM_CMS_PAGE_SITE_ID');
+        }else if(is_object(SmartestSession::get('current_open_project'))){
+            // This is mostly for when objects are used within the Smartest backend
+            // make sure the site object exists
+            $site_id = SmartestSession::get('current_open_project')->getId();
+        }
+        
+        define('SM_USER_CONTEXT_SITE_ID', $site_id);
+        
+        return $site_id;
+        
+    }
 	
 	public function getUsername(){
 		return $this->_properties['username'];
@@ -273,6 +296,16 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
             }else{
                 break;
             }
+            
+            case "groups":
+            return new SmartestArray($this->getGroups($this->getUserContextSiteId()));
+            
+            case "all_groups":
+            return new SmartestArray($this->getGroups('ALL'));
+            
+            case "is_in_group":
+            case "in_group":
+            return $this->getGroupMembershipChecker($this->getUserContextSiteId());
             
             case "info":
             return $this->_user_info;
@@ -957,6 +990,60 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    }
 	    
 	}
+    
+    public function getGroups($site_id=null){
+        
+        if($site_id != 'ALL'){
+            $site_id = $this->getUserContextSiteId();
+        }
+        
+        $q = new SmartestManyToManyQuery('SM_MTMLOOKUP_USER_GROUP_MEMBERSHIP');
+        $q->setTargetEntityByIndex(2);
+        $q->addQualifyingEntityByIndex(1, $this->getId());
+	    $q->addSortField('Sets.set_name');
+        
+        if(is_numeric($site_id)){
+            $q->addForeignTableConstraint('Sets.set_site_id', $this->_site_id);
+        }
+    
+        $groups = $q->retrieve(true);
+        
+        return $groups;
+        
+    }
+    
+    public function getGroupIds(){
+        
+        $group_ids = array();
+        
+        foreach($this->getGroups() as $g){
+            $group_ids[] = $g->getId();
+        }
+        
+        return $group_ids;
+        
+    }
+    
+    public function isInGroup($group_identifier, $site_id=null){
+        if($site_id != 'ALL'){
+            $site_id = $this->getUserContextSiteId();
+        }
+        return $this->getGroupMembershipChecker($site_id)->belongsToGroup($group_identifier);
+    }
+    
+    public function getGroupMembershipChecker($site_id=null){
+        
+        if($site_id != 'ALL'){
+            $site_id = $this->getUserContextSiteId();
+        }
+        
+        if(!is_object($this->_group_membership_checker)){
+            $this->_group_membership_checker = new SmartestUserGroupMembershipChecker($this, $site_id);
+        }
+        
+        return $this->_group_membership_checker;
+        
+    }
     
 	public function getActionUrl(){
 	    

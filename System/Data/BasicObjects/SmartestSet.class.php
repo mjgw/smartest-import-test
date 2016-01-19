@@ -7,13 +7,7 @@ class SmartestSet extends SmartestBaseSet{
     
     public function __objectConstruct(){
         
-        throw new SmartestException("SmartestSet should not be instantiated directly. Please instantiate a SmartestCmsItemSet, SmartestPageGroup, SmartestAssetGroup, or SmartestUserGroup", SM_ERROR_USER);
-        
-    }
-    
-    public function __postHydrationAction(){
-        
-	    if(!$this->_set_settings){
+	    if(!is_object($this->_set_settings)){
 	        $this->_set_settings = new SmartestParameterHolder("Settings for Set '".$this->_properties['label']."'");
         }
         
@@ -23,7 +17,22 @@ class SmartestSet extends SmartestBaseSet{
 		    $this->_set_settings->loadArray($s);
 	    }else{
 	        $this->_set_settings->loadArray(array());
-	    }
+	    }        
+    }
+    
+    public function __postHydrationAction(){
+        
+	    /* if(!is_object($this->_set_settings)){
+	        $this->_set_settings = new SmartestParameterHolder("Settings for Set '".$this->_properties['label']."'");
+        }
+        
+		$s = unserialize($this->getInfo());
+		
+		if(is_array($s)){
+		    $this->_set_settings->loadArray($s);
+	    }else{
+	        $this->_set_settings->loadArray(array());
+	    } */
         
     }
     

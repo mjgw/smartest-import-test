@@ -21,6 +21,15 @@ module:
     add_user:
       action: addUser
       url: /smartest/users/add
+    groups:
+      action: listUserGroups
+      url: /smartest/user_groups
+    add_group:
+      action: addUserGroup
+      url: /smartest/user_groups/add
+    edit_group:
+      action: editUserGroup
+      url: /smartest/user_group/edit
     roles:
       action: listRoles
       url: /smartest/user_roles

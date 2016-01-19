@@ -11,9 +11,15 @@
     <div class="image-picker-caption">No file is selected</div>
   {/if}
   </div>
+  {if $_site.id}
   <a class="button" href="#select-image" id="{$_input_data.id}-button">Select image</a>
   <a class="button" href="#clear-image" id="{$_input_data.id}-button-clear">Clear</a>
+  {else}
+  <div class="image-picker-caption">Images can only be selected when you are working with a site.</div>
+  {/if}
   <input type="hidden" name="{$_input_data.name}" id="{$_input_data.id}" value="{if $value && $value.id}{$value.id}{/if}" />
+  
+  {if $_site.id}
   <script type="text/javascript">
   {literal}
   if(typeof window.inputId == 'undefined'){
@@ -31,8 +37,12 @@
     $('{$_input_data.id}-thumbnail-area').update('<div class="image-picker-caption">No file is selected</div>');
     {rdelim});
   </script>
+  {/if}
 </div>
+
 <div class="breaker"></div>
+
+{if $_site.id}
 <script type="text/javascript">
   $('{$_input_data.id}').observe('image:chosen', function(e){ldelim}
   
@@ -41,3 +51,4 @@
 
   {rdelim});
 </script>
+{/if}

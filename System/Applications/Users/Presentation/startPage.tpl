@@ -1,5 +1,5 @@
-<script language="javascript" type="text/javascript">
-
+<script type="text/javascript">
+  
 </script>
 
 <div id="work-area">
@@ -13,6 +13,7 @@
 <ul class="tabset">
   <li{if $active_tab == 'system'} class="current"{/if}><a href="{$domain}smartest/users/system">System users</a></li>
   <li{if $active_tab == 'ordinary'} class="current"{/if}><a href="{$domain}smartest/users/ordinary">Other users</a></li>
+  <li{if $active_tab == 'groups'} class="current"{/if}><a href="{$domain}smartest/user_groups">User groups</a></li>
 </ul>
 
 <form id="pageViewForm" method="get" action="">

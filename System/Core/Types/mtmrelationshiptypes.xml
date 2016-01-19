@@ -65,11 +65,11 @@
     <entity table="Sets" class="SmartestPageGroup" foreignkey="set_id" index="2" required="true" />
   </type>
   
-  <!--<type id="SM_MTMLOOKUP_USER_GROUP_MEMBERSHIP" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+  <type id="SM_MTMLOOKUP_USER_GROUP_MEMBERSHIP" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
     <label>Maps system users into groups.</label>
-    <entity table="Users" class="SmartestUser" foreignkey="page_id" index="1" required="true" />
+    <entity table="Users" class="SmartestUser" foreignkey="user_id" index="1" required="true" />
     <entity table="Sets" class="SmartestUserGroup" foreignkey="set_id" index="2" required="true" />
-  </type>-->
+  </type>
   
   <type id="SM_MTMLOOKUP_TEXTFRAGMENT_ATTACHMENTS" return="class:SmartestTextFragmentAttachment" method="SM_MTMLOOKUPMETHOD_MAP">
     <label>Maps files to textfragments where they are referenced.</label>
