@@ -78,6 +78,13 @@
     {if $user.all_groups._empty}<em>This user does not belong to any groups.</em>{else}{$user.all_groups}{/if}
   </div>
   
+  {if $is_system_user}
+  <div class="edit-form-row">
+    <div class="form-section-label">SItes this user can access</div>
+{if $user_sites._empty}<em>This user does not have access to any sites.</em>{else}{$user_sites}{/if}
+  </div>
+  {/if}
+  
   <div class="edit-form-row">
     <div class="form-section-label">Tags</div>
     <div class="edit-form-sub-row">

@@ -206,6 +206,14 @@ class Users extends SmartestSystemApplication{
     		    $this->setTitle('Edit user | '.$user->__toString());
     		    $this->send($user, 'user');
                 $this->send($user->getBioForEditor(), 'bio_text_editor_content');
+                if($user->getType() == 'SM_USERTYPE_SYSTEM_USER'){
+                    $sys_user = new SmartestSystemUser;
+                    $sys_user->hydrate($user->getOriginalDbRecord());
+                    $this->send(new SmartestArray($sys_user->getAllowedSites()), 'user_sites');
+                    $this->send(true, 'is_system_user');
+                }else{
+                    $this->send(false, 'is_system_user');
+                }
             }else{
                 $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
                 $this->formForward();
