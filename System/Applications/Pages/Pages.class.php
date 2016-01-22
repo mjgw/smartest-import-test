@@ -520,6 +520,9 @@ class Pages extends SmartestSystemApplication{
         	}else if(strpos($placeholder_name, '_txt') !== false || strpos($placeholder_name, 'text') !== false || strpos($placeholder_name, 'txt') !== false || strpos($placeholder_name, 'quote') !== false){
             	$suggested_type = 'SM_ASSETCLASS_RICH_TEXT';
             	$this->send(true, 'type_suggestion_automatic');
+        	}else if(strpos($placeholder_name, 'video') !== false || strpos($placeholder_name, 'movie') !== false || strpos($placeholder_name, 'clip') !== false){
+            	$suggested_type = 'SM_ASSETCLASS_MOVIE';
+            	$this->send(true, 'type_suggestion_automatic');
             }else{
         	    $suggested_type = null;
         	    $this->send(false, 'type_suggestion_automatic');
@@ -1348,12 +1351,9 @@ class Pages extends SmartestSystemApplication{
     			    $this->send($suggested_url, 'suggested_url');
     			}
 			
-    			$page_presets = $helper->getPagePresets($this->getSite()->getId());
-			
-    			$this->send((bool) SmartestSession::get('__newPage_preset_id'), 'disable_template_dropdown');
-			
     			$pages = $helper->getSerialisedPageTree($helper->getPagesTree($this->getSite()->getId()));
-    			$this->send('TRUE', 'chooseParent');
+    			
+                $this->send('TRUE', 'chooseParent');
     			$this->send($pages, 'pages');
 			
     			if(!SmartestSession::get('__newPage')->getCacheAsHtml()){
@@ -1376,24 +1376,11 @@ class Pages extends SmartestSystemApplication{
      			$this->send($this->getSite(), 'siteInfo');
  			
      			$this->send($templates, 'templates');
-     			$this->send($page_presets, 'presets');
- 			
+     		
      			$newPage = SmartestSession::get('__newPage');
- 			
-     			$preset = new SmartestPagePreset;
- 			
-     			if($preset_id = SmartestSession::get('__newPage_preset_id') && $preset->hydrate(SmartestSession::get('__newPage_preset_id'))){
-     			    $newPage['preset'] = $preset->getId();
-     			    $newPage['draft_template'] = $preset->getMasterTemplateName();
-    		    }else{
-    		        $newPage['preset'] = '';
-    		    }
-                
-                $template = "addPage.stage2.tpl";
             
             }elseif(is_object(SmartestSession::get('__newPage')) && SmartestSession::get('__newPage') instanceof SmartestPage){
                 
-                $template = "addPage.stage2.tpl";
                 $this->send($this->getSite(), 'siteInfo');
                 $this->send(SmartestSession::get('__newPage')->getParent(), 'page_parent');
                 $url_array = SmartestSession::get('__newPage')->getUnsavedUrls();
@@ -1403,6 +1390,28 @@ class Pages extends SmartestSystemApplication{
                 
             }
             
+            ////// Presets stuff //////
+            
+			$page_presets = $helper->getPagePresets($this->getSite()->getId());
+            $this->send($page_presets, 'presets');
+            // $this->send((bool) $this->getGlobalPreference('site_default_page_preset_id'), 'hide_template_dropdown');
+            $preset = new SmartestPagePreset;
+		    
+ 			if($preset_id = SmartestSession::get('__newPage_preset_id') && $preset->find(SmartestSession::get('__newPage_preset_id'))){
+ 			    // if there is already a choice of preset in the session, send that
+                // echo "selected preset: ".SmartestSession::get('__newPage_preset_id');
+ 			    $newPage['draft_template'] = $preset->getMasterTemplateName();
+                $this->send($preset->getId(), 'selected_preset_id');
+                $this->send(true, 'hide_template_dropdown');
+                $this->send((bool) SmartestSession::get('__newPage_preset_id'), 'hide_template_dropdown');
+		    }else{
+		        // no preset has been selected, so go by settings
+                // echo "no selected preset";
+                $this->send($this->getGlobalPreference('site_default_page_preset_id'), 'selected_preset_id');
+                $this->send((bool) $this->getGlobalPreference('site_default_page_preset_id'), 'hide_template_dropdown');
+		    }
+            
+            $template = "addPage.stage2.tpl";
             $this->send($newPage, 'newPage');
 			
 			break;
@@ -1487,20 +1496,27 @@ class Pages extends SmartestSystemApplication{
 		    }
 			
 			// should the page have a preset?
-            if($this->getRequestParameter('page_preset')){
+            if($this->getRequestParameter('page_preset_id') == 'NONE'){
+                
+                // No page preset used
+                $this->send(false, 'use_preset');
+                
+            }else{
                 
                 $preset = new SmartestPagePreset;
+                $preset_id = (int) $this->getRequestParameter('page_preset_id');
                 
-                SmartestSession::set('__newPage_preset_id', $this->getRequestParameter('page_preset'));
-                $preset_id = SmartestSession::get('__newPage_preset_id');
+                SmartestSession::set('__newPage_preset_id', $preset_id);
                 
                 // if so, apply those definitions
                 if($preset->find($preset_id)){
                     SmartestSession::get('__newPage')->setDraftTemplate($preset->getMasterTemplateName());
-                    // $newPage['preset_label'] = $preset->getLabel();
-                    $this->send($preset->getLabel(), 'page_preset_label');
-    				// $newPage['draft_template'] = SmartestSession::get('__newPage')->getDraftTemplate();
+                    $this->send($preset, 'page_preset');
+                    $this->send(true, 'use_preset');
+    				$newPage['draft_template'] = SmartestSession::get('__newPage')->getDraftTemplate();
     				$this->send(SmartestSession::get('__newPage')->getDraftTemplate(), 'page_draft_template');
+                }else{
+                    $this->send(false, 'use_preset');
                 }
             }
 			
@@ -1618,6 +1634,7 @@ class Pages extends SmartestSystemApplication{
     		    // clear session and cached page tree
     		    SmartestCache::clear('site_pages_tree_'.$site_id, true);
 	            SmartestSession::clear('__newPage');
+                SmartestSession::clear('__newPage_preset_id');
 	    
 	            switch($this->getRequestParameter('destination')){
 			

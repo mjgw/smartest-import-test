@@ -87,6 +87,16 @@
 </div>
 
 <div class="edit-form-row">
+  <div class="form-section-label">Default page preset when creating new pages</div>
+  <select name="site_default_page_preset_id">
+    <option value="NONE">None</option>
+{foreach from="$page_presets" item="preset"}
+    <option value="{$preset.id}"{if $preset.id == $default_page_preset_id} selected="selected"{/if}>{$preset.name}</option>
+{/foreach}    
+  </select>
+</div>
+
+<div class="edit-form-row">
   <div class="form-section-label">Site ID</div>
   <code>{$site.unique_id}</code> {help id="desktop:install_ids" buttonize="true"}What&rsquo;s this?{/help}
 </div>

@@ -49,20 +49,50 @@
   	
   	{if count($presets)}
   	  <div class="edit-form-row">
-  	    <div class="form-section-label">Use Preset Layout</div>
-  	    <select name="page_preset" onchange="{literal}if(this.value){document.getElementById('page_draft_template').disabled=true;}else{document.getElementById('page_draft_template').disabled=false;}{/literal}">
-  	      <option value="">No preset</option>
+        
+  	    <div class="form-section-label">Use page preset?</div>
+  	    
+        <select name="page_preset_id" id="preset-chooser">
+  	      <option value="NONE">No preset</option>
   	      {foreach from=$presets item="preset"}
-  	      <option value="{$preset.plp_id}"{if $newPage.preset == $preset.plp_id} selected="selected"{/if}>{$preset.plp_label}</option>
+  	      <option value="{$preset.id}"{if $selected_preset_id == $preset.id} selected="selected"{/if}>{$preset.label}</option>
   	      {/foreach}
   	    </select>
+        
+        <script type="text/javascript">
+        {literal}
+        
+        $('preset-chooser').observe('change', function(){
+            
+          // alert($F('preset-chooser'));
+          
+          // alert($('main-template-selection').visible());
+          
+          if($F('preset-chooser') == 'NONE'){
+            if(!$('main-template-selection').visible()){
+              new Effect.BlindDown('main-template-selection', {duration: 0.3});
+            }
+          }else{
+            if($('main-template-selection').visible()){
+              new Effect.BlindUp('main-template-selection', {duration: 0.3});
+            }
+          }
+          
+          // if(this.value){document.getElementById('page_draft_template').disabled=true;}else{document.getElementById('page_draft_template').disabled=false;}
+          
+        });
+        
+        {/literal}
+        </script>
+        
   	  </div>
   	{/if}
   	
+    <div id="main-template-selection"{if $hide_template_dropdown} style="display:none"{/if}>
   	  <div class="edit-form-row">
-  	    <div class="form-section-label">Main Template</div>
+  	    <div class="form-section-label">Page master template</div>
         {if count($templates)}
-  	    <select name="page_draft_template" id="page_draft_template"{if $disable_template_dropdown} disabled="true"{/if}>
+  	    <select name="page_draft_template" id="page_draft_template">
   	      {foreach from=$templates item="template"}
   	      <option value="{$template.url}"{if $newPage.draft_template == $template.url} selected="selected"{/if}>{$template.url}</option>
   	      {/foreach}
@@ -72,6 +102,7 @@
         <input type="hidden" name="page_draft_template" value="" />
         {/if}
   	  </div>
+    </div>
   	
   	{if $newPage.type == 'NORMAL'}
     	<div class="edit-form-row">

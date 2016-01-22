@@ -1413,7 +1413,15 @@ AND PageProperties.pageproperty_id = PagePropertyValues.pagepropertyvalue_pagepr
 		}
 		
 		$results = $this->database->queryToArray($sql);
-		return $results;
+        $presets = array();
+        
+        foreach($results as $r){
+            $p = new SmartestPagePreset;
+            $p->hydrate($r);
+            $presets[] = $p;
+        }
+        
+		return $presets;
 		
 	}
 	

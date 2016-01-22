@@ -42,12 +42,12 @@
       </tr>
       {/if}
       <tr>
-        <td style="background-color:#fff" valign="top">Layout preset:</td>
-        <td style="background-color:#fff" valign="top">{if $newPage.preset}{$newPage.preset_label}{else}<em style="color:#999">NONE</em>{/if}</td>
+        <td style="background-color:#fff" valign="top">Use a page preset:</td>
+        <td style="background-color:#fff" valign="top">{if $use_preset}{$page_preset.label}{else}<em style="color:#999">None</em>{/if}</td>
       </tr>
       <tr>
         <td style="background-color:#fff" valign="top">Main template:</td>
-        <td style="background-color:#fff" valign="top">{if strlen($newPage.draft_template)}<code>Presentation/Masters/{$newPage.draft_template}</code>{else}<em style="color:#999">NONE</em>{/if}</td>
+        <td style="background-color:#fff" valign="top">{if strlen($newPage.draft_template)}<code>Presentation/Masters/{$newPage.draft_template}</code> {if $use_preset} (from preset){/if}{else}<em style="color:#999">None</em>{/if}</td>
       </tr>
   	{if $newPage.type == 'NORMAL'}
       <tr>

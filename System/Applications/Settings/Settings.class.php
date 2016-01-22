@@ -66,6 +66,11 @@ class Settings extends SmartestSystemApplication{
                 $this->send($default_suffix, 'site_pageurl_default_suffix');
                 $this->send(!in_array($default_suffix, array('html', 'php', 'shtml', '_NONE')), 'site_pageurl_default_suffix_custom');
                 
+                $pmh = new SmartestPageManagementHelper;
+                $this->send($pmh->getPagePresets($this->getSite()->getId()), 'page_presets');
+                $default_page_preset_id = $this->getGlobalPreference('site_default_page_preset_id');
+                $this->send($default_page_preset_id, 'default_page_preset_id');
+                
                 $this->send(!(bool) $this->getSite()->getIsEnabled(), 'site_disabled');
                 
                 // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
@@ -132,6 +137,10 @@ class Settings extends SmartestSystemApplication{
                 $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
                 $this->setGlobalPreference('enable_site_responsive_mode', ($this->requestParameterIsSet('site_responsive_mode') ? 1 : 0));
     	        
+                if(is_numeric($this->getRequestParameter('site_default_page_preset_id'))){
+                    $this->setGlobalPreference('site_default_page_preset_id', $this->getRequestParameter('site_default_page_preset_id'));
+                }
+                
                 $suff = $this->getRequestParameter('site_default_url_suffix');
                 
                 if($suff == '_CUSTOM'){
