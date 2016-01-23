@@ -312,7 +312,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             
             if(is_array($dp) && array_key_exists('width', $dp) && (is_numeric($dp['width']) || $dp['width'] instanceof SmartestNumeric)){
                 return (string) $dp['width'];
-            }elseif(preg_match('/width="(\d+(\.\d+))"/i', $this->getContent(true), $matches)){
+            }elseif(preg_match('/width="(\d+(\.\d+)?)"/i', $this->getContent(true), $matches)){
                 if(strpos($matches[1], '.')){
                     return ceil((float) $matches[1]);
                 }else{
@@ -340,7 +340,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             
             if(is_array($dp) && array_key_exists('height', $dp) && (is_numeric($dp['height']) || $dp['height'] instanceof SmartestNumeric)){
                 return (string) $dp['height'];
-            }elseif(preg_match('/height="(\d+(\.\d+))"/i', $this->getContent(true), $matches)){
+            }elseif(preg_match('/height="(\d+(\.\d+)?)"/i', $this->getContent(true), $matches)){
                 if(strpos($matches[1], '.')){
                     return ceil((float) $matches[1]);
                 }else{
