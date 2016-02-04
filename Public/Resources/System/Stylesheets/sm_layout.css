@@ -107,15 +107,33 @@ div#main-interface{
 }
 
 #work-area{
-	margin:0px;
+    margin:0px;
+    min-height:100%;
+    -webkit-transition: padding-left 0.4s; /* Safari */
+    transition: padding-left 0.4s;
+}
+
+body.nav-expanded #work-area{
 	padding:60px 220px 7px 185px;
-	min-height:100%;
 }
 
 #work-area-full{
-	margin:0px;
+    margin:0px;
+    min-height:100%;
+    -webkit-transition: padding-left 0.4s; /* Safari */
+    transition: padding-left 0.4s;
+}
+
+body.nav-expanded #work-area-full{
 	padding:60px 10px 7px 185px;
-	min-height:100%;
+}
+
+body.nav-contracted #work-area{
+    padding:60px 220px 7px 48px;
+}
+
+body.nav-contracted #work-area-full{
+	padding:60px 10px 7px 48px;
 }
 
 div#work-area h3, div#work-area-full h3{

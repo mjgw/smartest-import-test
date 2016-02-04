@@ -99,7 +99,7 @@
 		
   </head>
   
-  <body>
+  <body class="nav-{if $admin_menu_contracted}contracted{else}expanded{/if}" id="body">
     
     <div id="help" style="display:none" class="modal-outer">
       <div id="help-viewer" class="modal">

@@ -43,6 +43,8 @@ class SmartestSystemApplication extends SmartestBaseApplication{
             $global_ui_strings = $global_ui_strings['strings'];
             $this->send($global_ui_strings, '_l10n_global_strings');
             
+            $this->send($this->getGlobalPreference('admin_menu_contracted', '0') == '1', 'admin_menu_contracted');
+            
         }else{
             $global_ui_strings = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Languages/global.yml');
             $global_ui_strings = $global_ui_strings['strings'];

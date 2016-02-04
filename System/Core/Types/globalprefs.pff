@@ -25,3 +25,4 @@ site_responsive_distinguish_oldpcs:1:0:Distinguish desktops with older browsers
 default_url_suffix:1:0:The suffix appended when new page URLs are suggested
 site_organisation_name:1:0:The name of the organisation or entity around which the site is based
 site_default_page_preset_id:1:0:What preset, if any, should be suggested to the user when creating new pages?
+admin_menu_contracted:0:1:Should the main toolbar be contracted to show icons only?
