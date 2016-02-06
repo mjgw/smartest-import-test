@@ -2165,14 +2165,14 @@ class Items extends SmartestSystemApplication{
 	            $item->setPublic('FALSE');
 	            $item->save();
 	            $this->addUserMessageToNextRequest('The item is no longer visible on the site.', SmartestUserMessage::SUCCESS);
+                $this->redirect('@edit_item?item_id='.$item->getId());
 	        /* }else{
 	            $this->addUserMessageToNextRequest('You don\'t have permission to unpublish items.', SmartestUserMessage::ACCESS_DENIED);
 	        } */
         }else{
-            $this->addUserMessageToNextRequest('The Item ID was not recognised.', SmartestUserMessage::ERROR);
+            $this->addUserMessageToNextRequest('The item ID was not recognised.', SmartestUserMessage::ERROR);
+            $this->formForward();
         }
-        
-        $this->formForward();
 	    
 	}
 	

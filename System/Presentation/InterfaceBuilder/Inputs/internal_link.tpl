@@ -132,6 +132,7 @@
         $(propertyId+'-item-hidden-id-input').value = bits[1];
         $(propertyId).writeAttribute({'data-target-id':bits[1]});
         $(propertyId).fire('needs:update');
+        $(propertyId+'-item-input').value = li.readAtribute('data-fullname');
       }
   });
   

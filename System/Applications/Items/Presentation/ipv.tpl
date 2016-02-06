@@ -2,7 +2,9 @@
   <h3>{$property.name}</h3>
   Item: {$item.name} <a href="{$domain}datamanager/editItem?item_id={$item.id}" class="button small">Back to item</a><br />
   Property Type: {$property._type_info.label}<br />
-  Property type code: <code>{$property._type_info.id}</code><br /><br />
+  Property type code: <code>{$property._type_info.id}</code><br />
+  Value ID: <code>{$ipv.id}</code><br />
+  Value item ID: <code>{$ipv.item_id}</code><br /><br />
   Raw stored value: <code>{$raw_value}</code><br /><br />
   String value: <code>{$value}</code><br /><br />
   Will be saved as: <code>{$ipv.storable_format}</code><br /><br />

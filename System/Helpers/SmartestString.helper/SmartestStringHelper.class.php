@@ -591,10 +591,10 @@ class SmartestStringHelper extends SmartestHelper{
 	public static function sanitize($string){
 	    
 	    if(is_string($string)){
-	        $string = str_replace('<?php', '', $string);
-	        $string = str_replace('DELETE FROM', '', $string);
-	        $string = str_replace('DROP TABLE', '', $string);
-	        $string = str_replace('DROP DATABASE', '', $string);
+	        $string = str_ireplace('<?php', '', $string);
+	        $string = str_ireplace('DELETE FROM', '', $string);
+	        $string = str_ireplace('DROP TABLE', '', $string);
+	        $string = str_ireplace('DROP DATABASE', '', $string);
         }
 	    
 	    return $string;
@@ -806,6 +806,13 @@ class SmartestStringHelper extends SmartestHelper{
 	    }
 	}
 	
+    public static function forceAllHtmlEntities($string){
+        $str = mb_convert_encoding($string, 'UTF-32', 'UTF-8');
+        $t = unpack("N*", $str);
+        $t = array_map(function($n) { return "&#$n;"; }, $t);
+        return implode("", $t);
+    }
+    
 	public static function toHtmlEntities($string){
     	return htmlentities($string, ENT_QUOTES, 'UTF-8') ;
     }

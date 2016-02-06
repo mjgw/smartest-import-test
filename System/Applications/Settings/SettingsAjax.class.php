@@ -4,7 +4,8 @@ class SettingsAjax extends SmartestSystemApplication{
 
     public function tagsAutoComplete(){
         
-        $string = $this->getRequestParameter('string');
+        $string = SmartestStringHelper::sanitizeLookupValue($this->getRequestParameter('string'));
+        
         $sql = "SELECT * FROM Tags WHERE (Tags.tag_label LIKE '%".$string."%' OR Tags.tag_name LIKE '%".$string."%')";
         
         if($this->requestParameterIsSet('avoid_ids')){

@@ -1060,7 +1060,7 @@ class SmartestCmsLink extends SmartestHelper{
                         break;
                         
                         case SM_LINK_TYPE_MAILTO:
-                        return $fa_prefix.$this->_destination->toHtmlEncoded();
+                        return $fa_prefix.SmartestStringHelper::forceAllHtmlEntities((string) $this->_destination->getValue());
                         break;
                         
                     }

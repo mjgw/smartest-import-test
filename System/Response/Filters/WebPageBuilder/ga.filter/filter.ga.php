@@ -6,6 +6,7 @@ function smartest_filter_ga($html, $filter){
     $preference_value = SmartestStringHelper::toRealBool($ph->getGlobalPreference('enable_eu_cookie_compliance', null, $filter->getCurrentSite()->getId()));
     
     $cookies_allowed = (!(bool) $preference_value) || ($preference_value && isset($_COOKIE['SMARTEST_COOKIE_CONSENT']) && $_COOKIE['SMARTEST_COOKIE_CONSENT'] == "1");
+    $override_cookie_mode_for_ga = SmartestStringHelper::toRealBool($ph->getGlobalPreference('override_eu_cookie_compliance_ga', null, $filter->getCurrentSite()->getId()));
     
     // Has the template plugin been used?
     if(strpos($html, '<!--SM_GA_TAG')){
@@ -54,7 +55,7 @@ function smartest_filter_ga($html, $filter){
             }
             
             // Yes, if so, are cookies allowed?
-            if($cookies_allowed){
+            if($cookies_allowed || $override_cookie_mode_for_ga){
                 // Yes, so use the closing body tag to insert the code if the page is not a draft
                 
                 if($filter->getDraftMode()){
@@ -74,7 +75,7 @@ function smartest_filter_ga($html, $filter){
             }else{
                 // No, So insert a notice in an HTML comment
                 if(!$filter->getDraftMode()){
-                    str_ireplace('</body>', "<!--Google Analytics tags would have been placed here, was there permission to set cookies on your machine-->\n\n</body>", $html);
+                    $html = str_ireplace('</body>', "<!--Google Analytics tags would have been placed here, was there permission to set cookies on your machine-->\n\n</body>", $html);
                 }
             }
               

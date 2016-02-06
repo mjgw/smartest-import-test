@@ -56,6 +56,9 @@ class Settings extends SmartestSystemApplication{
                 $site_responsive_mode = $this->getGlobalPreference('enable_site_responsive_mode');
                 $this->send(SmartestStringHelper::toRealBool($site_responsive_mode), 'site_responsive_mode');
                 
+                $override_eu_cookie_compliance_ga = $this->getGlobalPreference('override_eu_cookie_compliance_ga', 1);
+                $this->send(SmartestStringHelper::toRealBool($override_eu_cookie_compliance_ga), 'override_eu_cookie_compliance_ga');
+                
                 $ga_id = $this->getGlobalPreference('google_analytics_id');
                 $this->send($ga_id, 'site_ga_id');
                 
@@ -135,8 +138,9 @@ class Settings extends SmartestSystemApplication{
                 
                 $this->setGlobalPreference('google_analytics_id', $this->getRequestParameter('site_ga_id'));
                 $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
-                $this->setGlobalPreference('enable_site_responsive_mode', ($this->requestParameterIsSet('site_responsive_mode') ? 1 : 0));
-    	        
+                $this->setGlobalPreference('enable_site_responsive_mode', SmartestStringHelper::toRealBool($this->getRequestParameter('site_responsive_mode')) ? 1 : 0);
+    	        $this->setGlobalPreference('override_eu_cookie_compliance_ga', SmartestStringHelper::toRealBool($this->getRequestParameter('site_override_eu_cookie_compliance_ga')) ? 1 : 0);
+                
                 if(is_numeric($this->getRequestParameter('site_default_page_preset_id'))){
                     $this->setGlobalPreference('site_default_page_preset_id', $this->getRequestParameter('site_default_page_preset_id'));
                 }

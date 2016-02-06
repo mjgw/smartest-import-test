@@ -8,6 +8,18 @@
   {/foreach}
 </div> *}
 
+<script type="text/javascript">
+{literal}
+var setEUCookieMode = function(state){
+  if(state){
+    Effect.BlindDown('eu-override-switch', {duration: 0.4});
+  }else{
+    Effect.BlindUp('eu-override-switch', {duration: 0.4});
+  }
+}
+{/literal}
+</script>
+
 <form id="updateSiteDetails" name="updateSiteDetails" action="{$domain}{$section}/updateSiteDetails" method="POST" style="margin:0px" enctype="multipart/form-data">
 
 <input type="hidden" name="site_id" value="{$site.id}">
@@ -133,8 +145,17 @@
 
 <div class="edit-form-row">
   <div class="form-section-label">EU cookie law compliance</div>
-  {boolean name="site_eu_cookie_compliance" id="site-eu-cookie-compliance" value=$eu_cookie_compliance}
+  {boolean name="site_eu_cookie_compliance" id="site-eu-cookie-compliance" value=$eu_cookie_compliance changehook="setEUCookieMode"}
   <div class="form-hint">Provides easy compliance with EU Directive 2002/58/EC. Will take effect immediately</div>
+  
+</div>
+
+<div style="display:{if $eu_cookie_compliance}block{else}none{/if}" id="eu-override-switch">
+  <div class="edit-form-row indent">
+    <div class="form-section-label">Override for Google Analytics cookies</div>
+    {boolean name="site_override_eu_cookie_compliance_ga" id="site-eu-cookie-compliance-override" value=$override_eu_cookie_compliance_ga}
+    <div class="form-hint">If switched off, Google Analytics will only measure site visitors who give cookie permission, which adversely affects its accuracy</div>
+  </div>
 </div>
 
 <div class="breaker"></div>

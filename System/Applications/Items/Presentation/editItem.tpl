@@ -2,11 +2,11 @@
 
 {load_interface file="edit_tabs.tpl"}
 
-<h3>Edit {$item._model.name|lower}: <span class="light">{$item.editor_name}</span></h3>
+<h3>Edit {$item._model.name|lower}: <span class="light" class="item-name-update">{$item.editor_name}</span></h3>
 
 {if $item.deleted}<div class="warning">Warning: This {$item._model.name|strtolower} is currently in the trash.</div>{/if}
 
-<div class="instruction">You are editing the draft property values of the {$item._model.name|strtolower} &quot;<strong>{$item.name}</strong>&quot; <a href="{$domain}{$section}/getItemClassMembers?class_id={$item._model.id}" class="button small">Back to {$item._model.plural_name|lower}</a></div>
+<div class="instruction">You are editing the draft property values of the {$item._model.name|strtolower} &quot;<strong class="item-name-update">{$item.name}</strong>&quot; <a href="{$domain}{$section}/getItemClassMembers?class_id={$item._model.id}" class="button small">Back to {$item._model.plural_name|lower}</a></div>
 
 {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}
 <div class="instruction">This <strong>{$item._model|lower}</strong> is attached to the {$parent_model.name|lower} &ldquo;{$parent_item.name}&rdquo; <a href="{$parent_item.action_url}" class="button">Edit {$parent_model.name|lower}</a> <a href="{$domain}datamanager/getSubModelItems?item_id={$parent_item.id}&amp;sub_model_id={$item._model.id}" class="button">See all {$item._model.plural_name|lower} for this {$parent_model.name|lower}</a></div>
