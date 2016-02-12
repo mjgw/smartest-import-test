@@ -304,7 +304,7 @@
         
         <label>Single tag</label>
         <description>One of the tags in use within Smartest.</description>
-        <usage>itemproperty</usage>
+        <usage>field,itemproperty</usage>
         <long>false</long>
         
         <filter>

@@ -85,6 +85,30 @@ class SmartestDataUtility{
 	    return $ids;
 	    
 	}
+    
+    public function getVisibleModels($site_id=null){
+        
+        $sql = "SELECT * FROM ItemClasses WHERE itemclass_type='SM_ITEMCLASS_MODEL' AND itemclass_is_hidden='0'";
+        
+		if(is_numeric($site_id)){
+		    $sql .= " AND (itemclass_site_id='".$site_id."' OR itemclass_shared='1')";
+		}
+	
+		$sql .= ' ORDER BY itemclass_name';
+		
+		$result = $this->database->queryToArray($sql, true);
+        
+		$model_objects = array();
+		
+		foreach($result as $model){
+			$m = new SmartestModel;
+			$m->hydrate($model);
+			$model_objects[] = $m;
+		}
+		
+		return $model_objects;
+        
+    }
 	
 	public static function getModelClassNames(){
 	    
@@ -203,10 +227,22 @@ class SmartestDataUtility{
 	    
 	}
 	
-	public function getModelsWIthMetapageOnSiteId($site_id){
+	public function getModelsWithMetapageOnSiteId($site_id){
 	    
+        $site_id = (int) $site_id;
 	    $ids = $this->getModelIdsWIthMetapageOnSiteId($site_id);
-	    // print_r($ids);
+	    
+        $sql = "SELECT * FROM ItemClasses WHERE itemclass_id IN ('".implode("','", $ids)."') AND (itemclass_shared='1' OR itemclass_site_id='".$site_id."')";
+        $result = $this->database->queryToArray($sql);
+        $models = array();
+        
+        foreach($result as $r){
+            $m = new SmartestModel;
+            $m->hydrate($r);
+            $models[] = $m;
+        }
+        
+        return $models;
 	    
 	}
 	

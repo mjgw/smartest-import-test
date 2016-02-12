@@ -25,7 +25,12 @@ class Items extends SmartestSystemApplication{
 		$this->setFormReturnUri();
 		
 		$du = new SmartestDataUtility;
-		$models = $du->getModels(false, $this->getSite()->getId(), true);
+        
+        if($this->getUser()->hasToken('see_private_models')){
+            $models = $du->getModels(false, $this->getSite()->getId(), true);
+        }else{
+            $models = $du->getVisibleModels($this->getSite()->getId());
+        }
 		
 		if(count($models) == 1){
 		    $this->setRequestParameter('class_id', $models[0]->getId());
@@ -1457,6 +1462,8 @@ class Items extends SmartestSystemApplication{
                         $model->setLongIdFormat($this->getRequestParameter('itemclass_long_id_format'));
                     }
                 }
+                
+                $model->setIsHidden((int) _b($this->getRequestParameter('itemclass_is_hidden')));
         
                 // $model->setColor($this->getRequestParameter('itemclass_color'));
                 // }

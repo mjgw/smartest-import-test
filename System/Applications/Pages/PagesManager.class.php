@@ -1507,7 +1507,7 @@ class PagesManager{
 	public function getTemplateItemSpaceNames($template_file_path){
 		if(is_file($template_file_path)){
 			if($template_contents = file_get_contents($template_file_path)){
-				$regexp = preg_match_all("/<\?sm:itemspace.+name=\"([\w-_]+?)\".*:\?>/i", $template_contents, $matches);
+				$regexp = preg_match_all("/<\?sm:itemspace.*\sname=\"([\w-_]+?)\".*:\?>/i", $template_contents, $matches);
 
 				$foundClasses = $matches[1];
 

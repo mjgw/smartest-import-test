@@ -1040,6 +1040,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     		
     		foreach($breadcrumbs as $key => $page){
                 
+                // TODO: Create savings by making the link use the object rather than the link code
                 if($page->getType() == 'ITEMCLASS'){
                     
                     if($key == $last_breadcrumb_index){
@@ -1073,6 +1074,8 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
 			    
 			    $link = SmartestCmsLinkHelper::createLink($to, $ph);
 			    $link->setHostPage($this->getPage());
+                $link->addClass('sm-link-breadcrumb');
+                $link->addClass('sm-link-breadcrumb-level-'.$key);
 			    $text = $link->render($this->getDraftMode());
 
     			if($key > 0){

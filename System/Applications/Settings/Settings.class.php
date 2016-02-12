@@ -327,9 +327,13 @@ class Settings extends SmartestSystemApplication{
     public function listTags(){
 	    
 	    $this->setFormReturnUri();
+        $this->setFormReturnDescription('tags list');
+        
 	    $du = new SmartestDataUtility;
 	    $tags = $du->getTagsAsArrays();
 	    $this->send($tags, 'tags');
+        $this->send($this->getUser()->hasToken('delete_tags'), 'allow_delete_tags');
+        $this->send($this->getUser()->hasToken('edit_tags'), 'allow_edit_tags');
 	    
 	}
     
@@ -454,6 +458,69 @@ class Settings extends SmartestSystemApplication{
         $this->formForward();
 	    
 	}
+    
+    public function editTag(){
+        
+        $tag = new SmartestTag;
+        
+        if($this->getUser()->hasToken('edit_tags')){
+            if($tag->find($this->getRequestParameter('tag_id'))){
+                
+                $this->send($tag, 'tag');
+                $this->setTitle('Edit tag: '.$tag->getLabel());
+                $this->send($tag->getDescriptionTextAssetForEditor(), 'desc_text_editor_content');
+                
+                if($this->requestParameterIsSet('page_id')){
+                    
+                    $page = new SmartestTagPage;
+                    
+                    if($page->smartFind($this->getRequestParameter('page_id'))){
+                        if($page->getId() == $this->getSite()->getTagPageId()){
+                            $this->send(true, 'show_edit_tabs');
+                            $this->send($page, 'page');
+                            $this->send($page->isEditableByUserId($this->getUser()->getId()), 'page_is_editable');
+                            $this->send($this->getUser()->hasToken('edit_tags'), 'allow_tag_edit');
+                        }else{
+                            echo "not tag page";
+                        }
+                    }else{
+                        echo "page not found";
+                    }
+                    
+                }else{
+                    echo "no page ID";
+                }
+                
+            }
+        }
+        
+    }
+    
+    public function updateTag(){
+        
+        $tag = new SmartestTag;
+        
+        if($this->getUser()->hasToken('edit_tags')){
+            if($tag->find($this->getRequestParameter('tag_id'))){
+                
+                $tag->setLabel(strip_tags($this->getRequestParameter('tag_label')));
+                $tag->setName(SmartestStringHelper::toSlug($this->getRequestParameter('tag_name')));
+                $tag->setIconImageAssetId($this->getRequestParameter('tag_icon_image'));
+                
+                $tag->updateDescriptionTextAssetFromEditor($this->getRequestParameter('tag_description'));
+                
+                $tag->save();
+                
+                $this->addUserMessageToNextRequest('The tag has been updated.', SmartestUserMessage::SUCCESS);
+                
+            }
+        }else{
+            $this->addUserMessageToNextRequest('YOu do not have permission to modify tags.', SmartestUserMessage::ACCESS_DENIED);
+        }
+        
+        $this->handleSaveAction();
+        
+    }
 	
 	public function getTaggedObjects(){
 	    

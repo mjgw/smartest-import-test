@@ -89,7 +89,9 @@ class SmartestManyToManyLookup extends SmartestBaseManyToManyLookup{
     
     public function save(){
         if(!isset($this->_modified_properties['context_data'])){
-            $this->setContextData(null);
+            if(!is_array($this->getContextData()) || !count($this->getContextData())){
+                $this->setContextData(null);
+            }
         }
         parent::save();
     }

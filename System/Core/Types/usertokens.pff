@@ -38,7 +38,7 @@ id:type:scope:code:category:description
 34:p:s:edit_item_name:SM_USERTOKEN_ITEMS:Edit item short name/slug
 35:p:s:see_server_speed:SM_USERTOKEN_SYSTEM:See the server's speed rating
 36:p:s:test_server_speed:SM_USERTOKEN_SYSTEM:Test/recalibrate the server's speed rating
-37:p:s:edit_model__name:SM_USERTOKEN_ITEMS:Edit the plural names of models
+37:p:s:edit_model_name:SM_USERTOKEN_ITEMS:Edit the plural names of models
 38:p:s:edit_held_pages:SM_USERTOKEN_PAGES:Edit pages that are currently held by another user
 39:p:s:edit_held_items:SM_USERTOKEN_ITEMS:Edit items that are currently held by another user
 40:p:s:edit_containers_in_preview:SM_USERTOKEN_PAGES:Change the values of containers from the page preview screen
@@ -57,3 +57,6 @@ id:type:scope:code:category:description
 53:p:s:delete_users:SM_USERTOKEN_USERS:Delete user accounts
 54:p:s:delete_page_property:SM_USERTOKEN_PAGES:Delete page fields
 55:p:s:clear_pageproperty_all_definitions:SM_USERTOKEN_PAGES:Clear all the values of a page field
+56:p:s:rename_tag:SM_USERTOKEN_SYSTEM:Rename tags
+57:p:s:delete_tag:SM_USERTOKEN_SYSTEM:Delete tags
+58:p:s:see_private_models:SM_USERTOKEN_ITEMS:See private models

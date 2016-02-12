@@ -35,7 +35,7 @@ function viewLivePage(parameters){
     <h3>Page elements</h3>
     {load_interface file="choose_item.tpl"}
   {else}
-    <h3>Elements used on page: {if $page.type == 'ITEMCLASS'}{$page.static_title} <span class="light">({$page.title})</span>{else}<span class="light">{$page.title}</span>{/if}</h3>
+    <h3>Elements used on page: {if $page.type == 'ITEMCLASS'}{$page.static_title} <span class="light">({$page.title})</span>{else}<span class="light">{$page.title}{if $is_tag_page && $tag.id} (tag '{$tag.label}'){/if}</span>{/if}</h3>
     {if $version == "draft"}
     <div class="instruction">Structure of elements as they are being rendered on the draft version of this page. {help id="websitemanager:page_elements_tree"}What is this?{/help}</div>
     {else}

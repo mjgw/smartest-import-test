@@ -25,6 +25,9 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
     
     protected $_filters = array();
     
+    protected $_icon_image_asset;
+    protected $_description_text_asset;
+    
     /* protected function __objectConstruct(){
         
         $this->_table_prefix = 'tag_';
@@ -513,6 +516,100 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
     }
     
+    public function getDescriptionTextAsset(){
+        
+        $request = SmartestPersistentObject::get('request_data');
+        
+        if($request->g('application')->g('name') == 'website'){
+            $class = 'SmartestRenderableAsset';
+        }else{
+            $class = 'SmartestAsset';
+        }
+        
+        if(is_object($this->_description_text_asset) && $this->_description_text_asset instanceof SmartestAsset){
+            $this->_description_text_asset->setDraftMode($this->getDraftMode());
+            return $this->_description_text_asset;
+        }
+        
+        $id = $this->getField('description_text_asset_id');
+        $asset = new $class;
+        
+        if(!is_numeric($id) || !$asset->find($id)){
+            
+            $this->_description_text_asset = new $class;
+            
+            $this->_description_text_asset->setWebid(SmartestStringHelper::random(32));
+            $this->_description_text_asset->setLabel('Tag description text for tag '.$this->getLabel());
+            $this->_description_text_asset->setCreated(time());
+            $this->_description_text_asset->setModified(time());
+            $this->_description_text_asset->setStringId(SmartestStringHelper::toVarName('Tag description text for tag '.$this->getLabel()));
+            $this->_description_text_asset->setUrl(SmartestStringHelper::toVarName('Tag description text for tag '.$this->getLabel()).'.html');
+            $this->_description_text_asset->setUserId($this->getId());
+            $this->_description_text_asset->setSiteId(0);
+            $this->_description_text_asset->setShared(1);
+            $this->_description_text_asset->setType('SM_ASSETTYPE_RICH_TEXT');
+            
+            // if($this->getType() == 'SM_USERTYPE_SYSTEM_USER'){
+                $this->_description_text_asset->setPublicStatusTrusted(1);
+            /* }else{
+                $this->_bio_text_asset->setPublicStatusTrusted(0);
+            } */
+            
+            $this->_description_text_asset->setIsHidden(1);
+            $this->_description_text_asset->setIsSystem(1);
+            
+            $this->_description_text_asset->save();
+            
+            // $this->_description_text_asset->getTextFragment()->setContent(SmartestStringHelper::sanitize(SmartestStringHelper::parseTextile(stripslashes($this->_properties['bio']))));
+            $this->_description_text_asset->connectTextFragmentOnSave();
+            $this->_description_text_asset->save();
+            
+            $this->setField('description_text_asset_id', $asset->getId());
+            $sql = "UPDATE Tags SET Tags.tag_description_text_asset_id='".$this->_description_text_asset->getId()."' WHERE Tags.tag_id='".$this->getId()."' LIMIT 1";
+            $this->database->rawQuery($sql);
+            
+        }else{
+            $this->_description_text_asset = $asset;
+        }
+        
+        $this->_description_text_asset->setDraftMode($this->getDraftMode());
+        return $this->_description_text_asset;
+        
+    }
+    
+    public function getDescriptionTextAssetForEditor(){
+        return $this->getDescriptionTextAsset()->getContentForEditor();
+    }
+    
+    public function updateDescriptionTextAssetFromEditor($content){
+        
+	    $content = SmartestStringHelper::unProtectSmartestTags($content);
+	    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
+        $content = SmartestStringHelper::sanitize($content);
+        
+	    $this->getDescriptionTextAsset()->setContent($content);
+        $this->getDescriptionTextAsset()->setModified(time());
+        $this->getDescriptionTextAsset()->save();
+        
+    }
+    
+    public function getIconImageAsset(){
+        
+        if(is_object($this->_icon_image_asset) && $this->_icon_image_asset instanceof SmartestAsset){
+            return $this->_icon_image_asset;
+        }else{
+            $id = (int) $this->getField('icon_image_asset_id');
+            $asset = new SmartestAsset;
+            
+            if($asset->find($id)){
+                $this->_icon_image_asset = $asset;
+                return $this->_icon_image_asset;
+            }
+            
+        }
+        
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){
@@ -536,6 +633,10 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             
             case "images":
             return new SmartestArray($this->getImages($this->getCurrentSiteId()));
+            
+            case "description":
+            case "description_text_asset":
+            return $this->getDescriptionTextAsset();
             
         }
         

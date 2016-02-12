@@ -14,7 +14,19 @@ function smarty_function_image_select($params, $smartest_engine){
         }
         
         if(isset($params['value'])){
-            $asset->setParameter('value', $params['value']);
+            if(is_object($params['value'])){
+                $asset->setParameter('value', $params['value']);
+            }elseif(is_numeric($params['value'])){
+                $imgasset = new SmartestAsset;
+                if($imgasset->find($params['value'])){
+                    $asset->setParameter('value', $imgasset);
+                }else{
+                    // image ID not recognised
+                }
+            }else{
+                // wrong value type
+            }
+            
         }else{
             $asset->setParameter('value', null);
         }

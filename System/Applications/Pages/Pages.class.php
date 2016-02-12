@@ -443,6 +443,64 @@ class Pages extends SmartestSystemApplication{
                             $this->addUserMessage("This page is a meta-page, but not linked to any existing model", SmartestUserMessage::WARNING);
                             
                         }
+                        
+                    }elseif($page->getId() == $this->getSite()->getTagPageId()){
+                        
+                        if($this->getRequestParameter('tag')){
+                            
+                            $tag = new SmartestTag;
+                            
+                            if($tag->findBy('name', $this->getRequestParameter('tag'))){
+                                
+                                // $this->send(true, 'show_iframe');
+                		        // $this->send($domain, 'site_domain');
+                		        // $this->setTitle('Page Preview | Tag | '.$tag->getLabel());
+                		        // $this->send(false, 'show_edit_item_option');
+                                // $this->send(false, 'show_publish_item_option');
+                                // $this->send(false, 'show_item_list');
+                                // $this->send(false, 'show_tag_list');
+                                // $this->send(false, 'show_search_box');
+                                // $this->send(false, 'show_author_list');
+                                // $preview_url .= '&amp;tag_name='.$tag->getName();
+                                
+                                /* if($this->requestParameterIsSet('model_id')){
+                                    $preview_url .= '&amp;model_id='.$this->getRequestParameter('model_id');
+                                } */
+                                
+                        		// $du = new SmartestDataUtility;
+                        		// $models = $du->getModelsWithMetapageOnSiteId($this->getSite()->getId());
+                                // $this->send($models, 'models');
+                                
+                                $this->send($tag, 'tag');
+                                $this->send(true, 'is_tag_page');
+                                $this->send($this->getUser()->hasToken('edit_tags'), 'allow_tag_edit');
+                                
+                            }else{
+                                // tag does not exist - require tag select
+                                // $this->send('The selected tag does not exist. Please choose another tag to preview on this page.', 'chooser_message');
+                                // $this->send(false, 'show_item_list');
+                                // $this->send(true, 'show_tag_list');
+                                // $this->send(false, 'show_search_box');
+                                // $this->send(false, 'show_author_list');
+                                // $this->send('websitemanager/preview', 'continue_action');
+                                // $du  = new SmartestDataUtility;
+                	            // $tags = $du->getTags();
+                	            // $this->send($tags, 'tags');
+                            }
+                            
+                        }else{
+                            // require tag select
+                            // $this->send('Please choose a tag to preview on this page.', 'chooser_message');
+                            // $this->send(false, 'show_item_list');
+                            // $this->send(true, 'show_tag_list');
+                            // $this->send(false, 'show_search_box');
+                            // $this->send(false, 'show_author_list');
+                            // $this->send('websitemanager/preview', 'continue_action');
+                            // $du  = new SmartestDataUtility;
+            	            // $tags = $du->getTags();
+            	            // $this->send($tags, 'tags');
+                        }
+                        
                     }
                 
             		$this->setTitle("Edit Page | ".$page->getTitle());
@@ -466,8 +524,7 @@ class Pages extends SmartestSystemApplication{
 	    
         }else{
             $this->addUserMessageToNextRequest('The page ID was not recognized.', SmartestUserMessage::ERROR, true);
-            echo "fail";
-            // $this->redirect("/smartest/pages");
+            $this->redirect("/smartest/pages");
         }
 		
 	}
@@ -881,6 +938,14 @@ class Pages extends SmartestSystemApplication{
                                 if($this->requestParameterIsSet('model_id')){
                                     $preview_url .= '&amp;model_id='.$this->getRequestParameter('model_id');
                                 }
+                                
+                        		$du = new SmartestDataUtility;
+                        		$models = $du->getModelsWithMetapageOnSiteId($this->getSite()->getId());
+                                $this->send($models, 'models');
+                                
+                                $this->send($tag, 'tag');
+                                $this->send(true, 'is_tag_page');
+                                
                             }else{
                                 // tag does not exist - require tag select
                                 $this->send('The selected tag does not exist. Please choose another tag to preview on this page.', 'chooser_message');
@@ -893,6 +958,7 @@ class Pages extends SmartestSystemApplication{
                 	            $tags = $du->getTags();
                 	            $this->send($tags, 'tags');
                             }
+                            
                         }else{
                             // require tag select
                             $this->send('Please choose a tag to preview on this page.', 'chooser_message');
@@ -905,6 +971,8 @@ class Pages extends SmartestSystemApplication{
             	            $tags = $du->getTags();
             	            $this->send($tags, 'tags');
                         }
+                        
+                        $this->send($this->getUser()->hasToken('edit_tags'), 'allow_tag_edit');
                     
                     }elseif($page->getId() == $this->getSite()->getUserPageId()){
                         
@@ -1815,6 +1883,22 @@ class Pages extends SmartestSystemApplication{
         	                $this->send(true, 'show_recent_items');
         	                $this->send($item, 'item');
         	            }
+                        
+    	            }elseif($page->getId() == $this->getSite()->getTagPageId()){
+                        
+                        $tag = new SmartestTag;
+                        
+                        if($tag->findBy('name', $this->getRequestParameter('tag'))){
+                            
+                            $this->send($tag, 'tag');
+                            $this->send(true, 'is_tag_page');
+                            $this->send($this->getUser()->hasToken('edit_tags'), 'allow_tag_edit');
+                            
+                        }else{
+                            // tag does not exist - require tag select?
+                            
+                        }
+                        
     	            }
 	                
     		        $this->setFormReturnUri();
@@ -2583,6 +2667,7 @@ class Pages extends SmartestSystemApplication{
 	                $this->send(false, 'is_defined');
 	            }
 	            
+                // echo "boo";
 	            $assets = $container->getPossibleAssets($this->getSite()->getId());
 	            
 	            $this->send($assets, 'templates');

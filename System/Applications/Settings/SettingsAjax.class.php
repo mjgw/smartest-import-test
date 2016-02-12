@@ -40,11 +40,15 @@ class SettingsAjax extends SmartestSystemApplication{
     
     public function deleteTagById(){
         
-        $t = new SmartestTag;
-        $tag_id = (int) $this->getRequestParameter('tag_id');
+        if($this->getUser()->hasToken('delete_tags')){
         
-        if($t->find($tag_id)){
-            $t->delete();
+            $t = new SmartestTag;
+            $tag_id = (int) $this->getRequestParameter('tag_id');
+            
+            if($t->find($tag_id)){
+                $t->delete();
+            }
+        
         }
         
         exit;

@@ -15,6 +15,10 @@ class SmartestContainer extends SmartestAssetClass{
 	    $group = new SmartestTemplateGroup;
 	    
 	    if($this->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_TEMPLATEGROUP' && $group->find($this->getFilterValue())){
+            if(!$group->getShared()){
+                $group->setShared(1);
+                $group->save();
+            }
 	        return $group->getMembers($site_id);
 	    }else{
 	        return $this->getAssetsByType($type['accept']);

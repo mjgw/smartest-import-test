@@ -4,8 +4,33 @@
 
 <h3>Preview of {if $item}{$item._model.name|lower}: <span class="light">{$item.name} <a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id={$item.id}', '{$item._model.name} info');" title="Get info"><img src="{$domain}Resources/Icons/information.png" alt="Get info" /></a> (via meta-page '{$page.title}')</span>{else}page: <span class="light">{$page.title}</span>{/if}</h3>
 
-{if $show_iframe}
+{if $tag.id}
+<div class="special-box">
+  <form action="{$domain}websitemanager/preview" id="tagged-object-model-selector-form" method="get">
+    <input type="hidden" name="page_id" value="{$request_parameters.page_id}" />
+    <input type="hidden" name="tag" value="{$request_parameters.tag|slug}" />
+    {if $request_parameters.from}<input type="hidden" name="from" value="{$request_parameters.from}" />{/if}
+    Tagged objects to retrieve:
+    <select name="model_id" id="tagged-object-model-selector">
+      <option value="">Pages and all items with meta-pages</option>
+{foreach from=$models item="m"}
+      <option value="{$m.id}"{if $request_parameters.model_id == $m.id} selected="selected"{/if}>{$m.plural_name} only</option>
+{/foreach}
+    </select>
+  </form>
+</div>
+<script type="text/javascript">
+{literal}
 
+$('tagged-object-model-selector').observe('change', function(){
+  $('tagged-object-model-selector-form').submit();
+});
+
+{/literal}
+</script>
+{/if}
+
+{if $show_iframe}
 
 <script language="javascript">
 {literal}  

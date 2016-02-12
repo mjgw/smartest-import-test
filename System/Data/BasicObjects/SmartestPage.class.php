@@ -55,10 +55,6 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 			$field = 'name';
 		}
         
-        // var_dump(preg_match('/[a-zA-Z0-9\$-]{32}/', $id));
-        
-        // echo $id;
-        
         if($field && $id){
 	        
             if($field == 'id'){
@@ -2498,7 +2494,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		
 		$section_index = 0;
 		
-		while($home_page->getId() != $page->getId() && $limit > 0){
+		while(is_object($page) && $home_page->getId() != $page->getId() && $limit > 0){
 		    
 		    if($page->isSection() && ($page->isPublished() || $this->getDraftMode())){
     		    $page->setDraftMode($this->getDraftMode());

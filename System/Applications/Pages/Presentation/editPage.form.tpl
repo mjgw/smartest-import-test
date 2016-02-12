@@ -20,7 +20,7 @@
 
 </script>
 
-<h3 id="pageName">Page Details: <span class="light">{$page.static_title}</span></h3>
+<h3 id="pageName">Page Details: <span class="light">{$page.static_title}{if $is_tag_page && $tag.id} (tag '{$tag.label}'){/if}</span></h3>
 
 <form id="getForm" method="get" action="">
   <input type="hidden" name="page_id" value="{$page.id}">

@@ -9,13 +9,12 @@
 
 <ul class="checkbox-array-list" id="tags-list">
 {foreach from=$tags item="tag" key="key"}
-  <li data-tagid="{$tag.id}" data-taglabel="{$tag.label}"><label>{$tag.label}<a href="#tag-info" data-tag="{$tag.name}" class="tag-info tag-icon-button"><i class="fa fa-info-circle"></i></a><a href="#tag-delete" data-tag="{$tag.name}" class="tag-delete tag-icon-button"><i class="fa fa-times"></i></a></label></li>
+  <li data-tagid="{$tag.id}" data-taglabel="{$tag.label}"><label>{$tag.label}<a href="#tag-info" data-tag="{$tag.name}" class="tag-info tag-icon-button"><i class="fa fa-info-circle"></i></a>{if $allow_delete_tags} <a href="#tag-delete" data-tag="{$tag.name}" class="tag-delete tag-icon-button"><i class="fa fa-times"></i></a>{/if}{if $allow_edit_tags} <a href="{$domain}settings/editTag?tag_id={$tag.id}" data-tag="{$tag.name}" class="tag-edit tag-icon-button"><i class="fa fa-pencil"></i></a>{/if}</label></li>
 {/foreach}
 </ul>
 
 <script type="text/javascript">
 {literal}
-
 $$('#tags-list li label a.tag-info').each(function(tagLink){
   tagLink.observe('click', function(evt){
     // console.log(tagLink.up(1));
@@ -24,7 +23,11 @@ $$('#tags-list li label a.tag-info').each(function(tagLink){
     MODALS.load('settings/getTaggedObjects?tag='+tagLink.readAttribute('data-tag'), 'Objects tagged with &lsquo;'+tagLabel+'&rsquo;');
   });
 });
+{/literal}
+</script>
 
+<script type="text/javascript">
+{literal}
 $$('#tags-list li label a.tag-delete').each(function(tagLink){
   tagLink.observe('click', function(evt){
     // console.log(tagLink.up(1));

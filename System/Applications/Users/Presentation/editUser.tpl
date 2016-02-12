@@ -80,7 +80,7 @@
   
   {if $is_system_user}
   <div class="edit-form-row">
-    <div class="form-section-label">SItes this user can access</div>
+    <div class="form-section-label">Sites this user can access</div>
 {if $user_sites._empty}<em>This user does not have access to any sites.</em>{else}{$user_sites}{/if}
   </div>
   {/if}

@@ -27,8 +27,12 @@
     </li>{/if}
 {foreach from=$models key="key" item="itemClass"}
   <li ondblclick="window.location='{$domain}smartest/items/{$itemClass.varname}'">
-    <a id="model_{$itemClass.id}" class="option" href="{dud_link}" onclick="modelList.setSelectedItem('{$itemClass.id}', 'model', {literal}{{/literal}updateFields: {literal}{{/literal}'model_name_field': '{$itemClass.name|summary:"29"|escape:quotes}', 'model_plural_name_field': '{$itemClass.plural_name|summary:"29"|escape:quotes}'{literal}}{/literal}{literal}}{/literal});">
-      <img border="0" src="{$domain}Resources/Icons/model.png">
+    <a id="model_{$itemClass.id}" class="option" href="{dud_link}" onclick="modelList.setSelectedItem('{$itemClass.id}', 'model', {literal}{{/literal}updateFields: {literal}{{/literal}'model_name_field': '{$itemClass.name|summary:"29"|escape:quotes}', 'model_plural_name_field': '{$itemClass.plural_name|summary:"29"|escape:quotes}'{literal}}{/literal}{literal}}{/literal});" data-hidden="{if $itemClass.is_hidden}true{else}false{/if}">
+      {if $itemClass.is_hidden}
+      <img border="0" src="{$domain}Resources/System/Images/model_private.png" alt="" />
+      {else}
+      <img border="0" src="{$domain}Resources/System/Images/model.png" alt="" />
+      {/if}
       {$itemClass.plural_name}</a></li>
 {/foreach}
 </ul>

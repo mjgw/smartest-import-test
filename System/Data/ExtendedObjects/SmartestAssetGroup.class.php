@@ -298,6 +298,7 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
         $memberships = $this->getMemberships(1, $this->getSiteId(), false, false, false);
         
         foreach($ids as $key => $value){
+            
             if(isset($memberships[$value])){
                 $memberships[$value]->setOrderIndex($key);
                 $memberships[$value]->save();

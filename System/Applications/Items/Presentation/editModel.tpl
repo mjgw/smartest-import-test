@@ -242,6 +242,11 @@
         {/if}
         {/if}
       </div>
+      
+      <div class="edit-form-row">
+        <div class="form-section-label">Private model</div>
+        {boolean name="itemclass_is_hidden" id="itemclass-is-hidden" value=$model.is_hidden}
+      </div>
             
       <div class="edit-form-row">
         <div class="form-section-label">Long ID format for new items</div>
@@ -256,7 +261,9 @@
           <option{if $model.long_id_format == "CCCCCC"} selected="selected"{/if} value="CCCCCC">Standard record locator (6 digits or uppercase letters)</option>
           <option{if $model.long_id_format_custom} selected="selected"{/if} value="_CUSTOM">Custom (advanced)</option>
         </select>
-        <input type="text" name="itemclass_long_id_custom_format" value="{if $model.long_id_format_custom}{$model.long_id_format}{/if}" id="long-id-custom-format" style="display:{if $model.long_id_format_custom}inline{else}none{/if}" />
+        <div class="edit-form-sub-row" id="long-id-custom-format" style="display:{if $model.long_id_format_custom}block{else}none{/if}">
+          <input type="text" name="itemclass_long_id_custom_format" value="{if $model.long_id_format_custom}{$model.long_id_format}{/if}" />
+        </div>
         <div class="form-hint">Does not affect items already created</div>
         <script type="text/javascript">
         {literal}

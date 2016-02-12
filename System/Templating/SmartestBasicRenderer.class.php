@@ -377,8 +377,13 @@ class SmartestBasicRenderer extends SmartestEngine{
 		    if(!$editableonly || (isset($asset_type_info['editable']) && SmartestStringHelper::toRealBool($asset_type_info['editable']))){
 		        $edit_link = '';
 		        $edit_url = $this->_request_data->g('domain')."assets/editAsset?asset_id=".$asset->getId()."&amp;from=pagePreview";
-		        if($this->_request_data->g('request_parameters')->hasParameter('item_id')) $edit_url .= '&item_id='.$this->_request_data->g('request_parameters')->getParameter('item_id');
+		        
+                if($this->_request_data->g('request_parameters')->hasParameter('item_id')) $edit_url .= '&item_id='.$this->_request_data->g('request_parameters')->getParameter('item_id');
 		        if($this->_request_data->g('request_parameters')->hasParameter('page_id')) $edit_url .= '&page_id='.$this->_request_data->g('request_parameters')->getParameter('page_id');
+                if($this->_request_data->g('request_parameters')->hasParameter('tag_name')) $edit_url .= '&tag='.$this->_request_data->g('request_parameters')->getParameter('tag_name');
+                if($this->_request_data->g('request_parameters')->hasParameter('model_id')) $edit_url .= '&model_id='.$this->_request_data->g('request_parameters')->getParameter('model_id');
+                if($this->_request_data->g('request_parameters')->hasParameter('author_id')) $edit_url .= '&author_id='.$this->_request_data->g('request_parameters')->getParameter('author_id');
+                
 		        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit file: ".$asset->getUrl()." (".$asset->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
                 if($this->_hide_edit_buttons) $edit_link .= ';display:none';
                 $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/edit-pencil-standard.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this asset--></a>";
