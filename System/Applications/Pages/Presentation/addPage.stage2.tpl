@@ -88,6 +88,8 @@
   	  </div>
   	{/if}
   	
+    <div class="form-section-label-full">Meta data</div>
+    
     <div id="main-template-selection"{if $hide_template_dropdown} style="display:none"{/if}>
   	  <div class="edit-form-row">
   	    <div class="form-section-label">Page master template</div>

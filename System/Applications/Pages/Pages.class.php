@@ -1650,22 +1650,24 @@ class Pages extends SmartestSystemApplication{
     			}
     		}
     		
-    		$this->send($this->getSite()->getModels(), 'models');
+    		
+            
+            if($this->getUser()->hasToken('see_private_models')){
+                $this->send($this->getSite()->getModels(), 'models');
+            }else{
+                $du = new SmartestDataUtility;
+                $models = $du->getVisibleModels($this->getSite()->getId());
+                $this->send($models, 'models');
+            }
 			
-			// $type = 'start';
-			
-            SmartestSession::set('__newPage', $page);
-			
+			SmartestSession::set('__newPage', $page);
 			$template = "addPage.start.tpl";
 			
 			break;
 		}
 		
 		$this->send($template, "_stage_template");
-		
-		$this->setTitle("Create A New Page");
-		
- 		
+		$this->setTitle("Create a new page");
  		
 	}
 	
