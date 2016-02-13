@@ -57,8 +57,6 @@ class SmartestContainer extends SmartestAssetClass{
 	    
 	    $args = func_get_args();
 	    
-	    // var_dump($args);
-	    
 	    if(count($args)){
 	        
 	        // detect whether we are being passed an array of types, or a list of arguments
@@ -146,5 +144,18 @@ class SmartestContainer extends SmartestAssetClass{
 	    return $array;
 	    
 	}
+    
+    public function offsetGet($offset){
+        
+        switch($offset){
+            case 'label':
+            if(!strlen(trim($this->_properties['label']))){
+                return $this->getName();
+            }
+        }
+        
+        return parent::offsetGet($offset);
+        
+    }
 
 }

@@ -48,10 +48,6 @@ function viewLivePage(parameters){
       {if $item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
     </form>
 
-    <script type="text/javascript">
-    var elementTree = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'page-element');
-    </script>
-
     {if $show_deleted_warning}
       <div class="warning">Warning: This page is currently in the trash.</div>
     {/if}
@@ -126,6 +122,7 @@ function viewLivePage(parameters){
 
 <ul class="invisible-actions-list" id="placeholder-specific-actions" style="display:none">
   <li><b>Placeholder Options</b></li>
+  <li class="permanent-action" id="placeholder-add" style="display:none"><a href="#" onclick="elementTree.workWithItem('addPlaceholder');">Add this placeholder</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('definePlaceholder');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define this placeholder</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('definePlaceholderWithNewFile');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_add.png" border="0" alt=""> Add a new file here</a></li>
   {if $item}
@@ -139,6 +136,7 @@ function viewLivePage(parameters){
 
 <ul class="invisible-actions-list" id="container-specific-actions" style="display:none">
   <li><b>Container Options</b></li>
+  <li class="permanent-action" id="container-add" style="display:none"><a href="#" onclick="elementTree.workWithItem('addContainer');">Add this container</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define this container</a></li>
   {if $item}
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefineContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear container definition</a></li>

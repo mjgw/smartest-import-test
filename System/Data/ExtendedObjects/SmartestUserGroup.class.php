@@ -7,19 +7,28 @@ class SmartestUserGroup extends SmartestSet{
         parent::__objectConstruct();
     }
     
-    public function getMembers($sort=''){
+    public function getMembers($draft_mode /* $sort='' */){
         
-        if(!$sort){
+        /* if(!$sort){
             $sort = SM_MTM_SORT_GROUP_ORDER;
-        }
+        } */
         
         if($refresh || !count($this->_members)){
         
             $q = new SmartestManyToManyQuery($this->_membership_type);
             $q->setTargetEntityByIndex(1);
             $q->addQualifyingEntityByIndex(2, $this->getId());
+            $q->addSortField('Users.user_lastname');
 	    
             $this->_members = $q->retrieve(true);
+            
+            if($draft_mode){
+                
+                foreach($this->_members as $user){
+                    $user->setDraftMode($draft_mode);
+                }
+                
+            }
         
         }
         
@@ -31,7 +40,7 @@ class SmartestUserGroup extends SmartestSet{
         $q = new SmartestManyToManyQuery($this->_membership_type);
         $q->setTargetEntityByIndex(1);
         $q->addQualifyingEntityByIndex(2, $this->getId());
-	    $q->addSortField($sort);
+	    $q->addSortField('Users.user_lastname');
         return $q->retrieveIds();
     }
     

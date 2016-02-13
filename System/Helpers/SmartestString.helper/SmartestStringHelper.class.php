@@ -935,6 +935,18 @@ class SmartestStringHelper extends SmartestHelper{
 	        
 	        foreach(array_values($array) as $key => $word){
 	            
+                if(is_object($word)){
+                    if(method_exists($word, 'getLabel')){
+                        $word = $word->getLabel();
+                    }elseif(method_exists($word, 'getFullName')){
+                        $word = $word->getFullName();
+                    }elseif(method_exists($word, 'getInternalLabel')){
+                        $word = $word->getInternalLabel();
+                    }elseif(method_exists($word, 'getName')){
+                        $word = $word->getName();
+                    }
+                }
+                
 	            if($key > 0){
 	                if($key == $last_index && $grammatical){
 	                    $string .= ' and ';

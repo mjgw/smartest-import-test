@@ -5,15 +5,22 @@ module:
   longname: Settings
   default_action: startPage
   aliases:
-    - {url: /smartest/settings, action: startPage}
-    - {url: /smartest/sitesettings, action: editSite}
   routes:
+    settings_home:
+      action: startPage
+      url: /smartest/settings
     tags:
       action: listTags
       url: /smartest/tags
     tagged_objects:
       action: getTaggedObjects
       url: /smartest/tagged/:tag
+    site_settings:
+      action: editSite
+      url: /smartest/sitesettings
+    cms_settings:
+      action: editCmsSettings
+      url: /smartest/cmssettings
   meta:
     system: true
   namespaces:

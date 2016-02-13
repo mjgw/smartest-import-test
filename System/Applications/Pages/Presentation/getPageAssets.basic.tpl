@@ -1,7 +1,11 @@
+<script type="text/javascript">
+  
+</script>
+
 <ul class="options-grid" id="page-elements-grid">
 {foreach from=$elements_list item="assetclass"}
   <li>
-    <a href="#" class="option" id="{$assetclass.info.type|lower}_{$assetclass.info.assetclass_name|escape:quotes}" onclick="{if $version == "draft"}return elementTree.setSelectedItem('{$assetclass.info.assetclass_name|escape:quotes}', '{$assetclass.info.type|lower}');{else}return false;{/if}">
+    <a href="#" class="option" id="{$assetclass.info.type|lower}_{$assetclass.info.assetclass_name|escape:quotes}" onclick="{if $version == "draft"}return elementTree.setSelectedItem('{$assetclass.info.assetclass_name|escape:quotes}', '{$assetclass.info.type|lower}');{else}return false;{/if}" data-exists="{$assetclass.info.exists}">
   		{if $assetclass.info.exists == 'true'}
         {if $assetclass.info.defined == "PUBLISHED"}
   		    {if $assetclass.info.type == 'attachment'}
@@ -17,9 +21,9 @@
   	          <img src="{$domain}Resources/Icons/page_white.png" alt="" />
   	        {/if}
   		    {elseif $assetclass.info.type == 'template'}
-    	  	  <img src="{$domain}Resources/Icons/page_white_code.png" alt="" />
+    	  	  <img src="{$domain}Resources/System/Images/template.png" alt="" />
     	  	{elseif $assetclass.info.type == 'item'}
-        		<img src="{$domain}Resources/Icons/package_small.png" alt="" />
+        		<img src="{$domain}Resources/Icons/item.png" alt="" />
           {else}
   		    <img src="{$domain}Resources/System/Images/published_{$assetclass.info.type|lower}.png" alt="" />
   		    {/if}
@@ -47,7 +51,7 @@
      	  {if $assetclass.info.type == "list"}
      	  <img src="{$domain}Resources/Icons/notexist_list.gif" alt="" />
      	  {elseif $assetclass.info.type == "field"}
-     	  <img src="{$domain}Resources/Icons/notexist_field.gif" alt="" />
+     	  <img src="{$domain}Resources/System/Images/notexist_field.png" alt="" />
       	{elseif $assetclass.info.type == "placeholder"}
       	<img src="{$domain}Resources/System/Images/notexist_placeholder.png" alt="" />
       	{elseif $assetclass.info.type == "container"}

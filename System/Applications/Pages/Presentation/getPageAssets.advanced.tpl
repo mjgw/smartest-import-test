@@ -2,6 +2,14 @@
 
 {if !empty($elements_tree)}
 
+<script type="text/javascript">
+{literal}
+  var elementTree = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'page-element', 'tree-root', function(){
+    
+  });
+{/literal}
+</script>
+
 <ul class="tree-parent-node-open" id="tree-root">
   <li class="page-element"><a class="option"><i class="flaticon solid document-3"></i></a> Current Page: {$page.title}</li>
   {defun name="menurecursion" list=$elements_tree}
@@ -38,7 +46,7 @@
 		  {elseif $assetclass.info.type == 'template'}
   		  <img src="{$domain}Resources/Icons/page_white_code.png" style="border:0px" />
   		{elseif $assetclass.info.type == 'item'}
-    		<img src="{$domain}Resources/Icons/package_small.png" style="border:0px;width:16px;height:16px" />
+    		<img src="{$domain}Resources/System/Images/edit-item-icon-2x.png" style="border:0px;width:16px;height:16px" />
       {else}
 		  <img border="0" style="width:16px;height:16px;" src="{$domain}Resources/System/Images/published_{$assetclass.info.type|lower}.png" />
 		  {/if}

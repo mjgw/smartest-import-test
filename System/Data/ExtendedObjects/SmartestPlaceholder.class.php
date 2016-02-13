@@ -286,5 +286,18 @@ class SmartestPlaceholder extends SmartestAssetClass{
 	    return $definitions;
 	    
 	}
+    
+    public function offsetGet($offset){
+        
+        switch($offset){
+            case 'label':
+            if(!strlen(trim($this->_properties['label']))){
+                return $this->getName();
+            }
+        }
+        
+        return parent::offsetGet($offset);
+        
+    }
 
 }

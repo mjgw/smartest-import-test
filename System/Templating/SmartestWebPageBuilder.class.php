@@ -1202,9 +1202,22 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 return $g->getMembers($this->getDraftMode());
             }else{
                 // no file group with that name
-                return $this->raiseError('No file group exists with the name \''.$name.'\'.');
+                return $this->raiseError('No page group exists with the name \''.$name.'\'.');
             }
             
+            break;
+            
+            case "usergroup":
+            case "user_group":
+            
+            $g = new SmartestUserGroup;
+            
+            if($g->findBy('name', $name, $this->page->getSiteId())){
+                return $g->getMembers($this->getDraftMode());
+            }else{
+                return $this->raiseError('No user group exists with the name \''.$name.'\'.');
+            }
+                
             break;
             
             case "set_feed_Items":

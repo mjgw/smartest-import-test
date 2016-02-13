@@ -75,7 +75,7 @@ class SmartestAssetClassesHelper{
 	    
 	}
     
-    public function getAssetGroupsForPlaceholderType($type, $site_id=''){
+    public function getAssetGroupsForPlaceholderType($type, $site_id=null){
         
         $sql = "SELECT * FROM Sets WHERE set_type='SM_SET_ASSETGROUP'";
         
@@ -96,6 +96,48 @@ class SmartestAssetClassesHelper{
         }
         
         return $groups;
+        
+    }
+    
+    public function getContainers($site_id=null){
+        
+        $sql = "SELECT * FROM AssetClasses WHERE AssetClasses.assetclass_type='SM_ASSETCLASS_CONTAINER'";
+        
+        if(is_numeric($site_id)){
+            $sql .= " AND (assetclass_site_id='".$site_id."' OR assetclass_shared='1')";
+        }
+        
+	    $result = $this->database->queryToArray($sql);
+        $containers = array();
+        
+        foreach($result as $r){
+            $c = new SmartestContainer;
+            $c->hydrate($r);
+            $containers[] = $c;
+        }
+        
+        return $containers;
+        
+    }
+    
+    public function getTextPlaceholders($site_id=null){
+        
+        $sql = "SELECT * FROM AssetClasses WHERE AssetClasses.assetclass_type='SM_ASSETCLASS_RICH_TEXT'";
+        
+        if(is_numeric($site_id)){
+            $sql .= " AND (assetclass_site_id='".$site_id."' OR assetclass_shared='1')";
+        }
+        
+	    $result = $this->database->queryToArray($sql);
+        $placeholders = array();
+        
+        foreach($result as $r){
+            $p = new SmartestPlaceholder;
+            $p->hydrate($r);
+            $placeholders[] = $p;
+        }
+        
+        return $placeholders;
         
     }
 

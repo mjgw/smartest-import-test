@@ -15,7 +15,7 @@ class Settings extends SmartestSystemApplication{
     
 	public function startPage(){
 		
-        
+        $this->setTitle('System settings');
         
 	}
     
@@ -50,48 +50,13 @@ class Settings extends SmartestSystemApplication{
                     $logos = array();
                 }
                 
-                $eu_cookie_compliance = $this->getGlobalPreference('enable_eu_cookie_compliance');
-                $this->send(SmartestStringHelper::toRealBool($eu_cookie_compliance), 'eu_cookie_compliance');
-                
-                $site_responsive_mode = $this->getGlobalPreference('enable_site_responsive_mode');
-                $this->send(SmartestStringHelper::toRealBool($site_responsive_mode), 'site_responsive_mode');
-                
-                $override_eu_cookie_compliance_ga = $this->getGlobalPreference('override_eu_cookie_compliance_ga', 1);
-                $this->send(SmartestStringHelper::toRealBool($override_eu_cookie_compliance_ga), 'override_eu_cookie_compliance_ga');
-                
-                $ga_id = $this->getGlobalPreference('google_analytics_id');
-                $this->send($ga_id, 'site_ga_id');
-                
-                $default_suffix = $this->getGlobalPreference('default_url_suffix', 'html');
-                if($default_suffix{0} == '.'){
-                    $default_suffix = substr($default_suffix, 1);
-                }
-                $this->send($default_suffix, 'site_pageurl_default_suffix');
-                $this->send(!in_array($default_suffix, array('html', 'php', 'shtml', '_NONE')), 'site_pageurl_default_suffix_custom');
-                
-                $pmh = new SmartestPageManagementHelper;
-                $this->send($pmh->getPagePresets($this->getSite()->getId()), 'page_presets');
-                $default_page_preset_id = $this->getGlobalPreference('site_default_page_preset_id');
-                $this->send($default_page_preset_id, 'default_page_preset_id');
-                
                 $this->send(!(bool) $this->getSite()->getIsEnabled(), 'site_disabled');
-                
-                // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
-                    $distinguish_mobiles = $this->getGlobalPreference('site_responsive_distinguish_mobile');
-                    $this->send(SmartestStringHelper::toRealBool($distinguish_mobiles), 'responsive_distinguish_mobiles');
-                    
-                    $distinguish_tablets = $this->getGlobalPreference('site_responsive_distinguish_tablet');
-                    $this->send(SmartestStringHelper::toRealBool($distinguish_tablets), 'responsive_distinguish_tablets');
-                    
-                    $distinguish_old_pcs = $this->getGlobalPreference('site_responsive_distinguish_oldpcs');
-                    $this->send(SmartestStringHelper::toRealBool($distinguish_old_pcs), 'responsive_distinguish_old_pcs');
-                // }
                 
                 $this->send($this->getSite()->getOrganizationName(), 'site_organisation');
                 
                 $this->send($logos, 'logo_assets');
             
-                $this->setTitle("Edit Site Settings");
+                $this->setTitle("Edit site settings");
     		    $this->send($sitedetails, 'site');
 		    
     	    }else{
@@ -129,33 +94,6 @@ class Settings extends SmartestSystemApplication{
                 $site->setLanguageCode($this->getRequestParameter('site_language'));
     	        $this->addUserMessageToNextRequest('Your site settings have been updated.', SmartestUserMessage::SUCCESS);
     	        $site->save();
-                
-                if($this->requestParameterIsSet('site_responsive_mode')){
-                    $this->setGlobalPreference('site_responsive_distinguish_mobile', ($this->requestParameterIsSet('site_responsive_distinguish_mobile') ? 1 : 0));
-                    $this->setGlobalPreference('site_responsive_distinguish_tablet', ($this->requestParameterIsSet('site_responsive_distinguish_tablet') ? 1 : 0));
-                    $this->setGlobalPreference('site_responsive_distinguish_oldpcs', ($this->requestParameterIsSet('site_responsive_distinguish_oldpcs') ? 1 : 0));
-                }
-                
-                $this->setGlobalPreference('google_analytics_id', $this->getRequestParameter('site_ga_id'));
-                $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
-                $this->setGlobalPreference('enable_site_responsive_mode', SmartestStringHelper::toRealBool($this->getRequestParameter('site_responsive_mode')) ? 1 : 0);
-    	        $this->setGlobalPreference('override_eu_cookie_compliance_ga', SmartestStringHelper::toRealBool($this->getRequestParameter('site_override_eu_cookie_compliance_ga')) ? 1 : 0);
-                
-                if(is_numeric($this->getRequestParameter('site_default_page_preset_id'))){
-                    $this->setGlobalPreference('site_default_page_preset_id', $this->getRequestParameter('site_default_page_preset_id'));
-                }
-                
-                $suff = $this->getRequestParameter('site_default_url_suffix');
-                
-                if($suff == '_CUSTOM'){
-                    $custom_suffix = $this->getRequestParameter('site_default_url_suffix_custom');
-                    if($custom_suffix{0} == '.'){
-                        $custom_suffix = substr($custom_suffix, 1);
-                    }
-                    $this->setGlobalPreference('default_url_suffix', $custom_suffix);
-                }else{
-                    $this->setGlobalPreference('default_url_suffix', $suff);
-                }
 	        
             }else{
                 
@@ -163,9 +101,7 @@ class Settings extends SmartestSystemApplication{
                 
             }
             
-            
-	        
-	        if($site->getIsEnabled() == '1' && SmartestStringHelper::toRealBool($this->getRequestParameter('site_is_disabled'))){
+            if($site->getIsEnabled() == '1' && SmartestStringHelper::toRealBool($this->getRequestParameter('site_is_disabled'))){
 	            if($this->getUser()->hasToken('disable_site')){
 	                $site->setIsEnabled(0);
                 }else{
@@ -229,11 +165,150 @@ class Settings extends SmartestSystemApplication{
 	        
 	        SmartestCache::clear('site_pages_tree_'.$site->getId(), true);
 	        
-            $this->redirect('/smartest/sitesettings');
+            $this->redirect('@site_settings');
             
 		    // $this->formForward();
 	    }
 	}
+    
+    public function editCmsSettings(){
+        
+        $this->requireOpenProject();
+        
+	    if($this->getUser()->hasToken('modify_site_parameters')){
+	    
+    	    if($this->getSite() instanceof SmartestSite){
+		    
+    		    $site_id = $this->getSite()->getId();
+		    
+    		    $main_page_templates = SmartestFileSystemHelper::load(SM_ROOT_DIR.'Presentation/Masters/');
+                
+                $default_suffix = $this->getGlobalPreference('default_url_suffix', 'html');
+                if($default_suffix{0} == '.'){
+                    $default_suffix = substr($default_suffix, 1);
+                }
+                $this->send($default_suffix, 'site_pageurl_default_suffix');
+                $this->send(!in_array($default_suffix, array('html', 'php', 'shtml', '_NONE')), 'site_pageurl_default_suffix_custom');
+                
+                $pmh = new SmartestPageManagementHelper;
+                
+                $this->send($pmh->getPagePresets($this->getSite()->getId()), 'page_presets');
+                
+                $default_page_preset_id = $this->getGlobalPreference('site_default_page_preset_id');
+                $this->send($default_page_preset_id, 'default_page_preset_id');
+                
+                $ach = new SmartestAssetClassesHelper;
+                $this->send($ach->getContainers(), 'containers');
+                $this->send($this->getSite()->getPrimaryContainerId(), 'primary_container_id');
+                $this->send($ach->getTextPlaceholders(), 'text_placeholders');
+                $this->send($this->getSite()->getPrimaryTextPlaceholderId(), 'primary_text_placeholder_id');
+                
+                $eu_cookie_compliance = $this->getGlobalPreference('enable_eu_cookie_compliance');
+                $this->send(SmartestStringHelper::toRealBool($eu_cookie_compliance), 'eu_cookie_compliance');
+                
+                $site_responsive_mode = $this->getGlobalPreference('enable_site_responsive_mode');
+                $this->send(SmartestStringHelper::toRealBool($site_responsive_mode), 'site_responsive_mode');
+                
+                $override_eu_cookie_compliance_ga = $this->getGlobalPreference('override_eu_cookie_compliance_ga', 1);
+                $this->send(SmartestStringHelper::toRealBool($override_eu_cookie_compliance_ga), 'override_eu_cookie_compliance_ga');
+                
+                $ga_id = $this->getGlobalPreference('google_analytics_id');
+                $this->send($ga_id, 'site_ga_id');
+                
+                $this->send(!(bool) $this->getSite()->getIsEnabled(), 'site_disabled');
+                
+                // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
+                    $distinguish_mobiles = $this->getGlobalPreference('site_responsive_distinguish_mobile');
+                    $this->send(SmartestStringHelper::toRealBool($distinguish_mobiles), 'responsive_distinguish_mobiles');
+                    
+                    $distinguish_tablets = $this->getGlobalPreference('site_responsive_distinguish_tablet');
+                    $this->send(SmartestStringHelper::toRealBool($distinguish_tablets), 'responsive_distinguish_tablets');
+                    
+                    $distinguish_old_pcs = $this->getGlobalPreference('site_responsive_distinguish_oldpcs');
+                    $this->send(SmartestStringHelper::toRealBool($distinguish_old_pcs), 'responsive_distinguish_old_pcs');
+                // }
+                
+                $this->setTitle("Edit CMS settings");
+                
+            }
+            
+        }else{
+            
+            $this->formForward();
+            
+        }
+        
+    }
+    
+    public function updateCmsSettings(){
+        
+        $this->requireOpenProject();
+        
+	    if($this->getUser()->hasToken('modify_site_parameters')){
+	    
+    	    if($this->getSite() instanceof SmartestSite){
+		    
+    		    $site_id = $this->getSite()->getId();
+                $site = $this->getSite();
+		    
+    		    $main_page_templates = SmartestFileSystemHelper::load(SM_ROOT_DIR.'Presentation/Masters/');
+                
+                if(is_numeric($this->getRequestParameter('site_default_page_preset_id'))){
+                    $this->setGlobalPreference('site_default_page_preset_id', $this->getRequestParameter('site_default_page_preset_id'));
+                }else{
+                    $this->setGlobalPreference('site_default_page_preset_id', '0');
+                }
+                
+                $suff = $this->getRequestParameter('site_default_url_suffix');
+                
+                if(is_numeric($this->getRequestParameter('site_default_container_id'))){
+                    $site->setPrimaryContainerId($this->getRequestParameter('site_default_container_id'));
+                }else{
+                    $site->setPrimaryContainerId(0);
+                }
+                
+                if(is_numeric($this->getRequestParameter('site_default_text_placeholder_id'))){
+                    $site->setPrimaryTextPlaceholderId($this->getRequestParameter('site_default_text_placeholder_id'));
+                }else{
+                    $site->setPrimaryTextPlaceholderId(0);
+                }
+                
+                if($suff == '_CUSTOM'){
+                    $custom_suffix = $this->getRequestParameter('site_default_url_suffix_custom');
+                    if($custom_suffix{0} == '.'){
+                        $custom_suffix = substr($custom_suffix, 1);
+                    }
+                    $this->setGlobalPreference('default_url_suffix', $custom_suffix);
+                }else{
+                    $this->setGlobalPreference('default_url_suffix', $suff);
+                }
+                
+                if($this->requestParameterIsSet('site_responsive_mode')){
+                    $this->setGlobalPreference('site_responsive_distinguish_mobile', ($this->requestParameterIsSet('site_responsive_distinguish_mobile') ? 1 : 0));
+                    $this->setGlobalPreference('site_responsive_distinguish_tablet', ($this->requestParameterIsSet('site_responsive_distinguish_tablet') ? 1 : 0));
+                    $this->setGlobalPreference('site_responsive_distinguish_oldpcs', ($this->requestParameterIsSet('site_responsive_distinguish_oldpcs') ? 1 : 0));
+                }
+                
+                $this->setGlobalPreference('google_analytics_id', $this->getRequestParameter('site_ga_id'));
+                $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
+                $this->setGlobalPreference('enable_site_responsive_mode', SmartestStringHelper::toRealBool($this->getRequestParameter('site_responsive_mode')) ? 1 : 0);
+    	        $this->setGlobalPreference('override_eu_cookie_compliance_ga', SmartestStringHelper::toRealBool($this->getRequestParameter('site_override_eu_cookie_compliance_ga')) ? 1 : 0);
+                
+                $this->addUserMessageToNextRequest('Your CMS settings have been updated.', SmartestUserMessage::SUCCESS);
+                
+                $site->save();
+                
+            }
+            
+            $this->redirect('@cms_settings');
+            
+        }else{
+            
+            $this->formForward();
+            
+        }
+        
+    }
     
     public function editSiteSpecialPages(){
         

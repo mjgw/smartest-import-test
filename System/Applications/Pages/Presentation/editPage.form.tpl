@@ -299,10 +299,10 @@
     <div class="v-spacer" style="height:10px"></div>
     <img src="{$domain}Resources/System/Images/ajax-loader.gif" style="display:none;float:right" id="urls-updating-gif" alt="" />
   	<a href="#add-url" class="button" id="new-url-button">{if count($page.urls) || $ishomepage == "true"}Add another url{else}Give this page a nicer URL{/if}</a><br />
-  	
+
     <script type="text/javascript">
     
-    var newUrlUrl = '{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&page_id={$item.id}{/if}';
+    var newUrlUrl = '{$section}/addPageUrl?page_id={$page.webid}{if $page.type != "NORMAL"}&item_id={$item.id}{/if}';
     
     {literal}
     $('new-url-button').observe('click', function(e){
@@ -319,7 +319,7 @@
   
   {if $page.type == "NORMAL"}
   <div class="edit-form-row">
-    <div class="form-section-label">Page Thumbnail Image</div>
+    <div class="form-section-label">Page thumbnail image</div>
     {image_select for="page_icon" page_id=$page.id name="page_icon_image_id" id="page_icon_image_input" value=$page.thumbnail_image}
     <!--<select name="page_icon_image_id">
       <option value="">None</option>
