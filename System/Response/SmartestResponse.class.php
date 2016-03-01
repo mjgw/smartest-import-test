@@ -300,16 +300,6 @@ class SmartestResponse{
 		    include(SM_ROOT_DIR.'System/Response/ErrorPages/mac_ie.php');
 		    exit();
 		}
-		
-        try{
-		    if(isset($GLOBALS['_site']) && is_object($GLOBALS['_site'])){
-		        SmartestQuery::init(true, $GLOBALS['_site']->getId());
-	        }else{
-	            SmartestQuery::init(true);
-	        }
-		}catch(SmartestException $e){
-			$this->errorFromException($e);
-		}
 	    
 	}
 	
@@ -495,6 +485,16 @@ class SmartestResponse{
 		}catch(SmartestRedirectException $e){
             $e->redirect();
         }
+        
+		try{
+		    if(isset($GLOBALS['_site']) && is_object($GLOBALS['_site'])){
+		        SmartestQuery::init(true, $GLOBALS['_site']->getId());
+	        }else{
+	            SmartestQuery::init(true);
+	        }
+		}catch(SmartestException $e){
+			$this->errorFromException($e);
+		}
 	    
         
 	    // Start Smarty
