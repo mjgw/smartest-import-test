@@ -53,11 +53,11 @@ class SmartestItemSpace extends SmartestAssetClass{
 	    
 	}
 	
-	public function getOptionsAsArrays(){
+	/* public function getOptionsAsArrays(){
 	    
 	    return $this->getDataSet()->getSimpleMembersAsArrays(SM_QUERY_ALL_DRAFT_CURRENT);
 	    
-	}
+	} */
 	
 	public function getDataSetId(){
 	    return $this->getInfoField('dataset_id');

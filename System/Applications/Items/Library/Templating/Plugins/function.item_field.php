@@ -14,8 +14,9 @@ function smarty_function_item_field($params, &$smarty){
             
             $file = 'Fields/property.'.strtolower(substr($params['property']['datatype'], 12)).'.tpl';
             
-            $input_data = new SmartestParameterHolder('Edit item field '.$params['property']['name']);
-            $input_data->setParameter('id', 'item_property_'.$params['property']['id']);
+            $input_data = new SmartestParameterHolder('Edit item field '.$params['property']->getName());
+            $input_data->setParameter('id', 'item_property_'.$params['property']->getId());
+            $input_data->setParameter('property_id', 'item_property_'.$params['property']->getId());
             
             if(isset($params['name']) && strlen($params['name'])){
                 $input_data->setParameter('name', $params['name']);
@@ -25,12 +26,9 @@ function smarty_function_item_field($params, &$smarty){
             
             $input_data->setParameter('property', $params['property']);
             
-            // echo $input_data->getParameter('name');
-            
             $input_data->setParameter('required', SmartestStringHelper::toRealBool($params['property']['required']));
             
             if(is_file(constant('SM_CONTROLLER_MODULE_PRES_DIR').$file)){
-                // echo constant('SM_CONTROLLER_MODULE_PRES_DIR').$file;
                 $smarty->_smarty_include(array('smarty_include_tpl_file'=>constant('SM_CONTROLLER_MODULE_PRES_DIR').$file, 'smarty_include_vars'=>array('value'=>$value, 'property'=>$params['property'], '_input_data'=>$input_data)));
             }else{
                 return constant('SM_CONTROLLER_MODULE_PRES_DIR').$file;

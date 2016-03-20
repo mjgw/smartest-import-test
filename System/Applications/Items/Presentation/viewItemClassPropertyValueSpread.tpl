@@ -1,6 +1,6 @@
-<script src="//raw.github.com/DmitryBaranovskiy/raphael/master/raphael-min.js"></script>
-<script src="//g.raphaeljs.com/g.raphael.js"></script>
-<script src="//g.raphaeljs.com/g.pie.js"></script>
+<script src="{$domain}Resources/System/Javascript/raphael/raphael-min.js"></script>
+<script src="{$domain}Resources/System/Javascript/raphael/g.raphael/g.raphael.js"></script>
+<script src="{$domain}Resources/System/Javascript/raphael/g.raphael/g.pie.js"></script>
 
 <div id="work-area">
     

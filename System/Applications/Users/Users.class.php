@@ -889,6 +889,23 @@ class Users extends SmartestSystemApplication{
         
     }
     
+    ///////////// New actions for converting users between 'system' and 'ordinary'
+    public function upgradeOrdinaryUserConfig(){
+        
+    }
+    
+    public function upgradeOrdinaryUserAction(){
+        
+    }
+    
+    public function downgradeSystemUser(){
+        
+    }
+    
+    public function downgradeSystemUserAction(){
+        
+    }
+    
     //////////////////////////////////// OTHER FUNCTIONALITY //////////////////////////////////
     
     public function userAssociatedContent(){

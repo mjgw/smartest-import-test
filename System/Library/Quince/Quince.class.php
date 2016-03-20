@@ -422,6 +422,7 @@ class QuinceRequest{
 class QuinceBase{
     
     protected $_request;
+    protected $_accepts_gifts = true;
     
     final public function __construct($r){
         $this->setCurrentRequest($r);
@@ -437,13 +438,24 @@ class QuinceBase{
         
     }
     
+    final public function lock(){
+        $this->_accepts_gifts = false;
+    }
+    
     public function give($name, $data){
         
-        if($name == '_request'){
-            throw new QuinceException("Cannot overwrite QuinceBase->_request with QuinceBase->give()");
+        if($this->_accepts_gifts){
+        
+            if($name == '_request'){
+                throw new QuinceException("Cannot overwrite QuinceBase->_request with QuinceBase->give()");
+            }
+        
+            $this->$name = $data;
+        
+        }else{
+            throw new QuinceException("Cannot use QuinceBase->give() once the module has been locked");
         }
         
-        $this->$name = $data;
     }
     
     protected function redirect($to, $http_code=303){

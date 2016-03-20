@@ -209,18 +209,18 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    if($offset == '_php_class'){
 	        return get_class($this);
 	    }
+	    
+	    if($offset == 'has_tag'){
+	        return new SmartestTagPresenceChecker($this->getTags());
+	    }
         
         if(is_array($this->_many_to_one_sub_models) && array_key_exists($offset, $this->_many_to_one_sub_models)){
             return new SmartestArray($this->getSubModelItems($this->_many_to_one_sub_models[$offset]));
         }
 	    
-	    if($this->_item->offsetExists($offset)){
+        if(isset($this->_varnames_lookup[$offset])){
 	        
-	        return $this->_item->offsetGet($offset);
-	        
-	    }else if(isset($this->_varnames_lookup[$offset])){
-	        
-	        if(isset($this->_disabled_template_properties[$this->_varnames_lookup[$offset]])){
+            if(isset($this->_disabled_template_properties[$this->_varnames_lookup[$offset]])){
 	            return "Recursion disallowed";
 	        }else{
 	            $v = $this->getPropertyValueByNumericKey($this->_varnames_lookup[$offset], $this->getDraftMode(), true);
@@ -230,8 +230,12 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	                return $v;
                 }
             }
-            
-        }else if(isset($this->_many_to_one_sub_models) && count($this->_many_to_one_sub_models) && isset($this->_many_to_one_sub_models[$offset])){
+    
+        }else if($this->_item->offsetExists($offset)){
+	        
+	        return $this->_item->offsetGet($offset);
+	        
+	    }else if(isset($this->_many_to_one_sub_models) && count($this->_many_to_one_sub_models) && isset($this->_many_to_one_sub_models[$offset])){
 	        
             return $this->getSubModelItems($this->_many_to_one_sub_models[$offset]);
             
@@ -1354,6 +1358,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
             }else{
                 return $this->_properties[$this->_varnames_lookup[$varname]]->getData()->getContent();
             } */
+                
+            $property_id = $this->_varnames_lookup[$varname];
+            // echo $property_id;
             
             if($this->getDraftMode()){
 	            $raw_value = $this->_properties[$this->_varnames_lookup[$varname]]->getData()->getDraftContent();

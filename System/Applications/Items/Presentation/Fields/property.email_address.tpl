@@ -1,5 +1,5 @@
 {capture name="property_id" assign="property_id"}item_property_{$property.id}{/capture}
-{$_input_data.property_id}
+
 {text_input name=$_input_data.name value=$value id=$property_id}
 {if strlen($value) && !$value.is_valid}<span style="color:#c00">Invalid email address</span>{/if}
 

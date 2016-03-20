@@ -3,7 +3,9 @@
 class SmartestItemSpaceDefinition extends SmartestAssetIdentifier{
     
     protected $_itemspace;
+    protected $_draft_item;
     protected $_item;
+    protected $_draft_simple_item;
     protected $_simple_item;
     protected $_loaded = false;
     
@@ -46,10 +48,15 @@ class SmartestItemSpaceDefinition extends SmartestAssetIdentifier{
     
     public function getSimpleItem($draft=false){
         
-        if(!$this->_simple_item){
-            if($this->_item){
-                $this->_simple_item = $this->_item->getItem();
+        if(!$this->_simple_item || ($draft && !$this->_draft_simple_item)){
+            if((!$draft && is_object($this->_item)) || ($draft && is_object($this->_draft_item))){
+                if($draft){
+                    $this->_draft_simple_item = $this->_draft_item->getItem();
+                }else{
+                    $this->_simple_item = $this->_item->getItem();
+                }
             }else{
+                
                 $item = new SmartestItem;
                 
                 if($draft){
@@ -59,7 +66,11 @@ class SmartestItemSpaceDefinition extends SmartestAssetIdentifier{
                 }
                 
                 if($item->hydrate($this->_properties[$field])){
-                    $this->_simple_item = $item;
+                    if($draft){
+                        $this->_draft_simple_item = $item;
+                    }else{
+                        $this->_simple_item = $item;
+                    }
                 }else{
                     return $item;
                 }
@@ -67,7 +78,11 @@ class SmartestItemSpaceDefinition extends SmartestAssetIdentifier{
             }
         }
         
-        return $this->_simple_item;
+        if($draft){
+            return $this->_draft_simple_item;
+        }else{
+            return $this->_simple_item;
+        }
         
     }
     
@@ -75,21 +90,40 @@ class SmartestItemSpaceDefinition extends SmartestAssetIdentifier{
         
         if($simple){
             
-            return $this->getSimpleItem();
-            
+            if($draft){
+                return $this->getSimpleItem(true);
+            }else{
+                return $this->getSimpleItem();
+            }
+                    
         }else{
             
-            if(!$this->_item){
-                if($draft){
-                    $this->_item = SmartestCmsItem::retrieveByPk($this->_properties['draft_asset_id']);
-                }else{
+            if($draft){
+                if(!$this->_draft_item){
+                    $this->_draft_item = SmartestCmsItem::retrieveByPk($this->_properties['draft_asset_id']);
+                }
+            }else{
+                if(!$this->_item){
                     $this->_item = SmartestCmsItem::retrieveByPk($this->_properties['live_asset_id']);
                 }
             }
             
-            return $this->_item;
+            if($draft){
+                return $this->_draft_item;
+            }else{
+                return $this->_item;
+            }
+            
         }
         
+    }
+    
+    public function hasItem($draft){
+        if($draft){
+            return is_object($this->_draft_item);
+        }else{
+            return is_object($this->_item);
+        }
     }
     
     public function hasTemplate(){
@@ -170,6 +204,21 @@ class SmartestItemSpaceDefinition extends SmartestAssetIdentifier{
         if(isset($array['item_id'])){
             $this->_item = SmartestCmsItem::retrieveByPk($array['item_id']);
         }
+        
+    }
+    
+    public function offsetGet($offset){
+        
+        switch($offset){
+            case "itemspace":
+            return $this->getItemSpace();
+            case "draft_item":
+            return $this->getItem(false, true);
+            case "item":
+            return $this->getItem(false, false);
+        }
+        
+        return parent::offsetGet($offset);
         
     }
     

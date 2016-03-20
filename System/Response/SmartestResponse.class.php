@@ -160,6 +160,7 @@ class SmartestResponse{
         	'System/Base/SmartestSystemApplication.class.php',
         	'System/Base/SmartestUserApplication.class.php',
         	'System/Data/SmartestParameterHolderValuePresenceChecker.class.php',
+        	'System/Data/SmartestTagPresenceChecker.class.php',
         	'System/Data/SmartestDataObjectHelper.class.php',
         	'System/Data/SmartestRandomNumberGenerator.class.php',
             'System/Data/SmartestTemplateNumberCalculator.class.php',
@@ -530,6 +531,8 @@ class SmartestResponse{
 	        $new_include_path = implode(constant('PATH_SEPARATOR'), $ip_array);
             set_include_path($new_include_path);
 	    }
+        
+        $this->_controller->getCurrentRequest()->getUserActionObject()->lock();
 	    
 	    SmartestHelper::loadApplicationHelpers();
         // Push controller and execute the user action

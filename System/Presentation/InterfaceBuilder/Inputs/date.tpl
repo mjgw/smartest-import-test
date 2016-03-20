@@ -69,7 +69,9 @@
 
 <input type="hidden" name="{$_input_data.name}[is_never]" value="{if $value.is_never}1{else}0{/if}" id="{$_input_data.id}-is-never" />
 
-<div id="{$_input_data.id}-no-value"{if !$value.is_never}style="display:none"{/if}><span style="color:#999">No date is recorded</span> <a class="button small" href="#add-value" id="{$_input_data.id}-add-value">Add value</a></div>
+<div id="{$_input_data.id}-no-value"{if !$value.is_never}style="display:none"{/if}><span style="color:#999">No date is recorded</span>
+  <a class="button small" href="#add-value" id="{$_input_data.id}-add-value">Add value</a>
+</div>
 
 <script type="text/javascript">
 (function(propertyId){ldelim}

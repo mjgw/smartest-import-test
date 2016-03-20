@@ -3769,6 +3769,15 @@ class Pages extends SmartestSystemApplication{
 		        $this->send($undefinedAssetsClasses, "undefined_asset_classes");
 		        $this->send($page->getWebId(), "page_id");
 		        $this->send(count($undefinedAssetsClasses), "count");
+		        
+		        $changed_itemspaces_containing_unpublished_items = $page->getChangedItemspaceDefinitions(true, $item_id);
+		        
+		        if(count($changed_itemspaces_containing_unpublished_items)){
+    		        $this->send(true, 'show_itemspace_publish_warning');
+    		        $this->send($changed_itemspaces_containing_unpublished_items, 'itemspaces');
+		        }else{
+    		        $this->send(false, 'show_itemspace_publish_warning');
+		        }
 		    
 	        }else{
 	            
@@ -3796,7 +3805,7 @@ class Pages extends SmartestSystemApplication{
 	    $page = new SmartestPage;
 	    $page_webid = $this->getRequestParameter('page_id');
         
-	    if($this->getRequestParameter('item_id')){$item_id = $this->getRequestParameter('item_id');}else{$item_id = false;}
+	    if($this->getRequestParameter('item_id')){$item_id = (int) $this->getRequestParameter('item_id');}else{$item_id = false;}
 	    
 	    if($page->smartFind($page_webid)){
 	        
@@ -3805,6 +3814,19 @@ class Pages extends SmartestSystemApplication{
 	        if(((boolean) $page->getChangesApproved() || $this->getUser()->hasToken('approve_page_changes')) && ($this->getUser()->hasToken('publish_approved_pages')) || $this->getUser()->hasToken('publish_all_pages')){
 		        
 		        $page->publish($item_id);
+		        $changed_itemspaces_containing_unpublished_items = $page->getChangedItemspaceDefinitions(true, $item_id);
+		        
+		        if(count($changed_itemspaces_containing_unpublished_items)){
+    		        if($this->getRequestParameter('itemspace_action') == 'publish'){
+        		        $published_unpublished_items = true;
+    		        }else{
+        		        $published_unpublished_items = false;
+    		        }
+		        }else{
+    		        $published_unpublished_items = false;
+		        }
+		        
+		        $page->publishItemSpaces($published_unpublished_items, $item_id);
 		        $page->setLastModified(time());
 		        $page->save();
 		        

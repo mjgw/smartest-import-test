@@ -365,7 +365,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	
 	public function getAssetIdentifiers($item_id=false, $item_only=false){
 	    
-	    $sql = "SELECT * FROM AssetIdentifiers, AssetClasses WHERE assetidentifier_page_id='".$this->_properties['id']."' AND assetidentifier_assetclass_id=assetclass_id";
+	    $sql = "SELECT * FROM AssetIdentifiers, AssetClasses WHERE assetidentifier_page_id='".$this->_properties['id']."' AND assetidentifier_assetclass_id=assetclass_id AND assetclass_type != 'SM_ASSETCLASS_ITEM_SPACE'";
 	    
 	    if(is_numeric($item_id)){
 	        if($item_only){
@@ -408,6 +408,107 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    
 	    return $ais;
 	    
+	}
+	
+	// This function is used in the backend when editing
+	public function getItemSpaceDefinitions($item_id=false, $item_only=false){
+	    
+	    $sql = "SELECT AssetIdentifiers.*, AssetClasses.* FROM AssetIdentifiers, AssetClasses WHERE assetidentifier_page_id='".$this->_properties['id']."' AND assetidentifier_assetclass_id=assetclass_id AND assetclass_type='SM_ASSETCLASS_ITEM_SPACE'";
+	    
+	    if(is_numeric($item_id)){
+	        if($item_only){
+	            $sql .= " AND assetidentifier_item_id='".$item_id."'";
+	        }else{
+	            $sql .= " AND (assetidentifier_item_id='".$item_id."' OR assetidentifier_item_id IS NULL)";
+	        }
+	    }else{
+	        $sql .= " AND assetidentifier_item_id IS NULL";
+	    }
+        
+        $result = $this->database->queryToArray($sql);
+        // print_r($result);
+        $ais = array();
+        
+        $i = 0;
+        
+	    foreach($result as $r){
+        
+	        $ai = new SmartestItemSpaceDefinition;
+	        $ai->hydrateFromGiantArray($r);
+	        $ais[$r['assetclass_id']] = $ai;
+            $i++;
+        
+	    }
+        
+        /* if($item_id !== false){
+	        
+	        $sql = "SELECT * FROM AssetIdentifiers, AssetClasses WHERE assetidentifier_page_id='".$this->_properties['id']."' AND assetidentifier_assetclass_id=assetclass_id AND assetidentifier_item_id='".$item_id."'";
+            $result = $this->database->queryToArray($sql);
+    	    
+    	    foreach($result as $r){
+
+    	        $ai = new SmartestAssetIdentifier;
+    	        $ai->hydrateFromGiantArray($r);
+    	        $ais[$r['assetclass_id']] = $ai;
+
+    	    }
+    	    
+	    } */
+	    
+	    return $ais;
+	    
+	}
+	
+	public function getChangedItemspaceDefinitions($unpublished_items_only=false, $item_id=null, $item_only=null){
+    	
+    	$sql = "SELECT AssetIdentifiers.*, AssetClasses.*, Items.item_name, Items.item_id, Items.item_public FROM AssetIdentifiers, AssetClasses, Items WHERE assetidentifier_page_id='".$this->_properties['id']."' AND assetidentifier_assetclass_id=assetclass_id AND assetidentifier_draft_asset_id=Items.item_id AND assetclass_type='SM_ASSETCLASS_ITEM_SPACE' AND assetidentifier_draft_asset_id != assetidentifier_live_asset_id";
+    	
+    	if($unpublished_items_only){
+        	$sql .= " AND item_public='FALSE'";
+    	}
+	    
+	    if(is_numeric($item_id)){
+	        if($item_only){
+	            $sql .= " AND assetidentifier_item_id='".$item_id."'";
+	        }else{
+	            $sql .= " AND (assetidentifier_item_id='".$item_id."' OR assetidentifier_item_id IS NULL)";
+	        }
+	    }else{
+	        $sql .= " AND assetidentifier_item_id IS NULL";
+	    }
+        
+        $result = $this->database->queryToArray($sql);
+        // print_r($result);
+        $ais = array();
+        
+        $i = 0;
+        
+	    foreach($result as $r){
+        
+	        $ai = new SmartestItemSpaceDefinition;
+	        $ai->hydrateFromGiantArray($r);
+	        $ais[$r['assetclass_id']] = $ai;
+            $i++;
+        
+	    }
+        
+        /* if($item_id !== false){
+	        
+	        $sql = "SELECT * FROM AssetIdentifiers, AssetClasses WHERE assetidentifier_page_id='".$this->_properties['id']."' AND assetidentifier_assetclass_id=assetclass_id AND assetidentifier_item_id='".$item_id."'";
+            $result = $this->database->queryToArray($sql);
+    	    
+    	    foreach($result as $r){
+
+    	        $ai = new SmartestAssetIdentifier;
+    	        $ai->hydrateFromGiantArray($r);
+    	        $ais[$r['assetclass_id']] = $ai;
+
+    	    }
+    	    
+	    } */
+	    
+	    return $ais;
+    	
 	}
 	
 	public function clearCachedCopies(){
@@ -468,34 +569,40 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    $asset_identifiers = $this->getAssetIdentifiers($item_id, $item_only);
 		
         foreach($asset_identifiers as $key=>$ai){
-		    
-            if($ai->getAssetClass()->getType() == 'SM_ASSETCLASS_ITEM_SPACE'){
-		        
-                if($ai->hasSimpleItem(true) && $item = $ai->getSimpleItem(true)){
-		        
-    		        if($item->getId()){
-		            
-                        if($item->getIsPublic()){
-    		                // if the item selected as the draft def for the itemspace is published
-    		                $ai->publish(true);
-    		            }
-		            
-    		        }else{
-    		            SmartestLog::getInstance("system")->log('Item ID '.$ai->getItemId(true).' chosen as draft definition for itemspace ID '.$ai->getItemSpaceId().' could not be found.');
-    		        }
-		        
-    		        if($ai->getAssetClass()->getUpdateOnPagePublish() == 1 || $item_published){
-
-        		    }
-                
-                }
-		        
-	        }else{
-	            $ai->publish(true);
-	        }
-		    
+            $ai->publish(true);
 		}
 	    
+	}
+	
+	public function publishItemSpaces($publish_unpublished_items, $item_id=false, $item_only=false){
+        
+        $definitions = $this->getItemSpaceDefinitions($item_id, $item_only);
+        
+        foreach($definitions as $key=>$ai){
+            
+            if($item = $ai->getItem(false, true)){
+            
+    	        if($item->getId()){
+                
+                    if($item->isPublished() || $publish_unpublished_items){
+                        if(!$item->isPublished() && $publish_unpublished_items){
+                            $item->publish();
+                        }
+    	                // if the item selected as the draft def for the itemspace is published
+    	                $ai->publish(true);
+    	            }
+                
+    	        }else{
+    	            SmartestLog::getInstance("system")->log('Item ID '.$ai->getItemId(true).' chosen as draft definition for itemspace ID '.$ai->getItemSpaceId().' could not be found.');
+    	        }
+            
+    	        if($ai->getAssetClass()->getUpdateOnPagePublish() == 1 || $item_published){
+    
+    		    }
+            
+            }
+        }
+		        
 	}
 	
 	public function publishFields(){
@@ -2409,6 +2516,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    return array_keys($this->_placeholders);
 	}
 	
+	// This function is used during the rendering of a page
 	public function getItemSpaceDefinition($itemspace_name){
 	    
 	    if(array_key_exists($itemspace_name, $this->_itemspaces)){

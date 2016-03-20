@@ -556,14 +556,14 @@ class Settings extends SmartestSystemApplication{
                             $this->send($page->isEditableByUserId($this->getUser()->getId()), 'page_is_editable');
                             $this->send($this->getUser()->hasToken('edit_tags'), 'allow_tag_edit');
                         }else{
-                            echo "not tag page";
+                            // echo "not tag page";
                         }
                     }else{
-                        echo "page not found";
+                        // echo "page not found";
                     }
                     
                 }else{
-                    echo "no page ID";
+                    // echo "no page ID";
                 }
                 
             }

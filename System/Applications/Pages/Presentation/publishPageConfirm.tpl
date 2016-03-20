@@ -21,11 +21,11 @@
 
 {elseif $count == 1}
 
-<div class="warning"><strong>Warning</strong>: The {$undefined_asset_classes[0].info.type} <strong>{$undefined_asset_classes[0].info.assetclass_name}</strong> is not defined.</div>
+<div class="warning">The {$undefined_asset_classes[0].info.type} <strong>{$undefined_asset_classes[0].info.assetclass_name}</strong> is not defined.</div>
 	
 {elseif $count > 1}
 
-<div class="warning"><strong>Warning</strong>: The following elements are not defined in the draft version of this page:</div>
+<div class="warning">The following elements are not defined in the in the most recent version of this page. Publishing this page will cause To be empty:</div>
 
 <ul class="basic-list">
 
@@ -34,8 +34,6 @@
 	{/foreach}
 
 </ul>
-
-<div class="special-box">Publishing this page will cause undefined placeholders and containers to be included on a live page.<br />Are you sure you want to continue?</div>
 
 {/if}{* number of undefined elements *}
 
@@ -59,11 +57,33 @@
 
 {/if}{* whether this is an item page *}
 
+{if $show_itemspace_publish_warning}
+<div class="special-box">
+{if count($itemspaces) > 1}
+  <p>The following item spaces are defined with items that are not yet published:</p>
+  <ul>
+{foreach from=$itemspaces item="itemspacedef"}
+    <li><strong>{$itemspacedef.itemspace.label}</strong> - chosen item: {$itemspacedef.draft_item.name}</li>
+{/foreach}
+  </ul>
+{else}
+{foreach from=$itemspaces item="itemspacedef"}
+<p>The item space <strong>{$itemspacedef.itemspace.label}</strong> contains an item that is not published: &quot;{$itemspacedef.draft_item.name}&quot;</p>
+{/foreach}
+{/if}
+  <p>What would you like to do?</p>
+  <p><select name="itemspace_action">
+      <option value="publish">Publish the items and update the page</option>
+      <option value="nothing">Do nothing</option>
+  </select></p>
+</div>
+{/if}
+
 {else}
 
 <div class="instruction">You can't publish this page at the moment</div>
 
-{/if}
+{/if}{* whether this is an item page *}
 
 <div class="buttons-bar">
   <input type="button" onclick="cancelForm();" value="Cancel" />
