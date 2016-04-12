@@ -3,20 +3,68 @@ services:
     id: SM_OAUTHSERVICE_TWITTER
     shortname: twitter
     label: Twitter
-    token_request_url: https://api.twitter.com/oauth/request_token
+    token_request_url: dynamic
     client_register_url: http://dev.twitter.com/apps/new
+    class: SmartestTwitterHelper
+    authorize_method: post
     oauth_version: 1.0
+    default_consumer_key: sa9IsyivfRop4zorTixj2VSXU
+    default_consumer_secret: K5Rl2lkm35uL5AFIXhxgNnKIqxOWotkeaVBMHL0dlGcsbGWBZn
+    fa_icon: twitter
+    username_prefix: '@'
   SM_OAUTHSERVICE_INSTAGRAM:
     id: SM_OAUTHSERVICE_INSTAGRAM
     shortname: instagram
     label: Instagram
     token_request_url: https://api.instagram.com/oauth/authorize/
-    client_register_url: http://instagram.com/developer/clients/manage/
+    client_register_url: https://www.instagram.com/developer/clients/manage/
+    class: SmartestInstagramHelper
+    authorize_method: get
     oauth_version: 2.0
+    default_client_id: 158cc3b2e1ac4c97b631fd302b75a327
+    default_client_secret: 42a06577794c46c18281c3ae30856c64
+    fa_icon: instagram
+    username_prefix: '@'
   SM_OAUTHSERVICE_BITLY:
     id: SM_OAUTHSERVICE_BITLY
     shortname: bitly
     label: Bit.ly
     token_request_url: https://bitly.com/oauth/authorize
     client_register_url: https://bitly.com/a/oauth_apps
+    class: SmartestBitlyHelper
+    authorize_method: get
     oauth_version: 2.0
+    default_client_id: 831ec4997c28ef50fe64cead5b13477091a5f30a
+    default_client_secret: e2d4c495a753d3e25c48b37f45750e35085df2d2
+    fa_icon: link
+#  SM_OAUTHSERVICE_BUFFER:
+#    id: SM_OAUTHSERVICE_BUFFER
+#    shortname: buffer
+#    label: Buffer
+#    token_request_url: https://bufferapp.com/oauth2/authorize
+#    client_register_url: https://buffer.com/developers/apps
+#    class: SmartestBufferHelper
+#    authorize_method: get
+#    oauth_version: 2.0
+#    default_client_id: 5704dcc385889e6b6d9ce86c
+#    default_client_secret: a56e4f3a1073441819c021361b023a7d
+#    fa_icon: link
+#  SM_OAUTHSERVICE_SOUNDCLOUD:
+#    id: SM_OAUTHSERVICE_SOUNDCLOUD
+#    shortname: soundcloud
+#    label: Soundcloud
+#    token_request_url: ??
+#    client_register_url: ??
+#    class: SmartestSoundcloudHelper
+#    authorize_method: get
+#    oauth_version: 2.0
+#    default_client_id: 
+#    default_client_secret: 
+#    fa_icon: link
+#  SM_OAUTHSERVICE_DROPBOX:
+#    id: SM_OAUTHSERVICE_DROPBOX
+#    shortname: dropbox
+#    label: Dropbox
+#    token_request_url: https://api.instagram.com/oauth/authorize/
+#    client_register_url: https://www.dropbox.com/developers/apps/create
+#    oauth_version: 2.0

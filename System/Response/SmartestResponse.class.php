@@ -180,9 +180,9 @@ class SmartestResponse{
         // General system information
     	$sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
     	// Constants need to be phased out as they are slow!!
-		define('SM_INFO_REVISION_NUMBER', $sd['system']['info']['revision']);
+		// define('SM_INFO_REVISION_NUMBER', $sd['system']['info']['revision']);
 		SmartestInfo::$revision = $sd['system']['info']['revision'];
-        define('SM_INFO_VERSION_NUMBER', $sd['system']['info']['version']);
+        // define('SM_INFO_VERSION_NUMBER', $sd['system']['info']['version']);
         SmartestInfo::$version = $sd['system']['info']['version'];
         /* define('SM_INFO_BUILD_NUMBER', $sd['system']['info']['build']);
         SmartestInfo::$build = $sd['system']['info']['build']; */

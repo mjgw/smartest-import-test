@@ -30,7 +30,7 @@ class SmartestRssOutputHelper{
 			
 			$this->_domObject = new DOMDocument('1.0');
 	        $this->_domObject->formatOutput = true;
-			$this->_domObject->loadXML('<?xml version="1.0" encoding="UTF-8" ?'.'><!-- generator="Smartest v'.SM_INFO_VERSION_NUMBER.'" --><rss version="2.0" />');
+			$this->_domObject->loadXML('<?xml version="1.0" encoding="UTF-8" ?'.'><!-- generator="Smartest v'.SmartestInfo::$version.'" --><rss version="2.0" />');
 	    
 	        $this->_domRootTagElement = $this->_domObject->getElementsByTagName('rss')->item(0);
     	    $channel = $this->_domObject->createElement("channel");
@@ -53,7 +53,7 @@ class SmartestRssOutputHelper{
             $image_title = $this->_domObject->createElement("title");
 	    
     	    $generator = $this->_domObject->createElement("generator");
-    	    $generator_text = $this->_domObject->createTextNode('Smartest v'.SM_INFO_VERSION_NUMBER);
+    	    $generator_text = $this->_domObject->createTextNode('Smartest v'.SmartestInfo::$version);
     	    $generator->appendChild($generator_text);
             
             $ttl = $this->_domObject->createElement("ttl");
@@ -80,7 +80,7 @@ class SmartestRssOutputHelper{
 			
 			$this->_domObject = new DOMDocument('1.0');
 	        $this->_domObject->formatOutput = true;
-			$this->_domObject->loadXML('<?xml version="1.0" encoding="UTF-8" ?'.'><!-- generator="Smartest v'.SM_INFO_VERSION_NUMBER.'" --><rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" />');
+			$this->_domObject->loadXML('<?xml version="1.0" encoding="UTF-8" ?'.'><!-- generator="Smartest v'.SmartestInfo::$version.'" --><rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" />');
 	    
 	        $this->_domRootTagElement = $this->_domObject->getElementsByTagName('rss')->item(0);
     	    $channel = $this->_domObject->createElement("channel");
@@ -99,7 +99,7 @@ class SmartestRssOutputHelper{
     	    $title->appendChild($title_text);
 	    
     	    $generator = $this->_domObject->createElement("generator");
-    	    $generator_text = $this->_domObject->createTextNode('Smartest v'.SM_INFO_VERSION_NUMBER);
+    	    $generator_text = $this->_domObject->createTextNode('Smartest v'.SmartestInfo::$version);
     	    $generator->appendChild($generator_text);
             
             $ttl = $this->_domObject->createElement("ttl");

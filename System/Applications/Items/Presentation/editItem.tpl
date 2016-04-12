@@ -200,42 +200,51 @@
             onSuccess: function(response){
               
               newTag = response.responseJSON;
-              // console.log(newTag);
               
-              new Ajax.Request(sm_domain+'ajax:datamanager/tagItem', {
+              if(tagsInUse.hasOwnProperty('tag_'+newTag.id)){
+                
+                $('item-add-tag-textbox').value = "";
+                $('item-add-tag-textbox').blur();
+                // TODO: Alert user that tag was already in use
+                
+              }else{
+              
+                new Ajax.Request(sm_domain+'ajax:datamanager/tagItem', {
           
-                parameters: 'tag_id='+newTag.id+'&item_id='+itemId,
-                onSuccess: function(useNewTagResponse) {
+                  parameters: 'tag_id='+newTag.id+'&item_id='+itemId,
+                  onSuccess: function(useNewTagResponse) {
           
-                  var i = new Element('i', {'class': 'fa fa-times'});
-                  var a = new Element('a', {'class': 'tag-icon-button delete-tag'});
-                  var label = new Element('label');
-                  label.update(newTag.label+' ');
+                    var i = new Element('i', {'class': 'fa fa-times'});
+                    var a = new Element('a', {'class': 'tag-icon-button delete-tag'});
+                    var label = new Element('label');
+                    label.update(newTag.label+' ');
           
-                  var tag_li = new Element('li');
-                  tag_li.writeAttribute('data-tagid', newTag.id);
+                    var tag_li = new Element('li');
+                    tag_li.writeAttribute('data-tagid', newTag.id);
           
-                  a.appendChild(i);
-                  a.observe('click', removeTagFromClick);
+                    a.appendChild(i);
+                    a.observe('click', removeTagFromClick);
           
-                  label.appendChild(a);
-                  tag_li.appendChild(label);
+                    label.appendChild(a);
+                    tag_li.appendChild(label);
           
-                  $('item-tags-list').appendChild(tag_li);
+                    $('item-tags-list').appendChild(tag_li);
           
-                  if($('no-tags-notice').visible()){
-                    $('no-tags-notice').hide();
-                  }
+                    if($('no-tags-notice').visible()){
+                      $('no-tags-notice').hide();
+                    }
             
-                  var tkey = 'tag_'+newTag.id;
-                  tagsInUse[tkey] = true;
+                    var tkey = 'tag_'+newTag.id;
+                    tagsInUse[tkey] = true;
               
-                  $('item-add-tag-textbox').value = "";
-                  $('item-add-tag-textbox').blur();
+                    $('item-add-tag-textbox').value = "";
+                    $('item-add-tag-textbox').blur();
           
-                }
+                  }
            
-              });
+                });
+                
+              }
               
             }
             
@@ -249,6 +258,7 @@
           if(tagsInUse.hasOwnProperty('tag_'+tagId)){
           
             // That tag is already in use here
+            // TODO: Alert user that tag was already in use
           
           }else{
           
@@ -309,9 +319,9 @@
 
 {if count($metapages)}
 <div class="edit-form-row">
-  <div class="form-section-label">Meta-Page</div>
+  <div class="form-section-label">Meta-page</div>
   <select name="item_metapage_id">
-    {if $item._model.default_metapage_id}<option value="0">Model Default</option>{/if}
+    {if $item._model.default_metapage_id}<option value="">Model Default</option>{/if}
     {foreach from=$metapages item="page"}
     <option value="{$page.id}"{if $item.metapage_id == $page.id} selected="selected"{/if}>{$page.title}</option>
     {/foreach}
@@ -320,7 +330,7 @@
 {/if}
 
 <div class="edit-form-row">
-  <div class="form-section-label">Search Terms</div>
+  <div class="form-section-label">Search terms</div>
   <textarea name="item_search_field" rows="3" cols="20" style="width:350px;height:60px">{$item.search_field}</textarea>
 </div>
 

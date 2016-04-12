@@ -1145,6 +1145,9 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             $parts = explode(':', $params['from']);
             $type = $parts[0];
             $name = $parts[1];
+            if(isset($parts[2])){
+                $subname = $parts[2];
+            }
         }else{
             if($params['from'] == '_authors'){
                 $type = 'authors';
@@ -1215,7 +1218,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             if($g->findBy('name', $name, $this->page->getSiteId())){
                 return $g->getMembers($this->getDraftMode());
             }else{
-                return $this->raiseError('No user group exists with the name \''.$name.'\'.');
+                echo $this->raiseError('No user group exists with the name \''.$name.'\'.');
             }
                 
             break;
@@ -1245,6 +1248,27 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 }else{
                     return $this->raiseError("Data set with name '".$name."' does not have feed properties.");
                 }
+            }
+            
+            break;
+            
+            case "instagram":
+            $oh = new SmartestOAuthHelper;
+            
+            if($acct = SmartestOAuthRateLimitDistributionHelper::getAccountForService('instagram')){
+                
+                $ih = new SmartestInstagramHelper;
+                $ih->assignClientAccount($acct);
+                
+                if($user = $ih->getUserFromUsername($name)){
+                    return $ih->getUserFeed($name, 20);
+                }else{
+                    echo $this->raiseError("Instagram user with name '@".$name."' does not exist.");
+                    return;
+                }
+            
+            }else{
+                echo $this->raiseError("No authenticated Instagram account is available to make this request.");
             }
             
             break;

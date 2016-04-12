@@ -17,8 +17,8 @@
 {foreach from=$accounts key=key item=user}
   <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/editAccount?account_id={$user.id}'">
     <a href="#" class="option" id="item_{$user.id}" onclick="setSelectedItem('{$user.id}'); return false;" >
-      <img border="0" src="{$domain}Resources/Icons/user.png">
-  {$user.display_name}</a></li>
+      <i class="fa fa-{$user.service.fa_icon}"></i>
+  {$user.firstname}</a></li>
 {/foreach}
 </ul>
 {else}
@@ -31,13 +31,14 @@
 
   <ul class="actions-list" id="item-specific-actions" style="display:none">
     <li><b>Selected OAuth Account</b></li>
-    <li class="permanent-action"><a href="#" onclick="workWithItem('editAccount'); return false;" class="right-nav-link"><img border="0" src="{$domain}Resources/Icons/pencil.png"> Edit Account Details</a></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(confirm('Are you sure you want to delete this OAuth Account?')){workWithItem('deleteAccount');}{/literal} return false;"><img border="0" src="{$domain}Resources/Icons/delete.png"> Delete User</a></li>
+    <li class="permanent-action"><a href="#" onclick="workWithItem('editAccount'); return false;" class="right-nav-link"><i class="fa fa-pencil"></i> Edit account details</a></li>
+    <li class="permanent-action"><a href="#" onclick="workWithItem('testClientAccount'); return false;" class="right-nav-link"><i class="fa fa-eyedropper"></i> Test account functionality</a></li>
+    <li class="permanent-action"><a href="#" onclick="{literal}if(confirm('Are you sure you want to delete this OAuth Account?')){workWithItem('deleteClientAccount');}{/literal} return false;"><i class="fa fa-minus-circle text-danger"></i> Delete User</a></li>
   </ul>
 
   <ul class="actions-list">
      <li><b>Options</b></li>
-     <li class="permanent-action"><a href="javascript:nothing()" onclick="window.location='{$domain}smartest/oauth_account/add'" class="right-nav-link"><img border="0" src="{$domain}Resources/Icons/add.png"> Add a service</a></li>
+     <li class="permanent-action"><a href="javascript:nothing()" onclick="window.location='{$domain}smartest/oauth_account/add'" class="right-nav-link"><i class="fa fa-plus-circle"></i> Add a service</a></li>
   </ul>
 
 </div>

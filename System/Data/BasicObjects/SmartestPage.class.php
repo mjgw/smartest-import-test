@@ -1634,8 +1634,8 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    $array['static_title'] = $this->_properties['title'];
 	    $array['is_tag_page'] = $this->isTagPage();
 	    
-	    if($this->getType() == 'ITEMCLASS'){
-	        if(is_object($this->_principal_item)){
+        if($this->getType() == 'ITEMCLASS'){
+	        if(isset($this->_principal_item) && is_object($this->_principal_item)){
 	            $array['link_contents'] = 'metapage:'.$this->getName().':id='.$this->_principal_item->getId();
             }else{
                 $array['link_contents'] = 'page:'.$this->getName();
@@ -2898,6 +2898,8 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
                 
             }
             
+        }else{
+            $platform_filename_insert = '';
         }
         
         $page_cache_name = "site".$this->_properties['site_id']."_cms_page_".$this->_properties['id'].$platform_filename_insert.$this->getCacheFileNameDatePart();

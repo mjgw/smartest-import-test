@@ -8,7 +8,7 @@
 * Please store any additional information on this class at: http://wiki.smartestproject.org/SmartestCmsItem
 */
 
-class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, SmartestStorableValue, SmartestDualModedObject{
+class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, SmartestStorableValue, SmartestSubmittableValue, SmartestDualModedObject{
 	
 	/** 
 	* Description
@@ -1381,7 +1381,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    }
 	}
 	
-	public function setPropertyValueByNumericKey($key, $raw_value){
+	public function setPropertyValueByNumericKey($key, $raw_value, $from_form=false){
 	    
 	    if(array_key_exists($key, $this->_properties)){
 	        
@@ -1398,7 +1398,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        // var_dump(get_class($this->_properties[$key]->getData()));
 	        // echo $key;
             
-            $this->_properties[$key]->getData()->setContent($raw_value);
+            $this->_properties[$key]->getData()->setContent($raw_value, false, false, $from_form);
 	        // print_r($this->_properties[$key]->getData()->getDraftContent());
 	        
 	        // return $this->_properties[$key]->getData()->setContent($raw_value);

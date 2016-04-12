@@ -53,7 +53,7 @@ class SmartestAssetCreationHelper{
         $this->_asset = new SmartestAsset;
         $this->_asset->setWebid(SmartestStringHelper::random(32));
         $this->_asset->setCreated(time());
-        $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label));
+        $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label, true));
         $this->_asset->setLabel($asset_label);
         $this->_asset->setUserId(SmartestSession::get('user')->getId());
         
@@ -129,9 +129,9 @@ class SmartestAssetCreationHelper{
             $this->_asset = new SmartestAsset;
             $this->_asset->setWebid(SmartestStringHelper::random(32));
             $this->_asset->setCreated(time());
-            $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label));
+            $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label, true));
             $this->_asset->setLabel($asset_label);
-            $this->_asset->setUserId(SmartestSession::get('user')->getId());
+            $this->_asset->setUserId(SmartestSession::get('user') ? SmartestSession::get('user')->getId() : '0');
             $this->_asset->setType($this->_asset_type['id']);
             $this->_asset->setUrl($url->getValue());
             
@@ -159,8 +159,8 @@ class SmartestAssetCreationHelper{
                             $this->_thumbnail_asset->setLabel("Thumbnail for ".$asset_label);
                             $this->_thumbnail_asset->setWebid(SmartestStringHelper::random(32));
                             $this->_thumbnail_asset->setCreated(time());
-                            $this->_thumbnail_asset->setStringId(SmartestStringHelper::toVarName($this->_thumbnail_asset->getLabel()));
-                            $this->_thumbnail_asset->setUserId(SmartestSession::get('user')->getId());
+                            $this->_thumbnail_asset->setStringId(SmartestStringHelper::toVarName($this->_thumbnail_asset->getLabel(), true));
+                            $this->_thumbnail_asset->setUserId(SmartestSession::get('user') ? SmartestSession::get('user')->getId() : '0');
                             $this->_thumbnail_asset->setType($type);
                             $this->_thumbnail_asset->setUrl(end(explode('/', $saved_thumbnail_file)));
                     
@@ -201,9 +201,9 @@ class SmartestAssetCreationHelper{
                 $this->_asset = new SmartestAsset;
                 $this->_asset->setWebid(SmartestStringHelper::random(32));
                 $this->_asset->setCreated(time());
-                $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label));
+                $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label, true));
                 $this->_asset->setLabel($asset_label);
-                $this->_asset->setUserId(SmartestSession::get('user')->getId());
+                $this->_asset->setUserId(SmartestSession::get('user') ? SmartestSession::get('user')->getId() : '0');
                 $this->_asset->setType($this->_asset_type['id']);
                 $this->_asset->setUrl($file_name);
                 return true;
@@ -219,7 +219,7 @@ class SmartestAssetCreationHelper{
         $this->_asset = new SmartestAsset;
         $this->_asset->setWebid(SmartestStringHelper::random(32));
         $this->_asset->setCreated(time());
-        $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label));
+        $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label, true));
         $this->_asset->setLabel($asset_label);
         $this->_asset->setUserId(is_object(SmartestSession::get('user')) ? SmartestSession::get('user')->getId() : '0');
         $this->_asset->setType($this->_asset_type['id']);

@@ -187,106 +187,55 @@ class SmartestLinkParser{
         }else{
             
             $pattern = '/^(([\w_-]+):)([\w\.@_-]+)(#([\w\._-]+))?(\|([^\]]+))?$/i';
-            preg_match($pattern, $string, $m);
             
-            $l = new SmartestParameterHolder("Parsed Link Destination Properties: ".$m[0]);
-            $l->setParameter('scope', SM_LINK_SCOPE_INTERNAL);
-            $l->setParameter('destination', $m[1].$m[3]);
-            $l->setParameter('namespace', $m[2]);
-            $l->setParameter('format', SM_LINK_FORMAT_USER);
+            if(preg_match($pattern, $string, $m)){
+                
+                $l = new SmartestParameterHolder("Parsed Link Destination Properties: ".$m[0]);
+                $l->setParameter('scope', SM_LINK_SCOPE_INTERNAL);
+                $l->setParameter('destination', $m[1].$m[3]);
+                $l->setParameter('namespace', $m[2]);
+                $l->setParameter('format', SM_LINK_FORMAT_USER);
             
-            // echo $l->getParameter('namespace');
-            
-            if($l->getParameter('namespace') == 'mailto'){
-                $l->setParameter('destination', $m[3]);
-            }
-            
-            if(in_array($m[2], array('image', 'asset', 'download', 'dl'))){
-                if(is_numeric($m[3])){
-                    $l->setParameter('asset_id', $m[3]);
-                }else{
-                    $l->setParameter('filename', $m[3]);
+                if($l->getParameter('namespace') == 'mailto'){
+                    $l->setParameter('destination', $m[3]);
                 }
-            }
             
-            if(in_array($m[2], array('user', 'author'))){
-                if(is_numeric($m[3])){
-                    $l->setParameter('user_id', $m[3]);
-                }else{
-                    $l->setParameter('username', $m[3]);
+                if(in_array($m[2], array('image', 'asset', 'download', 'dl'))){
+                    if(is_numeric($m[3])){
+                        $l->setParameter('asset_id', $m[3]);
+                    }else{
+                        $l->setParameter('filename', $m[3]);
+                    }
                 }
-            }
             
-            if($m[2] == 'tag'){
-                if(is_numeric($m[3])){
-                    $l->setParameter('tag_id', $m[3]);
-                }else{
-                    $l->setParameter('tag_name', $m[3]);
+                if(in_array($m[2], array('user', 'author'))){
+                    if(is_numeric($m[3])){
+                        $l->setParameter('user_id', $m[3]);
+                    }else{
+                        $l->setParameter('username', $m[3]);
+                    }
                 }
-            }
+            
+                if($m[2] == 'tag'){
+                    if(is_numeric($m[3])){
+                        $l->setParameter('tag_id', $m[3]);
+                    }else{
+                        $l->setParameter('tag_name', $m[3]);
+                    }
+                }
         
-            if(isset($m[7])){
-                $l->setParameter('text', $m[7]);
-            }else{
-                $l->setParameter('text', self::LINK_TARGET_TITLE);
-            }
-            
-            if(isset($m[4]) && strlen($m[5])){
-                $l->setParameter('hash', $m[5]);
-            }
-            
-            /* if($m[2]){
-                $l->setParameter('page_ref_field_name', 'name');
-                $l->setParameter('page_ref_field_value', SmartestStringHelper::toSlug($m[3]));
-            }else{
-                $l->setParameter('scope', SM_LINK_SCOPE_NONE);
-                return $l;
-            } */
-            
-            if(strpos($string, '=')){
-                
-                if(preg_match('/(meta)?page:((name|id|webid)=)?([\w_\$-]+)(:((name|id|webid)=)?([\w_\$-]+))?/i', $string, $m)){
-                    
-                    $l->setParameter('destination', $string);
-                    
-                    if(strlen($m[2])){
-                        $l->setParameter('page_ref_field_name', $m[3]);
-                    }else{
-                        $l->setParameter('page_ref_field_name', 'name');
-                    }
-                    
-                    if($m[3] == 'webid'){
-                        $l->setParameter('page_ref_field_value', $m[4]);
-                    }else{
-                        $l->setParameter('page_ref_field_value', trim(SmartestStringHelper::toSlug($m[4])));
-                    }
-                    
-                    $l->setParameter('format', SM_LINK_FORMAT_AUTO);
-                    
-                    if(strlen($m[1]) && isset($m[5]) && strlen($m[5])){
-                        $l->setParameter('namespace', 'metapage');
-                        if(strlen($m[6])){
-                            if($m[7] == 'name'){
-                                $l->setParameter('item_ref_field_name', 'slug');
-                            }else{
-                                $l->setParameter('item_ref_field_name', $m[7]);
-                            }
-                        }else{
-                            $l->setParameter('item_ref_field_name', 'slug');
-                        }
-                        $l->setParameter('item_ref_field_value', SmartestStringHelper::toSlug($m[8]));
-                    }else{
-                        $l->setParameter('namespace', 'page');
-                    }
-                
+                if(isset($m[7])){
+                    $l->setParameter('text', $m[7]);
                 }else{
-                    // regex did not match
+                    $l->setParameter('text', self::LINK_TARGET_TITLE);
                 }
             
-            }else{
+                if(isset($m[4]) && strlen($m[5])){
+                    $l->setParameter('hash', $m[5]);
+                }
                 
                 if(strtolower($l->getParameter('namespace')) == 'page'){
-                    
+                
                     if(is_numeric($m[3])){
                         $l->setParameter('page_ref_field_name', 'id');
                         $l->setParameter('page_ref_field_value', $m[3]);
@@ -294,12 +243,12 @@ class SmartestLinkParser{
                         $l->setParameter('page_ref_field_name', 'name');
                         $l->setParameter('page_ref_field_value', SmartestStringHelper::toSlug($m[3]));
                     }
-                    
+                
                 }elseif(strtolower($l->getParameter('namespace')) == 'item'){
-                    
+                
                     $l->setParameter('format', SM_LINK_FORMAT_FORM);
                     $l->setParameter('scope', SM_LINK_SCOPE_INTERNAL);
-                    
+                
                     if(is_numeric($m[3])){
                         $l->setParameter('item_ref_field_name', 'id');
                         $l->setParameter('item_ref_field_value', $m[3]);
@@ -307,9 +256,9 @@ class SmartestLinkParser{
                         $l->setParameter('item_ref_field_name', 'slug');
                         $l->setParameter('item_ref_field_value', SmartestStringHelper::toSlug($m[3]));
                     }
-                    
+                
                 }else{
-                    
+                
                     if(!in_array($l->getParameter('namespace'), array('image', 'download', 'tag', 'asset', 'mailto'))){
                         $l->setParameter('destination', $m[1].SmartestStringHelper::toSlug($m[3]));
                         $l->setParameter('item_ref_field_name', 'slug');
@@ -317,9 +266,46 @@ class SmartestLinkParser{
                         $l->setParameter('format', SM_LINK_FORMAT_USER);
                     }
                 }
+            
+            }else if(preg_match('/(meta)?page:((name|id|webid)=)?([\w_\$-]+)(:((name|id|webid)=)?([\w_\$-]+))?/i', $string, $m)){
                 
+                $l = new SmartestParameterHolder("Parsed Link Destination Properties: ".$m[0]);
+                $l->setParameter('destination', $string);
+            
+                if(strlen($m[2])){
+                    $l->setParameter('page_ref_field_name', $m[3]);
+                }else{
+                    $l->setParameter('page_ref_field_name', 'name');
+                }
+            
+                if($m[3] == 'webid'){
+                    $l->setParameter('page_ref_field_value', $m[4]);
+                }else{
+                    $l->setParameter('page_ref_field_value', trim(SmartestStringHelper::toSlug($m[4])));
+                }
+            
+                $l->setParameter('format', SM_LINK_FORMAT_AUTO);
+            
+                if(strlen($m[1]) && isset($m[5]) && strlen($m[5])){
+                    $l->setParameter('namespace', 'metapage');
+                    if(strlen($m[6])){
+                        if($m[7] == 'name'){
+                            $l->setParameter('item_ref_field_name', 'slug');
+                        }else{
+                            $l->setParameter('item_ref_field_name', $m[7]);
+                        }
+                    }else{
+                        $l->setParameter('item_ref_field_name', 'slug');
+                    }
+                    $l->setParameter('item_ref_field_value', SmartestStringHelper::toSlug($m[8]));
+                }else{
+                    $l->setParameter('namespace', 'page');
+                }
+                
+            }else{
+                // no link
+                echo "Link destination not parsable: ".$string;
             }
-        
         }
         
         return $l;

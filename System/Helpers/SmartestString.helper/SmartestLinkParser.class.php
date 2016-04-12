@@ -178,13 +178,13 @@ class SmartestLinkParser{
             
                 if(preg_match('/(meta)?page:((name|id|webid)=)?([\w_\$-]+)(:((name|id|webid)=)?([\w_\$-]+))?/i', $l->getParameter('destination'), $m)){
                     
-                    if(strlen($m[2])){
+                    if(isset($m[2]) && strlen($m[2])){
                         $l->setParameter('page_ref_field_name', $m[3]);
                     }else{
                         $l->setParameter('page_ref_field_name', 'name');
                     }
                     
-                    if($m[3] == 'webid'){
+                    if(isset($m[3]) && $m[3] == 'webid'){
                         $l->setParameter('page_ref_field_value', $m[4]);
                     }else{
                         $l->setParameter('page_ref_field_value', trim(SmartestStringHelper::toSlug($m[4])));

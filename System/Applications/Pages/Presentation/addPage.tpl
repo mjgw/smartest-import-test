@@ -16,7 +16,7 @@ function hideUploader(){
 	document.getElementById('add_type').value = 'direct';
 }
 
-function check(){
+var check = function(){
 	var editForm = document.getElementById('insertPage');
 	if(editForm.page_url.value==''){
 		alert ('please enter the url');
@@ -27,15 +27,15 @@ function check(){
 	}
 }
 
-function addField(input_id, field_name){
+var addField = function(input_id, field_name){
 	
-	var myInput = document.getElementById(input_id);
+	var myInput = $(input_id);
 	
 	if(myInput){
 		
 		myInput.focus();
 		
-		if(field_name == 'name' || field_name == 'id'){
+		if(field_name == 'name' || field_name == 'id' || field_name == 'long_id'){
 			myInput.value = myInput.value+':'+field_name;
 		}else{
 			myInput.value = myInput.value+'$'+field_name;

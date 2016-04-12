@@ -1706,7 +1706,7 @@ class Items extends SmartestSystemApplication{
 		                $item->setPropertyValueByNumericKey($property_id, $new_value);
 			        }
 			        
-			        $item->save();
+                    $item->save();
 			    
 			    }
 			    

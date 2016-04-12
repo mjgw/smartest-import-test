@@ -44,10 +44,11 @@ class ItemsAjax extends SmartestSystemApplication{
         
         // get metapages
         
-        $sql0 = "SELECT DISTINCT page_dataset_id FROM Pages WHERE `page_type` = 'ITEMCLASS' AND `page_deleted` != 'TRUE' AND `page_site_id`='".$this->getSite()->getId()."'";
+        $sql0 = "SELECT DISTINCT page_id, page_dataset_id FROM Pages WHERE `page_type` = 'ITEMCLASS' AND `page_deleted` != 'TRUE' AND `page_site_id`='".$this->getSite()->getId()."'";
         $result0 = $db->queryToArray($sql0);
         
         $metapage_model_ids = array();
+        $metapage_ids = array();
         
         foreach($result0 as $r){
             $metapage_model_ids[] = $r['page_dataset_id'];

@@ -378,6 +378,8 @@ class SmartestFileSystemHelper extends SmartestHelper{
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+        curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/600.1.17 (KHTML, like Gecko) Version/7.1 Safari/537.85.10');
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     
         $rawdata = curl_exec($ch);
     

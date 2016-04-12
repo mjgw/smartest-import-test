@@ -14,7 +14,7 @@ class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, Smart
         $this->_render_data = new SmartestParameterHolder('Internal Link Render Data');
         $this->_markup_attributes = new SmartestParameterHolder('Internal Link Markup Attributes');
         
-        if($v){
+        if(isset($v)){
             $this->setValue($v);
         }
             
@@ -28,13 +28,9 @@ class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, Smart
             $this->_destination_properties = SmartestLinkParser::parseSingle($v);
         }
         
-        // print_r($this->_destination_properties);
-        
         $this->setTypeFromNameSpace($this->_destination_properties->getParameter('namespace'));
         $this->_loadDestination();
         $extra_markup_attributes = $this->getSeparatedAttributes($this->_destination_properties)->getParameter('html');
-        
-        // $this->addClass('sm-link-internal');
         
         if($this->_destination_properties->hasParameter('hash')){
             $this->_hash = $this->_destination_properties->getParameter('hash');

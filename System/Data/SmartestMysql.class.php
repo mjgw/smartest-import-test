@@ -35,7 +35,7 @@ class SmartestMysql{
 	public function __construct(SmartestParameterHolder $dbconfig){
 	    
 	    $this->connection_config = $dbconfig;
-	    $this->r = SM_INFO_REVISION_NUMBER;
+	    $this->r = SmartestInfo::$revision;
 	    $this->_request_id = SmartestStringHelper::random(8);
 	    
 	    if($this->dblink = @mysql_connect($this->connection_config['host'], $this->connection_config['username'], $this->connection_config['password'])){

@@ -56,7 +56,7 @@ class SmartestFilter{
     
     public function getCurrentSite(){
         
-        if(is_object($this->_site)){
+        if(isset($this->_site) && is_object($this->_site)){
             
             return $this->_site;
             

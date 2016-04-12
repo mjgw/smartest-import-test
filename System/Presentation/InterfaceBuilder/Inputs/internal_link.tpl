@@ -19,10 +19,16 @@
 </div>
 
 <div id="{$_input_data.id}-item-chooser" class="{$_input_data.id}-chooser edit-form-sub-row"{if $_input_data.value.empty || $_input_data.value.namespace != 'item'} style="display:none"{/if}>
-  <div class="form-section-label-full">Choose an item</div>
-  <i class="fa fa-cube" style="font-size:1.5em;color:#aaa"></i> <input type="text" name="item_selector" value="{if !$_input_data.value.empty && $_input_data.value.namespace == 'item'}{$_input_data.value.target.name}{/if}" id="{$_input_data.id}-item-input" />
-  <input type="hidden" name="{$_input_data.id}-item-hidden-id-input" id="{$_input_data.id}-item-hidden-id-input" value="3" />
-  <div id="{$_input_data.id}-item_autocomplete_choices" class="autocomplete"></div>
+  <div class="item-chooser-value" id="{$_input_data.id}-item-chooser-value" style="display:{if !$_input_data.value.empty && $_input_data.value.namespace == 'item'}block{else}none{/if}">
+    <p><i class="fa fa-cube" style="font-size:1.5em;color:#aaa"></i> <span id="{$_input_data.id}-item-chooser-value-label">{if !$_input_data.value.empty && $_input_data.value.namespace == 'item'}{$_input_data.value.target.name}{else}<em>No item selected.</em>{/if}</span> <a href="#change-value" id="{$_input_data.id}-item-chooser-value-activate" class="button small">Change</a></p>
+  </div>
+  <div class="item-chooser-input" id="{$_input_data.id}-item-chooser-input" style="display:{if $_input_data.value.empty || $_input_data.value.namespace != 'item'}block{else}none{/if}">
+    <div class="form-section-label-full">Choose an item</div>
+    <i class="fa fa-cube" style="font-size:1.5em;color:#aaa"></i> <input type="text" name="item_selector" value="{if !$_input_data.value.empty && $_input_data.value.namespace == 'item'}{$_input_data.value.target.name}{/if}" id="{$_input_data.id}-item-input" />
+    <br /><span class="form-hint">To choose an item, simply begin entering its name in the box above</span>
+    <input type="hidden" name="{$_input_data.id}-item-hidden-id-input" id="{$_input_data.id}-item-hidden-id-input" value="3" />
+    <div id="{$_input_data.id}-item_autocomplete_choices" class="autocomplete"></div>
+  </div>
 </div>
 
 <div id="{$_input_data.id}-download-chooser" class="{$_input_data.id}-chooser edit-form-sub-row"{if $_input_data.value.empty || $_input_data.value.namespace != 'download'} style="display:none"{/if}>
@@ -95,7 +101,9 @@
           $(propertyId+'-file-input').focus();
           $(propertyId).writeAttribute({'data-target-id':$(propertyId+'-file-hidden-id-input').value});
         }else if(selectedlinkType == 'item'){
-          $(propertyId+'-item-input').focus();
+          $(propertyId+'-item-chooser-value').hide();
+          $(propertyId+'-item-chooser-input').show();
+          $(propertyId+'-item-input').activate();
           $(propertyId).writeAttribute({'data-target-id':$(propertyId+'-item-hidden-id-input').value});
         }else{
           $(propertyId).writeAttribute({'data-target-id':$(propertyId+'-'+selectedlinkType+'-select').value});
@@ -128,11 +136,18 @@
       delay: 50,
       width: 300,
       afterUpdateElement : function(text, li) {
-        var bits = li.id.split('-');
-        $(propertyId+'-item-hidden-id-input').value = bits[1];
-        $(propertyId).writeAttribute({'data-target-id':bits[1]});
-        $(propertyId).fire('needs:update');
-        $(propertyId+'-item-input').value = li.readAtribute('data-fullname');
+        if(li.id == 'itemOption-nothing'){
+          
+        }else{
+          var bits = li.id.split('-');
+          $(propertyId+'-item-hidden-id-input').value = bits[1];
+          $(propertyId).writeAttribute({'data-target-id':bits[1]});
+          $(propertyId).fire('needs:update');
+          $(propertyId+'-item-input').value = li.readAttribute('data-fullname');
+          $(propertyId+'-item-chooser-value').show();
+          $(propertyId+'-item-chooser-input').hide();
+          $(propertyId+'-item-chooser-value-label').update(li.readAttribute('data-fullname'));
+        }
       }
   });
   
@@ -150,12 +165,26 @@
       }
   });
   
+  $(propertyId+'-item-chooser-value-activate').observe('click', function(aclick){
+    aclick.stop();
+    $(propertyId+'-item-chooser-value').hide();
+    $(propertyId+'-item-chooser-input').show();
+    $(propertyId+'-item-input').activate();
+  });
+  
+  $(propertyId+'-item-input').observe('keydown', function(kevt){
+    if(kevt.keyCode == 13){
+      kevt.stop();
+      $(propertyId+'-item-chooser-value').show();
+      $(propertyId+'-item-chooser-input').hide();
+    }
+  });
   
   // Code to update the actual value of the <select>
   $(propertyId).observe('needs:update', function(){
     var newValue = $(propertyId).readAttribute('data-linktype')+':'+$(propertyId).readAttribute('data-target-id');
+    console.log(newValue);
     $(propertyId).value = newValue;
-    // alert(newValue);
   });
   
 {/literal}

@@ -151,6 +151,10 @@ div.autocomplete ul li{
     cursor:pointer;
 }
 
+div.autocomplete ul li.nothing-found{
+    font-style:italic;
+}
+
 div.autocomplete ul li span.informal{
     font-size:11px;
     color:#aaa;

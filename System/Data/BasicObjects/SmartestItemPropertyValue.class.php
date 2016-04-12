@@ -182,8 +182,6 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
                     $r->setCentralEntityByIndex($this->getProperty()->getManyToManyRelationshipItemEntityIndex());
                     $r->setTargetEntityByIndex($this->getProperty()->getManyToManyRelationshipMappedObjectEntityIndex());
                     
-                    // var_dump($draft);
-                    
                     if(!$draft){
                         $r->addConstraint('Items.item_public', 'TRUE');
                     }
@@ -415,7 +413,7 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
 	    }
 	} */
     
-    public function setContent($raw_data, $save=true, $force_live=false){
+    public function setContent($raw_data, $save=true, $force_live=false, $from_form=false){
         
         if(is_object($raw_data) && ($raw_data instanceof SmartestStorableValue)){
             $filtered_data = $raw_data->getStorableFormat();
@@ -434,8 +432,6 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
                 SmartestLog::getInstance('system')->log("Could not set content of SmartestItemPropertyValue object, because a value object was not given and none could be created from the raw value given: '".$raw_data."'.");
             }
         }
-        
-        // print_r($value_obj);
         
         if($this->getProperty()->isManyToMany()){
             

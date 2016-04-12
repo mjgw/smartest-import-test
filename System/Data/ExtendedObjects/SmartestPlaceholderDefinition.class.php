@@ -84,50 +84,11 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
         
         if(strlen($name) && is_object($page)){
             
-            $this->_page = $page;
-            
             $placeholder = new SmartestPlaceholder;
             
             if($placeholder->hydrateBy('name', $name)){
                 
-                $this->_asset_class = $placeholder;
-                $sql = "SELECT * FROM AssetIdentifiers WHERE assetidentifier_assetclass_id='".$this->_asset_class->getId()."' AND assetidentifier_page_id='".$this->_page->getId()."'";
-                
-                if(is_numeric($item_id)){
-                    $sql .= " AND assetidentifier_item_id='".$item_id."'";
-                }else{
-                    $sql .= " AND assetidentifier_item_id IS NULL";
-                }
-                
-                $result = $this->database->queryToArray($sql);
-                
-                if(count($result)){
-                    
-                    $this->hydrate($result[0]);
-                    
-                    if($placeholder->getType() != "SM_ASSETTYPE_CONTAINER_TEMPLATE"){
-                        
-                        $asset = new SmartestAsset;
-                        $this->_asset = $asset;
-                        $this->_asset->setIsDraft($draft);
-                        $this->_loaded = true;
-                        return true;
-                        
-                    }else{
-                        
-                        // asset class being filled is a container
-                        $this->_loaded = false;
-                        return false;
-                        
-                    }
-                    
-                    
-                }else{
-                    
-                    // placeholder not defined
-                    $this->_loaded = false;
-                    return false;
-                }
+                return $this->loadWithObjects($placeholder, $page, $item_id);
                 
             }else{
                 // Placeholder by that name doesn't exist
@@ -135,6 +96,51 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
                 return false;
             }
         }
+    }
+    
+    public function loadWithObjects(SmartestPlaceholder $placeholder, SmartestPage $page, $item_id=false){
+        
+        $this->_asset_class = $placeholder;
+        $this->_page = $page;
+        
+        $sql = "SELECT * FROM AssetIdentifiers WHERE assetidentifier_assetclass_id='".$this->_asset_class->getId()."' AND assetidentifier_page_id='".$this->_page->getId()."'";
+        
+        if(is_numeric($item_id)){
+            $sql .= " AND assetidentifier_item_id='".$item_id."'";
+        }else{
+            $sql .= " AND assetidentifier_item_id IS NULL";
+        }
+        
+        $result = $this->database->queryToArray($sql);
+        
+        if(count($result)){
+            
+            $this->hydrate($result[0]);
+            
+            if($placeholder->getType() != "SM_ASSETTYPE_CONTAINER_TEMPLATE"){
+                
+                $asset = new SmartestAsset;
+                $this->_asset = $asset;
+                $this->_asset->setIsDraft($draft);
+                $this->_loaded = true;
+                return true;
+                
+            }else{
+                
+                // asset class being filled is a container
+                $this->_loaded = false;
+                return false;
+                
+            }
+            
+            
+        }else{
+            
+            // placeholder not defined
+            $this->_loaded = false;
+            return false;
+        }
+        
     }
     
     public function getAsset($draft=false){

@@ -587,24 +587,22 @@ class SmartestCmsLink extends SmartestHelper{
                     if($this->_destination_properties->hasParameter('metapage_override') && $this->_destination_properties->getParameter('metapage_override') == true && $d = $this->getMetaPageObject($this->_destination_properties->getParameter('metapage_override_name'), $item->getModelId())){
                         
                         $sql = "SELECT * FROM Pages WHERE page_name='".$this->_destination_properties->getParameter('metapage_override_name')."' AND page_dataset_id='".$item->getModelId()."' AND page_site_id='".constant('SM_CMS_PAGE_SITE_ID')."' AND page_type='ITEMCLASS' AND page_deleted != 'TRUE'";
-                        $result = $this->database->queryToArray($sql);
+                        $result2 = $this->database->queryToArray($sql);
                         
                     }else{
                         
                         $sql = "SELECT * FROM Pages WHERE page_id='".$item->getMetaPageId()."' AND page_site_id='".$this->getSiteId()."' AND page_type='ITEMCLASS' AND page_deleted != 'TRUE'";
-                        $result = $this->database->queryToArray($sql);
+                        $result2 = $this->database->queryToArray($sql);
                         
                     }
                     
-                    if(count($result)){
+                    if(count($result2)){
                         
                         $d = new SmartestItemPage;
                         $d->hydrate($result[0]);
                         $d->setPrincipalItem($item);
                     
                         $this->_destination = $d;
-                        
-                        // echo "found destination";
                     
                     }else{
                         return $this->error("The requested meta-page was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');

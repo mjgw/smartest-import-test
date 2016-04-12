@@ -1,6 +1,12 @@
   <h3>Add a new page</h3>
   
-  <div class="instruction">Step 1: Choose which type of page you're going to make</div>
+  <ol class="stages-indicator">
+    <li class="label">Stage:</li>
+    <li class="current"><span class="stage-number">1</span> Enter basic page details</li>
+    <li><span class="stage-number">2</span> Add metadata and content</li>
+    <li><span class="stage-number">3</span> Check &amp; confirm</li>
+  </ol>
+  
   <form action="{$domain}smartest/page/new" method="post">
     
     {if $parent_page}<input type="hidden" name="page_parent" value="{$parent_page.id}" />{/if}
@@ -23,7 +29,6 @@
     </div>
   	
     <div style="display:none" id="model-selector">
-      <div></div>
       <div class="edit-form-row">
   	    <div class="form-section-label">Select a Model</div>
   	    <select name="page_model">

@@ -312,7 +312,12 @@ class SmartestBasicRenderer extends SmartestEngine{
                     }
                     
                     ob_start();
-                    $this->run($render_template, array('asset_info'=>$this->_asset, 'render_data'=>$render_data, 'image'=>$image));
+                    if(isset($image)){
+                        $this->run($render_template, array('asset_info'=>$this->_asset, 'render_data'=>$render_data, 'image'=>$image));
+                    }else{
+                        $this->run($render_template, array('asset_info'=>$this->_asset, 'render_data'=>$render_data));
+                    }
+                    
                     $content = ob_get_contents();
         	        ob_end_clean();
                     

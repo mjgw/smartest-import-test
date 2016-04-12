@@ -37,12 +37,13 @@ class SmartestTemplateAsset extends SmartestAsset{
         
         if(!$this->_template_file){
             
-            $this->_template_file = new SmartestFile();
+            $f = new SmartestFile();
             
-            if($this->_template_file->loadFile($this->_base_dir.$this->getUrl())){
-                    
+            if($f->loadFile($this->_base_dir.$this->getUrl())){
+                $this->_template_file = $f;
             }else{
                 // file doesn't exist or isn't readable
+                return false;
             }
             
         }

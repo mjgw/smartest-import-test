@@ -93,54 +93,11 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
         
         if(strlen($name) && is_object($page)){
             
-            $this->_page = $page;
-            
             $container = new SmartestContainer;
             
-            if($container->hydrateBy('name', $name)){
+            if($container->findBy('name', $name)){
                 
-                // echo 'loaded';
-                
-                $this->_asset_class = $container;
-                $sql = "SELECT * FROM AssetIdentifiers, AssetClasses WHERE assetclass_type = 'SM_ASSETCLASS_CONTAINER' AND assetidentifier_assetclass_id=assetclass_id AND assetidentifier_assetclass_id='".$this->_asset_class->getId()."' AND assetidentifier_page_id='".$this->_page->getId()."'";
-                
-                if(is_numeric($item_id)){
-                    $sql .= " AND assetidentifier_item_id='".$item_id."'";
-                }else{
-                    $sql .= " AND assetidentifier_item_id IS NULL";
-                }
-                
-                $result = $this->database->queryToArray($sql);
-                
-                if(count($result)){
-                    
-                    $this->hydrate($result[0]);
-                    
-                    // var_dump($container->getType());
-                    
-                    if($container->getType() == "SM_ASSETCLASS_CONTAINER"){
-                        
-                        $template = new SmartestTemplateAsset;
-                        $this->_template = $template;
-                        $this->_template->setIsDraft($draft);
-                        $this->_loaded = true;
-                        return true;
-                        
-                    }else{
-                        
-                        // asset class being filled is not a container
-                        $this->_loaded = false;
-                        return false;
-                        
-                    }
-                    
-                    
-                }else{
-                    
-                    // Container not defined
-                    $this->_loaded = false;
-                    return false;
-                }
+                return $this->loadWithObjects($container, $page, $draft, $item_id);
                 
             }else{
                 // Container by that name doesn't exist
@@ -148,6 +105,51 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
                 return false;
             }
         }
+    }
+    
+    public function loadWithObjects(SmartestContainer $container, SmartestPage $page, $draft=false, $item_id=false){
+        
+        $this->_asset_class = $container;
+        $this->_page = $page;
+        
+        $sql = "SELECT * FROM AssetIdentifiers, AssetClasses WHERE assetclass_type = 'SM_ASSETCLASS_CONTAINER' AND assetidentifier_assetclass_id=assetclass_id AND assetidentifier_assetclass_id='".$this->_asset_class->getId()."' AND assetidentifier_page_id='".$this->_page->getId()."'";
+        
+        if(is_numeric($item_id)){
+            $sql .= " AND assetidentifier_item_id='".$item_id."'";
+        }else{
+            $sql .= " AND assetidentifier_item_id IS NULL";
+        }
+        
+        $result = $this->database->queryToArray($sql);
+        
+        if(count($result)){
+            
+            // A definition exists
+            $this->hydrate($result[0]);
+            
+            if($container->getType() == "SM_ASSETCLASS_CONTAINER"){
+                
+                $template = new SmartestTemplateAsset;
+                $this->_template = $template;
+                $this->_template->setIsDraft($draft);
+                $this->_loaded = true;
+                return true;
+                
+            }else{
+                
+                // asset class being filled is not a container
+                $this->_loaded = false;
+                return false;
+                
+            }
+            
+        }else{
+            
+            // Container not defined (yet)
+            $this->_loaded = false;
+            return false;
+        }
+        
     }
     
     public function getTemplateFilePath(){

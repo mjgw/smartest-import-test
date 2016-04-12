@@ -40,7 +40,7 @@ class SmartestBaseApplication extends QuinceBase{
 		$this->userTokenHelper = new SmartestUsersHelper();
 		$this->settings = new SmartestParameterHolder("Application settings");
 		
-        if(SM_SESSION_ACTIVE){
+        if(SmartestInfo::$session_active){
 		    SmartestSession::set('user:currentApp', $this->getRequest()->getModule());
 		    SmartestSession::set('user:currentAction', $this->getRequest()->getAction());
         }

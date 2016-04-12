@@ -121,7 +121,7 @@ class SmartestHelper{
 			    $autoload_file = $h['dir'].'autoload.conf';
 			    $autoload_file_contents = file_get_contents($autoload_file);
 			    
-			    preg_match_all('/^(\w+)\s+([^\s\/]+)$/m', $autoload_file_contents, $matches, PREG_SET_ORDER);
+			    preg_match_all('/^(\w+)\s+([^\s]+)$/m', $autoload_file_contents, $matches, PREG_SET_ORDER);
 			    
 			    foreach($matches as $m){
 			        switch($m[1]){

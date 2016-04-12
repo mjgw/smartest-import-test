@@ -207,6 +207,8 @@ class SmartestDataObjectHelper{
 	    
 	    $file_contents = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Data/ObjectModelTemplates/dataobject_datafunctions.txt');
 	    
+        $fc = '';
+        
 	    foreach($pns as $pn){
 	        
 		    if(strlen($pn)){

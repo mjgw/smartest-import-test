@@ -136,6 +136,7 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	        $sm = new SmartyManager('BasicRenderer');
             $r = $sm->initialize($this->getStringId());
             $r->assignAsset($this);
+            $ua = SmartestPersistentObject::get('userAgent');
             $r->assign('sm_user_agent', $ua);
             $r->setDraftMode($draft_mode);
     	    $content = $r->renderAsset($this->_render_data);

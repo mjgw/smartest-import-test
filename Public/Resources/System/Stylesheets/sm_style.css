@@ -71,6 +71,8 @@ a.button, input[type="button"], input[type="submit"], a.editor_cancel_link.edito
     font-size:12px;
     
     cursor:pointer;
+    
+    font-style: normal;
 }
 
 a.button i:first-child{
@@ -468,6 +470,31 @@ ul#item-specific-actions{
 
 div.instruction{
 	font-size:12px;
+}
+
+ol.stages-indicator{
+    list-style-type:none;
+}
+
+ol.stages-indicator li{
+    color:#888;
+}
+
+ol.stages-indicator li span.stage-number{
+    background-color:#999;
+    color:#fff;
+    text-align:center;
+    border-radius:18px;
+    -webkit-border-radius:18px;
+    -moz-border-radius:18px;
+}
+
+ol.stages-indicator li.current{
+    color:#222;
+}
+
+ol.stages-indicator li.current span.stage-number{
+    background-color:#68849E;
 }
 
 div.form-section-label{
@@ -1046,11 +1073,14 @@ ul.apps li a.icon.gold{
     -moz-border-radius:5px;
 }
 
+div.image-picker-caption, span.ui-info-inactive{
+    color:#999;
+    font-size:0.9em;
+    font-style:italic;
+}
+
 div.image-picker-caption{
     margin:5px 0 5px 0;
-    color:#999;
-    font-size:11px;
-    font-style:italic;
 }
 
 /*** Favourites bar ***/

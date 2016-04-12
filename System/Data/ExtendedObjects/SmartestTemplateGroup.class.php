@@ -6,6 +6,8 @@ class SmartestTemplateGroup extends SmartestSet implements SmartestSetApi{
     
     public function __objectConstruct(){
         $this->_membership_type = 'SM_MTMLOOKUP_TEMPLATE_GROUP_MEMBERSHIP';
+        $this->_members = array();
+        $this->_member_ids = array();
     }
     
     public function delete(){
@@ -36,7 +38,7 @@ class SmartestTemplateGroup extends SmartestSet implements SmartestSetApi{
     
     public function getMembers($site_id='', $refresh=false){
         
-        if($refresh || !count($this->_members)){
+        if($refresh || (isset($this->_members) && !count($this->_members))){
         
             $memberships = $this->getMemberships($site_id, $refresh);
 	        

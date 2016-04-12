@@ -140,4 +140,16 @@ class SmartestExternalUrl implements SmartestBasicType, ArrayAccess, SmartestSto
         
     }
     
+    public function downloadContentTo($local_file_path_without_root){
+        if(is_dir(dirname(SM_ROOT_DIR.$local_file_path_without_root)) && is_writable(dirname(SM_ROOT_DIR.$local_file_path_without_root))){
+            try{
+                $file_name = SmartestFileSystemHelper::saveRemoteBinaryFile($this->_value, SM_ROOT_DIR.$local_file_path_without_root);
+                return $file_name;
+            }catch(SmartestException $e){
+                SmartestLog::getInstance('system')->log('Remote file could not be saved: '.$e->getMessage());
+                return false;
+            }
+        }
+    }
+    
 }

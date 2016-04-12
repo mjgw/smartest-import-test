@@ -29,9 +29,9 @@ class SettingsAjax extends SmartestSystemApplication{
             }
         }
         
-        if(count($tags) == 0){
+        // if(count($tags) == 0){
             $this->send(strip_tags($string), 'new_tag_label');
-        }
+        // }
         
         $this->send(count($tags), 'num_tags');
         $this->send($tags, 'tags');

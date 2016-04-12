@@ -341,5 +341,60 @@ class PagesAjax extends SmartestSystemApplication{
         }
         
     }
+    
+    public function checkPresetDefinitionForContainerId(){
+        
+        $preset_id = (int) $this->getRequestParameter('preset_id');
+        $container_id = (int) $this->getRequestParameter('container_id');
+        $preset = new SmartestPagePreset;
+        $result = new stdClass;
+        
+        if($preset->find($preset_id)){
+            $result->success = true;
+            $result->preset_id = $preset_id;
+            $result->container_id = $container_id;
+            if($preset->hasDefinitionForAssetClassId($container_id)){
+                $result->has_definition = true;
+            }else{
+                $result->has_definition = false;
+            }
+        }else{
+            $result->success = false;
+            $result->reason = 'Preset not found';
+        }
+        
+        header('Content-Type: application/json; charset=UTF8');
+        echo json_encode($result);
+        exit;
+        
+    }
+    
+    public function checkPresetDefinitionForTextAssetId(){
+        
+        
+        $preset_id = (int) $this->getRequestParameter('preset_id');
+        $placeholder_id = (int) $this->getRequestParameter('text_placeholder_id');
+        $preset = new SmartestPagePreset;
+        $result = new stdClass;
+        
+        if($preset->find($preset_id)){
+            $result->success = true;
+            $result->preset_id = $preset_id;
+            $result->placeholder_id = $placeholder_id;
+            if($preset->hasDefinitionForAssetClassId($placeholder_id)){
+                $result->has_definition = true;
+            }else{
+                $result->has_definition = false;
+            }
+        }else{
+            $result->success = false;
+            $result->reason = 'Preset not found';
+        }
+        
+        header('Content-Type: application/json; charset=UTF8');
+        echo json_encode($result);
+        exit;
+        
+    }
 
 }

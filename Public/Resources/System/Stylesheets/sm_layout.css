@@ -358,6 +358,31 @@ div.instruction{
 	margin-left:0px;
 }
 
+ol.stages-indicator{
+    margin:0px;
+    padding:10px 0;
+}
+
+ol.stages-indicator li{
+    display:inline-block;
+    padding-right:12px;
+}
+
+ol.stages-indicator li.label{
+    padding-right:5px!important;
+}
+
+ol.stages-indicator li:last-child{
+    padding-right:0px!important;
+}
+    
+ol.stages-indicator li span.stage-number{
+    width:15px;
+    height:15px;
+    display:inline-block;
+    padding:10px;
+}
+
 div.form-section-label{
 	margin:0px;
 	margin-bottom:5px;

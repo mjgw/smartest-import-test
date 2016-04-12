@@ -46,13 +46,17 @@ class SmartestOAuthAccount extends SmartestUser{
     } */
     
     public function getService(){
-        if(!$this->_service){
+        if(!is_object($this->_service)){
             $services = SmartestOAuthHelper::getServices();
             if(isset($services[$this->getOAuthServiceId()])){
                 $this->_service = $services[$this->getOAuthServiceId()];
             }
         }
         return $this->_service;
+    }
+    
+    public function getStateUri(){
+        return $this->getService()->getFinalUri().'?scid='.$this->getId();
     }
     
     public function getLabel(){

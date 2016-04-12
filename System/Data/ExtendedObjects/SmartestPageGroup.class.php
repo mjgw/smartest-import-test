@@ -10,7 +10,7 @@ class SmartestPageGroup extends SmartestSet{
     
     public function getMembers($draft_mode=false, $refresh=false){
         
-        if(!count($this->_members)){
+        if(!isset($this->_members) || !count($this->_members)){
         
             $memberships = $this->getMemberships($draft_mode, $refresh);
 	        

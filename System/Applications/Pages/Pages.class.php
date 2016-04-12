@@ -1440,12 +1440,19 @@ class Pages extends SmartestSystemApplication{
 			    
     			}
 			
-    			$this->send($parent_info, 'parentInfo');
+    			// $this->send($parent_info, 'parentInfo');
      			$this->send($this->getSite(), 'siteInfo');
  			
      			$this->send($templates, 'templates');
      		
      			$newPage = SmartestSession::get('__newPage');
+                
+                // echo "Forward";
+                if(is_object(SmartestSession::get('__newPage_temporary_text')) && SmartestSession::get('__newPage_temporary_text') instanceof SmartestTemporaryTextAsset){
+                    $this->send(SmartestSession::get('__newPage_temporary_text')->getContentForEditor(), 'text_editor_content');
+                }else{
+                    $this->send('Test text 1234', 'text_editor_content');
+                }
             
             }elseif(is_object(SmartestSession::get('__newPage')) && SmartestSession::get('__newPage') instanceof SmartestPage){
                 
@@ -1456,6 +1463,13 @@ class Pages extends SmartestSystemApplication{
                 $newPage = SmartestSession::get('__newPage');
                 $this->send($templates, 'templates');
                 
+                // echo "Back";
+                if(is_object(SmartestSession::get('__newPage_temporary_text')) && SmartestSession::get('__newPage_temporary_text') instanceof SmartestTemporaryTextAsset){
+                    $this->send(SmartestSession::get('__newPage_temporary_text')->getContentForEditor(), 'text_editor_content');
+                }else{
+                    $this->send('Test text 1234', 'text_editor_content');
+                }
+                
             }
             
             ////// Presets stuff //////
@@ -1465,18 +1479,167 @@ class Pages extends SmartestSystemApplication{
             // $this->send((bool) $this->getGlobalPreference('site_default_page_preset_id'), 'hide_template_dropdown');
             $preset = new SmartestPagePreset;
 		    
+            // echo SmartestSession::get('__newPage_preset_id');
+            
  			if($preset_id = SmartestSession::get('__newPage_preset_id') && $preset->find(SmartestSession::get('__newPage_preset_id'))){
- 			    // if there is already a choice of preset in the session, send that
-                // echo "selected preset: ".SmartestSession::get('__newPage_preset_id');
- 			    $newPage['draft_template'] = $preset->getMasterTemplateName();
+ 			    
+                // if there is already a choice of preset in the session, send that
+                $newPage['draft_template'] = $preset->getMasterTemplateName();
                 $this->send($preset->getId(), 'selected_preset_id');
                 $this->send(true, 'hide_template_dropdown');
                 $this->send((bool) SmartestSession::get('__newPage_preset_id'), 'hide_template_dropdown');
+                
+                if($this->getSite()->getPrimaryTextPlaceholderId()){
+                    if($preset->hasDefinitionForAssetClassId($this->getSite()->getPrimaryTextPlaceholderId())){
+                        $this->send(false, 'show_main_text_input');
+                    }else{
+                        $this->send(true, 'show_main_text_input');
+                    }
+                    $this->send(true, 'primary_text_placeholder_known');
+                    $this->send($this->getSite()->getPrimaryTextPlaceholderId(), 'primary_text_placeholder_id');
+                }else{
+                    $this->send(false, 'primary_text_placeholder_known');
+                    $this->send(false, 'show_main_text_input');
+                }
+                
+                if($this->getSite()->getPrimaryContainerId()){
+                    
+                    $container = new SmartestContainer;
+                    
+                    if($container->find($this->getSite()->getPrimaryContainerId())){
+                        if($preset->hasDefinitionForAssetClassId($this->getSite()->getPrimaryContainerId())){
+                            $this->send(false, 'show_template_selector');
+                        }else{
+                            $this->send(true, 'show_template_selector');
+                        }
+                        $this->send(true, 'primary_container_known');
+                        $this->send($this->getSite()->getPrimaryContainerId(), 'primary_container_id');
+                        $this->send($container->getPossibleAssets(), 'layout_templates');
+                        if(is_numeric(SmartestSession::get('__newPage_layout_template_id'))){
+                            $this->send(SmartestSession::get('__newPage_layout_template_id'), 'selected_layout_template_id');
+                        }
+                    }else{
+                        $this->send(false, 'primary_container_known');
+                        $this->send(false, 'show_template_selector');
+                    }
+                    
+                }else{
+                    $this->send(false, 'show_template_selector');
+                    $this->send(false, 'primary_container_known');
+                }
+            
+            }elseif(SmartestSession::hasData('__newPage_preset_id') && SmartestSession::get('__newPage_preset_id') === false){
+                
+                if($this->getSite()->getPrimaryContainerId()){
+                    
+                    $container = new SmartestContainer;
+                    
+                    if($container->find($this->getSite()->getPrimaryContainerId())){
+                        if($preset->hasDefinitionForAssetClassId($this->getSite()->getPrimaryContainerId())){
+                            $this->send(false, 'show_template_selector');
+                        }else{
+                            $this->send(true, 'show_template_selector');
+                        }
+                        $this->send(true, 'primary_container_known');
+                        $this->send($this->getSite()->getPrimaryContainerId(), 'primary_container_id');
+                        $this->send($container->getPossibleAssets(), 'layout_templates');
+                        if(is_numeric(SmartestSession::get('__newPage_layout_template_id'))){
+                            $this->send(SmartestSession::get('__newPage_layout_template_id'), 'selected_layout_template_id');
+                        }
+                    }else{
+                        $this->send(false, 'primary_container_known');
+                        $this->send(false, 'show_template_selector');
+                    }
+                    
+                }else{
+                    $this->send(false, 'show_template_selector');
+                    $this->send(false, 'primary_container_known');
+                }
+                
+                if($this->getSite()->getPrimaryTextPlaceholderId()){
+                    if($preset->hasDefinitionForAssetClassId($this->getSite()->getPrimaryTextPlaceholderId())){
+                        $this->send(false, 'show_main_text_input');
+                    }else{
+                        $this->send(true, 'show_main_text_input');
+                    }
+                    $this->send(true, 'primary_text_placeholder_known');
+                    $this->send($this->getSite()->getPrimaryTextPlaceholderId(), 'primary_text_placeholder_id');
+                }else{
+                    $this->send(false, 'primary_text_placeholder_known');
+                    $this->send(false, 'show_main_text_input');
+                }
+                
 		    }else{
+                
 		        // no preset has been selected, so go by settings
-                // echo "no selected preset";
+                $preset_id = $this->getGlobalPreference('site_default_page_preset_id');
                 $this->send($this->getGlobalPreference('site_default_page_preset_id'), 'selected_preset_id');
                 $this->send((bool) $this->getGlobalPreference('site_default_page_preset_id'), 'hide_template_dropdown');
+                
+                if($preset_id && $preset->find($preset_id)){
+                    
+                    if($this->getSite()->getPrimaryTextPlaceholderId()){
+                        if($preset->hasDefinitionForAssetClassId($this->getSite()->getPrimaryTextPlaceholderId())){
+                            $this->send(false, 'show_main_text_input');
+                        }else{
+                            $this->send(true, 'show_main_text_input');
+                        }
+                        $this->send($this->getSite()->getPrimaryTextPlaceholderId(), 'primary_text_placeholder_id');
+                        $this->send(true, 'primary_text_placeholder_known');
+                    }else{
+                        $this->send(false, 'show_main_text_input');
+                        $this->send(false, 'primary_text_placeholder_known');
+                    }
+                    
+                    if($this->getSite()->getPrimaryContainerId()){
+                        
+                        $container = new SmartestContainer;
+                    
+                        if($container->find($this->getSite()->getPrimaryContainerId())){
+                            if($preset->hasDefinitionForAssetClassId($this->getSite()->getPrimaryContainerId())){
+                                $this->send(false, 'show_template_selector');
+                            }else{
+                                $this->send(true, 'show_template_selector');
+                            }
+                            $this->send($this->getSite()->getPrimaryContainerId(), 'primary_container_id');
+                            $this->send(true, 'primary_container_known');
+                            $this->send($container->getPossibleAssets(), 'layout_templates');
+                            if(is_numeric(SmartestSession::get('__newPage_layout_template_id'))){
+                                $this->send(SmartestSession::get('__newPage_layout_template_id'), 'selected_layout_template_id');
+                            }
+                        }else{
+                            $this->send(false, 'show_template_selector');
+                            $this->send(false, 'primary_container_known');
+                        }
+                        
+                    }else{
+                        $this->send(false, 'show_template_selector');
+                        $this->send(false, 'primary_container_known');
+                    }
+                    
+                }else{
+                    
+                    if($this->getSite()->getPrimaryTextPlaceholderId()){
+                        $this->send(true, 'show_main_text_input');
+                        $this->send($this->getSite()->getPrimaryTextPlaceholderId(), 'primary_text_placeholder_id');
+                        $this->send(true, 'primary_text_placeholder_known');
+                    }else{
+                        $this->send(false, 'show_main_text_input');
+                        $this->send(false, 'primary_text_placeholder_known');
+                    }
+                    
+                    if($this->getSite()->getPrimaryContainerId()){
+                        $this->send(true, 'show_template_selector');
+                        $this->send($this->getSite()->getPrimaryContainerId(), 'primary_container_id');
+                        // echo $this->getSite()->getPrimaryContainerId();
+                        $this->send(true, 'primary_container_known');
+                    }else{
+                        $this->send(false, 'show_template_selector');
+                        $this->send(false, 'primary_container_known');
+                    }
+                    
+                }
+                
 		    }
             
             $template = "addPage.stage2.tpl";
@@ -1500,14 +1663,6 @@ class Pages extends SmartestSystemApplication{
 			SmartestSession::get('__newPage')->setChangesApproved(0);
 			SmartestSession::get('__newPage')->setSearchField(htmlentities(strip_tags($this->getRequestParameter('page_search_field')), ENT_COMPAT, 'UTF-8'));
 			
-            if(strlen($this->getRequestParameter('page_url')) && substr($this->getRequestParameter('page_url'), 0, 18) != 'website/renderPage'){
-			    SmartestSession::get('__newPage')->clearUnsavedUrls();
-                SmartestSession::get('__newPage')->addUrl($this->getRequestParameter('page_url')); 
-			    $url = $this->getRequestParameter('page_url');
-		    }else{
-		        
-		    } 
-			
             if(SmartestSession::get('__newPage')->getType() == 'NORMAL'){
 			    SmartestSession::get('__newPage')->setDraftTemplate($this->getRequestParameter('page_draft_template'));
 			    SmartestSession::get('__newPage')->setDescription(strip_tags($this->getRequestParameter('page_description')));
@@ -1515,6 +1670,16 @@ class Pages extends SmartestSystemApplication{
 			    SmartestSession::get('__newPage')->setKeywords(strip_tags($this->getRequestParameter('page_keywords')));
             }else if(SmartestSession::get('__newPage')->getType() == 'ITEMCLASS'){
                 SmartestSession::get('__newPage')->setDraftTemplate($this->getRequestParameter('page_draft_template'));
+            }
+            
+            if((bool) $this->getRequestParameter('save_textarea_contents')){
+                if(is_object(SmartestSession::get('__newPage_temporary_text')) && SmartestSession::get('__newPage_temporary_text') instanceof SmartestTemporaryTextAsset){
+                    SmartestSession::get('__newPage_temporary_text')->setContent($this->getRequestParameter('page_text_contents'));
+                }else{
+                    $temp_text_object = new SmartestTemporaryTextAsset('Main text for page '.SmartestSession::get('__newPage')->getTitle(), $this->getRequestParameter('page_text_contents'));
+                    $temp_text_object->setCreated(time());
+                    SmartestSession::set('__newPage_temporary_text', $temp_text_object);
+                }
             }
 			
 			if($this->getRequestParameter('page_id')){
@@ -1553,21 +1718,31 @@ class Pages extends SmartestSystemApplication{
                 $newPage['parent'] = SmartestSession::get('__newPage')->getParentPage();
             }
 			
-			$urlObj = new SmartestPageUrl;
-			
-			if(isset($url) && !$urlObj->hydrateBy('url', $url)){
-			    $newPage['url'] = $url;
-			    $this->send($url, 'new_page_url');
+			// Deal with submitted URL and send to summary if available
+            if(strlen($this->getRequestParameter('page_url')) && substr($this->getRequestParameter('page_url'), 0, 18) != 'website/renderPage'){
+    		    
+                $url = $this->getRequestParameter('page_url');
+                
+                if($this->getSite()->urlExists($url)){
+                    $this->send(false, 'chosen_url_available');
+                    $this->send('page/'.SmartestSession::get('__newPage')->getWebId(), 'new_page_url');
+                }else{
+    			    SmartestSession::get('__newPage')->clearUnsavedUrls();
+                    SmartestSession::get('__newPage')->addUrl($url); 
+    			    $this->send($url, 'new_page_url');
+                    $this->send(true, 'chosen_url_available');
+                }
+                
 		    }else{
-		        $newPage['url'] = $this->getRequest()->getDomain().'website/renderPageById?page_id='.SmartestSession::get('__newPage')->getWebid();
-		        $this->send($this->getRequest()->getDomain().'website/renderPageById?page_id='.SmartestSession::get('__newPage')->getWebid(), 'new_page_url');
+		        $this->send(false, 'chosen_url_available');
 		    }
-			
+            
 			// should the page have a preset?
             if($this->getRequestParameter('page_preset_id') == 'NONE'){
                 
                 // No page preset used
                 $this->send(false, 'use_preset');
+                SmartestSession::set('__newPage_preset_id', false);
                 
             }else{
                 
@@ -1586,6 +1761,38 @@ class Pages extends SmartestSystemApplication{
                 }else{
                     $this->send(false, 'use_preset');
                 }
+            }
+            
+			$primary_container = new SmartestContainer;
+            
+            if($this->getSite()->getPrimaryContainerId() && $primary_container->find($this->getSite()->getPrimaryContainerId())){
+                
+                if($this->getRequestParameter('page_preset_id') == 'NONE' && is_numeric($this->getRequestParameter('layout_template_id'))){
+                    
+                    $template = new SmartestAsset;
+                    
+                    if($template->find($this->getRequestParameter('layout_template_id'))){
+                        SmartestSession::set('__newPage_layout_template_id', $this->getRequestParameter('layout_template_id'));
+                        $this->send($template, 'layout_template');
+                        $this->send(true, 'show_layout_template');
+                    }else{
+                        // template doesn't exist or wasn't selected
+                    }
+                    $this->send(false, 'use_preset_for_layout');
+                    $this->send(true, 'show_layout_template');
+                    
+                }elseif(is_object($preset) && $template = $preset->getDefinitionForAssetClassId($this->getSite()->getPrimaryContainerId())){
+                    
+                    $this->send($template, 'layout_template');
+                    $this->send(true, 'show_layout_template');
+                    $this->send(true, 'use_preset_for_layout');
+                    
+                }else{
+                    $this->send(false, 'show_layout_template');
+                    $this->send(false, 'use_preset_for_layout');
+                    SmartestSession::get('__newPage_layout_template_id');
+                }
+                
             }
 			
 			/* if(SmartestSession::get('__newPage')->getPreset()){
@@ -1616,6 +1823,7 @@ class Pages extends SmartestSystemApplication{
             $page->setWebId(SmartestStringHelper::random(32));
             $page->setCreatedbyUserid($this->getUser()->getId());
             $page->setSiteId($this->getSite()->getId());
+            SmartestSession::set('__newPage_preset_id', null);
             
 			if($this->getRequestParameter('page_id')){
     			
@@ -1697,6 +1905,49 @@ class Pages extends SmartestSystemApplication{
 	                    $preset->applyToPage($page);
 	                }
 	            }
+                
+                if(is_numeric(SmartestSession::get('__newPage_layout_template_id')) && $this->getSite()->getPrimaryContainerId() && (!is_object($preset) || !$preset->hasDefinitionForAssetClassId($this->getSite()->getPrimaryContainerId()))){
+                    $t = new SmartestTemplateAsset;
+                    if($t->find(SmartestSession::get('__newPage_layout_template_id'))){
+                        $c = new SmartestContainer;
+                        if($c->find($this->getSite()->getPrimaryContainerId())){
+                            $d = new SmartestContainerDefinition();
+                            if(!$d->loadWithObjects($c, $page, true)){
+                                $d->setPageId($page->getId());
+                                $d->setAssetClassId($c->getId());
+                            }
+                            $d->setDraftAssetId($t->getId());
+                            $d->save();
+                        }else{
+                            // "primary container ID not found";
+                        }
+                    }else{
+                        // "template not found";
+                    }
+                }
+                
+                if(SmartestSession::get('__newPage_temporary_text') && is_object(SmartestSession::get('__newPage_temporary_text')) && is_numeric($this->getSite()->getPrimaryTextPlaceholderId())){
+                    // TODO: Deal with temporary text asset here
+                    $p = new SmartestPlaceholder;
+                    if($p->find($this->getSite()->getPrimaryTextPlaceholderId())){
+                        
+                        $tta = SmartestSession::get('__newPage_temporary_text');
+                        $pta = $tta->savePermanentTextAsset();
+                        
+                        $d = new SmartestPlaceholderDefinition();
+                        
+                        if(!$d->loadWithObjects($p, $page)){
+                            $d->setPageId($page->getId());
+                            $d->setAssetClassId($p->getId());
+                        }
+                        
+                        $d->setDraftAssetId($pta->getId());
+                        $d->save();
+                        
+                    }else{
+                        // "placeholder not found";
+                    }
+                }
 	            
 	            $page_webid = $page->getWebId();
     		    $site_id = $page->getSiteId();
@@ -1705,6 +1956,7 @@ class Pages extends SmartestSystemApplication{
     		    SmartestCache::clear('site_pages_tree_'.$site_id, true);
 	            SmartestSession::clear('__newPage');
                 SmartestSession::clear('__newPage_preset_id');
+                SmartestSession::clear('__newPage_temporary_text');
 	    
 	            switch($this->getRequestParameter('destination')){
 			
@@ -1952,7 +2204,7 @@ class Pages extends SmartestSystemApplication{
             		$this->send($page->isEditableByUserId($this->getUser()->getId()), 'page_is_editable');
             		$this->send($assetClasses["tree"], "elements_tree");
                     $this->send($assetClasseslist, "elements_list");
-                    $this->send($definedAssets, "definedAssets");
+                    // $this->send(isset($definedAssets) ? $definedAssets : array(), "definedAssets");
             		$this->send($page, "page");
             		$this->send($template_object, "page_template");
             		$this->send($templates, "templates");

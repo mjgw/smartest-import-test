@@ -5,11 +5,6 @@ module:
   longname: OAuth Account Manager
   default_action: listClientAccounts
   aliases:
-#    - {url: /smartest/settings, action: editSite}
-#    - {url: /smartest/_start, action: newDesktop}
-#    - {url: /smartest/about, action: aboutSmartest}
-#    - {url: /smartest/close, action: closeCurrentSite}
-#    - {url: /smartest/site/new, action: createSite}
   routes:
     oauth_callback:
       action: receiveOAuthCallback
@@ -20,14 +15,11 @@ module:
     oauth_accounts_add:
       action: addAccount
       url: /smartest/oauth_account/add
-#    home:
-#      action: startPage
-#      url: /smartest
-#    todo:
-#      action: todoList
-#      url: /smartest/todo
-#    open_site:
-#      action: openSite
-#      url: /smartest/site/open/:site_id
   meta:
     system: true
+  namespaces:
+    ajax:
+      class: OAuthAccountsAjax
+#      meta:
+#        template: _blank.tpl
+#        presentation_subfolder: Ajax/

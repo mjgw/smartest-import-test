@@ -10,15 +10,16 @@ class SmartestSession{
     final public static function start(){
         if(!self::isRegistered()){
             session_start();
-            if(!defined('SM_SESSION_ACTIVE')){
+            /* if(!defined('SM_SESSION_ACTIVE')){
                 define('SM_SESSION_ACTIVE', true);
-            }
+            } */
+            SmartestInfo::$session_active = true;
         }
     }
     
     final public static function isRegistered(){
         
-        if(defined('SM_SESSION_ACTIVE') && SM_SESSION_ACTIVE){
+        if(SmartestInfo::$session_active){
             return true;
         }
         

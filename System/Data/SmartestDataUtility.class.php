@@ -245,7 +245,7 @@ class SmartestDataUtility{
         return $models;
 	    
 	}
-	
+    
 	public function getDataSets($simple = false, $site_id=''){
 		
 		if($simple){
@@ -1079,11 +1079,11 @@ class SmartestDataUtility{
 	    
 	    if($object = self::getBlankObjectForDataType($as_type, $fk_filter)){
 	        
-	        if($object instanceof SmartestStorableValue){
+	        if($object instanceof SmartestSubmittableValue){
 	            
 	            try{
 	                if($object->hydrateFromFormData($value, $fk_filter)){
-    	                return $object;
+                        return $object;
     	            }else{
     	                
     	            }
@@ -1092,12 +1092,12 @@ class SmartestDataUtility{
 	            }
 	            
 	        }else{
-	            throw new SmartestException("Class ".get_class($object)." must implement interface SmartestStorableValue");
+	            throw new SmartestException("Class ".get_class($object)." must implement interface SmartestSubmittableValue");
 	        }
 	        
 	    }else{
 	        
-	        throw new SmartestException("Could not objectize value ".$value." as type '".$as_type."'");
+	        throw new SmartestException("Could not objectize value ".$value." as type '".$as_type."': could not generate vanilla object");
 	        
 	    }
 	    
@@ -1107,28 +1107,25 @@ class SmartestDataUtility{
 	    
         if($object = self::getBlankObjectForDataType($as_type, $fk_filter)){
 	        
-            if($object instanceof SmartestStorableValue){
-	            // echo get_class($object);
-	            // var_dump($value);
-	            try{
+            if($object instanceof SmartestSubmittableValue){
+	            
+                try{
 	                if($object->hydrateFromFormData($value)){
-    	                // print_r($object);
-    	                return $object;
+                        return $object;
     	            }else{
-    	                // object couldn't be hydrated
-    	                // echo "#fail";
+    	                
     	            }
 	            }catch(SmartestException $e){
 	                
 	            }
 	            
 	        }else{
-	            throw new SmartestException("Class ".get_class($object)." must implement interface SmartestStorableValue");
+	            throw new SmartestException("Class ".get_class($object)." must implement interface SmartestSubmittableValue");
 	        }
 	        
 	    }else{
 	        
-	        throw new SmartestException("Could not objectize value ".$value." as type '".$as_type."'");
+	        throw new SmartestException("Could not objectize value ".$value." as type '".$as_type."': could not generate vanilla object");
 	        
 	    }
 	    

@@ -39,6 +39,35 @@ class SmartestPagePreset extends SmartestBasePagePreset{
 		
 		}
 	}
+    
+    public function hasDefinitionForAssetClassId($assetclass_id){
+        
+        $assetclass_id = (int) $assetclass_id;
+        $sql = "SELECT plpd_element_value FROM PageLayoutPresetDefinitions WHERE plpd_preset_id='".$this->getId()."' AND plpd_element_id='".$assetclass_id."'";
+        $result = $this->database->queryToArray($sql);
+        
+        return (bool) count($result);
+        
+    }
+    
+    public function getDefinitionForAssetClassId($assetclass_id){
+        
+        $assetclass_id = (int) $assetclass_id;
+        $sql = "SELECT Assets.*, PageLayoutPresetDefinitions.plpd_element_value FROM Assets, PageLayoutPresetDefinitions WHERE Assets.asset_id=PageLayoutPresetDefinitions.plpd_element_value AND plpd_preset_id='".$this->getId()."' AND plpd_element_id='".$assetclass_id."'";
+        $result = $this->database->queryToArray($sql);
+        
+        if(count($result)){
+            if($result[0]['asset_type'] == 'SM_ASSETTYPE_CONTAINER_TEMPLATE'){
+                $a = new SmartestTemplateAsset;
+            }else{
+                $a = new SmartestAsset;
+            }
+            $a->hydrate($result[0]);
+        }
+        
+        return $a;
+        
+    }
 	
 	public function getOriginalPage(){
 	    

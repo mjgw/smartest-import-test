@@ -737,7 +737,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	
 	public function getThumbnailImage(){
 	    
-	    if($this->isImage()){
+	    if($this->isBinaryImage()){
 	        return $this;
 	    }else{
 	        if($this->getThumbnailId()){
@@ -839,7 +839,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
                     
                     // data found. loop through params from xml, replacing values with those from asset
     	            foreach($asset_params as $key => $value){
-    	                if($params[$key] !== null){
+    	                if(isset($params[$key])){
     	                    // $params[$key] = $value;
                             $params[$key] = SmartestDataUtility::objectize($value, $type_lookups[$key]);
                         }
@@ -1059,20 +1059,22 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         
 	    parent::save();
 	    
-        $placeholders_usages = $this->getPlaceholderUsages($site_id);
-        $ipv_usages = $this->getItemPropertyUsages($site_id);
+        if(is_object(SmartestSession::get('current_open_project'))){
+            $placeholders_usages = $this->getPlaceholderUsages(SmartestSession::get('current_open_project')->getId());
+            $ipv_usages = $this->getItemPropertyUsages(SmartestSession::get('current_open_project')->getId());
         
-        ////// Touch any pages where this asset is used, so theycan be identified as potentially needing republishing //////
+            ////// Touch any pages where this asset is used, so theycan be identified as potentially needing republishing //////
         
-        if(count($ipv_usages)){
-            foreach($ipv_usages as $ipvu){
-                $ipvu->getItem()->touch();
+            if(count($ipv_usages)){
+                foreach($ipv_usages as $ipvu){
+                    $ipvu->getItem()->touch();
+                }
             }
-        }
         
-        if(count($placeholders_usages)){
-            foreach($placeholders_usages as $phu){
-                $phu->getPage()->touch();
+            if(count($placeholders_usages)){
+                foreach($placeholders_usages as $phu){
+                    $phu->getPage()->touch();
+                }
             }
         }
         

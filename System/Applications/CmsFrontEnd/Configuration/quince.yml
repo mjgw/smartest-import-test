@@ -8,6 +8,9 @@ module:
     - {url: /tag/:tag_name/feed, action: renderSiteTagSimpleRssFeed}
     - {url: /tag/:tag_name, action: renderPageFromId, params: {tag: true}}
   routes:
+    page_shortcut:
+      url: /page/:page_id
+      action: renderPageFromId
     tag_page_legacy:
       url: /tags/:tag_name.html
       action: renderPageFromId
