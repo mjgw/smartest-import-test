@@ -304,7 +304,8 @@ class SmartestLinkParser{
                 
             }else{
                 // no link
-                echo "Link destination not parsable: ".$string;
+                // echo "Link destination not parsable: ".$string;
+                return false;
             }
         }
         

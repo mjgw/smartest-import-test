@@ -28,25 +28,31 @@ class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, Smart
             $this->_destination_properties = SmartestLinkParser::parseSingle($v);
         }
         
-        $this->setTypeFromNameSpace($this->_destination_properties->getParameter('namespace'));
-        $this->_loadDestination();
-        $extra_markup_attributes = $this->getSeparatedAttributes($this->_destination_properties)->getParameter('html');
+        if($this->_destination_properties instanceof SmartestParameterHolder){
+            
+            $this->setTypeFromNameSpace($this->_destination_properties->getParameter('namespace'));
+            $this->_loadDestination();
+            $extra_markup_attributes = $this->getSeparatedAttributes($this->_destination_properties)->getParameter('html');
+            
+            if($this->_destination_properties->hasParameter('hash')){
+                $this->_hash = $this->_destination_properties->getParameter('hash');
+            }
+            
+            if($this->_render_data->hasParameter('hash')){
+                $this->_hash = $this->_render_data->getParameter('hash');
+            }
+            
+            if($this->_destination_properties->hasParameter('model')){
+                $this->_model = $this->recognizeModel($this->_destination_properties->getParameter('model'));
+            }elseif($this->_render_data->hasParameter('model')){
+                $this->_model = $this->recognizeModel($this->_render_data->getParameter('model'));
+            }
+            
+            return true;
         
-        if($this->_destination_properties->hasParameter('hash')){
-            $this->_hash = $this->_destination_properties->getParameter('hash');
+        }else{
+            return false;
         }
-        
-        if($this->_render_data->hasParameter('hash')){
-            $this->_hash = $this->_render_data->getParameter('hash');
-        }
-        
-        if($this->_destination_properties->hasParameter('model')){
-            $this->_model = $this->recognizeModel($this->_destination_properties->getParameter('model'));
-        }elseif($this->_render_data->hasParameter('model')){
-            $this->_model = $this->recognizeModel($this->_render_data->getParameter('model'));
-        }
-        
-        return true;
         
     }
     

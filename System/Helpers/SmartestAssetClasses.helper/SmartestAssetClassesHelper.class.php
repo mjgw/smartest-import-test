@@ -122,13 +122,13 @@ class SmartestAssetClassesHelper{
     
     public function getTextPlaceholders($site_id=null){
         
-        $sql = "SELECT * FROM AssetClasses WHERE AssetClasses.assetclass_type='SM_ASSETCLASS_RICH_TEXT'";
+        $sql = "SELECT * FROM AssetClasses WHERE (AssetClasses.assetclass_type='SM_ASSETCLASS_RICH_TEXT' OR AssetClasses.assetclass_type='SM_ASSETCLASS_TEXT')";
         
         if(is_numeric($site_id)){
             $sql .= " AND (assetclass_site_id='".$site_id."' OR assetclass_shared='1')";
         }
         
-	    $result = $this->database->queryToArray($sql);
+        $result = $this->database->queryToArray($sql);
         $placeholders = array();
         
         foreach($result as $r){
