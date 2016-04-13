@@ -96,9 +96,7 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
             $container = new SmartestContainer;
             
             if($container->findBy('name', $name)){
-                
                 return $this->loadWithObjects($container, $page, $draft, $item_id);
-                
             }else{
                 // Container by that name doesn't exist
                 $this->_loaded = false;

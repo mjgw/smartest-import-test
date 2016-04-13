@@ -26,6 +26,8 @@
     <div class="special-box">There are no attachment tags in this text yet. <a href="{$domain}{$section}/editTextFragmentSource?asset_id={$asset.id}" class="button">Click here</a> to add some.</div>
 {/if}
 
+<div class="buttons-bar"><input type="button" id="done-button" value="{$_l10n_global_strings.system_wide_buttons.done}" /><script type="text/javascript">{literal}$('done-button').observe('click', cancelForm);{/literal}</script></div>
+
 </div>
 
 <div id="actions-area">

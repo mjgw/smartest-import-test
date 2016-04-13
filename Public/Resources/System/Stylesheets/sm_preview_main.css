@@ -132,6 +132,14 @@ span.smartest-preview-warning{
     background-image:url('../Images/return-to-preview.png');
 }
 
+#smartest-preview-publish-link{
+    display:inline-block;
+    float:right;
+    width:16px;
+    height:16px;
+    background-image:url('../Images/publish-from-preview.png');
+}
+
 #hide-preview-bar-link{
     display:inline-block;
     float:right;
@@ -146,6 +154,7 @@ span.smartest-preview-warning{
     display:block;
     width:16px;
     height:16px;
+    float:right;
     background-image:url('../Images/show-edit-bar-out.png');
     background-repeat:no-repeat;
     background-position:50% 50%;
@@ -186,6 +195,11 @@ only screen and (                min-resolution: 2dppx) {
     #smartest-preview-collapse-link{
         background-size:16px 16px;
         background-image:url('../Images/return-to-preview-2x.png');
+    }
+    
+    #smartest-preview-publish-link{
+        background-size:16px 16px;
+        background-image:url('../Images/publish-from-preview-2x.png');
     }
     
     #hide-preview-bar-link{

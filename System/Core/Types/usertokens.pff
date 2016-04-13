@@ -60,3 +60,4 @@ id:type:scope:code:category:description
 56:p:s:rename_tag:SM_USERTOKEN_SYSTEM:Rename tags
 57:p:s:delete_tag:SM_USERTOKEN_SYSTEM:Delete tags
 58:p:s:see_private_models:SM_USERTOKEN_ITEMS:See private models
+59:p:s:clean_data_cache:SM_USERTOKEN_SYSTEM:Clean the data cache

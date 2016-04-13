@@ -121,41 +121,47 @@ class SmartestFileSystemHelper extends SmartestHelper{
 	        return false;
 	    }else{
 	        // size is in bytes
-	        if($size >= 1024){
-	            // convert to kilobytes
-	            $new_size = $size/1024;
-	            
-	            if($new_size >= 1024){
-	                // convert to megabytes
-	                $new_size = $new_size/1024;
-	                
-	                if($new_size >= 1024){
-    	                // convert to gigabytes
-    	                $new_size = $new_size/1024;
-    	                
-                        /* if($new_size >= 1024){
-        	                // convert to terrabytes
-        	                $new_size = $new_size/1024;
-                            return number_format($new_size, 3, '.', ',').' TB'; */
-                        // }else{
-                            return number_format($new_size, 2, '.', ',').' GB';
-                        //}
-                        
-                        // No point checking for terrabytes
-
-                    }else{
-                        return number_format($new_size, 1, '.', ',').' MB';
-                    }
-	                
-                }else{
-                    return number_format($new_size, 1, '.', ',').' KB';
-                }
-                
-	        }else{
-	            return $size.' Bytes';
-	        }
+	        return self::formatRawFileSize($size);
 	    }
 	}
+    
+    public static function formatRawFileSize($size){
+        
+        if($size >= 1024){
+            // convert to kilobytes
+            $new_size = $size/1024;
+            
+            if($new_size >= 1024){
+                // convert to megabytes
+                $new_size = $new_size/1024;
+                
+                if($new_size >= 1024){
+	                // convert to gigabytes
+	                $new_size = $new_size/1024;
+	                
+                    /* if($new_size >= 1024){
+    	                // convert to terrabytes
+    	                $new_size = $new_size/1024;
+                        return number_format($new_size, 3, '.', ',').' TB'; */
+                    // }else{
+                        return number_format($new_size, 2, '.', ',').' GB';
+                    //}
+                    
+                    // No point checking for terrabytes
+
+                }else{
+                    return number_format($new_size, 1, '.', ',').' MB';
+                }
+                
+            }else{
+                return number_format($new_size, 1, '.', ',').' KB';
+            }
+            
+        }else{
+            return $size.' Bytes';
+        }
+        
+    }
 	
 	public static function isSafeFileName($file_path, $intended_dir=''){
 	    

@@ -82,7 +82,7 @@ class SmartestDatabase{
     		    $ph->setParameter('short_name', $connection_name);
 		        
 		        SmartestCache::save('dbc_'.$connection_name, $ph, -1, true);
-		        SmartestCache::save('db_config_file_md5', $actual_md5);
+		        SmartestCache::save('db_config_file_md5', $actual_md5, -1, true);
     		    return $ph;
 		
     	    }else{

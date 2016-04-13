@@ -75,5 +75,15 @@ class SettingsAjax extends SmartestSystemApplication{
         exit;
         
     }
+    
+    public function cleanDataCache(){
+        
+        if($this->getUser()->hasToken('clean_data_cache')){
+            $result = SmartestCache::clean(true);
+            header('Content-Type: application/json; charset=UTF8');
+            echo json_encode($result);
+        }
+        
+    }
 
 }

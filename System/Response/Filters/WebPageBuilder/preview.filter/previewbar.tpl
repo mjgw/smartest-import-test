@@ -6,6 +6,7 @@
         Page Build Time: <?sm:$build_time:?>ms |
         Total time taken: <?sm:$total_time:?> 
         
+        <a href="<?sm:if $has_item:?><?sm:$domain:?>datamanager/publishItem?item_id=<?sm:$item_id:?><?sm:else:?><?sm:$domain:?>websitemanager/publishPageConfirm?page_id=<?sm:$page_webid:?><?sm:/if:?>" target="_top" id="smartest-preview-publish-link" class="smartest-preview-button" title="Publish this <?sm:if $has_item:?>item<?sm:else:?>page<?sm:/if:?>"></a>
         <?sm:if !$hide_liberate_link:?> <a href="<?sm:$liberate_link_url:?>" target="_top" id="smartest-preview-liberate-link" title="Preview in full screen" class="smartest-preview-button"></a><?sm:else:?> <a href="<?sm:$preview_link_url:?>" id="smartest-preview-collapse-link" title="Back to Smartest preview" class="smartest-preview-button"></a><?sm:/if:?>
         <?sm:if $show_item_edit_link:?> <a href="<?sm:$domain:?>datamanager/openItem?item_id=<?sm:$item_id:?>&amp;from=preview&amp;page_webid=<?sm:$page_webid:?>" id="smartest-preview-edit-item" target="_top" class="smartest-preview-button" title="Edit this <?sm:$model_name:?>"></a><?sm:/if:?>
         <?sm:if $hide_liberate_link:?> <a href="<?sm:$domain:?>smartest/pages" id="smartest-preview-return-topages" title="Back to site pages" class="smartest-preview-button"></a><?sm:/if:?>
