@@ -42,15 +42,23 @@ class SmartestInstagramHelper implements SmartestOAuthController{
     
     public function getUserFeedFromId($id, $limit=20){
         
-        $i = new Instagram(array(
-          'apiKey'      => $this->_account->getOAuthConsumerToken(),
-          'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
-          'apiCallback' => $this->_service->getCallbackUri()
-        ));
+        if($d = SmartestCache::load('instagram_user_media_'.$this->_account->getId(), true, 600)){
+            $data = $d;
+            // echo "loaded from cache";
+        }else{
+            
+            $i = new Instagram(array(
+              'apiKey'      => $this->_account->getOAuthConsumerToken(),
+              'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
+              'apiCallback' => $this->_service->getCallbackUri()
+            ));
+            
+            $i->setAccessToken($this->_account->getOAuthAccessToken());
+            $data = $i->getUserMedia($id, $limit);
+            SmartestCache::save('instagram_user_media_'.$this->_account->getId(), $data, -1, true);
+            // echo "loaded live data";
+        }
         
-        $i->setAccessToken($this->_account->getOAuthAccessToken());
-        
-        $data = $i->getUserMedia($id, $limit);
         $result = array();
         
         if(isset($data->data) && is_array($data->data)){
@@ -72,15 +80,19 @@ class SmartestInstagramHelper implements SmartestOAuthController{
     
     public function getUserFromUsername($username){
         
-        $i = new Instagram(array(
-          'apiKey'      => $this->_account->getOAuthConsumerToken(),
-          'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
-          'apiCallback' => $this->_service->getCallbackUri()
-        ));
-        
-        $i->setAccessToken($this->_account->getOAuthAccessToken());
-        
-        $data = $i->searchUser($username);
+        if($d = SmartestCache::load('instagram_user_search_'.md5($username), true, 600)){
+            $data = $d;
+        }else{
+             $i = new Instagram(array(
+              'apiKey'      => $this->_account->getOAuthConsumerToken(),
+              'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
+              'apiCallback' => $this->_service->getCallbackUri()
+            ));
+            
+            $i->setAccessToken($this->_account->getOAuthAccessToken());
+            $data = $i->searchUser($username);
+            SmartestCache::save('instagram_user_search_'.md5($username), $data, -1, true);
+        }
         
         if(count($data->data)){
             if(strtolower($data->data[0]->username) == strtolower($username)){
@@ -93,19 +105,20 @@ class SmartestInstagramHelper implements SmartestOAuthController{
     
     public function getUserIdFromUsername($username){
         
-        $i = new Instagram(array(
-          'apiKey'      => $this->_account->getOAuthConsumerToken(),
-          'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
-          'apiCallback' => $this->_service->getCallbackUri()
-        ));
-        
-        // var_dump($this->_account->getOAuthAccessToken());
-        $i->setAccessToken($this->_account->getOAuthAccessToken());
-        // var_dump($i->getAccessToken());
-        
-        // 616712045
-        // 8798111
-        $data = $i->searchUser($username);
+        if($d = SmartestCache::load('instagram_user_search_'.md5($username), true, 600)){
+            $data = $d;
+        }else{
+            
+            $i = new Instagram(array(
+              'apiKey'      => $this->_account->getOAuthConsumerToken(),
+              'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
+              'apiCallback' => $this->_service->getCallbackUri()
+            ));
+            
+            $i->setAccessToken($this->_account->getOAuthAccessToken());
+            $data = $i->searchUser($username);
+            SmartestCache::save('instagram_user_search_'.md5($username), $data, -1, true);
+        }
         
         if(strtolower($data->data[0]->username) == strtolower($username)){
             return $data->data[0]->id;

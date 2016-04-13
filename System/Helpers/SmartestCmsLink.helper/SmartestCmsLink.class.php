@@ -363,31 +363,45 @@ class SmartestCmsLink extends SmartestHelper{
     }
     
     public function getScope(){
-        return $this->_destination_properties->getParameter('scope');
+        if(is_object($this->_destination_properties)){
+            return $this->_destination_properties->getParameter('scope');
+        }
     }
     
     public function setType($type){
-        return $this->_destination_properties->setParameter('type', (int) $type);
+        if(is_object($this->_destination_properties)){
+            return $this->_destination_properties->setParameter('type', (int) $type);
+        }
     }
     
     public function getType(){
-        return $this->_destination_properties->getParameter('type');
+        if(is_object($this->_destination_properties)){
+            return $this->_destination_properties->getParameter('type');
+        }
     }
     
     public function setNamespace($ns){
-        return $this->_destination_properties->setParameter('namespace', $ns);
+        if(is_object($this->_destination_properties)){
+            return $this->_destination_properties->setParameter('namespace', $ns);
+        }
     }
     
     public function getNamespace(){
-        return $this->_destination_properties->getParameter('namespace');
+        if(is_object($this->_destination_properties)){
+            return $this->_destination_properties->getParameter('namespace');
+        }
     }
     
     public function setDestinationString($s){
-        return $this->_destination_properties->setParameter('destination', $s);
+        if(is_object($this->_destination_properties)){
+            return $this->_destination_properties->setParameter('destination', $s);
+        }
     }
     
     public function getDestinationString(){
-         return $this->_destination_properties->getParameter('destination');
+        if(is_object($this->_destination_properties)){
+            return $this->_destination_properties->getParameter('destination');
+        }
     }
     
     public function getMetaPageObject($name, $iem_model_id){

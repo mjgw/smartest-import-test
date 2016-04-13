@@ -24,8 +24,12 @@ class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, Smart
         
         if($v instanceof SmartestParameterHolder){
             $this->_destination_properties = $v;
+        }elseif(strlen($v)){
+            if(!$this->_destination_properties = SmartestLinkParser::parseSingle($v)){
+                $this->_destination_properties = new SmartestParameterHolder('Blank link');
+            }
         }else{
-            $this->_destination_properties = SmartestLinkParser::parseSingle($v);
+            // echo "No properties";
         }
         
         if($this->_destination_properties instanceof SmartestParameterHolder){

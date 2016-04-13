@@ -20,7 +20,7 @@ class SmartestOAuthRateLimitDistributionHelper{
                 }
                 $accounts[$s->getParameter('shortname')][$timekey] = $acct;
             }
-            ksort($accounts[$s->getParameter('shortname')]);
+            ksort($accounts);
         }
         
         self::$accounts = $accounts;
@@ -41,6 +41,7 @@ class SmartestOAuthRateLimitDistributionHelper{
                 $num_service_accounts = count(self::$accounts[$service_shortname]);
                 if($num_service_accounts == 1){
                     $acct = array_shift(array_values(self::$accounts[$service_shortname]));
+                    return $acct;
                 }else{
                     $acct = array_shift(self::$accounts[$service_shortname]);
                     $timekey = microtime(true)*10000;

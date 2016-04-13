@@ -62,7 +62,9 @@ class SmartestResponse{
 	    
 	    $this->_error_stack = new SmartestErrorStack();
         
-        define('SM_CACHE_LAST_MTIME', time() - 804600); // A week ago
+        // define('SM_CACHE_LAST_MTIME', time() - 804600); // A week ago
+        // SmartestInfo::$cache_last_mtime = (time() - 804600); // A week ago
+        SmartestInfo::$cache_last_mtime = (time() - 259200); // three days ago
 	    
 	    if(is_file(SM_ROOT_DIR."System/Core/Info/system.yml")){
 	        define('SYSTEM_INFO_FILE', SM_ROOT_DIR."System/Core/Info/system.yml");

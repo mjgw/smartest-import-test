@@ -2,7 +2,7 @@
 
 class SmartestCache{
 
-	static function load($token, $is_smartest=false){
+	static function load($token, $is_smartest=false, $max_age=259200){
 		
 		if($is_smartest){
 			$file_name = 'scd_'.md5($token).'.tmp';
@@ -11,9 +11,11 @@ class SmartestCache{
 		}
 		
 		$file_path = SM_ROOT_DIR.'System/Cache/Data/'.$file_name;
-	
+        
+        $last_mtime = ($max_age==259200) ? SmartestInfo::$cache_last_mtime : (time() - $max_age);
+        
 		if(file_exists($file_path)){
-            if(filemtime($file_path) > SM_CACHE_LAST_MTIME){ // Check that the cache is not more than a week old, and delete if it is
+            if(filemtime($file_path) > $last_mtime){ // Check that the cache is not more than a week old, and delete if it is
                 return unserialize(file_get_contents($file_path));
             }else{
                 unlink($file_path);
