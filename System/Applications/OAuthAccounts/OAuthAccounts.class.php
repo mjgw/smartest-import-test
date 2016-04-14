@@ -13,6 +13,7 @@ class OAuthAccounts extends SmartestSystemApplication{
         $this->setTitle('OAuth Client Accounts');
         $this->setFormReturnUri();
         $this->setFormReturnDescription('OAuth accounts');
+        $this->send($this->getUser()->hasToken('delete_oauth_accounts'), 'allow_delete');
         $h = new SmartestOAuthHelper;
         $this->send($h->getAccounts(), 'accounts');
         
@@ -89,13 +90,13 @@ class OAuthAccounts extends SmartestSystemApplication{
                 }
             }
             
-            if(strlen($this->getRequestParameter('oauth_access_token'))){
+            // if(strlen($this->getRequestParameter('oauth_access_token'))){
                 $account->setOAuthAccessToken($this->getRequestParameter('oauth_access_token'));
-            }
+            // }
             
-            if(strlen($this->getRequestParameter('oauth_access_token_secret'))){
+            // if(strlen($this->getRequestParameter('oauth_access_token_secret'))){
                 $account->setOAuthAccessTokenSecret($this->getRequestParameter('oauth_access_token_secret'));
-            }
+            // }
             
             $account->save();
             
@@ -105,6 +106,32 @@ class OAuthAccounts extends SmartestSystemApplication{
         }else{
             $this->addUserMessageToNextRequest("The account ID was not recognised or the account is not an OAuth Client Account", SmartestUserMessage::ERROR);
             $this->formForward();
+        }
+        
+    }
+    
+    public function deleteClientAccount(){
+        
+        if($this->getUser()->hasToken('delete_oauth_accounts')){
+            
+            $account = new SmartestOAuthAccount;
+        
+            if($account->find($this->getRequestParameter('account_id')) && $account->isOAuthClient()){
+                
+                $account->delete();
+                $this->addUserMessageToNextRequest("The account has been deleted.", SmartestUserMessage::INFO);
+                $this->formForward();
+                
+            }else{
+                $this->addUserMessageToNextRequest("The account ID was not recognised or the account is not an OAuth Client Account", SmartestUserMessage::ERROR);
+                $this->formForward();
+            }
+            
+        }else{
+            
+            $this->addUserMessageToNextRequest("You do not have permission to delete OAuth client accounts", SmartestUserMessage::ACCESS_DENIED);
+            $this->formForward();
+            
         }
         
     }

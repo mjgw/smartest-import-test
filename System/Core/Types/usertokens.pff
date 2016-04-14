@@ -61,3 +61,4 @@ id:type:scope:code:category:description
 57:p:s:delete_tag:SM_USERTOKEN_SYSTEM:Delete tags
 58:p:s:see_private_models:SM_USERTOKEN_ITEMS:See private models
 59:p:s:clean_data_cache:SM_USERTOKEN_SYSTEM:Clean the data cache
+60:p:s:delete_oauth_accounts:SM_USERTOKEN_SYSTEM:Delete OAuth accounts

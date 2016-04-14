@@ -33,7 +33,7 @@
     <li><b>Selected OAuth Account</b></li>
     <li class="permanent-action"><a href="#" onclick="workWithItem('editAccount'); return false;" class="right-nav-link"><i class="fa fa-pencil"></i> Edit account details</a></li>
     <li class="permanent-action"><a href="#" onclick="workWithItem('testClientAccount'); return false;" class="right-nav-link"><i class="fa fa-eyedropper"></i> Test account functionality</a></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(confirm('Are you sure you want to delete this OAuth Account?')){workWithItem('deleteClientAccount');}{/literal} return false;"><i class="fa fa-minus-circle text-danger"></i> Delete User</a></li>
+    {if $allow_delete}<li class="permanent-action"><a href="#" onclick="{literal}if(confirm('Are you sure you want to delete this OAuth Account?')){workWithItem('deleteClientAccount');}{/literal} return false;"><i class="fa fa-minus-circle text-danger"></i> Delete account</a></li>{/if}
   </ul>
 
   <ul class="actions-list">

@@ -582,7 +582,17 @@ class SmartestCmsLink extends SmartestHelper{
                 $d->hydrate($result[0]);
                 $this->_destination = $d;
             }else{
-                return $this->error("The requested page was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
+                
+                $sql = "SELECT * FROM Pages WHERE page_".$this->_destination_properties->getParameter('page_ref_field_name')."='".$this->_destination_properties->getParameter('page_ref_field_value')."' AND page_site_id!='".$this->getSiteId()."' AND page_type='NORMAL' AND page_deleted != 'TRUE'";
+                $result = $this->database->queryToArray($sql);
+                
+                if(count($result)){
+                    $d->hydrate($result[0]);
+                    $this->_destination = $d;
+                }else{
+                    return $this->error("The requested page was not found. (Link destination: ".$this->_destination_properties->getParameter('destination').')');
+                }
+                
             }
             
             break;
@@ -1102,30 +1112,59 @@ class SmartestCmsLink extends SmartestHelper{
             case SM_LINK_TYPE_PAGE:
             
             if($draft_mode){
-                if($this->_request->getRequestParameter('hide_newwin_link')){
-                    $url = $this->_request->getDomain().'website/renderEditableDraftPage?page_id='.$this->_destination->getWebId().'&amp;hide_newwin_link=true';
-                    if(strlen($this->_hash)){
-                        $url .= '#'.$this->_hash;
+                
+                if($this->_destination->getSiteId() == $this->getSiteId()){
+                    if($this->_request->getRequestParameter('hide_newwin_link')){
+                        $url = $this->_request->getDomain().'website/renderEditableDraftPage?page_id='.$this->_destination->getWebId().'&amp;hide_newwin_link=true';
+                        if(strlen($this->_hash)){
+                            $url .= '#'.$this->_hash;
+                        }
+                    }else{
+                        $url = $this->_request->getDomain().'websitemanager/preview?page_id='.$this->_destination->getWebId();
+                        if(strlen($this->_hash)){
+                            $url .= '&amp;hash='.$this->_hash;
+                        }
                     }
                 }else{
-                    $url = $this->_request->getDomain().'websitemanager/preview?page_id='.$this->_destination->getWebId();
-                    if(strlen($this->_hash)){
-                        $url .= '&amp;hash='.$this->_hash;
-                    }
+                    $url = '#other-site-draft-mode';
                 }
+                
                 return $url;
             }else{
                 if($this->_destination->getIsPublishedAsBoolean() || $ignore_status){
-                    /* if(defined('SM_LINK_URLS_ABSOLUTE') && constant('SM_LINK_URLS_ABSOLUTE')){
-                        'http://'.$this->getSite()->getDomain().$this->_request->getDomain().$this->_destination->getDefaultUrl();
-                    }else{ */
-                        $url = $this->_request->getDomain().$this->_destination->getDefaultUrl();
-                    // }
-                    // var_dump($this->_hash);
-                    if(strlen($this->_hash)){
-                        $url .= '#'.$this->_hash;
+                    if($this->_destination->getSiteId() == $this->getSiteId()){
+                        /* if(defined('SM_LINK_URLS_ABSOLUTE') && constant('SM_LINK_URLS_ABSOLUTE')){
+                            'http://'.$this->getSite()->getDomain().$this->_request->getDomain().$this->_destination->getDefaultUrl();
+                        }else{ */
+                            $url = $this->_request->getDomain().$this->_destination->getDefaultUrl();
+                        // }
+                        // var_dump($this->_hash);
+                        if(strlen($this->_hash)){
+                            $url .= '#'.$this->_hash;
+                        }
+                        return $url;
+                    }else{
+                        if($this->_destination->getSiteId()){
+                            $site = new SmartestSite;
+                            if($site->find($this->_destination->getSiteId())){
+                                if((bool) $site->getIsEnabled()){
+                                    $url = 'http://'.$site->getDomain().$this->_request->getDomain().$this->_destination->getDefaultUrl();
+                                }else{
+                                    $url = '#other-site-not-enabled';
+                                }
+                                
+                            }else{
+                                // site ID doesn't exist
+                                $url = '#site-id-not-recognised';
+                            }
+                        }else{
+                            // no site ID found
+                            $url = '#no-site-id';
+                        }
+                        
+                        return $url;
+                        
                     }
-                    return $url;
                 }else{
                     return '#';
                 }
