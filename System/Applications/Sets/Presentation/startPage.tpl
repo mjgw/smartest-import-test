@@ -36,17 +36,17 @@
 <div id="actions-area">
   
 <ul class="actions-list" id="item-specific-actions" style="display:none">
-  <li><b>Selected Data Set</b></li>
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editSet');}{/literal}"><img border="0" src="{$domain}Resources/Icons/folder_edit.png"> Modify data set contents</a></li>
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('previewSet');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_go.png"> List data set contents</a></li>
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('deleteSetConfirm');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_delete.png"> Delete this data set</a></li>
+  <li><b>Selected set</b></li>
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editSet');}{/literal}"><i class="fa fa-pencil-square-o"></i> Modify data set contents</a></li>
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('previewSet');}{/literal}" ><i class="fa fa-list-ul"></i> List data set contents</a></li>
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('deleteSetConfirm');}{/literal}" ><i class="fa fa-times-circle"></i> Delete this data set</a></li>
 {* <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('chooseSchemaForExport');}{/literal}"><img border="0" src="{$domain}Resources/Icons/page_code.png"> Export</a></li> *}
 </ul>
 
 <ul class="actions-list">
-  <li><b>Data Options</b></li>
-  <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/addSet'"><img border="0" src="{$domain}Resources/Icons/folder_add.png"> Create A New Data Set</a></li>  
-  <li class="permanent-action"><a href="{$domain}smartest/models"><img border="0" src="{$domain}Resources/Icons/package.png" style="width:16px;height:18px"> Browse Data in Models</a></li>
+  <li><b>Sets options</b></li>
+  <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/addSet'"><i class="fa fa-plus-square-o"></i> Create a new data set</a></li>  
+  <li class="permanent-action"><a href="{$domain}smartest/models"><i class="fa fa-cubes"></i> Browse Data in Models</a></li>
   {* <li class="permanent-action"><a href="{$domain}sets/getDataExports"><img border="0" src="{$domain}Resources/Icons/package_add.png"> View XML Feeds</a></li>
   <li class="permanent-action"><a href="{$domain}smartest/schemas"><img border="0" src="{$domain}Resources/Icons/package_add.png"> View XML Schemas</a></li> *}
 </ul>

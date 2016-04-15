@@ -25,18 +25,30 @@ services:
     default_client_secret: 42a06577794c46c18281c3ae30856c64
     fa_icon: instagram
     username_prefix: '@'
-  SM_OAUTHSERVICE_BITLY:
-    id: SM_OAUTHSERVICE_BITLY
-    shortname: bitly
-    label: Bit.ly
-    token_request_url: https://bitly.com/oauth/authorize
-    client_register_url: https://bitly.com/a/oauth_apps
-    class: SmartestBitlyHelper
-    authorize_method: get
-    oauth_version: 2.0
-    default_client_id: 831ec4997c28ef50fe64cead5b13477091a5f30a
-    default_client_secret: e2d4c495a753d3e25c48b37f45750e35085df2d2
-    fa_icon: link
+#  SM_OAUTHSERVICE_BITLY:
+#    id: SM_OAUTHSERVICE_BITLY
+#    shortname: bitly
+#    label: Bit.ly
+#    token_request_url: https://bitly.com/oauth/authorize
+#    client_register_url: https://bitly.com/a/oauth_apps
+#    class: SmartestBitlyHelper
+#    authorize_method: get
+#    oauth_version: 2.0
+#    default_client_id: 831ec4997c28ef50fe64cead5b13477091a5f30a
+#    default_client_secret: e2d4c495a753d3e25c48b37f45750e35085df2d2
+#    fa_icon: link
+#  SM_OAUTHSERVICE_MAILCHIMP:
+#    id: SM_OAUTHSERVICE_MAILCHIMP
+#    shortname: mailchimp
+#    label: MailChimp
+#    client_register_url: https://admin.mailchimp.com/account/oauth2/
+#    token_request_url: https://login.mailchimp.com/oauth2/authorize
+#    oauth_version: 2.0
+#    authorize_method: get
+#    default_client_id: 903413349110
+#    default_client_secret: 7c84730340950b028dc253ee91837f59
+#    class: SmartestMailchimpHelper
+#    fa_icon: envelope-square
 #  SM_OAUTHSERVICE_BUFFER:
 #    id: SM_OAUTHSERVICE_BUFFER
 #    shortname: buffer
@@ -58,8 +70,6 @@ services:
 #    class: SmartestSoundcloudHelper
 #    authorize_method: get
 #    oauth_version: 2.0
-#    default_client_id: 
-#    default_client_secret: 
 #    fa_icon: link
 #  SM_OAUTHSERVICE_DROPBOX:
 #    id: SM_OAUTHSERVICE_DROPBOX

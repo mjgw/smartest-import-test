@@ -194,14 +194,14 @@ function viewLivePage(parameters){
 
 <ul class="actions-list" id="non-specific-actions">
   <li><b>Page Options</b></li>
-  {if $page_template.filename && $version == "draft"}<li class="permanent-action"><a href="{$domain}templates/editTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={if $page_template.status == "imported"}{$page_template.id}{else}{$page_template.url}{/if}" value="Edit"><img src="{$domain}Resources/Icons/page_edit.png" border="0" alt="" /> Edit Page Template</a></li>{/if}
-  {if $version == "draft"}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/publishPageConfirm?page_id={$page.webid}{if $item}&amp;item_id={$item.id}{/if}'" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this page</a></li>{/if}
-  <li class="permanent-action"><a href="javascript:;" onclick="viewLivePage({ldelim}domain: '{$_site.domain}'{rdelim});" class="right-nav-link"><img src="{$domain}Resources/Icons/page_go.png" border="0" alt=""> Go to this page</a></li>
-  <li class="permanent-action"><a href="{$domain}{$section}/layoutPresetForm?page_id={$page.webid}{if $item}&amp;item_id={$item.id}{/if}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_edit.png" border="0" alt=""> Create preset from this page</a></li>
+  {if $page_template.filename && $version == "draft"}<li class="permanent-action"><a href="{$domain}templates/editTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={if $page_template.status == "imported"}{$page_template.id}{else}{$page_template.url}{/if}" value="Edit"><i class="fa fa-file-code-o"></i> Edit Page Template</a></li>{/if}
+  {if $version == "draft"}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/publishPageConfirm?page_id={$page.webid}{if $item}&amp;item_id={$item.id}{/if}'" class="right-nav-link"><i class="fa fa-globe"></i> Publish this page</a></li>{/if}
+  {if _b($page.is_published)}<li class="permanent-action"><a href="javascript:;" onclick="viewLivePage({ldelim}domain: '{$_site.domain}'{rdelim});" class="right-nav-link"><i class="fa fa-rocket"></i> See this page online</a></li>{/if}
+  <li class="permanent-action"><a href="{$domain}{$section}/layoutPresetForm?page_id={$page.webid}{if $item}&amp;item_id={$item.id}{/if}" class="right-nav-link"><i class="fa fa-share-square-o"></i> Create preset from this page</a></li>
   {if $draftAsset.asset_id && $draftAsset.asset_id != $liveAsset.asset_id}<li class="permanent-action"><a href="#" onclick="{literal}if(confirm('Are you sure you want to publish your changes right now?')){workWithItem('setLiveAsset');}{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_delete.png" border="0" alt=""> Publish This Asset Class</a>{/if}
-  <li class="permanent-action"><a href="{$domain}smartest/assets/types" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Browse Assets Library</a></li>
-  <li class="permanent-action"><a href="{$domain}{$section}/closeCurrentPage" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt=""> Finish working with this page</a></li>
-  {if $allow_release}<li class="permanent-action"><a href="{$domain}{$section}/releasePage?page_id={$page.webid}" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt=""> Release this page</a></li>{/if}
+  <li class="permanent-action"><a href="{$domain}smartest/assets/types" class="right-nav-link"><i class="fa fa-file-image-o"></i> Browse Assets Library</a></li>
+  <li class="permanent-action"><a href="{$domain}{$section}/closeCurrentPage" class="right-nav-link"><i class="fa fa-check"></i> Finish working with this page</a></li>
+  {if $allow_release}<li class="permanent-action"><a href="{$domain}{$section}/releasePage?page_id={$page.webid}" class="right-nav-link"><i class="fa fa-unlock"></i> Release this page</a></li>{/if}
 </ul>
 
 {if $show_recent_items}

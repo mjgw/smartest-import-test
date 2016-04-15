@@ -36,25 +36,25 @@
   
 <ul class="actions-list" id="static-specific-actions" style="display:none">
   <li><b>Selected Set</b></li>
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editSet');}{/literal}"><img border="0" src="{$domain}Resources/Icons/folder_edit.png"> Change contents</a></li>
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('previewSet');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_go.png"> Browse items</a></li>
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editStaticSetOrder');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/arrow_switch.png"> Change order</a></li>
-{* <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('copySet');}{/literal}"><img border="0" src="{$domain}Resources/Icons/page_code.png"> Duplicate<!--structure, not template because it does not propigate back to template--></a></li> *}
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this set?')){workWithItem('deleteSet');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_delete.png"> Delete</a></li>
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editSet');}{/literal}"><i class="fa fa-pencil-square-o"></i> Change contents</a></li>
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('previewSet');}{/literal}" ><i class="fa fa-search"></i> Browse items</a></li>
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editStaticSetOrder');}{/literal}" ><i class="fa fa-random"></i> Change order</a></li>
+{* <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('copySet');}{/literal}"><i class="fa fa-clipboard"></i> Duplicate<!--structure, not template because it does not propigate back to template--></a></li> *}
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this set?')){workWithItem('deleteSet');}{/literal}" ><i class="fa fa-times-circle"></i> Delete this set</a></li>
 {* <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('chooseSchemaForExport');}{/literal}"><img border="0" src="{$domain}Resources/Icons/page_code.png"> Export</a></li> *}
 </ul>
 
 <ul class="actions-list" id="dynamic-specific-actions" style="display:none">
   <li><b>Selected Dynamic Set</b></li>
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editSet');}{/literal}"><img border="0" src="{$domain}Resources/Icons/folder_edit.png"> Change Contents</a></li>
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('previewSet');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_go.png"> Browse items</a></li>
-{* <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('copySet');}{/literal}"><img border="0" src="{$domain}Resources/Icons/page_code.png"> Duplicate<!--structure, not template because it does not propigate back to template--></a></li> *}
-  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this page?')){workWithItem('deleteSet');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_delete.png"> Delete</a></li>
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editSet');}{/literal}"><i class="fa fa-pencil-square-o"></i> Change Contents</a></li>
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('previewSet');}{/literal}" ><i class="fa fa-search"></i> Browse items</a></li>
+{* <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('copySet');}{/literal}"><i class="fa fa-clipboard"></i> Duplicate<!--structure, not template because it does not propigate back to template--></a></li> *}
+  <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this page?')){workWithItem('deleteSet');}{/literal}" ><i class="fa fa-times-circle"></i> Delete this set</a></li>
 </ul>
 
 <ul class="actions-list">
   <li><b>Set options</b></li>
-  <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/addSet?class_id={$model.id}'"><img border="0" src="{$domain}Resources/Icons/add.png"> Make a new set of {$model.plural_name|lower}</a></li>
+  <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/addSet?class_id={$model.id}'"><i class="fa fa-plus-square-o"></i> Make a new set of {$model.plural_name|lower}</a></li>
 </ul>
 
 </div>

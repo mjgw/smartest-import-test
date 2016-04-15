@@ -94,9 +94,9 @@
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Site Options</b></li>
     
-    <li class="permanent-action"><a href="{$domain}{$section}/publishPageConfirm?page_id={$page.webid}{if $page.type == "ITEMCLASS" && $page.item.id}&amp;item_id={$page.item.id}{/if}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this page</a></li>
-    {if $allow_release}<li class="permanent-action"><a href="{$domain}{$section}/releasePage?page_id={$page.webid}" class="right-nav-link"><img src="{$domain}Resources/Icons/lock_open.png" border="0" alt=""> Release this page</a></li>{/if}
-    {if $allow_edit}<li class="permanent-action"><a href="{$domain}{$section}/closeCurrentPage" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt=""> Finish working with this page</a></li>{/if}
+    <li class="permanent-action"><a href="{$domain}{$section}/publishPageConfirm?page_id={$page.webid}{if $page.type == "ITEMCLASS" && $page.item.id}&amp;item_id={$page.item.id}{/if}" class="right-nav-link"><i class="fa fa-globe"></i> Publish this page</a></li>
+    {if $allow_release}<li class="permanent-action"><a href="{$domain}{$section}/releasePage?page_id={$page.webid}" class="right-nav-link"><i class="fa fa-unlock"></i> Release this page</a></li>{/if}
+    {if $allow_edit}<li class="permanent-action"><a href="{$domain}{$section}/closeCurrentPage" class="right-nav-link"><i class="fa fa-check"></i> Finish working with this page</a></li>{/if}
   </ul>
 </div>
 {/if}

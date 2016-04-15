@@ -54,33 +54,33 @@
 <ul class="actions-list" id="imported-template-specific-actions" style="display:none">
     
   <li><b>Selected template:</b></li>
-	<li class="permanent-action"><a href="javascript:templates.workWithItem('editTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt="" /> Edit this template</a></li>
-	<li class="permanent-action"><a href="javascript:templates.workWithItem('templateInfo');" class="right-nav-link"><img src="{$domain}Resources/Icons/information.png" border="0" alt="" /> About this template</a></li>
-	<li class="permanent-action"><a href="javascript:templates.workWithItem('duplicateTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_edit.png" border="0" alt="" /> Duplicate this template</a></li>
-	<li class="permanent-action"><a href="javascript:{literal}if(confirm('Really delete this template?')){ templates.workWithItem('deleteTemplate'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_delete.png" border="0" alt="" /> Delete this template</a></li>
-	<li class="permanent-action"><a href="javascript:templates.workWithItem('downloadTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_white_put.png" border="0" alt="" /> Download this template</a></li>
+	<li class="permanent-action"><a href="javascript:templates.workWithItem('editTemplate');" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this template</a></li>
+	<li class="permanent-action"><a href="javascript:templates.workWithItem('templateInfo');" class="right-nav-link"><i class="fa fa-info-circle"></i> About this template</a></li>
+	<li class="permanent-action"><a href="javascript:templates.workWithItem('duplicateTemplate');" class="right-nav-link"><i class="fa fa-clipboard"></i> Duplicate this template</a></li>
+	<li class="permanent-action"><a href="javascript:{literal}if(confirm('Really delete this template?')){ templates.workWithItem('deleteTemplate'); }{/literal}" class="right-nav-link"><i class="fa fa-times-circle"></i> Delete this template</a></li>
+	<li class="permanent-action"><a href="javascript:templates.workWithItem('downloadTemplate');" class="right-nav-link"><i class="fa fa-download"></i> Download this template</a></li>
 </ul>
 
 <ul class="actions-list" id="unimported-template-specific-actions" style="display:none">
     
   <li><b>Unimported template:</b></li>
-	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('importSingleTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt="" /> Import this template</a></li>
-	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('editTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt="" /> Edit as-is</a></li>
-	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('deleteTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_delete.png" border="0" alt="" /> Delete this template</a></li>
-	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('duplicateTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_edit.png" border="0" alt="" /> Duplicate this template</a></li>
-	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('downloadTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_white_put.png" border="0" alt="" /> Download this template</a></li>
+	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('importSingleTemplate');" class="right-nav-link"><i class="fa fa-sign-in"></i> Import this template</a></li>
+	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('editTemplate');" class="right-nav-link"><i class="fa fa-pencil"></i> Edit as-is</a></li>
+	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('deleteTemplate');" class="right-nav-link"><i class="fa fa-times-circle"></i> Delete this template</a></li>
+	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('duplicateTemplate');" class="right-nav-link"><i class="fa fa-clipboard"></i> Duplicate this template</a></li>
+	<li class="permanent-action"><a href="#" onclick="return templates.workWithItem('downloadTemplate');" class="right-nav-link"><i class="fa fa-download"></i> Download this template</a></li>
 </ul>
 
 <ul class="actions-list" id="non-specific-actions">
   <li><b>Template options</b></li>
-	{if $dir_is_writable}<li class="permanent-action"><a href="javascript:nothing()" onclick="window.location='{$domain}{$section}/addTemplate?type={$type.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt="" /> Add another {$type.label|lower}</a></li>{/if}
-	<li class="permanent-action"><a href="javascript:nothing()" onclick="window.location='{$domain}smartest/templates';" class="right-nav-link"><img src="{$domain}Resources/Icons/folder.png" border="0" alt="" style="width:16px;height:16px" /> Back to template types</a></li>
+	{if $dir_is_writable}<li class="permanent-action"><a href="javascript:nothing()" onclick="window.location='{$domain}{$section}/addTemplate?type={$type.id}';" class="right-nav-link"><i class="fa fa-plus-circle"></i> Add another {$type.label|lower}</a></li>{/if}
+	<li class="permanent-action"><a href="javascript:nothing()" onclick="window.location='{$domain}smartest/templates';" class="right-nav-link"><i class="fa fa-folder-open"></i> Back to template types</a></li>
 </ul>
 
 <ul class="actions-list" id="non-specific-actions">
   <li><b>Recent {$type.label|strtolower}s</b></li>
   {foreach from=$recently_edited item="recent_template"}
-	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_template.action_url}'"><img border="0" src="{$recent_template.small_icon}" /> {$recent_template.label|summary:"30"}</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_template.action_url}'"><i class="fa fa-file-code-o"></i> {$recent_template.label|summary:"30"}</a></li>
   {/foreach}
 </ul>
 

@@ -92,7 +92,6 @@
 <div id="actions-area">
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Site Options</b></li>
-    <li class="permanent-action"><a href="{$domain}smartest/users" class="right-nav-link"><img src="{$domain}Resources/Icons/user.png" border="0" alt=""> Users &amp; Permissions</a></li>
-    <li class="permanent-action"><a href="{$domain}desktop/twitterSettings" class="right-nav-link"><img src="{$domain}Resources/Icons/cog.png" border="0" alt=""> Twitter settings</a></li>
+    <li class="permanent-action"><a href="{$domain}smartest/users" class="right-nav-link"><i class="fa fa-users"></i> Users &amp; permissions</a></li>
   </ul>
 </div>

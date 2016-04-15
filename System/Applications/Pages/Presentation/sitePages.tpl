@@ -80,7 +80,7 @@ function viewPage(){
   <ul class="actions-list" id="home-page-specific-actions" style="display:none">
 
   	<li><b>Home Page Options</b></li>
-  	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('openPage'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this page</a></li>
+  	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('openPage'); }{/literal}" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this page</a></li>
   	<li class="permanent-action"><a href="{dud_link}" onclick="workWithItem('addPage');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Add a new page under this one</a></li>
   	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('publishPageConfirm'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this page</a></li>
   	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('preview'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/eye.png" border="0" alt=""> Preview This Page</a></li>
@@ -91,23 +91,23 @@ function viewPage(){
 
 	<li><b>Static Page Options</b></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('openPage'); }{/literal}" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this page</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="workWithItem('addPage');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Add a new page under this one</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('publishPageConfirm'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this page</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('preview'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/eye.png" border="0" alt=""> Preview This Page</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('movePageUp'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/arrow_up.png" border="0" alt=""> Move Up</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('movePageDown'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/arrow_down.png" border="0" alt=""> Move Down</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this page?')){workWithItem('deletePage');}{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_delete.png" border="0" alt=""> Delete Page</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="workWithItem('addPage');" class="right-nav-link"><i class="fa fa-plus-circle"></i> Add a new page under this one</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('publishPageConfirm'); }{/literal}" class="right-nav-link"><i class="fa fa-globe"></i> Publish this page</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('preview'); }{/literal}" class="right-nav-link"><i class="fa fa-eye"></i> Preview This Page</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('movePageUp'); }{/literal}" class="right-nav-link"><i class="fa fa-arrow-circle-o-up"></i> Move Up</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('movePageDown'); }{/literal}" class="right-nav-link"><i class="fa fa-arrow-circle-o-down"></i> Move Down</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this page?')){workWithItem('deletePage');}{/literal}" class="right-nav-link"><i class="fa fa-times-circle"></i> Delete Page</a></li>
 	
 </ul>
 
 <ul class="actions-list" id="meta-page-specific-actions" style="display:none">
 
 	<li><b>Meta Page Options</b></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('openPage'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this page</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="workWithItem('addPage');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Add a new page under this one</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('publishPageConfirm'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this page</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('preview'); }{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/eye.png" border="0" alt=""> Preview This Page</a></li>
-  <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this page?')){workWithItem('deletePage');}{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/page_delete.png" border="0" alt=""> Delete Page</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('openPage'); }{/literal}" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this page</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="workWithItem('addPage');" class="right-nav-link"><i class="fa fa-plus-circle"></i> Add a new page under this one</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('publishPageConfirm'); }{/literal}" class="right-nav-link"><i class="fa fa-globe"></i> Publish this page</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage){ workWithItem('preview'); }{/literal}" class="right-nav-link"><i class="fa fa-eye"></i> Preview This Page</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="{literal}if(selectedPage && confirm('Are you sure you want to delete this page?')){workWithItem('deletePage');}{/literal}" class="right-nav-link"><i class="fa fa-times-circle"></i> Delete Page</a></li>
     	
 </ul>
 
@@ -121,17 +121,17 @@ function viewPage(){
 
 <ul class="actions-list" id="non-specific-actions">
     <li><b>Site Options</b></li>
-    <li class="permanent-action"><a href="{$domain}website/renderEditableDraftPage?page_id={$home_page.webid}&amp;hide_newwin_link=true"><img src="{$domain}Resources/Icons/eye.png" border="0" alt=""> Enter site preview mode</a></li>
-    <li class="permanent-action"><a href="{$domain}smartest/page/new" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Add page</a></li>
-    <li class="permanent-action"><a href="{$domain}websitemanager/releaseCurrentUserHeldPages" class="right-nav-link"><img src="{$domain}Resources/Icons/lock_open.png" border="0" alt=""> Release all pages</a></li>
-    <li class="permanent-action"><a href="{$domain}smartest/pagegroups" class="right-nav-link"><img src="{$domain}Resources/Icons/page_white_stack.png" border="0" alt=""> Page groups</a></li>
-    <li class="permanent-action"><a href="{$domain}websitemanager/clearPagesCache" class="right-nav-link"><img src="{$domain}Resources/Icons/page_delete.png" border="0" alt=""> Clear cached pages</a></li>
+    <li class="permanent-action"><a href="{$domain}website/renderEditableDraftPage?page_id={$home_page.webid}&amp;hide_newwin_link=true"><i class="fa fa-eye"></i> Enter site preview mode</a></li>
+    <li class="permanent-action"><a href="{$domain}smartest/page/new" class="right-nav-link"><i class="fa fa-plus-circle"></i> Add page</a></li>
+    <li class="permanent-action"><a href="{$domain}websitemanager/releaseCurrentUserHeldPages" class="right-nav-link"><i class="fa fa-unlock"></i> Release all pages</a></li>
+    <li class="permanent-action"><a href="{$domain}smartest/pagegroups" class="right-nav-link"><i class="fa fa-files-o"></i> Page groups</a></li>
+    <li class="permanent-action"><a href="{$domain}websitemanager/clearPagesCache" class="right-nav-link"><i class="fa fa-refresh"></i> Force page cache refresh</a></li>
 </ul>
 
 <ul class="actions-list" id="non-specific-actions">
   <li><span style="color:#999">Recently edited pages</span></li>
   {foreach from=$recent_pages item="recent_page"}
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_page.action_url}'"><img border="0" src="{$recent_page.small_icon}" /> {$recent_page.label|summary:"28"}</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_page.action_url}'"><i class="fa fa-file-o"></i> {$recent_page.label|summary:"28"}</a></li>
   {/foreach}
 </ul>
 

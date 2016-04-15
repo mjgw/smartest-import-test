@@ -68,6 +68,6 @@ $$('#tags-list li label a.tag-delete').each(function(tagLink){
 <div id="actions-area">
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Tags Options</b></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addTag'"><img src="{$domain}Resources/Icons/tag_blue.png" />Add Tag</a></li>    
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addTag'"><i class="fa fa-tag"></i> Add tag</a></li>    
   </ul>
 </div>

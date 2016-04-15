@@ -172,28 +172,28 @@ function openPage(pageAction){
 {if $items_exist}
 <ul class="actions-list" id="item-specific-actions" style="display:none">
   <li><b><span class="item_name_field">{$model.name}</span></b></li>
-  {if $can_edit_items}<li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/pencil.png"> <a href="{dud_link}" onclick="itemList.workWithItem('openItem');">Open</a></li>{/if}
-  <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/information.png"> <a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id='+itemList.lastItemId+'&amp;enable_ajax=1', '{$model.name} info');">{$model.name} info</a></li>
-  <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/lock_open.png"> <a href="{dud_link}" onclick="itemList.workWithItem('releaseItem');">Release</a></li>
-  {if $has_metapages}<li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/eye.png"> <a href="{dud_link}" onclick="itemList.workWithItem('preview');">Preview</a></li>{/if}
-  <li class="permanent-action" id="item-publish-option"><img border="0" src="{$domain}Resources/Icons/page_lightning.png"> <a href="{dud_link}" onclick="itemList.workWithItem('publishItem');" id="item-publish-option-link">Publish</a></li>
-  <li class="permanent-action" id="item-unpublish-option" style="display:none"><img border="0" src="{$domain}Resources/Icons/page_code.png"> <a href="{dud_link}" onclick="itemList.workWithItem('unpublishItem');">Un-Publish</a></li>
-  <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/accept.png"> <a href="{dud_link}" onclick="itemList.workWithItem('addTodoItem');">Add new to-do</a></li>
-  <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/page_code.png"> <a href="{dud_link}" onclick="itemList.workWithItem('toggleItemArchived');"><span class="archive_action_name" id="archive-action-name">Archive/Un-archive<span></a></li>
-  <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/page_white_copy.png"> <a href="{dud_link}" onclick="itemList.workWithItem('duplicateItem');">Duplicate</a></li>
-  <li class="permanent-action"><img border="0" src="{$domain}Resources/Icons/package_delete.png"> <a href="{dud_link}" onclick="itemList.workWithItem('deleteItem', {ldelim}confirm: 'Are you sure you want to delete this {$model.name|lower} ?'{rdelim});">Delete</a></li>
+  {if $can_edit_items}<li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('openItem');"><i class="fa fa-pencil"></i> Open</a></li>{/if}
+  <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id='+itemList.lastItemId+'&amp;enable_ajax=1', '{$model.name} info');"><i class="fa fa-info-circle"></i> {$model.name} info</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('releaseItem');"><i class="fa fa-unlock"></i> Release</a></li>
+  {if $has_metapages}<li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('preview');"><i class="fa fa-eye"></i> Preview</a></li>{/if}
+  <li class="permanent-action" id="item-publish-option"><a href="{dud_link}" onclick="itemList.workWithItem('publishItem');"><i class="fa fa-globe"></i> <span id="item-publish-option-link">Publish</span></a></li>
+  <li class="permanent-action" id="item-unpublish-option" style="display:none"><a href="{dud_link}" onclick="itemList.workWithItem('unpublishItem');"><i class="fa fa-eye-slash"></i> Un-Publish</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('addTodoItem');"><i class="fa fa-share-square-o"></i> Add new to-do</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('toggleItemArchived');"><i class="fa fa-archive"></i> <span class="archive_action_name" id="archive-action-name">Archive/Un-archive<span></a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('duplicateItem');"><i class="fa fa-clipboard"></i> Duplicate</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('deleteItem', {ldelim}confirm: 'Are you sure you want to delete this {$model.name|lower} ?'{rdelim});"><i class="fa fa-times-circle"></i> Delete</a></li>
 </ul>
 {/if}
 
 <ul class="actions-list" id="non-specific-actions">
   <li><b>Model Options</b></li>
-  {if $allow_create_new}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addItem?class_id={$model.id}'"><img border="0" src="{$domain}Resources/Icons/add.png" /> New {$model.name|lower}</a></li>{/if}
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/releaseUserHeldItems?class_id={$model.id}';"><img border="0" src="{$domain}Resources/Icons/lock_open.png" /> Release all {$model.plural_name|lower}</a></li>
-  <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/modelInfo?class_id={$model.id}', 'Model info');"><img border="0" src="{$domain}Resources/Icons/information.png" /> Model info</a></li>
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/getItemClassSets?class_id={$model.id}'"><img border="0" src="{$domain}Resources/Icons/folder_old.png" /> View sets of {$model.plural_name|lower}</a></li>
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/addSet?class_id={$model.id}'"><img border="0" src="{$domain}Resources/Icons/package_add.png" /> Create a new set of {$model.plural_name|lower}</a></li>
-  {if $can_edit_properties}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassProperties?class_id={$model.id}'"><img border="0" src="{$domain}Resources/Icons/tag_blue_edit.png" /> Edit model properties</a></li>
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editItemClassPropertyOrder?class_id={$model.id}'"><img border="0" src="{$domain}Resources/Icons/arrow_switch.png" /> Edit property order</a></li>{/if}  
+  {if $allow_create_new}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addItem?class_id={$model.id}'"><i class="fa fa-plus-circle"></i> New {$model.name|lower}</a></li>{/if}
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/releaseUserHeldItems?class_id={$model.id}';"><i class="fa fa-unlock"></i> Release all {$model.plural_name|lower}</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/modelInfo?class_id={$model.id}', 'Model info');"><i class="fa fa-info"></i> Model info</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/getItemClassSets?class_id={$model.id}'"><i class="fa fa-folder-open"></i> View sets of {$model.plural_name|lower}</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/addSet?class_id={$model.id}'"><i class="fa fa-plus-square-o"></i> Create a new set of {$model.plural_name|lower}</a></li>
+  {if $can_edit_properties}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassProperties?class_id={$model.id}'"><i class="fa fa-sliders"></i> Edit model properties</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editItemClassPropertyOrder?class_id={$model.id}'"><i class="fa fa-random"></i> Edit property order</a></li>{/if}  
 {* <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/importData?class_id={$itemBaseValues.itemclass_id}';"><img border="0" src="{$domain}Resources/Icons/page_code.png" /> Import data from CSV</a></li> *}
 </ul>
 
@@ -201,7 +201,7 @@ function openPage(pageAction){
 <ul class="actions-list" id="non-specific-actions">
   <li><span style="color:#999">Recently edited {$model.plural_name|strtolower}</span></li>
   {foreach from=$recent_items item="recent_item"}
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_item.action_url}'"><img border="0" src="{$recent_item.small_icon}" /> {$recent_item.label|summary:"28"}</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_item.action_url}'"><i class="fa fa-cube"></i> {$recent_item.label|summary:"28"}</a></li>
   {/foreach}
 </ul>
 {/if}

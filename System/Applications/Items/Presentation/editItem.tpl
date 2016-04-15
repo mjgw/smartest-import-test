@@ -372,31 +372,31 @@ $('form-save-button').observe('click', function(e){
 
   <ul class="actions-list" id="non-specific-actions">
     <li><b>This {$item._model.name}</b></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id={$item.id}', '{$item._model.name} info');" class="right-nav-link"><img src="{$domain}Resources/Icons/information.png" border="0" />&nbsp;About this {$item._model.name}</a></li>
-    {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/editItem?item_id={$parent_item.id}';"><img src="{$domain}Resources/Icons/package_small.png" alt="" />&nbsp;Back to {$parent_model.name}</a></li>{/if}
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/releaseItem?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/lock_open.png" border="0" />&nbsp;Release for others to edit</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/approveItem?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" />&nbsp;Approve changes</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addTodoItem?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" />&nbsp;Assign To-do</a></li>
-    {if $default_metapage_id}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/preview?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/eye.png" border="0" />&nbsp;Preview it</a></li>{/if}
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/page_lightning.png" border="0" />&nbsp;Publish it</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/duplicateItem?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/page_white_copy.png" border="0" />&nbsp;Duplicate it</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/toggleItemArchived?item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/folder.png" style="width:16px;height:16px" border="0" />&nbsp;{if $item.is_archived}Un-archive this {$item._model.name}{else}Archive this {$item._model.name}{/if}</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$item.itemclass_id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" />&nbsp;Finish editing for now</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id={$item.id}', '{$item._model.name} info');" class="right-nav-link"><i class="fa fa-info-circle"></i>&nbsp;About this {$item._model.name}</a></li>
+    {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/editItem?item_id={$parent_item.id}';"><i class="fa fa-cube"></i>&nbsp;Back to {$parent_model.name}</a></li>{/if}
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/releaseItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-unlock"></i>&nbsp;Release for others to edit</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/approveItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-check"></i>&nbsp;Approve changes</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addTodoItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-share-square-o"></i>&nbsp;Assign To-do</a></li>
+    {if $default_metapage_id}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/preview?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-eye"></i>&nbsp;Preview it</a></li>{/if}
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-globe"></i>&nbsp;Publish it</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/duplicateItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-clipboard"></i>&nbsp;Duplicate it</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/toggleItemArchived?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-archive"></i>&nbsp;{if $item.is_archived}Un-archive this {$item._model.name}{else}Archive this {$item._model.name}{/if}</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$item.itemclass_id}';" class="right-nav-link"><i class="fa fa-check-circle"></i>&nbsp;Finish editing for now</a></li>
   </ul>
   
   <ul class="actions-list">
     <li><b>{$item._model.name} Options</b></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$item._model.id}';" class="right-nav-link">Back to {$item._model.plural_name}</a></li>
-    {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$parent_model.id}';" class="right-nav-link">Back to {$parent_model.plural_name}</a></li>{/if}
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addItem?class_id={$item._model.id}';" class="right-nav-link">New {$item._model.name}</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/addSet?class_id={$item._model.id}';" class="right-nav-link">Create a new set of {$item._model.plural_name}</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassProperties?class_id={$item._model.id}';" class="right-nav-link">Edit the properties of this model</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$item._model.id}';" class="right-nav-link"><i class="fa fa-cubes"></i> Back to {$item._model.plural_name}</a></li>
+    {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$parent_model.id}';" class="right-nav-link"><i class="fa fa-cubes"></i> Back to {$parent_model.plural_name}</a></li>{/if}
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addItem?class_id={$item._model.id}';" class="right-nav-link"><i class="fa fa-plus-circle"></i> New {$item._model.name}</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/addSet?class_id={$item._model.id}';" class="right-nav-link"><i class="fa fa-plus-square-o"></i> Create a new set of {$item._model.plural_name}</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassProperties?class_id={$item._model.id}';" class="right-nav-link"><i class="fa fa-sliders"></i> Edit the properties of this model</a></li>
   </ul>
 
   <ul class="actions-list">
     <li><span style="color:#999">Recently edited {$item._model.plural_name|strtolower}</span></li>
     {foreach from=$recent_items item="recent_item"}
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_item.action_url}'"><img border="0" src="{$recent_item.small_icon}" /> {$recent_item.label|summary:"28"}</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_item.action_url}'"><i class="fa fa-cube"></i> {$recent_item.label|summary:"28"}</a></li>
     {/foreach}
   </ul>
   

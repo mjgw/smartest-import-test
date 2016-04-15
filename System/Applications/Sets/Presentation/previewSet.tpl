@@ -87,18 +87,18 @@ var itemList = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'item'
     
     <ul class="actions-list" id="item-specific-actions" style="display:none">
       <li><b>Selected Item</b></li>
-      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/openItem?item_id='+selectedPage+'&amp;from=previewSet'"><img border="0" src="{$domain}Resources/Icons/pencil.png" style="width:16px;height:18px"> Edit this {$model.name|strtolower}</a></li>	
-      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/publishItem?item_id='+selectedPage"><img border="0" src="{$domain}Resources/Icons/page_lightning.png" style="width:16px;height:18px"> Publish this {$model.name|strtolower}</a></li>	
+      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/openItem?item_id='+selectedPage+'&amp;from=previewSet'"><i class="fa fa-pencil"></i> Edit this {$model.name|strtolower}</a></li>	
+      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/publishItem?item_id='+selectedPage"><i class="fa fa-globe"></i> Publish this {$model.name|strtolower}</a></li>	
     </ul>
     
     <ul class="actions-list">
       <li><b>Sets Options</b></li>
-      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editSet?set_id={$set.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}'"><img border="0" src="{$domain}Resources/Icons/pencil.png" style="width:16px;height:18px" /> Edit this set</a></li>
-      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/deleteSetConfirm?set_id={$set.id}'"><img border="0" src="{$domain}Resources/Icons/package_delete.png" style="width:16px;height:18px" /> Delete this set</a></li>
-      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editStaticSetOrder?set_id={$set.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}';" ><img border="0" src="{$domain}Resources/Icons/arrow_switch.png"> Change order</a></li>
-      {if $model.id}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassSets?class_id={$model.id}'"><img border="0" src="{$domain}Resources/Icons/folder.png" style="width:16px;height:18px" /> Back to sets</a></li>{else}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/sets'"><img border="0" src="{$domain}Resources/Icons/folder.png" style="width:16px;height:18px"> Back to sets</a></li>{/if}
-      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/getItemClassMembers?class_id={$set.model.id}'"><img border="0" src="{$domain}Resources/Icons/package_small.png" /> Browse {$set.model.plural_name}</a></li>
-      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/models'"><img border="0" src="{$domain}Resources/Icons/package_small.png" /> Browse all items</a></li>
+      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editSet?set_id={$set.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}'"><i class="fa fa-pencil-square-o"></i> Edit this set</a></li>
+      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/deleteSetConfirm?set_id={$set.id}'"><i class="fa fa-times-circle"></i> Delete this set</a></li>
+      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editStaticSetOrder?set_id={$set.id}{if $request_parameters.page_id}&amp;page_id={$request_parameters.page_id}{/if}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}';" ><i class="fa fa-random"></i> Change order</a></li>
+      {if $model.id}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassSets?class_id={$model.id}'"><i class="fa fa-folder-open"></i> Back to sets</a></li>{else}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/sets'"><img border="0" src="{$domain}Resources/Icons/folder.png" style="width:16px;height:18px"> Back to sets</a></li>{/if}
+      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/getItemClassMembers?class_id={$set.model.id}'"><i class="fa fa-search"></i> Browse {$set.model.plural_name}</a></li>
+      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/models'"><i class="fa fa-cubes"></i> Back to models</a></li>
     </ul>
         
 </div>
