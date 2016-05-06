@@ -757,6 +757,14 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	
 	public function systemStatusAsXml(){
 	    header('Content-type: application/xml');
+        // TODO: Make automatic system status information available here as XML
+        // TODO: SmartestSystemHelper::getSystemStatus()
+	}
+  
+	public function systemStatusAsJson(){
+	    header('Content-type: application/json');
+        // TODO: Make automatic system status information available here as JSON
+        // TODO: SmartestSystemHelper::getSystemStatus()
 	}
 	
 	public function getCaptchaImage(){

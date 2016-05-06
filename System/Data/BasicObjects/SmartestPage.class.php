@@ -516,7 +516,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    $cache_files = SmartestFileSystemHelper::load(SM_ROOT_DIR."System/Cache/Pages/");
 		
 		// removes all cache versions related to this page to keep the cache nice and tidy
-		$cf_start = "site".$this->_properties['site_id']."_cms_page_".$this->_properties['id'];
+		$cf_start = "site".$this->_properties['site_id']."_page".$this->_properties['id'];
 		
 		$result = false;
 		$len = strlen($cf_start);
@@ -2902,7 +2902,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             $platform_filename_insert = '';
         }
         
-        $page_cache_name = "site".$this->_properties['site_id']."_cms_page_".$this->_properties['id'].$platform_filename_insert.$this->getCacheFileNameDatePart();
+        $page_cache_name = "site".$this->_properties['site_id']."_page".$this->_properties['id'].$platform_filename_insert.$this->getCacheFileNameDatePart();
 	    
 	    if($this->getType() == "ITEMCLASS" && $this->_principal_item){
 			$page_cache_name .= "__id".$this->_principal_item->getId();

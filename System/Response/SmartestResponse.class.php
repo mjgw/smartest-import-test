@@ -105,6 +105,9 @@ class SmartestResponse{
         
         SmartestDataUtility::loadBasicTypes();
         
+    	$td = new SmartestParameterHolder("Smartest System Response Times");
+    	$td->setParameter('start_time', microtime(true));
+        
         SmartestFileSystemHelper::include_group(
 
         	'System/Data/ExtendedTypes/SmartestCmsItemsCollection.class.php',
@@ -208,9 +211,6 @@ class SmartestResponse{
     		$this->_error_stack->recordError($e, false);
     	}
     	
-    	$td = new SmartestParameterHolder("Smartest System Response Times");
-    	$td->setParameter('start_time', microtime(true));
-    	
     	SmartestPersistentObject::set('timing_data', $td);
         
 		// Instantiate browser object
@@ -220,8 +220,8 @@ class SmartestResponse{
     	$this->_error_stack->display();
 	    
 	}
-	
-	public function init(){
+    
+    public function init(){
 	    
 	    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
 		
