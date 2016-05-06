@@ -450,9 +450,6 @@ class Assets extends SmartestSystemApplication{
     		        break;
     		        
     		        case "SM_ASSETINPUTTYPE_BROWSER_UPLOAD":
-    		        // $mr = ini_get('upload_max_filesize');
-            		// preg_match('/(\d+)M$/', $mr, $m);
-                    // 
                     
                     $this->send($alh->getFilenameExtensionTestRegex($asset_type), 'file_suffix_regex');
                     
@@ -492,8 +489,6 @@ class Assets extends SmartestSystemApplication{
     		    $form_include = "add.default.tpl";
     		    $this->send($form_include, 'form_include'); 
     		}
-
-    		
             
         }else{
             
@@ -1091,7 +1086,7 @@ class Assets extends SmartestSystemApplication{
 	    
 	}
 	
-	public function assetGroupsByType($get){
+	public function assetGroupsByType(){
 	    
 	    $this->requireOpenProject();
 	    
@@ -1115,7 +1110,7 @@ class Assets extends SmartestSystemApplication{
 	    
 	}
 	
-	public function newAssetGroup($get){
+	public function newAssetGroup(){
 	    
 	    $alh = new SmartestAssetsLibraryHelper;
 	    $asset_types = $alh->getTypes(array('templates'));
@@ -1657,7 +1652,7 @@ class Assets extends SmartestSystemApplication{
 	
 	/** End Asset Group Stuff **/
 	
-	public function assetInfo($get){
+	public function assetInfo(){
 	    
 	    $asset_id = $this->getRequestParameter('asset_id');
 	    
