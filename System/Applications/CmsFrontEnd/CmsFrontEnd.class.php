@@ -7,7 +7,6 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	protected function __smartestApplicationInit(){
 	    
 	    $this->manager = new SmartestRequestUrlHelper;
-	    // print_r($this->_site);
 	    // define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
 	    
 	}
@@ -224,7 +223,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
 		    define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
 	        define('SM_CMS_PAGE_SITE_UNIQUE_ID', $this->_site->getUniqueId());
 	        
-	        if($this->_page = $this->manager->getNormalPageByWebId($page_webid, true)){
+            if($this->_page = $this->manager->getNormalPageByWebId($page_webid, true)){
                 
                 if(in_array($this->_page->getId(), $this->_site->getSpecialPageIds()->getParameters())){
                     
@@ -418,6 +417,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
                     switch($this->getRequestParameter('format')){
                     
                         case "rss":
+                        
                         if($set->getSyndicateAsRSS()){
                             $members = $set->getMembers();
                             $rss = new SmartestRssOutputHelper($members);
@@ -461,6 +461,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
                 }
                 
             }else{
+                echo "set ".$this->getRequestParameter('set_name')." not found";
                 exit;
             }
         

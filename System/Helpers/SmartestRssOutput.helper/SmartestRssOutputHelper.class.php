@@ -125,6 +125,7 @@ class SmartestRssOutputHelper{
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT\r\n");
         header('Last-Modified: '.gmdate( 'D, d M Y H:i:s' ). ' GMT'."\r\n");
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        // header('Content-Type: application/rss+xml; charset=utf-8');
         header('Content-Type: text/plain; charset=utf-8');
         // $this->getXml();
         echo $this->getXml();

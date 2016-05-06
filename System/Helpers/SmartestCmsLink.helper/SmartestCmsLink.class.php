@@ -43,6 +43,8 @@ class SmartestCmsLink extends SmartestHelper{
             $this->_destination_properties = $ph;
         }else if($destination_properties instanceof SmartestParameterHolder){
             $this->_destination_properties = $destination_properties;
+        }else{
+            return $this->error("Destination properties improperly formed.");
         }
         
         $this->applyMarkupAttributes($markup_attributes);

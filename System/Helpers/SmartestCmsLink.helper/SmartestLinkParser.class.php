@@ -186,7 +186,7 @@ class SmartestLinkParser{
             
         }else{
             
-            $pattern = '/^(([\w_-]+):)([\w\.@_-]+)(#([\w\._-]+))?(\|([^\]]+))?$/i';
+            $pattern = '/^(([\w_-]+):)([\w\.\'@_-]+)(#([\w\._-]+))?(\|([^\]]+))?$/i';
             
             if(preg_match($pattern, $string, $m)){
                 

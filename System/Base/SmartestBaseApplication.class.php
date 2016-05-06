@@ -405,11 +405,11 @@ class SmartestBaseApplication extends QuinceBase{
 		return SmartestCache::load($token, $is_smartest);
 	}
 	
-	protected function saveData($token, $data, $expire=-1, $is_smartest=false){
-		return SmartestCache::save($token, $data, $expire, $is_smartest);
+	protected function saveData($token, $data, $is_smartest=false){
+		return SmartestCache::save($token, $data, -1, $is_smartest);
 	}
 	
-	protected function hasData($token, $is_smartest){
+	protected function hasData($token, $is_smartest=false){
 		return SmartestCache::hasData($token, $is_smartest);
 	}
 		
@@ -466,17 +466,17 @@ class SmartestBaseApplication extends QuinceBase{
     
     protected function getUserIdOrZero(){
         if(is_object($this->getUser())){
-            return $this->getUser()->getId();
+            return (int) $this->getUser()->getId();
         }else{
-            return '0';
+            return 0;
         }
     }
     
     protected function getSiteIdOrZero(){
         if(is_object($this->getSite())){
-            return $this->getSite()->getId();
+            return (int) $this->getSite()->getId();
         }else{
-            return '0';
+            return 0;
         }
     }
     

@@ -1040,6 +1040,10 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     		
     		foreach($breadcrumbs as $key => $page){
                 
+                if(!$this->getDraftMode() && !SmartestStringHelper::toRealBool($page->getIsPublished())){
+                    continue;
+                }
+                
                 // TODO: Create savings by making the link use the object rather than the link code
                 if($page->getType() == 'ITEMCLASS'){
                     

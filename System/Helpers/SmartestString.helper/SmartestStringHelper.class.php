@@ -8,7 +8,7 @@ require_once(SM_ROOT_DIR.'System/Library/Textile/classTextile.php');
 
 class SmartestStringHelper extends SmartestHelper{
     
-    const EMAIL_ADDRESS = '/^[A-Z0-9._%-]+@[A-Z0-9-]+\.[\w]{2,4}/i';
+    const EMAIL_ADDRESS = '/^[A-Z0-9._%\'-]+@[A-Z0-9-]+\.[\w]{2,4}/i';
     const US_ZIP_CODE = '/^(\d{5})(-\d{4})?/';
     const UK_POST_CODE = '/^([A-Z][A-Z]?\d\d?[A-Z]?)\s*(\d[A-Z][A-Z])?/i';
     
