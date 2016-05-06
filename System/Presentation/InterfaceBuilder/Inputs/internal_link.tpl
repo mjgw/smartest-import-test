@@ -180,10 +180,16 @@
     }
   });
   
+  $(propertyId+'-item-input').observe('blur', function(kevt){
+      kevt.stop();
+      $(propertyId+'-item-chooser-value').show();
+      $(propertyId+'-item-chooser-input').hide();
+  });
+  
   // Code to update the actual value of the <select>
   $(propertyId).observe('needs:update', function(){
     var newValue = $(propertyId).readAttribute('data-linktype')+':'+$(propertyId).readAttribute('data-target-id');
-    console.log(newValue);
+    // console.log(newValue);
     $(propertyId).value = newValue;
   });
   
