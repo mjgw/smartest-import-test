@@ -104,7 +104,7 @@ span.smartest-preview-warning{
     background-image:url('../Images/edit-buttons-showing.png');
 }
 
-#sm-edit-button-toggle.hidden{
+#sm-edit-button-toggle.buttons-hidden{
     background-image:url('../Images/edit-buttons-hidden.png');
 }
 
@@ -177,7 +177,7 @@ only screen and (                min-resolution: 2dppx) {
         background-image:url('../Images/edit-buttons-showing-2x.png');
     }
 
-    #sm-edit-button-toggle.hidden{
+    #sm-edit-button-toggle.buttons-hidden{
         background-size:16px 16px;
         background-image:url('../Images/edit-buttons-hidden-2x.png');
     }

@@ -11,7 +11,7 @@
         <?sm:if $show_item_edit_link:?> <a href="<?sm:$domain:?>datamanager/openItem?item_id=<?sm:$item_id:?>&amp;from=preview&amp;page_webid=<?sm:$page_webid:?>" id="smartest-preview-edit-item" target="_top" class="smartest-preview-button" title="Edit this <?sm:$model_name:?>"></a><?sm:/if:?>
         <?sm:if $hide_liberate_link:?> <a href="<?sm:$domain:?>smartest/pages" id="smartest-preview-return-topages" title="Back to site pages" class="smartest-preview-button"></a><?sm:/if:?>
         
-        <a id="sm-edit-button-toggle" href="#toggle-edit-buttons" class="<?sm:if $hide_preview_edit_buttons.value:?>hidden<?sm:else:?>showing<?sm:/if:?> smartest-preview-button" title="<?sm:if $hide_preview_edit_buttons.value:?>Show<?sm:else:?>Hide<?sm:/if:?> edit buttons"></a>
+        <a id="sm-edit-button-toggle" href="#toggle-edit-buttons" class="<?sm:if $hide_preview_edit_buttons.value:?>buttons-hidden<?sm:else:?>showing<?sm:/if:?> smartest-preview-button" title="<?sm:if $hide_preview_edit_buttons.value:?>Show<?sm:else:?>Hide<?sm:/if:?> edit buttons"></a>
         
     </div>
     
@@ -78,7 +78,7 @@
         if(_SM.editButtonsVisible){
             hideEditButtons();
             document.getElementById('sm-edit-button-toggle').title = 'Show edit buttons';
-            document.getElementById('sm-edit-button-toggle').className = 'hidden smartest-preview-button';
+            document.getElementById('sm-edit-button-toggle').className = 'buttons-hidden smartest-preview-button';
         }else{
             showEditButtons();
             document.getElementById('sm-edit-button-toggle').title = 'Hide edit buttons';
