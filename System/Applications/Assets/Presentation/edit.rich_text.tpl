@@ -46,16 +46,15 @@ tinymce.init({
     ],
     style_formats: [
         {title: 'Headers', items: [
-            {title: 'h1', block: 'h1'},
-            {title: 'h2', block: 'h2'},
-            {title: 'h3', block: 'h3'},
-            {title: 'h4', block: 'h4'},
-            {title: 'h5', block: 'h5'},
-            {title: 'h6', block: 'h6'}
+            {title: 'Header 2', block: 'h2'},
+            {title: 'Header 3', block: 'h3'},
+            {title: 'Header 4', block: 'h4'},
+            {title: 'Header 5', block: 'h5'},
+            {title: 'Header 6', block: 'h6'}
         ]},
 
         {title: 'Blocks', items: [
-            {title: 'p', block: 'p'},
+            {title: 'Paragraph', block: 'p'},
             {title: 'div', block: 'div'},
             {title: 'pre', block: 'pre'}
         ]},
@@ -64,10 +63,13 @@ tinymce.init({
             {title: 'section', block: 'section', wrapper: true, merge_siblings: false},
             {title: 'article', block: 'article', wrapper: true, merge_siblings: false},
             {title: 'blockquote', block: 'blockquote', wrapper: true},
-            {title: 'hgroup', block: 'hgroup', wrapper: true},
             {title: 'aside', block: 'aside', wrapper: true},
             {title: 'figure', block: 'figure', wrapper: true}
         ]}
+    ],
+    protect: [
+        /\<xsl\:[^>]+\>/g,  // Protect <xsl:...>
+        /<\?sm:.*?:\?>/g  // Protect php code
     ],
     paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,p",
     toolbar: "insertfile undo redo | styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code"

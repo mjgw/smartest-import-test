@@ -18,7 +18,34 @@ tinymce.init({
         "searchreplace visualblocks code fullscreen",
         "media table contextmenu paste link wordcount"
     ],
-    paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,p",
+    style_formats: [
+        {title: 'Headers', items: [
+            {title: 'Header 2', block: 'h2'},
+            {title: 'Header 3', block: 'h3'},
+            {title: 'Header 4', block: 'h4'},
+            {title: 'Header 5', block: 'h5'},
+            {title: 'Header 6', block: 'h6'}
+        ]},
+
+        {title: 'Blocks', items: [
+            {title: 'Paragraph', block: 'p'},
+            {title: 'div', block: 'div'},
+            {title: 'pre', block: 'pre'}
+        ]},
+
+        {title: 'Containers', items: [
+            {title: 'section', block: 'section', wrapper: true, merge_siblings: false},
+            {title: 'article', block: 'article', wrapper: true, merge_siblings: false},
+            {title: 'blockquote', block: 'blockquote', wrapper: true},
+            {title: 'aside', block: 'aside', wrapper: true},
+            {title: 'figure', block: 'figure', wrapper: true}
+        ]}
+    ],
+    protect: [
+        /\<xsl\:[^>]+\>/g,  // Protect <xsl:...>
+        /<\?sm:.*?:\?>/g  // Protect php code
+    ],
+    paste_word_valid_elements: "b,strong,i,em,h2,h3,h4,p",
     toolbar: "insertfile undo redo | styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code"
 });
 
