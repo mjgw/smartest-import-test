@@ -501,7 +501,7 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
     }
     
-    public function getObjectsOnSiteAsArrays($site_id, $d='USE_DEFAULT'){
+    /* public function getObjectsOnSiteAsArrays($site_id, $d='USE_DEFAULT'){
         
         $draft = ($d == 'USE_DEFAULT') ? $this->_draft_mode : $d;
         
@@ -514,13 +514,13 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
         return $arrays;
         
-    }
+    } */
     
     public function getDescriptionTextAsset(){
         
         $request = SmartestPersistentObject::get('request_data');
         
-        if($request->g('application')->g('name') == 'website'){
+        if($this->getCurrentRequestData()->g('application')->g('name') == 'website'){
             $class = 'SmartestRenderableAsset';
         }else{
             $class = 'SmartestAsset';
@@ -688,6 +688,9 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
     }
     
     public function getDraftMode(){
+        if($this->getCurrentRequestData()->g('action') == "renderEditableDraftPage"){
+            $this->setDraftMode(true);
+        }
         return $this->_draft_mode;
     }
     

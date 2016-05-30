@@ -1,5 +1,5 @@
 <!--Smartest Text Attachment: <?sm:$_textattachment._name:?>-->
-<div class="sm-attachment" style="<?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>width:<?sm:$_textattachment.div_width :?>px;<?sm:/if:?><?sm:if $_textattachment.border :?>border: 1px solid #ccc;padding:6px;<?sm:/if:?><?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>float: <?sm:else:?>text-align: <?sm:/if:?><?sm:$_textattachment.alignment:?>; margin:<?sm:if $_textattachment.alignment == "right" :?>0 0 10px 10px;<?sm:else if $_textattachment.alignment == "left" :?>0 10px 10px 0;<?sm:/if:?>">
+<div class="sm-attachment <?sm:$_textattachment.alignment:?>" style="<?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>width:<?sm:$_textattachment.div_width :?>px;<?sm:/if:?><?sm:if $_textattachment.border :?>border: 1px solid #ccc;padding:6px;<?sm:/if:?><?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>float: <?sm:else:?>text-align: <?sm:/if:?><?sm:$_textattachment.alignment:?>; margin:<?sm:if $_textattachment.alignment == "right" :?>0 0 10px 10px;<?sm:else if $_textattachment.alignment == "left" :?>0 10px 10px 0;<?sm:/if:?>">
 
 <?sm:* $_textattachment.asset.render_data_debug *:?>
 

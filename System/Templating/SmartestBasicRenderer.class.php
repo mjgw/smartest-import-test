@@ -162,7 +162,7 @@ class SmartestBasicRenderer extends SmartestEngine{
                 if($this->_asset->usesTextFragment()){
                     
                     if($this->_asset->getCategory() == 'user_text'){
-                    
+                        
                         $render_process_id = SmartestStringHelper::toVarName('textfragment_'.$this->_asset->getStringid().'_'.substr(microtime(true), -6));
                     
                         if($this->_asset->getTextFragment()->containsAttachmentTags()){
@@ -170,7 +170,7 @@ class SmartestBasicRenderer extends SmartestEngine{
                         }else{
                             $attachments = array();
                         }
-                    
+                        
                         // If draft, check that a temporary preview copy has been created, and creat it if not
                         if($this->getDraftMode()){
                         
@@ -181,8 +181,8 @@ class SmartestBasicRenderer extends SmartestEngine{
                     	        $child->setProperty('asset', $this->_asset);
                     	        $child->setProperty('attachments', $attachments);
                     	        $child->setDraftMode($this->getDraftMode());
-                	        
-                    	        $content = $child->fetch($this->_asset->getTextFragment()->getParsableFilePath(true));
+                	            
+                                $content = $child->fetch($this->_asset->getTextFragment()->getParsableFilePath(true));
                 	        
                                 $this->killChildProcess($child->getProcessId());
                 	        
@@ -444,14 +444,22 @@ class SmartestBasicRenderer extends SmartestEngine{
         
     }
     
-    public function renderImage($render_data='', $path='none'){
+    public function renderImage($render_data='', $retina=false){
         
         if(!$render_data['width']){
-            $render_data['width'] = $this->_image->getWidth();
+            if($retina){
+                $render_data['width'] = ceil($this->_image->getWidth()/2);
+            }else{
+                $render_data['width'] = $this->_image->getWidth();
+            }
         }
         
         if(!$render_data['height']){
-            $render_data['height'] = $this->_image->getHeight();
+            if($retina){
+                $render_data['height'] = ceil($this->_image->getHeight()/2);
+            }else{
+                $render_data['height'] = $this->_image->getHeight();
+            }
         }
             
         $render_template = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/display.image.tpl';

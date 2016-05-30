@@ -264,6 +264,11 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	        
 	        case "bio":
 	        return new SmartestString($this->getBio());
+            
+            case "bio_text":
+            // var_dump($this->getBioTextAsset()->toRenderableAsset()->render());
+            // var_dump($this->getBioTextAsset()->toRenderableAsset());
+            return $this->getBioTextForRender();
 	        
 	        case "website":
 	        case "website_url":
@@ -614,6 +619,14 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
     
     public function getBioForEditor(){
         return $this->getBioTextAsset()->getContentForEditor();
+    }
+    
+    public function getBioTextForRender(){
+        $a = $this->getBioTextAsset()->toRenderableAsset();
+        if($this->getCurrentRequestData()->g('action') == "renderEditableDraftPage"){
+            $a->setDraftMode(true);
+        }
+        return $a;
     }
     
     public function updateBioTextAssetFromEditor($content){

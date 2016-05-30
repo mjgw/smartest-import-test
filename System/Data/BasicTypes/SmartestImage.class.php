@@ -781,6 +781,10 @@ class SmartestImage extends SmartestFile{
             // $request_data = SmartestPersistentObject::get('request_data');
             // $domain = $request_data->g('domain');
             return "background-image:url('".$this->getWebPath()."');";
+            
+            case "retina":
+            case "hd":
+            return $this->render(true);
 	        
 	        case "_ui_preview":
 	        $prev = $this->getSquarePreviewForUI();
@@ -834,12 +838,12 @@ class SmartestImage extends SmartestFile{
 		}
 	}
 	
-	public function render($og_meta=false){
+	public function render($retina=false){
 	    
 	    $sm = new SmartyManager('BasicRenderer');
         $r = $sm->initialize($this->getShortHash());
         $r->assignImage($this);
-        $content = $r->renderImage($this->_render_data);
+        $content = $r->renderImage($this->_render_data, $retina);
         
 	    return $content;
 	    

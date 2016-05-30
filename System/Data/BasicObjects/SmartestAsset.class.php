@@ -863,6 +863,12 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    $alh = new SmartestAssetsLibraryHelper;
 	    return in_array($this->getType(), $alh->getTypeIdsInCategories('templates'));
 	}
+    
+    public function toRenderableAsset(){
+        $obj = new SmartestRenderableAsset;
+        $obj->hydrate($this->getOriginalDbRecord());
+        return $obj;
+    }
 	
 	public function isTooLarge(){
 	    if($this->isImage()){
@@ -1166,7 +1172,11 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	        if($this->isExternal()){
     	        $this->_absolute_uri_object = new SmartestExternalUrl($this->getUrl());
     	    }else{
-	            $this->_absolute_uri_object = new SmartestExternalUrl($protocol.$this->getSite()->getDomain().$this->getDownloadUrl());
+                if($this->getSiteId() == 0){
+                    $this->_absolute_uri_object = new SmartestExternalUrl($protocol.$this->getCurrentSite()->getDomain().$this->getDownloadUrl());
+                }else{
+                    $this->_absolute_uri_object = new SmartestExternalUrl($protocol.$this->getSite()->getDomain().$this->getDownloadUrl());
+                }
             }
         }
         return $this->_absolute_uri_object;
@@ -1562,9 +1572,12 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	}
 	
 	public function getPossibleOwners(){
-	    
-	    return $this->getSite()->getUsersThatHaveAccess();
-	    
+	    // var_dump($this->getSiteId());
+        if($this->getSiteId() == 0){
+            return array();
+        }else{
+            return $this->getSite()->getUsersThatHaveAccess();
+        }
 	}
 	
 	public function getGroupMemberships($refresh=false, $mode=1, $approved_only=false){

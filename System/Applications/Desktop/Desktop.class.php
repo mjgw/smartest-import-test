@@ -418,7 +418,7 @@ class Desktop extends SmartestSystemApplication{
         $this->send($sys['system']['info']['revision'], 'revision');
         $this->send($sys['system']['info']['version'], 'version');
         $this->send($sys['system']['info']['revision']-$sys['system']['info']['lastversion_last_revision'], 'build'); */
-        $this->send(SmartestSystemHelper::getSmartestLocalVersionInfo(), 'smartest_info');
+        // $this->send(SmartestSystemHelper::getSmartestLocalVersionInfo(), 'smartest_info');
         
         // Memory Limit
         $this->send(SmartestSystemHelper::getPhpMemoryLimit(true), 'memory_limit');

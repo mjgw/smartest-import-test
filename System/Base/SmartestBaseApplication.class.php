@@ -129,6 +129,7 @@ class SmartestBaseApplication extends QuinceBase{
 	    $this->getPresentationLayer()->assign("action", $this->getRequest()->getAction());
 	    $this->getPresentationLayer()->assign("method", $this->getRequest()->getAction()); // deprecated
 	    $this->getPresentationLayer()->assign("metas", $this->getRequest()->getMetas());
+        $this->getPresentationLayer()->assign('smartest_info', SmartestSystemHelper::getSmartestLocalVersionInfo());
 	    
 	}
 	

@@ -17,15 +17,15 @@
 		<link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Icons/font-awesome.css" />
 		{/if}
 		
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_style.css" />
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_layout.css" />
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_admin_menu.css" />
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_actions_menu.css" />
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_itemsview.css" />
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_treeview.css" />
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_dropdown_menu.css" />
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_columns.css" />
-    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_tabs.css" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_style.css?r={$smartest_info.revision}" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_layout.css?r={$smartest_info.revision}" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_admin_menu.css?r={$smartest_info.revision}" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_actions_menu.css?r={$smartest_info.revision}" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_itemsview.css?r={$smartest_info.revision}" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_treeview.css?r={$smartest_info.revision}" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_dropdown_menu.css?r={$smartest_info.revision}" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_columns.css?r={$smartest_info.revision}" />
+    <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_tabs.css?r={$smartest_info.revision}" />
     {* <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_buttons.css" /> *}
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_modals.css" />
     <link rel="stylesheet" href="{$domain}Resources/System/Javascript/CodeMirror-5.2/lib/codemirror.css">
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="{$domain}Resources/System/Javascript/syntacticx-livepipe-ui/src/scrollbar.js"></script>
     <script type="text/javascript" src="{$domain}Resources/System/Javascript/jscolor/jscolor.js"></script>
                                                                             
-    <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/interface.js"></script>
+    <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/interface.js?r={$smartest_info.revision}"></script>
     <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/treeview.js"></script>
     <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/help.js"></script>
     <script type="text/javascript" src="{$domain}Resources/System/Javascript/smartest/prefs.js"></script>
@@ -72,7 +72,7 @@
       document.observe('dom:loaded', function(){
       
         document.observe('scrolled:vertically', function(evt){
-          // console.log(evt.memo.currentScrollTop);
+          
           if(evt.memo.currentScrollTop > 50){
             if(!$('primary-ajax-loader').hasClassName('scrolled')){
               $('primary-ajax-loader').addClassName('scrolled');

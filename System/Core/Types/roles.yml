@@ -64,3 +64,8 @@ roles:
       - enable_site
       - disable_site
       - edit_pagegroup_name
+  credit_author:
+    label: Author
+    tokens:
+      - author_credit
+      - site_access
