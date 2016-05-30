@@ -311,6 +311,27 @@ class SmartestAssetsLibraryHelper{
 	    return $types;
 		
 	}
+    
+    public function getTypesByStorageType($storage_type){
+        
+		$processed_xml_data = SmartestDataUtility::getAssetTypes();
+        $types = array();
+		
+		// if(is_array($processed_xml_data)){
+		    foreach($processed_xml_data as $type_array){
+		        if(isset($type_array['storage']) && isset($type_array['storage']['type'])){
+		            // $cat_array =& $types[$type_array['category']]['types'];
+		            // $cat_array[] = $type_array;
+                    if($type_array['storage']['type'] == $storage_type){
+                        $types[] = $type_array;
+                    }
+		        }
+		    }
+        // }
+	    
+	    return $types;
+        
+    }
 	
 	// This is deprecated. Use SmartestAssetClassesHelper::getAssetTypesFromAssetClassType();
 	public function getTypesByPlaceholderType($type){
@@ -1427,6 +1448,42 @@ class SmartestAssetsLibraryHelper{
         }
         
         return "/\.(".implode('|', $suffixes).")$/i";
+        
+    }
+    
+    public function getValidExternalUrlPatternsWithServices(){
+        
+        $url_services = array();
+        // $oembedhelper = new SmartestAPIServicesHelper();
+        // $oembed_urls = $oembedhelper->getOEmbedUrlPatterns();
+        $oembed_services = SmartestAPIServicesHelper::getOEmbedServices();
+        
+        foreach($oembed_services as $oes){
+            $url_services[] = array(
+                'label'=>$oes->getParameter('label'),
+                'url_pattern'=>'^https?:\/\/'.$oes->getUrlPattern(),
+                'type'=>'OEMBED_SERVICE',
+                'service_id'=>$oes->getParameter('id'),
+                'type_code'=>'SM_ASSETTYPE_OEMBED_URL'
+            );
+        }
+        
+        $external_assettypes = $this->getTypesByStorageType('external_translated');
+        
+        foreach($external_assettypes as $at){
+            if($at['id'] != 'SM_ASSETTYPE_OEMBED_URL'){
+                $url_services[] = array(
+                    'label'=>$at['label'],
+                    'url_pattern'=>$at['url_translation']['format'],
+                    'type'=>'ASSET_TYPE',
+                    'service_id'=>$at['id'],
+                    'type_code'=>$at['id']
+                );
+            }
+        }
+        
+        // print_r($url_services);
+        return $url_services;
         
     }
     

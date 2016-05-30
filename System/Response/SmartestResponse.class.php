@@ -95,7 +95,8 @@ class SmartestResponse{
         	'System/Base/Exceptions/SmartestInterfaceBuilderException.class.php',
         	'System/Base/Exceptions/SmartestRedirectException.class.php',
         	'System/Base/Exceptions/SmartestAuthenticationException.class.php',
-        	'System/Base/Exceptions/SmartestAssetCreationException.class.php'
+        	'System/Base/Exceptions/SmartestAssetCreationException.class.php',
+            'System/Base/Exceptions/SmartestOEmbedUrlNotSupportedException.class.php'
 
         );
         

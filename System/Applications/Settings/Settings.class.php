@@ -212,6 +212,9 @@ class Settings extends SmartestSystemApplication{
                 $override_eu_cookie_compliance_ga = $this->getGlobalPreference('override_eu_cookie_compliance_ga', 1);
                 $this->send(SmartestStringHelper::toRealBool($override_eu_cookie_compliance_ga), 'override_eu_cookie_compliance_ga');
                 
+                $oembed_enabled = (bool) $this->getGlobalPreference('site_oembed_enabled');
+                $this->send($oembed_enabled, 'oembed_enabled');
+                
                 $ga_id = $this->getGlobalPreference('google_analytics_id');
                 $this->send($ga_id, 'site_ga_id');
                 
@@ -289,6 +292,7 @@ class Settings extends SmartestSystemApplication{
                     $this->setGlobalPreference('site_responsive_distinguish_oldpcs', ($this->requestParameterIsSet('site_responsive_distinguish_oldpcs') ? 1 : 0));
                 }
                 
+                $this->setGlobalPreference('site_oembed_enabled', (int) SmartestStringHelper::toRealBool($this->getRequestParameter('site_oembed_enabled')));
                 $this->setGlobalPreference('google_analytics_id', $this->getRequestParameter('site_ga_id'));
                 $this->setGlobalPreference('enable_eu_cookie_compliance', $this->getRequestParameter('site_eu_cookie_compliance'));
                 $this->setGlobalPreference('enable_site_responsive_mode', SmartestStringHelper::toRealBool($this->getRequestParameter('site_responsive_mode')) ? 1 : 0);

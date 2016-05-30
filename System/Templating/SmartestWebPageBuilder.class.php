@@ -1257,7 +1257,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             break;
             
             case "instagram":
-            $oh = new SmartestOAuthHelper;
+            $oh = new SmartestAPIServicesHelper;
             
             if($acct = SmartestOAuthRateLimitDistributionHelper::getAccountForService('instagram')){
                 

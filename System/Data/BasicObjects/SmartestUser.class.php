@@ -696,6 +696,14 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    }
 	}
     
+    public function setInfoField($field, $new_data){
+        $this->setInfoValue($field, $new_data);
+    }
+    
+    public function getInfoField($field){
+        return $this->getInfoValue($field);
+    }
+    
     public function delete(){
         
         if($this->getId() > 0 && $this->getUsername() != 'smartest'){ // The Smartest user, ID zero, should never be deletable

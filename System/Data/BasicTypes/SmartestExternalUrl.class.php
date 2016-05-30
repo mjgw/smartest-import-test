@@ -32,6 +32,11 @@ class SmartestExternalUrl implements SmartestBasicType, ArrayAccess, SmartestSto
         return $matches[1];
     }
     
+    public function getRequestString(){
+        preg_match('/^https?:\/\/([\w\.-]+)(\/(.*))?/', $this->_value, $matches);
+        return $matches[2];
+    }
+    
     // The next two methods are for the SmartestStorableValue interface
     public function getStorableFormat(){
         return $this->_value;
@@ -53,8 +58,15 @@ class SmartestExternalUrl implements SmartestBasicType, ArrayAccess, SmartestSto
         
     }
     
+    /////////////////////////////
+    
+    public function getWithoutProtocol(){
+        $str = preg_replace('/^(https?|feed|rss|atom|itunes):\/\//', '', $this->_value);
+        return $str;
+    }
+    
     public function offsetExists($offset){
-        return in_array($offset, array('_host', '_request', '_protocol', 'encoded'));
+        return in_array($offset, array('_host', '_request', '_protocol', 'encoded', 'urlencoded', 'empty', 'url', 'string', 'is_valid'));
     }
     
     public function offsetGet($offset){

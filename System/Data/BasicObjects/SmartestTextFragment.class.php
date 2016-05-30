@@ -244,6 +244,82 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
 	public function getContent(){
 	    return $this->_getContent();
 	}
+    
+	public function getContentForEditor(){
+	    
+        $string = $this->_getContent();
+        $regexp = preg_match_all('/<\?sm:attachment.+?name="([\w_-]+)".*:\?>/', $string, $matches);
+        
+        $num_tags = count($matches[0]);
+        
+        if($num_tags){
+            $i = 1;
+            foreach($matches[0] as $key => $attachment){
+                if($num_tags == $i){
+                    
+                    // We are on the last one - check if it is at the bottom of the file
+                    $text = trim($string);
+                    $start = strlen($attachment) * -1;
+                    $last_chars = substr($text, $start);
+                    $attachment_div_text = '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy mceNonEditable" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Media attachment: <strong>'.$matches[1][$key].'</strong></div>';
+                    
+                    if($last_chars == $attachment){
+                        $string = str_replace($attachment, $attachment_div_text.'<p class="sm-attachment-buffer"></p>', $string);
+                    }else{
+                        $string = str_replace($attachment, $attachment_div_text, $string);
+                    }
+                    
+                }else{
+                    $attachment_div_text = '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy mceNonEditable" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Media attachment: <strong>'.$matches[1][$key].'</strong></div>';
+                    $string = str_replace($attachment, $attachment_div_text, $string);
+                }
+                $i++;
+            }
+        }
+        
+        $regexp = preg_match_all('/<a[^>]+?href="(https?:\/\/[^"]+)"[^>]*>([^<]*)?<\/a>/', $string, $matches_a);
+        
+        if(count($matches_a[0])){
+            foreach($matches_a[0] as $key => $link){
+                if(strpos($link, 'target="_blank"')){
+                    $string = str_replace($link, '[+'.$matches_a[1][$key].' '.$matches_a[2][$key].']',$string);
+                }else{
+                    $string = str_replace($link, '['.$matches_a[1][$key].' '.$matches_a[2][$key].']',$string);
+                }
+            }
+        }
+        
+        // echo $string;
+        
+        $regexp = preg_match_all('/<a href="mailto:([^"]+)+"[^>]*>([^<]*)?<\/a>/', $string, $matches_m);
+        
+        // print_r($matches_m);
+        
+        if(count($matches_m[0])){
+            foreach($matches_m[0] as $key => $link){
+                if(trim($matches_m[1][$key]) == trim($matches_m[2][$key])){
+                    $string = str_replace($link, '[[mailto:'.trim($matches_m[1][$key]).']]',$string);
+                }else{
+                    $string = str_replace($link, '[[mailto:'.trim($matches_m[1][$key]).' '.trim($matches_m[2][$key]).']]',$string);
+                }
+            }
+        }
+        
+        // echo $string;
+        
+        /* $regexp = preg_match_all('/<\?sm:link.+?to="([\w_-]+:[\w_-]+(\|[^"]+))".*:\?>/', $string, $matches_l); */
+        
+        // print_r($matches_l);
+        
+        /* if(count($matches[0])){
+            foreach($matches[0] as $key => $attachment){
+                $string = str_replace($attachment, '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Smartest Attachment: <strong>'.$matches[1][$key].'</strong></div>', $string);
+            }
+        } */
+        
+        return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+        
+	}
 	
 	public function getContentAsObject(){
 	    return new SmartestString($this->_properties['content']);
@@ -252,6 +328,85 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
 	public function setContent($content){
 	    return $this->_setContent($content);
 	}
+    
+    public function setContentFromEditor($content){
+        
+        if(class_exists('tidy')){
+            
+            $tidy = new tidy;
+            $tidy->ParseString($content);
+            $new = $tidy->repairString($content, array( 
+                'output-xml' => true, 
+                'input-xml' => true,
+                'bare' => true,
+                'wrap' => 0 
+            ));
+            
+            if(strlen(trim($new))){
+                $content = $new;
+            }
+            
+            $content = preg_replace( "/\r|\n/", "", $content);
+            
+        }
+        
+        $content = str_replace('<p>&nbsp;</p>', '', $content);
+        $content = str_replace('&nbsp;', ' ', $content);
+        
+        if($element = simplexml_load_string('<div>'.$content.'</div>')){
+            
+            $content = preg_replace( "/\r|\n/", "", $content);
+            $divs = (array) $element->xpath('/div/div');
+            
+            foreach($divs as $divelement){
+                $attributes = (array) $divelement->attributes();
+                if(strpos($attributes['@attributes']['class'], 'sm-attachment-proxy') !== false){
+                    $attachment_name = $attributes['@attributes']['data-attachmentname'];
+                    $content = str_replace($divelement->asXML(), '<?sm:attachment name="'.$attachment_name.'":?>', $content);
+                }
+            }
+            
+            $paras = (array) $element->xpath('/div/p');
+            
+            // Code to remove buffer paragraphs
+            foreach($paras as $p_element){
+                $attributes = (array) $p_element->attributes();
+                // If the element has a class
+                if(isset($attributes['@attributes']['class'])){
+                    // if the sm-attachment-buffer class has been set
+                    if(strpos($attributes['@attributes']['class'], 'sm-attachment-buffer') !== false){
+                        // If the contents of the paragraph are more than just space
+                        if(strlen($p_element->__toString()) && strlen(trim($p_element->__toString()))){
+                            $content = str_replace($p_element->asXML(), '<p>'.$p_element->__toString().'</p>', $content);
+                        }else{
+                            // Otherwise, remove the paragraph
+                            $content = str_replace($p_element->asXML(), '', $content);
+                        }
+                    }
+                }
+            }
+            
+            $content = str_replace(':?>', ":?>\n", $content);
+            $content = str_replace('</p>', "</p>\n", $content);
+            $content = str_replace('</li>', "</li>\n", $content);
+            $content = str_replace('</h1>', "</h1>\n", $content);
+            $content = str_replace('</h2>', "</h2>\n", $content);
+            $content = str_replace('</h3>', "</h3>\n", $content);
+            $content = str_replace('</h4>', "</h4>\n", $content);
+            
+            return $this->_setContent($content);
+        
+        }else{
+            // SimpleXML failed
+            if(strlen($content) && strpos($content, 'sm-attachment-proxy') === false){
+                // If there are no attachment proxy divs, just skip filtering
+                return $this->_setContent($content);
+            }else{
+                // TODO: deal with the attachments differently
+            }
+        }
+        
+    }
 	
 	protected function _getContent(){
 	    return $this->_properties['content'];

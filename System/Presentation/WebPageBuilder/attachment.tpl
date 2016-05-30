@@ -7,13 +7,13 @@
   <?sm:if $_textattachment.allow_resize && $_textattachment.asset.is_binary_image:?>
   <img src="<?sm:$_textattachment.thumbnail.url:?>" style="display:block" alt="<?sm:$_textattachment.asset.render_data.alt_text:?>" />
   <?sm:else:?>
-  <?sm:render_file asset=$_textattachment.asset style="display:block":?>
+  <?sm:render_file asset=$_textattachment.asset style="display:block" manual_width=$_textattachment.div_width:?>
   <?sm:/if:?>
 <?sm:else:?>
   <?sm:if $_textattachment.allow_resize && $_textattachment.asset.is_binary_image:?>
   <img src="<?sm:$_textattachment.thumbnail.url:?>" style="display:block" alt="<?sm:$_textattachment.asset.render_data.alt_text:?>" />
   <?sm:else:?>
-  <?sm:render_file asset=$_textattachment.asset style="display:block":?>
+  <?sm:render_file asset=$_textattachment.asset style="display:block" manual_width=$_textattachment.div_width:?>
   <?sm:/if:?>
 <?sm:/if:?>
 

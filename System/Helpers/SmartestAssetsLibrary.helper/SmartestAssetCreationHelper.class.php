@@ -144,8 +144,11 @@ class SmartestAssetCreationHelper{
                     if(count($og_metas) && isset($og_metas['og:image'])){
                 
                         $og_url = new SmartestExternalUrl($og_metas['og:image']);
-                
-                        $filename = end(explode('/', $og_url->getValue()));
+                        
+                        $parts = explode('/', $og_url->getValue());
+                        $filename = array_pop($parts);
+                        $parts = explode('?', $filename);
+                        $filename = array_shift($parts);
                 
                         if($saved_thumbnail_file = SmartestFileSystemHelper::saveRemoteBinaryFile($og_metas['og:image'], SM_ROOT_DIR.'Public/Resources/Images/'.$filename)){
                     

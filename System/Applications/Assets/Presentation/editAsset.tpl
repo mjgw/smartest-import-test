@@ -58,7 +58,7 @@
   <ul class="actions-list" id="non-specific-actions">
     <li><span style="color:#999">Recent {$asset.type_info.label|strtolower} files</span></li>
     {foreach from=$recent_assets item="recent_asset"}
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_asset.action_url}'"><img border="0" src="{$recent_asset.small_icon}" /> {$recent_asset.label|summary:"30"}</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_asset.action_url}'"><i class="fa fa-{$recent_asset.type_info.fa_iconname}"></i> {$recent_asset.label|summary:"30"}</a></li>
     {/foreach}
   </ul>
 </div>

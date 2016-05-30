@@ -14,6 +14,21 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     protected $_absolute_uri_object;
     protected $_thumbnail_asset = null;
     protected $_default_parameter_values = null;
+    protected $_asset_info = null;
+    
+    protected function __objectConstruct(){
+        $this->_asset_info = new SmartestDbStorageParameterHolder("Asset info");
+    }
+    
+	public function __postHydrationAction(){
+	    
+	    if(!$this->_asset_info){
+	        $this->_asset_info = new SmartestDbStorageParameterHolder("Info for asset ID '".$this->_properties['id']."'");
+        }
+        
+        $this->_asset_info->loadArray(unserialize($this->_properties['info']));
+	    
+	}
     
     public function __toArray($include_object=false, $include_owner=false){
         
@@ -51,6 +66,21 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         
 	    return $data;
 	}
+    
+    public function __toSimpleObject(){
+        
+        $obj = parent::__toSimpleObject();
+        $obj->type_info = $this->getTypeInfo();
+        $obj->is_binary_image = $this->isBinaryImage();
+        $obj->is_web_accessible = $this->isWebAccessible();
+        if($this->isWebAccessible()){
+            $obj->absolute_uri = $this->getAbsoluteUri();
+        }
+        if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
+            $obj->oembed_service = $this->getOembedService()->getArray();
+        }
+        return $obj;
+    }
 	
 	public function offsetGet($offset){
         
@@ -68,6 +98,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             return $this->getTextFragment();
             
             case "type_info":
+            case "typeinfo":
             return $this->getTypeInfo();
             
             case "type":
@@ -229,6 +260,9 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             case "tags":
             return $this->getTags();
             
+            case "fa_icon":
+            return $this->getFontAwesomeIcon();
+            
         }
         
         return parent::offsetGet($offset);
@@ -244,6 +278,23 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         }
         
 	}
+    
+    public function getFontAwesomeIcon(){
+        if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
+            if($s = $this->getOEmbedService()){
+                return $s->getParameter('fa_iconname');
+            }else{
+                if(substr($this->getOEmbedServiceId(), 0, 20) == 'OEMBED_SMARTEST_SITE'){
+                    return 'clone';
+                }else{
+                    return 'file-code-o';
+                }
+            }
+        }else{
+            $type_info = $this->getTypeInfo();
+            return $type_info['fa_iconname'];
+        }
+    }
 	
 	// The next two methods are for the SmartestStorableValue interface
     public function getStorableFormat(){
@@ -529,18 +580,103 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         return $this->_text_fragment;
 	    
 	}
+    
+    public function getOEmbedService(){
+        if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
+            
+            $apih = new SmartestAPIServicesHelper;
+                
+            if(strlen($this->getInfoField('oembed_service_id'))){
+                if($s = $apih->getOEmbedService($this->getInfoField('oembed_service_id'))){
+                    return $s;
+                }
+            }
+            
+            try{
+                if($s = $apih->getServiceFromUrl($this->getUrl())){
+                    $this->setOEmbedServiceId($s->getParameter('id'));
+                    return $s;
+                }else{
+                    return false;
+                }
+            }catch(SmartestOEmbedUrlNotSupportedException $e){
+                return false;
+            }
+        }
+    }
+    
+    public function getOEmbedServiceId(){
+        
+        if(strlen($this->getInfoField('oembed_service_id'))){
+            return $this->getInfoField('oembed_service_id');
+        }
+        
+        if($s = $this->getOEmbedService()){
+            return $s->getParameter('id');
+        }
+    }
+    
+    public function setOEmbedServiceId($service_id){
+        $this->setInfoField('oembed_service_id', $service_id);
+    }
+    
+    public function setInfoField($field, $new_data){
+	    
+	    $field = SmartestStringHelper::toVarName($field);
+	    // URL Encoding is being used to work around a bug in PHP's serialize/unserialize. No actual URLS are necessarily in use here:
+	    $this->_asset_info->setParameter($field, rawurlencode(utf8_decode($new_data)));
+        $this->_asset_info_modified = true;
+	    $this->_modified_properties['info'] = SmartestStringHelper::sanitize(serialize($this->_asset_info->getArray()));
+	    
+	}
 	
+	public function getInfoField($field){
+	    
+	    $field = SmartestStringHelper::toVarName($field);
+        
+        if($this->_asset_info->hasParameter($field)){
+            return $this->_asset_info->getParameter($field);
+	    }else{
+	        return null;
+	    }
+	}
+	
+    // Will return exactly what is stored
 	public function getContent($raw=false){
 	    
 	    if($this->getTextFragment()){
-	        if($this->isParsable() || $raw){
-	            $string = $this->getTextFragment()->getContent();
-            }else{
-                $string = htmlspecialchars($this->getTextFragment()->getContent(), ENT_COMPAT, 'UTF-8');
-            }
+	        $string = $this->getTextFragment()->getContent();
 	    }else if($this->isEditable() && is_file($this->getFullPathOnDisk())){
 	        $string = SmartestFileSystemHelper::load($this->getFullPathOnDisk(), true);
-	    }else{
+        }else if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
+            $apih = new SmartestAPIServicesHelper;
+            
+            if($this->getOEmbedServiceId() && substr($this->getOEmbedServiceId(), 0, 20) == 'OEMBED_SMARTEST_SITE'){
+                
+                try{
+                    if($this instanceof SmartestRenderableAsset && $this->_render_data instanceof SmartestParameterHolder){
+                        if($this->_render_data->hasParameter('width') && $this->_render_data->hasParameter('height')){
+                            $string = $apih->getSmartestOEmbedMarkupFromUrl($this->getUrl(), $this->_render_data->getParameter('width'), $this->_render_data->getParameter('height'));
+                        }else{
+                            $string = $apih->getSmartestOEmbedMarkupFromUrl($this->getUrl());
+                        }
+                    }else{
+                        $string = $apih->getSmartestOEmbedMarkupFromUrl($this->getUrl());
+                    }
+                    
+                }catch(SmartestOEmbedUrlNotSupportedException $e){
+                    $string = '<p>'.$e->getMessage().'</p>';
+                }
+                
+            }else{
+                try{
+                    $string = $apih->getOEmbedMarkupFromUrl($this->getUrl());
+                }catch(SmartestOEmbedUrlNotSupportedException $e){
+                    $string = '<p>'.$e->getMessage().'</p>';
+                }
+            }
+            
+        }else{
     	    $string = null;
     	}
     	
@@ -550,35 +686,22 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     	
 	}
     
+    // Will preformat and process the content in a form suitable for both rendering in in editor and being edited (visually)
     public function getContentForEditor(){
         
         $asset_type = $this->getTypeInfo();
         
 	    if($asset_type['storage']['type'] == 'database'){
 	        if($this->usesTextFragment()){
-	            $content = htmlspecialchars($this->getTextFragment()->getContent(), ENT_COMPAT, 'UTF-8');
-                // $this->send(true, 'show_publish');
+	            $content = $this->getTextFragment()->getContentForEditor();
 	        }else{
-	            // $this->send(false, 'show_publish');
+                // Assets that are stored in the database but not in a textfragment. Hmmm....
 	        }
         }else{
             $file = SM_ROOT_DIR.$asset_type['storage'].$this->getUrl();
-            // $this->send(false, 'show_publish');
             $content = htmlspecialchars(SmartestFileSystemHelper::load($this->getFullPathOnDisk()), ENT_COMPAT, 'UTF-8');
         }
     
-        /* if(isset($asset_type['source_editable']) && SmartestStringHelper::toRealBool($asset_type['source_editable'])){
-	        $this->send(true, 'allow_source_edit');
-	    }else{
-	        $this->send(false, 'allow_source_edit');
-	    } */
-    
-	    /* if(isset($asset_type['parsable']) && SmartestStringHelper::toRealBool($asset_type['parsable'])){
-	        $this->send(true, 'show_attachments');
-	    }else{
-	        $this->send(false, 'show_attachments');
-	    } */
-        
         $content = trim(SmartestStringHelper::protectSmartestTags($content));
     
         return $content;
@@ -594,6 +717,28 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    if($this->getTextFragment()){
 	        // save the text fragment in the database
 	        $this->getTextFragment()->setContent($content);
+	        $this->_save_textfragment_on_save = true;
+	    }else if($this->usesLocalFile() && $this->isEditable()){
+	        // save the file to its desired location
+	        SmartestFileSystemHelper::save($this->getFullPathOnDisk(), $content, true);
+	    }else{
+	        // what happens here?
+	        // probably nothing as it's just not the right type of asset. Just log and move on
+	        SmartestLog::getInstance('system')->log('SmartestAsset::setContent() called on a non-editable asset ('.$this->getId().')');
+	    }
+	    
+	}
+    
+	public function setContentFromEditor($raw_content, $escapeslashes=true){
+	    
+	    $info = $this->getTypeInfo();
+	    
+	    $content = $raw_content;
+	    
+	    if($this->getTextFragment()){
+	        // save the text fragment in the database
+	        $this->getTextFragment()->setContentFromEditor($content);
+            // echo $this->getTextFragment()->getContent();
 	        $this->_save_textfragment_on_save = true;
 	    }else if($this->usesLocalFile() && $this->isEditable()){
 	        // save the file to its desired location
@@ -1057,13 +1202,18 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             $this->setSearchField('');
         }
         
+        // This bit guarantees that new files are saved to the correct (current) site
+        if($this->getCurrentSiteId() && !$this->getCameFromDatabase() && $this->getSiteId() != $this->getCurrentSiteId() && !isset($this->_modified_properties['site_id'])){
+            $this->setSiteId($this->getCurrentSiteId());
+        }
+        
 	    parent::save();
 	    
         if(is_object(SmartestSession::get('current_open_project'))){
             $placeholders_usages = $this->getPlaceholderUsages(SmartestSession::get('current_open_project')->getId());
             $ipv_usages = $this->getItemPropertyUsages(SmartestSession::get('current_open_project')->getId());
         
-            ////// Touch any pages where this asset is used, so theycan be identified as potentially needing republishing //////
+            ////// Touch any pages where this asset is used, so they can be identified as potentially needing republishing //////
         
             if(count($ipv_usages)){
                 foreach($ipv_usages as $ipvu){
@@ -1084,7 +1234,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	            $this->getTextFragment()->setAssetId($this->getId());
 	        }
 	        
-	        if($this->_set_textfragment_asset_id_on_save || $this->_save_textfragment_on_save || (is_object($tf) && !$tf->getId())){
+	        if($this->_set_textfragment_asset_id_on_save || $this->_save_textfragment_on_save || (is_object($this->getTextFragment()) && !$this->getTextFragment()->getId())){
 	            $this->getTextFragment()->save();
 	            if(($this->getFragmentId() != $this->getTextFragment()->getId() && $this->getTextFragment()->getId() > 0) || $this->_set_textfragment_id_on_save){
 	                $this->setFragmentId($this->getTextFragment()->getId());

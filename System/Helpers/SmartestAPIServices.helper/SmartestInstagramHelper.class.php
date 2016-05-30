@@ -10,7 +10,7 @@ class SmartestInstagramHelper implements SmartestOAuthController{
     protected $_service;
     
     public function __construct(){
-        $this->_service = SmartestOAuthHelper::getService('SM_OAUTHSERVICE_INSTAGRAM');
+        $this->_service = SmartestAPIServicesHelper::getOAuthService('SM_OAUTHSERVICE_INSTAGRAM');
     }
     
     public function assignClientAccount(SmartestUser $account){

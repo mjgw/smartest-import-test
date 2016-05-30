@@ -4,7 +4,7 @@ class OAuthAccountsAjax extends SmartestSystemApplication{
 
     public function getPlatformClientDefaults(){
         
-        if($service = SmartestOAuthHelper::getService($this->getRequestParameter('platform_id'))){
+        if($service = SmartestAPIServicesHelper::getOAuthService($this->getRequestParameter('platform_id'))){
             
             $result = new stdClass;
             

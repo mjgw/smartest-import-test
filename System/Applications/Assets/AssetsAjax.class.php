@@ -418,6 +418,7 @@ class AssetsAjax extends SmartestSystemApplication{
                 $obj->is_image = false;
             }
             
+            $obj->label = $asset->getLabel();
             $obj->type = $asset->getType();
             
             header('Content-Type: application/json; charset=UTF8');
@@ -679,6 +680,144 @@ class AssetsAjax extends SmartestSystemApplication{
             
         }else{
             // New file upload does not exist
+        }
+        
+    }
+    
+    public function validateExternalResourceUrl(){
+        
+        $alh = new SmartestAssetsLibraryHelper;
+        $urls = $alh->getValidExternalUrlPatternsWithServices();
+        $url = $this->getRequestParameter('url');
+        $urlobj = new SmartestExternalUrl($url);
+        $result = array();
+        
+        if(SmartestStringHelper::isValidExternalUri($url)){
+            
+            foreach($urls as $service){
+                if(preg_match('/^'.$service['url_pattern'].'/', $url, $matches)){
+                    $result['data'] = $service;
+                    $result['valid'] = true;
+                    $result['url'] = $url;
+                    header('Content-Type: application/json; charset=UTF8');
+                    echo json_encode($result);
+                    exit;
+                }
+            }
+        
+            $du = new SmartestDataUtility;
+            $sites = $du->getSites();
+            $hostname = $urlobj->getHostName();
+        
+            foreach($sites as $s){
+                if($s->getDomain() == $hostname){
+                    $result['data'] = array(
+                        'label'=>'Content from your Smartest website \''.$s->getInternalLabel().'\'',
+                        'type'=>'OEMBED_SMARTEST_SITE',
+                        'service_id'=>'OEMBED_SMARTEST_SITE:'.$s->getId(),
+                        'url_pattern'=>'^https?:\/\/'.$s->getDomain().'\/*',
+                        'type_code' => 'SM_ASSETTYPE_OEMBED_URL'
+                    );
+                    $result['valid'] = true;
+                    $result['url'] = $url;
+                    header('Content-Type: application/json; charset=UTF8');
+                    echo json_encode($result);
+                    exit;
+                }
+            }
+        
+            $result['valid'] = false;
+            $result['url'] = $url;
+            $result['message'] = 'Service not supported';
+        }else{
+            $result['valid'] = false;
+            $result['url'] = $url;
+            $result['message'] = 'URL is not valid';
+        }
+        
+        header('Content-Type: application/json; charset=UTF8');
+        echo json_encode($result);
+        exit;
+        
+    }
+    
+    public function postBackTextEditorContentsFromModal(){
+        
+        if($this->getUser()->hasToken('modify_assets')){
+            
+            $asset = new SmartestAsset;
+            
+            if($asset->find($this->getRequestParameter('asset_id'))){
+                
+                if($asset->getType() == 'SM_ASSETTYPE_RICH_TEXT'){
+                    
+                    // echo $this->getRequestParameter('asset_id');
+                    
+        		    $content = $this->getRequestParameter('asset_content');
+        		    $content = SmartestStringHelper::unProtectSmartestTags($content);
+        		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
+                    // echo $content;
+        		    $asset->setContentFromEditor($content);
+        	        $asset->setModified(time());
+                    $asset->save();
+                    
+                }
+                
+            }
+        }
+        
+    }
+    
+    public function createEmbeddableAssetFromModal(){
+        
+        $ach = new SmartestAssetCreationHelper($this->getRequestParameter('asset_type'));
+        
+        try{
+            
+            $ach->createNewAssetFromUrl(new SmartestExternalUrl($this->getRequestParameter('asset_url')), $this->getRequestParameter('asset_label'), true);
+            $asset = $ach->finish();
+            $asset->setSiteId($this->getSite()->getId());
+            
+            if($this->getRequestParameter('asset_type') == 'SM_ASSETTYPE_OEMBED_URL'){
+                $asset->setOEmbedServiceId($this->getRequestParameter('service_id'));
+            }
+            
+            $asset->save();
+            $obj = $asset->__toSimpleObject();
+            
+            if($this->getRequestParameter('asset_type') == 'SM_ASSETTYPE_OEMBED_URL'){
+                $obj->oembed_service_id = $asset->getOEmbedServiceId();
+            }
+            
+            header('Content-Type: application/json; charset=UTF8');
+            echo json_encode($obj);
+            exit;
+            
+        }catch(SmartestException $e){
+            // Deal with exception
+        }
+        
+    }
+    
+    public function createEmbeddableAssetFromModalTextArea(){
+        
+        $ach = new SmartestAssetCreationHelper($this->getRequestParameter('asset_type'));
+        
+        try{
+            
+            $ach->createNewAssetFromTextArea($this->getRequestParameter('asset_contents'), $this->getRequestParameter('asset_label'));
+            $asset = $ach->finish();
+            $asset->setSiteId($this->getSite()->getId());
+            $asset->save();
+            
+            $obj = $asset->__toSimpleObject();
+            
+            header('Content-Type: application/json; charset=UTF8');
+            echo json_encode($obj);
+            exit;
+            
+        }catch(SmartestException $e){
+            // Deal with exception
         }
         
     }

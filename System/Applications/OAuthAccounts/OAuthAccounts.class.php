@@ -14,7 +14,7 @@ class OAuthAccounts extends SmartestSystemApplication{
         $this->setFormReturnUri();
         $this->setFormReturnDescription('OAuth accounts');
         $this->send($this->getUser()->hasToken('delete_oauth_accounts'), 'allow_delete');
-        $h = new SmartestOAuthHelper;
+        $h = new SmartestAPIServicesHelper;
         $this->send($h->getAccounts(), 'accounts');
         
     }
@@ -22,7 +22,7 @@ class OAuthAccounts extends SmartestSystemApplication{
     public function addAccount(){
         
         $this->setTitle('Add an OAuth-based service client');
-        $services = SmartestOAuthHelper::getServices();
+        $services = SmartestAPIServicesHelper::getOAuthServices();
         $this->send($services, 'services');
         
     }
@@ -144,7 +144,7 @@ class OAuthAccounts extends SmartestSystemApplication{
             
             $_SESSION['client_account_id'] = $account->getId();
             
-            if($service = SmartestOAuthHelper::getService($account->getOAuthServiceId())){
+            if($service = SmartestAPIServicesHelper::getOAuthService($account->getOAuthServiceId())){
                 
                 $oauth_version = (int) $service->getParameter('oauth_version');
                 $this->send(($service->hasParameter('authorize_method') ? $service->getParameter('authorize_method') : 'get'), 'authorize_method');
@@ -184,7 +184,7 @@ class OAuthAccounts extends SmartestSystemApplication{
             
             if($account->find($_SESSION['client_account_id'])){
                 
-                $service = SmartestOAuthHelper::getService($this->getRequestParameter('service_shortname'));
+                $service = SmartestAPIServicesHelper::getOAuthService($this->getRequestParameter('service_shortname'));
                 $class = $service->getParameter('class');
         
                 $oauth_version = (int) $service->getParameter('oauth_version');

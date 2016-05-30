@@ -56,6 +56,7 @@ var addAttachmentTag = function(attachmentName){
 
     <input type="hidden" name="asset_id" value="{$asset.id}" />
     <input type="hidden" name="asset_type" value="{$asset.type}" />
+    <input type="hidden" name="filter_markup" value="0" />
 
       {foreach from=$asset.type_info.param item="parameter"}
       <div class="edit-form-row">

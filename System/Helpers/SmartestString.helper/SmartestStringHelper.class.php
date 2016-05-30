@@ -735,6 +735,10 @@ class SmartestStringHelper extends SmartestHelper{
 	public static function isValidExternalUri($string){
 		return preg_match('/^https?:\/\/.{4,}/i', $string);
 	}
+    
+    public static function isSecureUrl($string){
+        return preg_match('/^https:\/\/.{4,}/i', $string);
+    }
 	
 	public static function parseNameValueString($string){
 	    
@@ -841,7 +845,22 @@ class SmartestStringHelper extends SmartestHelper{
         }
     }
     
+    public static function convertAttachmentsToVisualEditorFormat($string){
+        
+        // echo $string;
+        $regexp = preg_match_all('/<\?sm:attachment.+?name="([\w_-]+)".*:\?>/', $string, $matches);
+        if(count($matches[0])){
+            foreach($matches[0] as $key => $attachment){
+                $string = str_replace($attachment, '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Smartest Attachment: <strong>'.$matches[1][$key].'</strong></div>', $string);
+            }
+        }
+        return $string;
+        
+    }
+    
     public static function protectSmartestTags($string){
+        
+        // self::convertAttachmentsToVisualEditorFormat($string);
         
         $string = preg_replace('/([\w_]+)=&(amp;)?quot;([\w\s\.:_-]*)&(amp;)?quot;/i', '$1="$3"', $string);
         

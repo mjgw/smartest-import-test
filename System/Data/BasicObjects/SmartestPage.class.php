@@ -1045,6 +1045,10 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         return $url;
 	    
 	}
+    
+    public function getFullUrl(){
+        return $this->getSite()->getTopLevelUrl().$this->getDefaultUrl();
+    }
 	
 	public function getJsonInfoUrl($complete=false){
 	    
@@ -2963,6 +2967,40 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         $q->delete();
 	    
 	}
+    
+    public function getOEmbedRetrievalUrl(){
+        return $this->getSite()->getTopLevelUrl().'embed?url='.urlencode($this->getFullUrl());
+    }
+    
+    public function getOembedIFrameMarkup($width=null, $height=null){
+        
+        if(!is_numeric($width)){
+            $width = ceil($this->getSite()->getOEmbedWidth());
+        }else{
+            $width = ceil($width);
+        }
+        
+        if(!is_numeric($height)){
+            if(is_numeric($this->getSite()->getOEmbedHeight())){
+                $height = ceil($this->getSite()->getOEmbedHeight());
+            }else{
+                $height = ceil($width/3);
+            }
+        }else{
+            $height = ceil($height);
+        }
+        
+        if($this->getSite()->getOEmbedEnabled()){
+            return '<iframe width="'.$width.'" height="'.$height.'" src="'.$this->getOembedIFrameSrc().'&amp;width='.$width.'&amp;height='.$height.'" class="smartest-oembed" style="border:1px solid #acacac;border-radius:4px"></iframe>';
+        }else{
+            return '<div class="sm-oembed-error">This site has not enabled OEmbed</div>';
+        }
+    }
+    
+    public function getOembedIFrameSrc(){
+        $request = SmartestPersistentObject::get('request_data');
+        return 'http://'.$this->getSite()->getDomain().$request->g('domain').'website/oEmbedIFrameContent?page_id='.$this->getWebId();
+    }
 	
 	// SmartestStorableValue methods
 	

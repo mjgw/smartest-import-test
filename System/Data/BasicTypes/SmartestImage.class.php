@@ -298,10 +298,14 @@ class SmartestImage extends SmartestFile{
         
     }
     
-    public function getSquareVersion($side){
+    public function getSquareVersion($side=null){
         
         $url = 'Resources/System/Cache/Images/'.$this->getSquareVersionFilename($side);
         $full_path = SM_ROOT_DIR.'Public/'.$url;
+        
+        if(!$side){
+            $side = min($this->getWidth(), $this->getHeight());
+        }
         
         if(file_exists($full_path)){
             
@@ -336,7 +340,8 @@ class SmartestImage extends SmartestFile{
         
     }
     
-    public function getSquareVersionFilename($side){
+    public function getSquareVersionFilename($side=null){
+        $side = is_numeric($side) ? $side : 'ntv';
         return SmartestStringHelper::toVarName(SmartestStringHelper::removeDotSuffix(basename($this->_current_file_path))).'_sqthumb_'.$side.'.'.$this->getSuffix();
     }
     
@@ -742,6 +747,9 @@ class SmartestImage extends SmartestFile{
 	        
 	        case "is_square":
 	        return (bool) $this->isSquare();
+            
+            case "square":
+            return $this->getSquareVersion(null);
 	        
 	        case "web_path":
 	        return $this->getWebPath();

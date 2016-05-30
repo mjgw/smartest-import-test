@@ -5,46 +5,105 @@ oembed:
     url: 'http://soundcloud.com/oembed?format=json&url=$URL'
     provides_html: true
     response_type: json
-    url_pattern: '(www\.)?flickr.com\/photos\/([^\/]+)\/?'
+    url_pattern: '(www\.)?soundcloud\.com\/([^\/]+)\/([^\/]+)\/?'
+    fa_iconname: soundcloud
+    provider_name: SoundCloud
   SM_OEMBED_SCRIBD:
     id: SM_OEMBED_SCRIBD
-    label: ScribD document
+    label: Scribd document
     provides_html: true
     url: 'https://www.scribd.com/services/oembed/?format=json&url=$URL'
     response_type: json
-    url_pattern: '(www\.)?flickr.com\/photos\/([^\/]+)\/?'
+    url_pattern: '(www\.)?scribd\.com\/doc\/([^\/]+)\/?'
+    fa_iconname: scribd
+    provider_name: Scribd
   SM_OEMBED_FLICKR:
     id: SM_OEMBED_FLICKR
     label: Flickr Photo
     provides_html: true
     response_type: json
     url: 'https://www.flickr.com/services/oembed?format=json&url=$URL'
-    url_pattern: '(www\.)?flickr.com\/photos\/([^\/]+)\/?'
+    url_pattern: '(www\.)?flickr\.com\/photos\/.*'
+    fa_iconname: flickr
+    provider_name: Flickr
   SM_OEMBED_INFOGRAM:
     id: SM_OEMBED_INFOGRAM
     label: Infogram chart
     provides_html: true
     url: https://infogr.am/oembed?url=$URL
     response_type: json
-    url_pattern: '(www\.)?infogr.am\/photos\/([^\/]+)\/?'
+    url_pattern: '(www\.)?infogr\.am\/([^\/]+)\/?'
+    fa_iconname: pie-chart
+    provider_name: Infogram
   SM_OEMBED_INSTAGRAM:
     id: SM_OEMBED_INSTAGRAM
     label: Instagram image
     provides_html: true
     url: https://api.instagram.com/oembed/?url=$URL
-    url_pattern: '(www\.)?instagram.com\/p\/([^\/]+)\/?'
+    url_pattern: '(www\.)?instagram\.com\/p\/([^\/]+)\/?'
     response_type: json
+    fa_iconname: instagram
+    provider_name: Instagram
   SM_OEMBED_USTREAM:
     id: SM_OEMBED_USTREAM
     label: UStream.tv stream
     provides_html: true
     url: https://www.ustream.tv/oembed?url=$URL
-    url_pattern: '(www\.)?flickr.com\/photos\/([^\/]+)\/?'
+    url_pattern: '([^\/\.]+\.)?ustream\.(com|tv)\/([^\/]+)\/([^\/]+)\/?'
     response_type: json
+    fa_iconname: video-camera
+    provider_name: Ustream
   SM_OEMBED_SLIDESHARE:
     id: SM_OEMBED_SLIDESHARE
     label: Slideshare presentation
     provides_html: true
     url: 'http://www.slideshare.net/api/oembed/2?format=json&url=$URL'
-    url_pattern: '(www\.)?flickr.com\/photos\/([^\/]+)\/?'
+    url_pattern: '(www\.)?slideshare\.net\/([^\/]+)\/([^\/]+)\/?'
     response_type: json
+    fa_iconname: slideshare
+    provider_name: Slideshare
+  SM_OEMBED_IMGUR:
+    id: SM_OEMBED_IMGUR
+    label: Imgur content
+    provides_html: true
+    url: 'http://api.imgur.com/oembed?url=$URL&format=json'
+    url_pattern: imgur\.com\/(.+)
+    response_type: json
+    fa_iconname: file-photo-o
+    provider_name: Imgur
+  SM_OEMBED_SPOTIFY:
+    id: SM_OEMBED_SPOTIFY
+    label: Spotify track
+    provides_html: true
+    url: 'https://embed.spotify.com/oembed/?format=json&url=$URL'
+    url_pattern: 'open\.spotify\.com\/track\/([^\/]+)\/?'
+    response_type: json
+    fa_iconname: spotify
+    provider_name: Spotify
+  SM_OEMBED_SPOTIFY_USER:
+    id: SM_OEMBED_SPOTIFY_USER
+    label: Spotify user
+    provides_html: true
+    url: 'https://embed.spotify.com/oembed/?format=json&url=$URL'
+    url_pattern: 'open\.spotify\.com\/user\/([^\/]+)\/?'
+    response_type: json
+    fa_iconname: spotify
+    provider_name: Spotify
+  SM_OEMBED_CODEPEN:
+    id: SM_OEMBED_CODEPEN
+    label: Codepen project
+    provides_html: true
+    url: 'http://codepen.io/api/oembed?format=json&url=$URL'
+    url_pattern: 'codepen\.io\/([^\/]+)\/pen\/([^\/]+)\/?'
+    response_type: json
+    fa_iconname: codepen
+    provider_name: Codepen
+  SM_OEMBED_VINE:
+    id: SM_OEMBED_VINE
+    label: Vine video
+    provides_html: true
+    url: 'https://vine.co/oembed.json?url=$URL'
+    url_pattern: 'vine\.co\/v\/([^\/]+)\/?'
+    response_type: json
+    fa_iconname: vine
+    provider_name: Vine

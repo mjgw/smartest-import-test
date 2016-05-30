@@ -6,7 +6,7 @@ class SmartestBufferHelper implements SmartestOAuthController{
     protected $_service;
     
     public function __construct(){
-        $this->_service = SmartestOAuthHelper::getService('SM_OAUTHSERVICE_BUFFER');
+        $this->_service = SmartestAPIServicesHelper::getOAuthService('SM_OAUTHSERVICE_BUFFER');
     }
     
     public function assignClientAccount(SmartestUser $account){

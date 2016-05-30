@@ -79,6 +79,13 @@ var setEUCookieMode = function(state){
     <div class="form-section-label-full">Frontend options</div>
     
     <div class="edit-form-row">
+      <div class="form-section-label">Enable OEmbed?</div>
+      {boolean name="site_oembed_enabled" id="site-oembed-enabled" value=$oembed_enabled}
+      <div class="form-hint">OEmbed allows small previews to be built for pages on your site and embedded on other web pages</div>
+      {* boolean name="site_oembed_enabled" id="site-oembed-enabled" value=$oembed_enabled changehook="setEUCookieMode" *}
+    </div>
+    
+    <div class="edit-form-row">
       <div class="form-section-label">Google Analytics Site ID</div>
       <input type="text" name="site_ga_id" value="{$site_ga_id}" />
       <div class="form-hint">Usually takes the form <em>UA-1234567-1</em></div>

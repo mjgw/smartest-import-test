@@ -9,6 +9,10 @@
     background-color:rgba(30, 30, 30, 0.37);
 }
 
+.modal-outer.big{
+    padding-top:60px;
+}
+
 .modal{
     
     width:550px;
@@ -28,6 +32,11 @@
     -moz-box-shadow: 0px 10px 22px #444;
     -webkit-box-shadow: 0px 10px 22px #444;
     
+}
+
+.modal-outer.big .modal{
+    width:750px;
+    height:450px;
 }
 
 .modal h1{
@@ -74,6 +83,11 @@
     overflow:hidden;
 }
 
+.modal-outer.big .modal-updater{
+    height:420px;
+    width:725px;
+}
+
 .modal-updater h1{
     font-family:"source-sans";
     color:#666;
@@ -111,6 +125,10 @@
     width:562px;
     color:#999;
     font-size:14px;
+}
+
+.modal-outer.big .modal-title-bar{
+    width:762px;
 }
 
 .modal-title-bar h2{
@@ -165,11 +183,11 @@ div#modal-work-area div.edit-form-row{
 }
 
 div#modal-work-area div.edit-form-row input[type="password"], div#modal-work-area div.edit-form-row input[type="text"]{
-    width:300px!important;
+    width:315px!important;
 }
 
 div#modal-work-area div.edit-form-row select, div#modal-work-area div.edit-form-row select{
-    width:300px!important;
+    width:315px!important;
 }
 
 div#modal-work-area div.form-section-label{
@@ -181,6 +199,16 @@ div#modal-work-area div.form-section-label{
 div#modal-work-area div.buttons-bar{
     background:none;
     border:0px;
+    margin-top:10px;
+}
+
+div#modal-work-area div.edit-form-sub-row{
+    box-sizing:border-box;
+    padding-left:155px;
+}
+
+div#modal-work-area div.form-hint{
+    padding:1px 6px 6px 155px;
 }
 
 ul.modal-basic-list{
@@ -188,6 +216,37 @@ ul.modal-basic-list{
     /* list-style-image:url('../Images/generic_bullet.gif'); */
     padding:5px 10px 5px 5px;
     margin:5px 5px 5px 0;
+}
+
+div#modal-work-area div.edit-form-row.url{
+    box-sizing:border-box;
+    padding-left:5px;
+    padding-bottom:10px;
+}
+
+div#modal-work-area div.edit-form-row.url div.form-section-label{
+    width:100%;
+    clear:both;
+    box-sizing:border-box;
+    text-align:left;
+}
+
+div#modal-work-area div.edit-form-row.url input[type="text"]{
+    width:90%!important;
+    height:18px;
+    font-family:courier,monospace;
+    font-size:1.05em;
+    color:#222;
+    clear:both;
+}
+
+div#modal-work-area div.edit-form-row.url div.form-hint{
+    padding-left:5px!important;
+}
+
+div#modal-work-area div.edit-form-row.url div.edit-form-sub-row{
+    padding-top:5px;
+    padding-left:5px!important;
 }
 
 /** When options are shown in a grid via a modal, such as in the "Create" dialog **/
@@ -266,6 +325,12 @@ div.modal-error{
     
 }
 
+div#modal-work-area div.CodeMirror{
+    height:200px!important;
+    width:95%!important;
+    border:1px solid #999;
+}
+
 ul.file-thumbnails{
     margin:0px;
     padding:0px;
@@ -282,6 +347,7 @@ ul.file-thumbnails li{
     border-radius:5px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
+    background-color:#565656;
 }
 
 ul.file-thumbnails li a{
@@ -297,6 +363,10 @@ ul.file-thumbnails li a{
 
 ul.file-thumbnails li a.selected{
     border:3px solid #f90;
+}
+
+ul.file-thumbnails li#add-image-li{
+    background-color:transparent;
 }
 
 ul.file-thumbnails li a span.image-info{
@@ -323,8 +393,47 @@ ul.file-thumbnails li a.selected span.image-info{
 }
 
 ul.file-thumbnails li a:hover span.image-info{
-    opacity: 0.75;
-    filter: alpha(opacity=75);
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+}
+
+ul.file-thumbnails li a span.file-info{
+    -webkit-transition: all 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: opacity 0.3s, filter 0.3s;
+    opacity: 0.7;
+    filter: alpha(opacity=0);
+    display:block;
+    width:100px;
+    height:100px;
+    box-sizing:border-box;
+    /* background-color:#fff;
+    color:#333; */
+    color:#fff;
+    background-color:rgba(0,0,0,0.4);
+    padding:10px;
+    border-radius:1px;
+    -webkit-border-radius:1px;
+    -moz-border-radius:1px;
+    text-align:center;
+}
+
+ul.file-thumbnails li a.selected span.file-info{
+    padding:7px;
+    width:94px;
+    height:94px;
+}
+
+ul.file-thumbnails li a:hover span.file-info{
+    opacity: 0.95;
+    filter: alpha(opacity=95);
+    text-shadow: 0px 0px 5px rgba(255,255,255,0.5);
+}
+
+ul.file-thumbnails li a span.file-info i.fa{
+    display:block;
+    margin-bottom:5px;
+    margin-top:3px;
+    font-size:2.2em;
 }
 
 ul.file-thumbnails li.add a{

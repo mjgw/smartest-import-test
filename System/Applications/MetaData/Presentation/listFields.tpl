@@ -16,7 +16,7 @@
        {foreach from=$fields item="element" }
     <li>
        <a id="item_{$element.pageproperty_id}" class="option" href="#" onclick="setSelectedItem('{$element.pageproperty_id}','{$element.pageproperty_name}');" ondblclick="workWithItem('viewPageFieldDefinitions')">		 
-        <img border="0" src="{$domain}Resources/Icons/page_code.png" />
+        <i class="fa fa-pencil-square-o"></i>
         {$element.pageproperty_name}
       </a>
      

@@ -1,6 +1,29 @@
 type:
 # Text & static markup
   
+  SM_ASSETTYPE_OEMBED_URL:
+    id: SM_ASSETTYPE_OEMBED_URL
+    category: none
+    label: OEmbed URL
+    description: "URL to an embeddable resource on a third-party website"
+    class: SmartestOEmbedAsset
+    hidden: true
+    parsable: false
+    attachable: true
+    input_options:
+      - SM_ASSETINPUTTYPE_URL_INPUT
+#    url_translation:
+#      format: "^https?:\/\/((instagram\.com)|(instagr\.am))\/p\/([\w_-]+).*"
+#      id_position: 4
+    storage:
+      type: external_translated
+    render:
+      template: System/Presentation/WebPageBuilder/display.oembed.tpl
+    fa_iconname: code
+#    param:
+#      - {name: width, label: Width, type: SM_DATATYPE_NUMERIC, required: false}
+#      - {name: height, label: Height, type: SM_DATATYPE_NUMERIC, required: false}
+      
   SM_ASSETTYPE_RICH_TEXT:
     id: SM_ASSETTYPE_RICH_TEXT
     category: user_text
@@ -13,6 +36,7 @@ type:
     parsable: true
     smarty_render: true
     icon: style.png
+    fa_iconname: file-text
     large_icon: rich_text_file.png
     input_options:
       - SM_ASSETINPUTTYPE_DIRECT_INPUT
@@ -35,6 +59,7 @@ type:
     convert_to_smarty: true
     parsable: true
     icon: style.png
+    fa_iconname: asterisk
     large_icon: textile_file.png
     input_options:
       - SM_ASSETINPUTTYPE_DIRECT_INPUT
@@ -56,6 +81,7 @@ type:
     parsable: false
     editable: true
     icon: page_white_text.png
+    fa_iconname: file-text-o
     input_options:
       - SM_ASSETINPUTTYPE_DIRECT_INPUT
     input_panel: add.plain_text.tpl
@@ -81,6 +107,7 @@ type:
     editable: true
     attachable: true
     icon: layout.png
+    fa_iconname: file-code-o
     input_options:
       - SM_ASSETINPUTTYPE_DIRECT_INPUT
     input_panel: add.html_fragment.tpl
@@ -102,6 +129,7 @@ type:
     description: An image in JPEG format.
     class: SmartestImageAsset
     icon: picture.png
+    fa_iconname: file-image-o
     attachable: true
     captionable: true
     parsable: false
@@ -135,6 +163,7 @@ type:
     description: An image in PNG format.
     class: SmartestImageAsset
     icon: picture.png
+    fa_iconname: file-image-o
     attachable: true
     captionable: true
     parsable: false
@@ -166,6 +195,7 @@ type:
     description: "An image in GIF format, including animated GIFs"
     class: SmartestImageAsset
     icon: picture.png
+    fa_iconname: file-image-o
     attachable: true
     captionable: true
     parsable: false
@@ -196,6 +226,7 @@ type:
     label: Instagram image
     description: Exterally hosted image on Instagram
     class: SmartestExternallyHostedVideoAsset
+    fa_iconname: instagram
     parsable: false
     attachable: true
     input_options:
@@ -221,6 +252,7 @@ type:
     class: SmartestSvgAsset
     editable: true
     icon: picture.png
+    fa_iconname: file-code-o
     attachable: true
     captionable: true
     storage:
@@ -249,6 +281,7 @@ type:
     editable: true
     class: SmartestAsset
     icon: script.png
+    fa_iconname: file-text-o
     parsable: false
     show_preview_edit_link: false
     input_options:
@@ -273,6 +306,7 @@ type:
     description: A CSS file
     editable: true
     class: SmartestAsset
+    fa_iconname: file-text-o
     parsable: false
     show_preview_edit_link: false
     input_options:
@@ -328,6 +362,7 @@ type:
     editable: false
     class: SmartestAsset
     icon: script.png
+    fa_iconname: font
     parsable: false
     show_preview_edit_link: false
     input_options:
@@ -355,6 +390,7 @@ type:
     editable: false
     class: SmartestAsset
     icon: script.png
+    fa_iconname: font
     parsable: false
     show_preview_edit_link: false
     input_options:
@@ -381,6 +417,7 @@ type:
     editable: false
     class: SmartestAsset
     icon: script.png
+    fa_iconname: font
     parsable: false
     show_preview_edit_link: false
     input_options:
@@ -407,6 +444,7 @@ type:
     class: SmartestAsset
     parsable: false
     icon: music.png
+    fa_iconname: music
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
@@ -430,6 +468,7 @@ type:
     class: SmartestAsset
     parsable: false
     icon: music.png
+    fa_iconname: file-audio
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
@@ -474,6 +513,7 @@ type:
     class: SmartestExternallyHostedVideoAsset
     parsable: false
     attachable: true
+    fa_iconname: youtube-play
     input_options:
       - SM_ASSETINPUTTYPE_URL_INPUT
     url_translation:
@@ -498,6 +538,7 @@ type:
     class: SmartestExternallyHostedVideoAsset
     parsable: false
     attachable: true
+    fa_iconname: vimeo
     input_options:
       - SM_ASSETINPUTTYPE_URL_INPUT
     url_translation:
@@ -520,6 +561,7 @@ type:
     description: A movie saved in standard MPEG format
     class: SmartestAsset
     parsable: false
+    fa_iconname: file-video-o
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
@@ -546,6 +588,7 @@ type:
     description: A movie saved in any Quicktime format
     class: SmartestAsset
     parsable: false
+    fa_iconname: file-video-o
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
@@ -573,6 +616,7 @@ type:
     description: A file in Flash Video format
     class: SmartestAsset
     parsable: false
+    fa_iconname: file-o
     icon: page_white_flash.png
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
@@ -595,6 +639,7 @@ type:
     label: Shockwave Flash
     description: A published Adobe Flash file
     icon: page_white_flash.png
+    fa_iconname: file-o
     class: SmartestAsset
     parsable: false
     captionable: true
@@ -620,6 +665,7 @@ type:
     label: Windows Media Video (WMV)
     description: A movie saved in Microsoft's proprietary WMV format
     icon: page_white_flash.png
+    fa_iconname: file-video-o
     class: SmartestAsset
     parsable: false
     captionable: true
@@ -652,6 +698,7 @@ type:
     class: SmartestAsset
     parsable: false
     icon: page_white_acrobat.png
+    fa_iconname: file-pdf-o
     html_friendly: false
     input_options:
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
@@ -673,6 +720,7 @@ type:
     html_friendly: false
     parsable: false
     icon: page_white.png
+    fa_iconname: file-zip-o
     input_options:
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
@@ -698,6 +746,7 @@ type:
     html_friendly: false
     parsable: false
     icon: page_white.png
+    fa_iconname: user
     input_options:
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
@@ -718,6 +767,7 @@ type:
     html_friendly: false
     parsable: false
     icon: page_word.png
+    fa_iconname: file-word-o
     input_options:
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
@@ -739,6 +789,7 @@ type:
     html_friendly: false
     parsable: false
     icon: page_excel.png
+    fa_iconname: file-excel-o
     input_options:
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
@@ -760,6 +811,7 @@ type:
     html_friendly: false
     parsable: false
     icon: page_white_powerpoint.png
+    fa_iconname: file-powerpoint-o
     input_options:
       - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
       - SM_ASSETINPUTTYPE_FTP_UPLOAD
@@ -783,6 +835,7 @@ type:
     model_specific: never
     groupable: false
     icon: layout.png
+    fa_iconname: object-group
     class: SmartestTemplateAsset
     storage: 
       type: file
@@ -799,6 +852,7 @@ type:
     editable: true
     model_specific: sometimes
     icon: layout.png
+    fa_iconname: object-group
     class: SmartestTemplateAsset
     allow_convert_to: [SM_ASSETTYPE_ITEMSPACE_TEMPLATE, SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE]
     storage: 
@@ -816,6 +870,7 @@ type:
     editable: true
     model_specific: always
     icon: layout.png
+    fa_iconname: object-group
     class: SmartestTemplateAsset
     allow_convert_to: [SM_ASSETTYPE_CONTAINER_TEMPLATE, SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE]
     storage: 
@@ -833,6 +888,7 @@ type:
     editable: true
     model_specific: always
     icon: layout.png
+    fa_iconname: object-group
     class: SmartestTemplateAsset
     allow_convert_to: [SM_ASSETTYPE_ITEMSPACE_TEMPLATE, SM_ASSETTYPE_CONTAINER_TEMPLATE]
     storage: 
@@ -867,6 +923,7 @@ type:
     editable: true
     model_specific: sometimes
     icon: layout.png
+    fa_iconname: object-group
     class: SmartestTemplateAsset
     storage: 
       type: file

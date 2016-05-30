@@ -38,6 +38,8 @@
 
 {asset_select id=$input_id name=$name value=$value options=$property._options required=$property.required}
 
+<script type="text/javascript" src="{$domain}Resources/System/Javascript/tinymce4/tinymce.min.js"></script>
+
 {if strlen($property.hint)}<div class="form-hint">{$property.hint}</div>{/if}
 
   <ul class="item_property_actions">
@@ -63,7 +65,14 @@
     {if $value.id && is_array($value.type_info) && isset($value.type_info.editable) && _b($value.type_info.editable)}
       <li><a href="#edit-file" id="edit-asset-button-{$property.id}" title="Edit this file"><i class="fa fa-pencil"></i></a>
       <script type="text/javascript">
-      $('edit-asset-button-{$property.id}').observe('click', function(e){literal}{{/literal}e.stop();window.location='{$domain}assets/editAsset?from=item_edit&asset_id='+$('{$input_id}').value+'&item_id={$item.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}'{literal}}{/literal});
+      $('edit-asset-button-{$property.id}').observe('click', function(e){literal}{{/literal}
+        e.stop();
+        {if $property.foreign_key_filter == 'SM_ASSETTYPE_RICH_TEXT'}
+        MODALS.load('assets/richTextEditorModal?asset_id={$value.id}&from=item_edit&item_id={$item.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}', 'Edit rich text', true);
+        {else}
+        window.location='{$domain}assets/editAsset?from=item_edit&asset_id='+$('{$input_id}').value+'&item_id={$item.id}{if $request_parameters.page_id}&page_id={$request_parameters.page_id}{/if}';
+        {/if}
+      {literal}}{/literal});
       $('edit-asset-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit the selected file');{literal}}{/literal});
       $('edit-asset-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
       </script></li>

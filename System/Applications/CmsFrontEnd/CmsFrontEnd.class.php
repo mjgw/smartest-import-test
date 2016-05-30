@@ -49,24 +49,14 @@ class CmsFrontEnd extends SmartestSystemApplication{
             if(strlen($this->getRequest()->getRequestString())){
 		        
 		        try{
-		        
-		            if($this->_page = $this->manager->getNormalPageByUrl($this->getRequest()->getRequestString(), $this->_site->getId())){
-
-        		        // we are viewing a static page
-        		        $this->renderPage();
+		            
+                    if($this->_page = $this->_site->getContentByUrl($this->getRequest()->getRequestString())){
+                        $this->renderPage();
                         return true;
-
-        		    }else if($this->_page = $this->manager->getItemClassPageByUrl($this->getRequest()->getRequestString(), $this->_site->getId())){
-
-        		        $this->renderPage();
-                        return true;
-
-        		    }else{
-
+                    }else{
             		    $this->renderNotFoundPage();
                         return false;
-
-            	    }
+                    }
             	
         	    }catch(SmartestRedirectException $e){
         	        
@@ -669,16 +659,129 @@ class CmsFrontEnd extends SmartestSystemApplication{
         
     }
     
-    public function setPrivacyCookieNoJS(){
+    public function oEmbedFragment(){
         
-        // var_dump($this->lookupSiteDomain());
+        $url = $this->getRequestParameter('url');
+        if(SmartestStringHelper::isValidExternalUri($url)){
+            $urlobj = new SmartestExternalUrl($url);
+            $hostname = $urlobj->getHostName();
+            if($hostname == $_SERVER['HTTP_HOST']){
+                $s = new SmartestSite;
+                if($s->findBy('domain', $hostname)){
+                    
+                    $this->_site = $s;
+                    define('SM_CMS_PAGE_SITE_ID', $this->_site->getId());
+        		    define('SM_CMS_PAGE_SITE_UNIQUE_ID', $this->_site->getUniqueId());
+                    
+    		        try{
+		            
+                        if($this->_page = $this->_site->getContentByUrl($urlobj->getRequestString())){
+                            
+                            $oembed_data = array();
+                            $oembed_data['version'] = '1.0';
+                            $oembed_data['provider_name'] = $this->_site->getOrganizationNameOrSiteName();
+                            $oembed_data['provider_url'] = $this->_site->getHomepageFullUrl();
+                            $oembed_data['width'] = (int) $this->_site->getOEmbedWidth();
+                            $oembed_data['height'] = (int) $this->_site->getOEmbedHeight();
+                            $oembed_data['lang'] = $this->_site->getLanguageCode();
+                            
+                            if($this->_page instanceof SmartestItemPage){
+                                $item = $this->_page->getPrincipalItem();
+                                // echo "Retrieve OEmbed information for ".$item->getModel()->getName().": \"".$this->_page->getTitle().'" from site "'.$this->_site->getName().'"';
+                                $oembed_data['type'] = $item->getModel()->getName();
+                                $oembed_data['title'] = $item->getName();
+                            }else{
+                                // echo "Retrieve OEmbed information for static page: \"".$this->_page->getTitle().'" from site "'.$this->_site->getName().'"';
+                                $oembed_data['type'] = "Page";
+                                $oembed_data['title'] = $this->_page->getTitle();
+                            }
+                            
+                            $oembed_data['html'] = $this->_page->getOembedIFrameMarkup();
+                            
+                            if($this->getRequestParameter('format', 'json') == 'xml'){
+                                $xml = new SimpleXMLElement('<oembed/>');
+                                foreach($oembed_data as $key=>$value){
+                                    if($key == 'html'){
+                                        $xml->addChild($key,'<![CDATA['.$value.']]>');
+                                    }else{
+                                        $xml->addChild($key,$value);
+                                    }
+                                }
+                                header('Content-type: text/xml');
+                                echo $xml->asXML();
+                            }else{
+                                header('Content-type: application/json');
+                                echo json_encode($oembed_data);
+                            }
+                            
+                            
+                        }else{
+                		    echo "Page not found on this site";
+                        }
+            	
+            	    }catch(SmartestRedirectException $e){
+            	        echo "Try again with URL ".$e->getRedirectUrl();
+            	    }
+                    
+                }else{
+                    echo "Hostname ".$urlobj->getHostName().' not recognised';
+                }
+            }else{
+                echo "This OEmbed endpoint can only look up URLs starting with the hostname ".$_SERVER['HTTP_HOST'];
+            }
+        }else{
+            echo "URL is invalid";
+        }
+        exit;
+        
+    }
+    
+    public function oEmbedIFrameContent(){
         
         if($this->lookupSiteDomain()){
-            
-            
-            
+            if($this->requestParameterIsSet('item_id')){
+                if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                    // Item
+                    $wph = new SmartestWebPagePreparationHelper;
+        	        header('X-Powered-By: Smartest v'.SmartestInfo::$version.' ('.SmartestInfo::$revision.')');
+        	        $cth = 'Content-Type: '.$this->getRequest()->getContentType().'; charset='.$this->getRequest()->getCharSet();
+        	        header($cth);
+                    echo $wph->getCmsItemOEmbedIframeContent($item, $this->getRequestParameter('width'), $this->getRequestParameter('height'));
+                }else{
+                    // Item not found
+                }
+            }else{
+                if($this->requestParameterIsSet('page_id')){
+                    $page = new SmartestPage;
+                    if($page->smartFind($this->getRequestParameter('page_id'))){
+                        if($page->getTYpe() == 'NORMAL'){
+                            // Page
+                            $wph = new SmartestWebPagePreparationHelper;
+                	        header('X-Powered-By: Smartest v'.SmartestInfo::$version.' ('.SmartestInfo::$revision.')');
+                	        $cth = 'Content-Type: '.$this->getRequest()->getContentType().'; charset='.$this->getRequest()->getCharSet();
+                	        header($cth);
+                            echo $wph->getStaticPageOEmbedIframeContent($page);
+                        }
+                    }else{
+                        // Page not found
+                    }
+                }
+            }
+        }else{
+            // Site domain not recognised
+            echo "<p>Site domain not recognised</p>";
         }
         
+        exit;
+        
+    }
+    
+    public function setPrivacyCookieNoJS(){
+        
+        // TODO: A server-side setting of the SMARTEST_COOKIE_CONSENT cookie
+        if($this->lookupSiteDomain()){
+            
+        }
     }
 	
 	public function addRating(){

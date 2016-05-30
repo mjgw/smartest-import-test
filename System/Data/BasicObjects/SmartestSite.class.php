@@ -253,17 +253,12 @@ class SmartestSite extends SmartestBaseSite{
             ksort($master_array);
             
             $search_end_time = microtime(true);
-            
             $this->_last_search_time_taken = ($search_end_time - $search_start_time)*1000;
-            
-            // echo count($master_array);
-            
-            // print_r($this->database->getDebugInfo());
             
             return $master_array;
             
         }else{
-            // no search terms were entered so no serch results come back
+            // no search terms were entered so no search results come back
             return array();
         }
 	    
@@ -333,7 +328,7 @@ class SmartestSite extends SmartestBaseSite{
 	    }
 	}
 	
-	public function getDataSetsAsArrays(){
+	/* public function getDataSetsAsArrays(){
 	    
 	    $sets = $this->getDataSets();
 	    $arrays = array();
@@ -344,7 +339,7 @@ class SmartestSite extends SmartestBaseSite{
 	    
 	    return $arrays;
 	    
-	}
+	} */
 	
 	public function getContainers(){
 	    
@@ -371,8 +366,6 @@ class SmartestSite extends SmartestBaseSite{
 	}
 	
 	public function getFieldNames(){
-	    
-	    // $names = array();
 	    
 	    if(!count($this->_field_names)){
 	    
@@ -402,9 +395,7 @@ class SmartestSite extends SmartestBaseSite{
         
         $result = array();
         
-        // var_dump($page_id);
-        
-	    if(is_numeric($page_id)){
+        if(is_numeric($page_id)){
 			// numeric_id
 			$sql = "SELECT page_site_id FROM Pages WHERE page_id='".$page_id."'";
             $result = $this->database->queryToArray($sql);
@@ -414,6 +405,7 @@ class SmartestSite extends SmartestBaseSite{
             $result = $this->database->queryToArray($sql);
 		}else{
             // echo "did not match";
+            $result = array();
         }
         
         if(count($result)){
@@ -428,6 +420,15 @@ class SmartestSite extends SmartestBaseSite{
 	
 	public function getFullDirectoryPath(){
 	    return SM_ROOT_DIR.'Sites/'.$this->getDirectoryName().'/';
+	}
+    
+    public function getTopLevelUrl(){
+        $request = SmartestPersistentObject::get('request_data');
+	    return 'http://'.$this->getDomain().$request->g('domain');
+    }
+    
+	public function getHomepageFullUrl(){
+        return $this->getTopLevelUrl().$this->getHomePage()->getDefaultUrl();
 	}
 	
 	public function getUniqueId(){
@@ -490,6 +491,33 @@ class SmartestSite extends SmartestBaseSite{
         
     }
     
+    public function getContentByUrl($url){
+        
+        if(strlen($url) > 1 && $url{0} == '/'){
+            $url = substr($url, 1);
+        }
+        
+        $h = new SmartestRequestUrlHelper;
+        
+        if($page = $h->getNormalPageByUrl($url, $this->getId())){
+
+	        // we are viewing a static page
+	        return $page;
+
+	    }else if($page = $h->getItemClassPageByUrl($url, $this->getId())){
+            
+            // we are viewing an item page
+	        return $page;
+
+	    }else{
+            
+            // page not found
+		    return false;
+
+	    }
+        
+    }
+    
     public function getLanguageCode(){
         
         $ph = new SmartestPreferencesHelper;
@@ -527,7 +555,17 @@ class SmartestSite extends SmartestBaseSite{
     
     public function getOrganizationName(){
         $ph = new SmartestPreferencesHelper;
-        return $ph->getGlobalPreference('site_organisation_name', null, $this->getId());
+        $on = $ph->getGlobalPreference('site_organisation_name', null, $this->getId());
+        return $on;
+    }
+    
+    public function getOrganizationNameOrSiteName(){
+        $on = $this->getOrganizationName();
+        if(strlen($on)){
+            return $on;
+        }else{
+            return $this->getName();
+        }
     }
     
     public function setOrganizationName($name){
@@ -541,6 +579,25 @@ class SmartestSite extends SmartestBaseSite{
     
     public function setOrganisationName($name){
         $this->setOrganizationName($name);
+    }
+    
+    public function getOEmbedEnabled(){
+        $ph = new SmartestPreferencesHelper;
+        return (bool) $ph->getGlobalPreference('site_oembed_enabled', null, $this->getId());
+    }
+    
+    public function getOEmbedWidth(){
+        $ph = new SmartestPreferencesHelper;
+        $val = (int) $ph->getGlobalPreference('site_oembed_width', null, $this->getId());
+        $val = $val ? $val : 420;
+        return $val;
+    }
+    
+    public function getOEmbedHeight(){
+        $ph = new SmartestPreferencesHelper;
+        $val = (int) $ph->getGlobalPreference('site_oembed_width', null, $this->getId());
+        $val = $val ? $val : 140;
+        return $val;
     }
     
     public function offsetGet($offset){
@@ -580,6 +637,10 @@ class SmartestSite extends SmartestBaseSite{
             case "organization_name":
             case "organisation_name":
             return $this->getOrganisationName();
+            
+            case "organization_name_safe":
+            case "organisation_name_safe":
+            return $this->getOrganizationNameOrSiteName();
             
             case "pages_list":
             return $this->getPagesList();

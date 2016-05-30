@@ -167,6 +167,18 @@ span.null-notice{
     font-style:italic;
 }
 
+span.feedback-ok{
+    color:#00c66b;
+}
+
+span.feedback-bad{
+    color:#fe462e;
+}
+
+span.null-notice i.fa, span.feedback-ok i.fa, span.feedback-bad i.fa{
+    font-size:1.15em;
+}
+
 div.special-box a.sm-help-link{
     background-color:#fff;
     text-decoration:none;

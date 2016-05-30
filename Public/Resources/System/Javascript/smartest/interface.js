@@ -719,7 +719,7 @@ Smartest.AjaxModalViewer = Class.create({
     history: [],
     current: null,
     
-    load: function(url, title){
+    load: function(url, title, big){
         
         url = sm_domain+'modal:'+url;
         
@@ -728,6 +728,12 @@ Smartest.AjaxModalViewer = Class.create({
         }
         
         this.updateTo(url, title);
+        
+        if(big){
+          $('modal-outer').addClassName('big');
+        }else{
+          $('modal-outer').removeClassName('big');
+        }
         
         return false;
         
@@ -761,6 +767,10 @@ Smartest.AjaxModalViewer = Class.create({
     
     updateScroller: function(){
         var t = setTimeout(function(){Smartest.AjaxModalScroller = new Control.ScrollBar('modal-updater', 'modal-scrollbar-track');}, 50);
+    },
+    
+    updateTitle: function(title){
+        $('modal-title').update(title);
     },
     
     hideViewer: function(){

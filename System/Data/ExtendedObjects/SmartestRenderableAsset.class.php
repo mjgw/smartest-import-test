@@ -107,10 +107,12 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	}
 	
 	public function extractId(){
-	    $regex = "/".$this->_type_info['url_translation']['format']."/i";
-	    preg_match($regex, $this->getUrl(), $matches);
-	    $position = isset($this->_type_info['url_translation']['id_position']) ? $this->_type_info['url_translation']['id_position'] : 1;
-	    return $matches[$position];
+        if(isset($this->_type_info['url_translation'])){
+            $regex = "/".$this->_type_info['url_translation']['format']."/i";
+    	    preg_match($regex, $this->getUrl(), $matches);
+    	    $position = isset($this->_type_info['url_translation']['id_position']) ? $this->_type_info['url_translation']['id_position'] : 1;
+    	    return $matches[$position];
+        }
 	}
 	
 	public function render($draft_mode='unset', $edit_button_in_draft=true){
@@ -129,6 +131,11 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
         
         if(!$edit_button_in_draft){
             $this->_render_data->setParameter('_hide_edit_button', true);
+        }
+        
+        if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
+            // echo "blah";
+            $this->_render_data->setParameter('markup', $this->getContent());
         }
 	    
         if($this->getId()){

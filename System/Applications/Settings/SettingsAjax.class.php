@@ -4,7 +4,20 @@ class SettingsAjax extends SmartestSystemApplication{
 
     public function tagsAutoComplete(){
         
+        $db = SmartestDatabase::getInstance('SMARTEST');
+        
         $string = SmartestStringHelper::sanitizeLookupValue($this->getRequestParameter('string'));
+        
+        $pre_sql = "SELECT * FROM Tags WHERE Tags.tag_name ='".SmartestStringHelper::toSlug($string, true)."'";
+        $result = $db->queryToArray($pre_sql);
+        
+        if(count($result)){
+            $allow_create = false;
+        }else{
+            $allow_create = true;
+        }
+        
+        $this->send($allow_create, 'allow_create');
         
         $sql = "SELECT * FROM Tags WHERE (Tags.tag_label LIKE '%".$string."%' OR Tags.tag_name LIKE '%".$string."%')";
         
@@ -17,7 +30,6 @@ class SettingsAjax extends SmartestSystemApplication{
             $sql .= " AND Tags.tag_id NOT IN ('".implode("','", $avoid_ids)."')";
         }
         
-        $db = SmartestDatabase::getInstance('SMARTEST');
         $result = $db->queryToArray($sql);
         $tags = array();
         
@@ -29,9 +41,9 @@ class SettingsAjax extends SmartestSystemApplication{
             }
         }
         
-        // if(count($tags) == 0){
+        if($allow_create){
             $this->send(strip_tags($string), 'new_tag_label');
-        // }
+        }
         
         $this->send(count($tags), 'num_tags');
         $this->send($tags, 'tags');

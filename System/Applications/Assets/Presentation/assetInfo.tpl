@@ -383,7 +383,7 @@
       <tr>
         <td class="field-name">&nbsp;</td>
         <td>
-          <a href="#open-file-notes" id="file-notes-link"><img src="{$domain}Resources/Icons/note.png"> Notes</a>
+          <a href="#open-file-notes" id="file-notes-link" class="button"><i class="fa fa-sticky-note-o"></i> Notes</a>
           <script type="text/javascript">
           {literal}
           $('file-notes-link').observe('click', function(e){

@@ -35,6 +35,7 @@
     // MODALS.load('assets/miniImageBrowser?{if $_input_data.for}for={$_input_data.for}{if $_input_data.for == "ipv" && $_input_data.property_id}&property_id={$_input_data.property_id}{/if}{if $_input_data.for == "ipv" && $_input_data.item_id}&item_id={$_input_data.item_id}{/if}{if $_input_data.for == "placeholder" && $_input_data.placeholder_id}&placeholder_id={$_input_data.placeholder_id}{/if}{if $_input_data.for == "user_profile_pic" && $_input_data.user_id}&user_id={$_input_data.user_id}{/if}{/if}&input_id={$_input_data.id}&current_selection_id='+$F('{$_input_data.id}'), 'Image browser');
     $('{$_input_data.id}').value = '';
     $('{$_input_data.id}-thumbnail-area').update('<div class="image-picker-caption">No file is selected</div>');
+    $('{$_input_data.id}').fire('image:chosen');
     {rdelim});
   </script>
   {/if}

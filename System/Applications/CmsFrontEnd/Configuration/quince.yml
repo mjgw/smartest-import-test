@@ -81,6 +81,9 @@ module:
     page_fragment:
       url: /pagefragment/:page_id/:container_name
       action: pageFragment
+    oembed:
+      url: /embed
+      action: oEmbedFragment
 #    sitemap:
 #      url: /sitemap.xml
 #      action: buildXmlSitemap

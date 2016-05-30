@@ -214,6 +214,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        return new SmartestTagPresenceChecker($this->getTags());
 	    }
         
+        if($offset == '_is_linkable'){
+            return $this->isLinkable();
+        }
+        
         if(is_array($this->_many_to_one_sub_models) && array_key_exists($offset, $this->_many_to_one_sub_models)){
             return new SmartestArray($this->getSubModelItems($this->_many_to_one_sub_models[$offset]));
         }
@@ -458,16 +462,17 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	}
     
     public function getMetapageId(){
-	    
 	    return $this->_item->getMetapageId();
-	    
 	}
 	
 	public function getMetaPage(){
-	    
 	    return $this->_item->getMetapage();
-	    
 	}
+    
+    public function isLinkable(){
+        $p = $this->getMetapage();
+        return (is_object($p) && $p->getId());
+    }
 	
 	public function getDefaultThumbnailImage(){
 	    if($propertyid = $this->getModel()->getDefaultThumbnailPropertyId()){
@@ -476,9 +481,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	}
 	
 	public function getItemSpaceDefinitions($draft=false){
-	    
 	    return $this->_item->getItemSpaceDefinitions($draft);
-	    
 	}
 	
 	public function hydrateNewFromRequest($request_data, $site_id=''){
@@ -1728,14 +1731,25 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
     
     public static function getModelClassName($item_id){
 	    
-	    $item = new SmartestItem;
-	    $item->find($item_id);
-	    $model_id = $item->getItemclassId();
-	    
-	    $model = new SmartestModel;
-	    $model->find($model_id);
-        // $model->init();
-	    return $model->getClassName();
+	    // $item = new SmartestItem;
+	    // $item->find($item_id);
+	    // $model_id = $item->getItemclassId();
+        
+        $database = SmartestPersistentObject::get('db:main');
+        $field = is_numeric($item_id) ? 'item_id' : 'item_webid';
+        $sql = "SELECT item_itemclass_id FROM Items WHERE ".$field."='".$item_id."'";
+        $result = $database->queryToArray($sql);
+        
+        if(count($result)){
+	        
+            $model_id = $result[0]['item_itemclass_id'];
+            
+    	    $model = new SmartestModel;
+    	    $model->find($model_id);
+            // $model->init();
+    	    return $model->getClassName();
+        
+        }
 	    
     }
     
@@ -1761,7 +1775,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
             
         }
         
-        if($object->find($item_id)){
+        if(is_numeric($item_id) && $object->find($item_id)){
+            return $object;
+        }elseif($object->findBy('webid', $item_id)){
             return $object;
         }else{
             return null;

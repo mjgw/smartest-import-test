@@ -7,8 +7,8 @@ class SmartestOAuthRateLimitDistributionHelper{
     
     public static function init(){
     
-        $services = SmartestOAuthHelper::getServices();
-        $h = new SmartestOAuthHelper;
+        $services = SmartestAPIServicesHelper::getOAuthServices();
+        $h = new SmartestAPIServicesHelper;
         $accounts = array();
         
         foreach($services as $s){

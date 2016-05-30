@@ -318,4 +318,10 @@ class SmartestItemPage extends SmartestPage{
 	    return $this->_simple_item->getAuthorsAsArrays();
 	}
     
+    public function getOembedIFrameSrc(){
+        $request = SmartestPersistentObject::get('request_data');
+        // TODO: Sort out https
+        return 'http://'.$this->getSite()->getDomain().$request->g('domain').'website/oEmbedIFrameContent?page_id='.$this->getWebId().'&amp;item_id='.$this->_simple_item->getWebId();
+    }
+    
 }

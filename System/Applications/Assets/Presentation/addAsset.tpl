@@ -112,7 +112,7 @@ function validateUploadSuffix(){
       <div class="edit-form-row">
         <select name="asset_type" id="file-type-select">
 {foreach from=$types item="type"}
-          <option value="{$type.id}">{$type.label}</option>
+          {if !isset($type.hidden) || !_b($type.hidden)}<option value="{$type.id}">{$type.label}</option>{/if}
 {/foreach}
         </select>
       </div>

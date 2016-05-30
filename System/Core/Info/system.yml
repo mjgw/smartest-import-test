@@ -42,6 +42,8 @@ system:
     - website/setPrivacyCookieNoJS
     - website/renderDynamicBrowserInstruction
     - website/getDataSetFeed
+    - website/oEmbedFragment
+    - website/oEmbedIFrameContent
   content_interaction_methods:
     - website/renderPageFromUrl
     - website/renderPageFromId
@@ -58,6 +60,8 @@ system:
     - website/setPrivacyCookieNoJS
     - website/renderDynamicBrowserInstruction
     - website/getDataSetFeed
+    - website/oEmbedFragment
+    - website/oEmbedIFrameContent
   smarty_config:
     default_templates_dir: Presentation/
     templates_cache: System/Cache/Smarty/
@@ -80,6 +84,7 @@ system:
       - System/Cache/Controller/
       - System/Cache/TextFragments/Previews/
       - System/Cache/TextFragments/Live/
+      - System/Cache/TextFragments/OEmbed/
       - System/Logs/
       - System/Temporary/
       - Public/Resources/System/Cache/Images/

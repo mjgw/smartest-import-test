@@ -84,13 +84,13 @@ document.observe('dom:loaded', function(){
         getAssetInfo(selectedAssetId);
     }
   
-    $('asset-selector-embed').observe('change', function(){
+    /* $('asset-selector-embed').observe('change', function(){
         if($F('asset-selector-embed')){
             // getAssetInfo($F('asset-selector-embed'));
             getNonImageAssetInfo($F('asset-selector-embed'));
             $('attachment-file-type').value = 'embed';
         }
-    });
+    }); */
     
     $('attachment-filetype-selector-image').observe('click', function(evt){
       evt.stop();
@@ -149,6 +149,11 @@ document.observe('dom:loaded', function(){
       }
     });
     
+    $('embed-selector-button').observe('click', function(e){
+      e.stop();
+      MODALS.load('assets/nonImageAttachmentChooser', 'Select embeddable media');
+    });
+    
 });
 
 {/literal}
@@ -184,8 +189,6 @@ document.observe('dom:loaded', function(){
       
       <div class="edit-form-sub-row">
         
-        {$asset.is_binary_image}
-        
         <div id="image-selector" {if !$attached_asset.id || !$attached_asset.is_binary_image} style="display:none"{/if}>
           {if $attached_asset.id && $attached_asset.is_binary_image}
           {image_select name="attached_file_id_img" id="asset-selector-img" changehook="imageSelected" value=$attached_asset}
@@ -195,12 +198,19 @@ document.observe('dom:loaded', function(){
         </div>
         
         <div id="embed-selector" {if !$attached_asset.id || $attached_asset.is_binary_image} style="display:none"{/if}>
-          <select name="attached_file_id_embed" id="asset-selector-embed">
+          <!--<select name="attached_file_id_embed" id="asset-selector-embed">
             <option value="">No file attached</option>
             {foreach from=$non_image_files item="file"}
             <option value="{$file.id}"{if $file.id == $attached_asset_id} selected="selected"{/if}>{$file.stringid} ({$file.url})</option>
             {/foreach}
-          </select>
+          </select>-->
+          <input type="hidden" name="attached_file_id_embed" value="{$attached_asset.id}" id="attached-file-id-embed" />
+          <div class="item-chooser-input" id="embed-file-indicator-holder">
+            <span id="embed-file-indicator" style="margin-right:10px">
+              <i class="fa fa-file-o"></i> <span id="embed-file-name" class="{if !$attached_asset.id || $attached_asset.is_binary_image}null-notice{/if}">{if !$attached_asset.id || $attached_asset.is_binary_image}No embed file selected{else}{$attached_asset.label}{/if}</span>
+            </span>
+            <a href="#select" id="embed-selector-button" class="button">Select</a>
+          </div>
         </div>
       
       </div>

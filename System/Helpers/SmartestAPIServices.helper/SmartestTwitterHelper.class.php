@@ -10,7 +10,7 @@ class SmartestTwitterHelper implements SmartestOAuthController{
     protected $_connection;
     
     public function __construct(){
-        $this->_service = SmartestOAuthHelper::getService('SM_OAUTHSERVICE_TWITTER');
+        $this->_service = SmartestAPIServicesHelper::getOAuthService('SM_OAUTHSERVICE_TWITTER');
     }
     
     public function requestOAuthKeysWithAuthTokenAndVerifier($token, $verifier){

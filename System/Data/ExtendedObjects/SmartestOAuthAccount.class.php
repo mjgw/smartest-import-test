@@ -47,7 +47,7 @@ class SmartestOAuthAccount extends SmartestUser{
     
     public function getService(){
         if(!is_object($this->_service)){
-            $services = SmartestOAuthHelper::getServices();
+            $services = SmartestAPIServicesHelper::getOAuthServices();
             if(isset($services[$this->getOAuthServiceId()])){
                 $this->_service = $services[$this->getOAuthServiceId()];
             }

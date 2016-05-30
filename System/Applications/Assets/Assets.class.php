@@ -1803,7 +1803,9 @@ class Assets extends SmartestSystemApplication{
 
         			    if($asset_type['storage']['type'] == 'database'){
         			        if($asset->usesTextFragment()){
-        			            $content = htmlspecialchars($asset->getTextFragment()->getContent(), ENT_COMPAT, 'UTF-8');
+        			            // $content = htmlspecialchars($asset->getTextFragment()->getContent(), ENT_COMPAT, 'UTF-8');
+                                // $content = htmlspecialchars(SmartestStringHelper::convertAttachmentsToVisualEditorFormat($asset->getTextFragment()->getContent()), ENT_COMPAT, 'UTF-8');
+                                $content = $asset->getTextFragment()->getContentForEditor();
                                 $this->send(true, 'show_publish');
         			        }else{
         			            $this->send(false, 'show_publish');
@@ -1897,25 +1899,6 @@ class Assets extends SmartestSystemApplication{
 		
 	}
     
-    public function editFileParametersModal(){
-        
-		$asset = new SmartestAsset;
-	
-		if($asset->find($this->getRequestParameter('asset_id'))){
-		    
-            $assettype_code = $asset->getType();
-			$types_data = SmartestDataUtility::getAssetTypes();
-            
-            if(array_key_exists($assettype_code, $types_data)){
-                
-                $this->send($asset, 'asset');
-                
-            }
-            
-		}
-        
-    }
-	
 	public function editTextFragmentSource($get, $post){
 
 		$asset_id = $this->getRequestParameter('asset_id');
@@ -1979,6 +1962,53 @@ class Assets extends SmartestSystemApplication{
 		    // asset ID was not recognised
 		    $this->addUserMessage('The asset ID was not recognized.', SmartestUserMessage::ERROR);
 		}
+	}
+    
+	public function updateAsset($get, $post){
+        
+        $asset_id = $this->getRequestParameter('asset_id');
+
+		$asset = new SmartestAsset;
+
+		if($asset->find($asset_id)){
+            
+            if($asset->getUserId() == $this->getUser()->getId() || $this->getUser()->hasToken('modify_assets')){
+            
+                $filter = !$this->requestParameterIsSet('filter_markup') || (bool) $this->getRequestParameter('filter_markup');
+                
+		        $param_values = serialize($this->getRequestParameter('params'));
+    		    $asset->setParameterDefaults($param_values);
+
+    		    $content = $this->getRequestParameter('asset_content');
+    		    $content = SmartestStringHelper::unProtectSmartestTags($content);
+    		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
+    		    
+                if($filter){
+                    $asset->setContentFromEditor($content);
+                }else{
+                    $asset->setContent($content);
+                }
+                
+    	        $asset->setLanguage(strtolower(substr($this->getRequestParameter('asset_language'), 0, 3)));
+    	        $asset->setModified(time());
+                
+                $asset->save();
+                
+    		    $this->addUserMessageToNextRequest("The file has been successfully updated.", SmartestUserMessage::SUCCESS);
+    		    $success = true;
+		    
+		    }else{
+    	        $this->addUserMessageToNextRequest("You don't have permission to edit assets created by other users.", SmartestUserMessage::WARNING);
+    	        $success = false;
+    	    }
+
+		}else{
+		    $this->addUserMessageToNextRequest("The file you are trying to update no longer exists or has been deleted by another user.", SmartestUserMessage::WARNING);
+		    $success = false;
+		}
+	    
+	    $this->handleSaveAction();
+
 	}
 	
 	public function approveAsset($get){
@@ -2311,10 +2341,10 @@ class Assets extends SmartestSystemApplication{
         		    }
     			    
 			    }else{
-			        // $formTemplateInclude = "edit.default.tpl";
+			        $formTemplateInclude = "edit.default.tpl";
 			    }
 
-    			$this->send($formTemplateInclude, "formTemplateInclude");
+    			// $this->send($formTemplateInclude, "formTemplateInclude");
     			$this->setTitle('Attached Files');
     			$this->send($asset_type, 'asset_type');
     			$this->send($asset, 'asset');
@@ -2329,58 +2359,6 @@ class Assets extends SmartestSystemApplication{
 		    $this->addUserMessage('The asset ID was not recognized.', SmartestUserMessage::ERROR);
 		}
 	    
-	}
-
-	public function updateAsset($get, $post){
-        
-        $asset_id = $this->getRequestParameter('asset_id');
-
-		$asset = new SmartestAsset;
-
-		if($asset->find($asset_id)){
-            
-            if($asset->getUserId() == $this->getUser()->getId() || $this->getUser()->hasToken('modify_assets')){
-            
-		        $param_values = serialize($this->getRequestParameter('params'));
-    		    $asset->setParameterDefaults($param_values);
-
-    		    $content = $this->getRequestParameter('asset_content');
-    		    $content = SmartestStringHelper::unProtectSmartestTags($content);
-    		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
-    		    $asset->setContent($content);
-    	        $asset->setLanguage(strtolower(substr($this->getRequestParameter('asset_language'), 0, 3)));
-    	        $asset->setModified(time());
-                $asset->save();
-                
-    		    $this->addUserMessageToNextRequest("The file has been successfully updated.", SmartestUserMessage::SUCCESS);
-    		    $success = true;
-    		    // $message = 
-		    
-		    }else{
-    	        $this->addUserMessageToNextRequest("You don't have permission to edit assets created by other users.", SmartestUserMessage::WARNING);
-    	        $success = false;
-    	    }
-
-		}else{
-		    $this->addUserMessageToNextRequest("The file you are trying to update no longer exists or has been deleted by another user.", SmartestUserMessage::WARNING);
-		    $success = false;
-		}
-		
-	    // $this->formForward();
-	    
-	    /* if($this->getRequestParameter('_submit_action') == "continue" && $success){
-	        if($this->getRequestParameter('editor') && $this->getRequestParameter('editor') == 'source'){
-	            $this->redirect("/assets/editTextFragmentSource?asset_id=".$asset->getId());
-	        }else{
-	            $this->redirect("/assets/editAsset?asset_type=".$asset->getType()."&asset_id=".$asset->getId());
-		    }
-	    }else{
-	        // $this->addUserMessageToNextRequest($message, $message_type);
-	        $this->formForward();
-	    } */
-	    
-	    $this->handleSaveAction();
-
 	}
 	
 	public function defineAttachment($get){
@@ -2500,7 +2478,7 @@ class Assets extends SmartestSystemApplication{
                 
     			    $asset_type = $types_data[$assettype_code];
 
-        			$this->send($formTemplateInclude, "formTemplateInclude");
+        			// $this->send($formTemplateInclude, "formTemplateInclude");
         			$this->setTitle('Define attachment: '.$attachment_name);
         			$this->send($asset_type, 'asset_type');
         			$this->send($asset, 'asset');
@@ -2785,6 +2763,8 @@ class Assets extends SmartestSystemApplication{
 	    
 	}
     
+    /////////// MODALS ///////////
+    
     /** Mini image browser **/
     
     public function miniImageBrowser(){
@@ -2889,6 +2869,88 @@ class Assets extends SmartestSystemApplication{
         }
         
         $this->send($assets, 'assets');
+        
+    }
+    
+    public function editFileParametersModal(){
+        
+		$asset = new SmartestAsset;
+	
+		if($asset->find($this->getRequestParameter('asset_id'))){
+		    
+            $assettype_code = $asset->getType();
+			$types_data = SmartestDataUtility::getAssetTypes();
+            
+            if(array_key_exists($assettype_code, $types_data)){
+                
+                $this->send($asset, 'asset');
+                
+            }
+            
+		}
+        
+    }
+    
+    public function nonImageAttachmentChooser(){
+        
+        $helper = new SmartestAssetsLibraryHelper;
+	    $attachable_files = $helper->getAttachableFilesWithoutBinaryImages($this->getSite()->getId());
+        $this->send($attachable_files, 'attachable_files');
+        
+    }
+    
+    public function richTextEditorModal(){
+        
+        if($this->getUser()->hasToken('modify_assets')){
+            
+            $asset = new SmartestAsset;
+            
+            if($asset->find($this->getRequestParameter('asset_id'))){
+                
+                if($asset->getType() == 'SM_ASSETTYPE_RICH_TEXT'){
+                    
+                    // SmartestStringHelper::convertAttachmentsToVisualEditorFormat($asset->getContent());
+                    
+                    $this->send($asset->getContentForEditor(), 'editor_contents');
+                    $this->send(SmartestStringHelper::randomFromFormat('RRRR'), 'random_nonce');
+                    $this->send($asset, 'asset');
+                    $this->send(true, 'show_editor');
+                    
+                    if($this->getRequestParameter('from')){
+                        
+                        if($this->getRequestParameter('from') == 'item_edit'){
+                            
+                            if($this->getRequestParameter('item_id') && $item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                                $this->send($item, 'item');
+                            }
+                            
+                        }
+                        
+                        $page = new SmartestPage;
+                        if($this->getRequestParameter('page_id') && $page->smartFind($this->getRequestParameter('page_id'))){
+                            $this->send($page, 'page');
+                        }
+                        
+                        $this->send($this->getRequestParameter('from'), 'from');
+                        
+                    }
+                    
+                }else{
+                    
+                    $this->send("This file is not the right type of file to be edited in this way.", 'message');
+                    $this->send(false, 'show_editor');
+                    
+                }
+                
+            }else{
+                $this->send("The specified file ID could not be found.", 'message');
+                $this->send(false, 'show_editor');
+            }
+            
+        }else{
+            $this->send("You do not have permission to edit files.", 'message');
+            $this->send(false, 'show_editor');
+        }
         
     }
 		
