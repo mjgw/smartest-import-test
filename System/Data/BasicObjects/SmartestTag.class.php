@@ -590,6 +590,8 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
 	    $this->getDescriptionTextAsset()->setContent($content);
         $this->getDescriptionTextAsset()->setModified(time());
         $this->getDescriptionTextAsset()->save();
+        $this->getDescriptionTextAsset()->getTextFragment()->createPreviewFile();
+        $this->getDescriptionTextAsset()->getTextFragment()->publish();
         
     }
     
@@ -637,6 +639,9 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             case "description":
             case "description_text_asset":
             return $this->getDescriptionTextAsset();
+            
+            case "slug":
+            return $this->getName();
             
         }
         

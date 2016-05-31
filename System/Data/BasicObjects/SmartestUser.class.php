@@ -638,6 +638,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    $this->getBioTextAsset()->setContent($content);
         $this->getBioTextAsset()->setModified(time());
         $this->getBioTextAsset()->save();
+        $this->getBioTextAsset()->getTextFragment()->publish();
         
     }
     
