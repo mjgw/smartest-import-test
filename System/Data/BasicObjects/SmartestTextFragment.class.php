@@ -353,7 +353,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
         $content = str_replace('<p>&nbsp;</p>', '', $content);
         $content = str_replace('&nbsp;', ' ', $content);
         
-        if($element = simplexml_load_string('<div>'.$content.'</div>')){
+        if($element = simplexml_load_string(html_entity_decode('<div>'.$content.'</div>'))){
             
             $content = preg_replace( "/\r|\n/", "", $content);
             $divs = (array) $element->xpath('/div/div');
@@ -403,6 +403,8 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
                 return $this->_setContent($content);
             }else{
                 // TODO: deal with the attachments differently
+                // throw new SmartestException("Textfragment could not be updated.");
+                SmartestLog::getInstance('system')->log("TextFragment with ID ".$this->getId().' (asset ID '.$this->getAssetId().') could not be updated because it cannot be parsed by SimpleXml, and contains proxy elements that need to be removed before saving.');
             }
         }
         
