@@ -331,91 +331,99 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
     
     public function setContentFromEditor($content){
         
-        if(class_exists('tidy')){
+        if($this->getAsset()->getType() == 'SM_ASSETTYPE_RICH_TEXT'){
             
-            $tidy = new tidy;
-            $tidy->ParseString($content);
-            $new = $tidy->repairString($content, array( 
-                'output-xml' => true, 
-                'input-xml' => true,
-                'bare' => true,
-                'wrap' => 0 
-            ));
+            if(class_exists('tidy')){
             
-            if(strlen(trim($new))){
-                $content = $new;
-            }
+                $tidy = new tidy;
+                $tidy->ParseString($content);
+                $new = $tidy->repairString($content, array( 
+                    'output-xml' => true, 
+                    'input-xml' => true,
+                    'bare' => true,
+                    'wrap' => 0 
+                ));
             
-            $content = preg_replace( "/\r|\n/", "", $content);
-            
-        }
-        
-        $content = str_replace('<p>&nbsp;</p>', '', $content);
-        $content = str_replace('&nbsp;', ' ', $content);
-        
-        if($element = simplexml_load_string(html_entity_decode('<div>'.$content.'</div>'))){
-            
-            $content = preg_replace( "/\r|\n/", "", $content);
-            $divs = (array) $element->xpath('/div/div');
-            
-            foreach($divs as $divelement){
-                $attributes = (array) $divelement->attributes();
-                if(strpos($attributes['@attributes']['class'], 'sm-attachment-proxy') !== false){
-                    $attachment_name = $attributes['@attributes']['data-attachmentname'];
-                    $content = str_replace($divelement->asXML(), '<?sm:attachment name="'.$attachment_name.'":?>', $content);
+                if(strlen(trim($new))){
+                    $content = $new;
                 }
+            
+                $content = preg_replace( "/\r|\n/", "", $content);
+            
             }
+        
+            $content = str_replace('<p>&nbsp;</p>', '', $content);
+            $content = str_replace('&nbsp;', ' ', $content);
+        
+            if($element = simplexml_load_string(html_entity_decode('<div>'.$content.'</div>'))){
             
-            $divs = (array) $element->xpath('/div/ul/li/div');
+                $content = preg_replace( "/\r|\n/", "", $content);
+                $divs = (array) $element->xpath('/div/div');
             
-            foreach($divs as $divelement){
-                $attributes = (array) $divelement->attributes();
-                if(strpos($attributes['@attributes']['class'], 'sm-attachment-proxy') !== false){
-                    $attachment_name = $attributes['@attributes']['data-attachmentname'];
-                    $content = str_replace($divelement->asXML(), '<?sm:attachment name="'.$attachment_name.'":?>', $content);
+                foreach($divs as $divelement){
+                    $attributes = (array) $divelement->attributes();
+                    if(strpos($attributes['@attributes']['class'], 'sm-attachment-proxy') !== false){
+                        $attachment_name = $attributes['@attributes']['data-attachmentname'];
+                        $content = str_replace($divelement->asXML(), '<?sm:attachment name="'.$attachment_name.'":?>', $content);
+                    }
                 }
-            }
             
-            $paras = (array) $element->xpath('/div/p');
+                $divs = (array) $element->xpath('/div/ul/li/div');
             
-            // Code to remove buffer paragraphs
-            foreach($paras as $p_element){
-                $attributes = (array) $p_element->attributes();
-                // If the element has a class
-                if(isset($attributes['@attributes']['class'])){
-                    // if the sm-attachment-buffer class has been set
-                    if(strpos($attributes['@attributes']['class'], 'sm-attachment-buffer') !== false){
-                        // If the contents of the paragraph are more than just space
-                        if(strlen($p_element->__toString()) && strlen(trim($p_element->__toString()))){
-                            $content = str_replace($p_element->asXML(), '<p>'.$p_element->__toString().'</p>', $content);
-                        }else{
-                            // Otherwise, remove the paragraph
-                            $content = str_replace($p_element->asXML(), '', $content);
+                foreach($divs as $divelement){
+                    $attributes = (array) $divelement->attributes();
+                    if(strpos($attributes['@attributes']['class'], 'sm-attachment-proxy') !== false){
+                        $attachment_name = $attributes['@attributes']['data-attachmentname'];
+                        $content = str_replace($divelement->asXML(), '<?sm:attachment name="'.$attachment_name.'":?>', $content);
+                    }
+                }
+            
+                $paras = (array) $element->xpath('/div/p');
+            
+                // Code to remove buffer paragraphs
+                foreach($paras as $p_element){
+                    $attributes = (array) $p_element->attributes();
+                    // If the element has a class
+                    if(isset($attributes['@attributes']['class'])){
+                        // if the sm-attachment-buffer class has been set
+                        if(strpos($attributes['@attributes']['class'], 'sm-attachment-buffer') !== false){
+                            // If the contents of the paragraph are more than just space
+                            if(strlen($p_element->__toString()) && strlen(trim($p_element->__toString()))){
+                                $content = str_replace($p_element->asXML(), '<p>'.$p_element->__toString().'</p>', $content);
+                            }else{
+                                // Otherwise, remove the paragraph
+                                $content = str_replace($p_element->asXML(), '', $content);
+                            }
                         }
                     }
                 }
+            
+                $content = str_replace(':?>', ":?>\n", $content);
+                $content = str_replace('</p>', "</p>\n", $content);
+                $content = str_replace('</li>', "</li>\n", $content);
+                $content = str_replace('</h1>', "</h1>\n", $content);
+                $content = str_replace('</h2>', "</h2>\n", $content);
+                $content = str_replace('</h3>', "</h3>\n", $content);
+                $content = str_replace('</h4>', "</h4>\n", $content);
+            
+                return $this->_setContent($content);
+        
+            }else{
+                // SimpleXML failed
+                if(strlen($content) && strpos($content, 'sm-attachment-proxy') === false){
+                    // If there are no attachment proxy divs, just skip filtering
+                    return $this->_setContent($content);
+                }else{
+                    // TODO: deal with the attachments differently
+                    // throw new SmartestException("Textfragment could not be updated.");
+                    SmartestLog::getInstance('system')->log("TextFragment with ID ".$this->getId().' (asset ID '.$this->getAssetId().') could not be updated because it cannot be parsed by SimpleXml, and contains proxy elements that need to be removed before saving.');
+                }
             }
             
-            $content = str_replace(':?>', ":?>\n", $content);
-            $content = str_replace('</p>', "</p>\n", $content);
-            $content = str_replace('</li>', "</li>\n", $content);
-            $content = str_replace('</h1>', "</h1>\n", $content);
-            $content = str_replace('</h2>', "</h2>\n", $content);
-            $content = str_replace('</h3>', "</h3>\n", $content);
-            $content = str_replace('</h4>', "</h4>\n", $content);
+        }else{
             
             return $this->_setContent($content);
-        
-        }else{
-            // SimpleXML failed
-            if(strlen($content) && strpos($content, 'sm-attachment-proxy') === false){
-                // If there are no attachment proxy divs, just skip filtering
-                return $this->_setContent($content);
-            }else{
-                // TODO: deal with the attachments differently
-                // throw new SmartestException("Textfragment could not be updated.");
-                SmartestLog::getInstance('system')->log("TextFragment with ID ".$this->getId().' (asset ID '.$this->getAssetId().') could not be updated because it cannot be parsed by SimpleXml, and contains proxy elements that need to be removed before saving.');
-            }
+            
         }
         
     }
