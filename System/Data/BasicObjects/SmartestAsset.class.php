@@ -76,7 +76,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         if($this->isWebAccessible()){
             $obj->absolute_uri = $this->getAbsoluteUri();
         }
-        if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
+        if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL' && is_object($this->getOembedService())){
             $obj->oembed_service = $this->getOembedService()->getArray();
         }
         return $obj;

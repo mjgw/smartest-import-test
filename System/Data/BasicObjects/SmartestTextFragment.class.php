@@ -366,6 +366,16 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
                 }
             }
             
+            $divs = (array) $element->xpath('/div/ul/li/div');
+            
+            foreach($divs as $divelement){
+                $attributes = (array) $divelement->attributes();
+                if(strpos($attributes['@attributes']['class'], 'sm-attachment-proxy') !== false){
+                    $attachment_name = $attributes['@attributes']['data-attachmentname'];
+                    $content = str_replace($divelement->asXML(), '<?sm:attachment name="'.$attachment_name.'":?>', $content);
+                }
+            }
+            
             $paras = (array) $element->xpath('/div/p');
             
             // Code to remove buffer paragraphs
