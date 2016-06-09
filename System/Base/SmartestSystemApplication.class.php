@@ -345,10 +345,19 @@ class SmartestSystemApplication extends SmartestBaseApplication{
 	protected function handleSaveAction(){
 	    
 	    if($this->getRequestParameter('_submit_action') == "continue" && $this->getRequestParameter('_referring_action')){
+            if(method_exists($this, 'preContinueAction')){
+                $this->preContinueAction($this->getRequestParameters());
+            }
 	        $this->redirect($this->getRequestParameter('_referring_action'));
         }elseif($this->getRequestParameter('_submit_action') == "publish" && $this->getRequestParameter('_publish_action')){
+            if(method_exists($this, 'prePublishAction')){
+                $this->prePublishAction($this->getRequestParameters());
+            }
             $this->redirect($this->getRequestParameter('_publish_action'));
 	    }else{
+            if(method_exists($this, 'preCloseAction')){
+                $this->preCloseAction($this->getRequestParameters());
+            }
 	        $this->formForward();
 	    }
 	    

@@ -1984,9 +1984,10 @@ class Assets extends SmartestSystemApplication{
     		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
     		    
                 if($filter){
-                    $asset->setContentFromEditor($content);
+                    $update_success = $asset->setContentFromEditor($content);
                 }else{
                     $asset->setContent($content);
+                    $update_success = true;
                 }
                 
     	        $asset->setLanguage(strtolower(substr($this->getRequestParameter('asset_language'), 0, 3)));
@@ -1994,8 +1995,17 @@ class Assets extends SmartestSystemApplication{
                 
                 $asset->save();
                 
-    		    $this->addUserMessageToNextRequest("The file has been successfully updated.", SmartestUserMessage::SUCCESS);
-    		    $success = true;
+                if($update_success){
+                    $this->addUserMessageToNextRequest("The file has been successfully updated.", SmartestUserMessage::SUCCESS);
+    		        $success = true;
+                }else{
+                    if($asset->usesTextFragment()){
+                        $this->addUserMessageToNextRequest("The file \"".$this->getLabel()."\" could not be updated because of illegal characters in the submitted text that prevented validation parsing.", SmartestUserMessage::WARNING, true);
+                    }else{
+                        $this->addUserMessageToNextRequest("The file could not be updated because of file permissions while writing to disk.", SmartestUserMessage::WARNING);
+                    }
+    		        $success = false;
+                }
 		    
 		    }else{
     	        $this->addUserMessageToNextRequest("You don't have permission to edit assets created by other users.", SmartestUserMessage::WARNING);

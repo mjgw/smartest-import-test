@@ -751,15 +751,21 @@ class AssetsAjax extends SmartestSystemApplication{
                 
                 if($asset->getType() == 'SM_ASSETTYPE_RICH_TEXT'){
                     
-                    // echo $this->getRequestParameter('asset_id');
-                    
-        		    $content = $this->getRequestParameter('asset_content');
+                    $content = $this->getRequestParameter('asset_content');
         		    $content = SmartestStringHelper::unProtectSmartestTags($content);
         		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
-                    // echo $content;
-        		    $asset->setContentFromEditor($content);
-        	        $asset->setModified(time());
-                    $asset->save();
+                    $success = (bool) $asset->setContentFromEditor($content);
+                    if($success){
+            	        $asset->setModified(time());
+                        $asset->save();
+                        header('Content-Type: application/json; charset=UTF8');
+                        echo json_encode(array('success'=>true));
+                        exit;
+                    }else{
+                        header('Content-Type: application/json; charset=UTF8');
+                        echo json_encode(array('success'=>false));
+                        exit;
+                    }
                     
                 }
                 

@@ -7,6 +7,7 @@
     <div class="buttons-bar">
       <img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" style="display:none;float:left" id="progress" />
       <span class="feedback-ok" style="display:none;float:left" id="saved-message"><i class="fa fa-thumbs-o-up"> </i> Text saved successfully</span>
+      <span class="feedback-error" style="display:none;float:left" id="didnt-save-message"><i class="fa fa-thumbs-o-up"> </i> Text could not be saved</span>
       <input type="button" value="Cancel" id="cancel-texteditor-modal" />
       <input type="button" value="Save" id="save-texteditor-modal" />
       <input type="button" value="Save &amp; close" id="save-texteditor-modal-close" />
@@ -40,12 +41,20 @@
       $('saved-message').hide();
       // $('rich-text-updater-form').submit();
       $('rich-text-updater-form').request({
-        onComplete: function(){
-          $('progress').hide();
-          $('saved-message').show();
-          setTimeout(function(){
-            $('saved-message').fade({duration: 0.5});
-          }, 1000);
+        onComplete: function(response){
+          if(response.responseJSON.success){
+            $('progress').hide();
+            $('saved-message').show();
+            setTimeout(function(){
+              $('saved-message').fade({duration: 0.5});
+            }, 1000);
+          }else{
+            $('progress').hide();
+            $('didnt-save-message').show();
+            setTimeout(function(){
+              $('didnt-save-message').fade({duration: 0.5});
+            }, 1000);
+          }
         }
       });
     });

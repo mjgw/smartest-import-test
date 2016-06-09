@@ -110,7 +110,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
     
     public function parseAttachmentNames(){
         
-        if($this->_asset->getType() == 'SM_ASSETTYPE_TEXTILE_TEXT'){
+        if($this->getAsset()->getType() == 'SM_ASSETTYPE_TEXTILE_TEXT'){
             $regexp = preg_match_all('/\{attach:([\w_-]+)\}/', $this->_properties['content'], $matches);
         }else{
             $regexp = preg_match_all('/<\?sm:attachment.+?name="([\w_-]+)"/', $this->_properties['content'], $matches);
@@ -130,7 +130,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
     
     public function containsAttachmentTags(){
         
-        if($this->_asset->getType() == 'SM_ASSETTYPE_TEXTILE_TEXT'){
+        if($this->getAsset()->getType() == 'SM_ASSETTYPE_TEXTILE_TEXT'){
             $c = !(strpos($this->_properties['content'], '{attach:') === FALSE);
         }else{
             $c = !(strpos($this->_properties['content'], '<?sm:att') === FALSE);
@@ -187,6 +187,17 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
 	
 	public function publish(){
 	    
+        // Any attached textfragments such as embed codes should also be published
+        foreach($this->getAttachments() as $attachment){
+            if($attachment->hasAsset()){
+                if($attachment->getAsset()->usesTextFragment()){
+                    if($attachment->getAsset()->getTextFragmentId() != $this->getId()){
+                        $attachment->getAsset()->getTextFragment()->publish();
+                    }
+                }
+            }
+        }
+        
 	    $content = $this->getContent();
 	    
 	    $parser = new SmartestDataBaseStoredTextAssetToolkit();
@@ -355,7 +366,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
             $content = str_replace('<p>&nbsp;</p>', '', $content);
             $content = str_replace('&nbsp;', ' ', $content);
         
-            if($element = simplexml_load_string(html_entity_decode('<div>'.$content.'</div>'))){
+            if($element = simplexml_load_string(str_replace('&', '&amp;', html_entity_decode('<div>'.$content.'</div>', ENT_QUOTES, 'UTF-8')))){
             
                 $content = preg_replace( "/\r|\n/", "", $content);
                 $divs = (array) $element->xpath('/div/div');
@@ -417,6 +428,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
                     // TODO: deal with the attachments differently
                     // throw new SmartestException("Textfragment could not be updated.");
                     SmartestLog::getInstance('system')->log("TextFragment with ID ".$this->getId().' (asset ID '.$this->getAssetId().') could not be updated because it cannot be parsed by SimpleXml, and contains proxy elements that need to be removed before saving.');
+                    return false;
                 }
             }
             

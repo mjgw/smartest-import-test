@@ -737,17 +737,20 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    
 	    if($this->getTextFragment()){
 	        // save the text fragment in the database
-	        $this->getTextFragment()->setContentFromEditor($content);
+	        $success = $this->getTextFragment()->setContentFromEditor($content);
             // echo $this->getTextFragment()->getContent();
 	        $this->_save_textfragment_on_save = true;
 	    }else if($this->usesLocalFile() && $this->isEditable()){
 	        // save the file to its desired location
-	        SmartestFileSystemHelper::save($this->getFullPathOnDisk(), $content, true);
+	        $success = SmartestFileSystemHelper::save($this->getFullPathOnDisk(), $content, true);
 	    }else{
 	        // what happens here?
 	        // probably nothing as it's just not the right type of asset. Just log and move on
 	        SmartestLog::getInstance('system')->log('SmartestAsset::setContent() called on a non-editable asset ('.$this->getId().')');
+            $success = false;
 	    }
+        
+        return $success;
 	    
 	}
     
