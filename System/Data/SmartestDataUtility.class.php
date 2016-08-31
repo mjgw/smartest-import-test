@@ -23,7 +23,7 @@ class SmartestDataUtility{
         
     }
     
-    public function getModels($simple = false, $site_id=null, $force_regenerate=false){
+    public function getModels($simple = false, $site_id=null, $force_regenerate=false, $top_level=true){
 	    
 	    if(is_numeric($site_id)){
 	        $cache_name = 'models_query_site_'.$site_id;
@@ -40,8 +40,12 @@ class SmartestDataUtility{
     		}else{
     			$sql = "SELECT * FROM ItemClasses";
     		}
-		
-    		$sql .= " WHERE itemclass_type='SM_ITEMCLASS_MODEL'";
+		    
+            if($top_level){
+                $sql .= " WHERE itemclass_type='SM_ITEMCLASS_MODEL'";
+            }else{
+                $sql .= " WHERE (itemclass_type='SM_ITEMCLASS_MODEL' OR itemclass_type='SM_ITEMCLASS_MT1_SUB_MODEL')";
+            }
 		
     		if(is_numeric($site_id)){
     		    $sql .= " AND (itemclass_site_id='".$site_id."' OR itemclass_shared='1')";
@@ -96,6 +100,32 @@ class SmartestDataUtility{
 	
 		$sql .= ' ORDER BY itemclass_name';
 		
+		$result = $this->database->queryToArray($sql, true);
+        
+		$model_objects = array();
+		
+		foreach($result as $model){
+			$m = new SmartestModel;
+			$m->hydrate($model);
+			$model_objects[] = $m;
+		}
+		
+		return $model_objects;
+        
+    }
+    
+    public function getMetaPageModels($site_id=null){
+        
+        $sql = "SELECT * FROM ItemClasses WHERE (itemclass_type='SM_ITEMCLASS_MODEL' OR itemclass_type='SM_ITEMCLASS_MT1_SUB_MODEL') AND itemclass_is_hidden='0'";
+        
+		if(is_numeric($site_id)){
+		    $sql .= " AND (itemclass_site_id='".$site_id."' OR itemclass_shared='1')";
+		}
+	
+		$sql .= ' ORDER BY itemclass_name';
+		
+        echo $sql;
+        
 		$result = $this->database->queryToArray($sql, true);
         
 		$model_objects = array();

@@ -249,6 +249,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
             return $this->getModelVarname();
         }
         
+        if(isset($this->_parent_item_slug) && $offset == $this->_parent_item_slug && $this->getModel()->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
+            return $this->getParentItem();
+        }
+        
         if(is_array($this->_many_to_one_sub_models) && array_key_exists($offset, $this->_many_to_one_sub_models)){
             return new SmartestArray($this->getSubModelItems($this->_many_to_one_sub_models[$offset]));
         }
@@ -901,6 +905,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
                 if($parent_item_id = $this->getParentItemId()){
                     if($parent_item = SmartestCmsItem::retrieveByPk($parent_item_id)){
                         $this->_parent_item = $parent_item;
+                        $this->_parent_item->setDraftMode($this->getDraftMode());
                         return $this->_parent_item;
                     }else{
                         // an item with this ID couldn't be found!

@@ -332,9 +332,9 @@ class SmartestSite extends SmartestBaseSite{
         }
 	}
 	
-	public function getModels(){
+	public function getModels($top_level=true){
 	    
-	    $sql = "SELECT * FROM ItemClasses WHERE ItemClasses.itemclass_type='SM_ITEMCLASS_MODEL' AND (ItemClasses.itemclass_shared='1' OR ItemClasses.itemclass_site_id = '".$this->getId()."') ORDER BY itemclass_name";
+	    /* $sql = "SELECT * FROM ItemClasses WHERE ItemClasses.itemclass_type='SM_ITEMCLASS_MODEL' AND (ItemClasses.itemclass_shared='1' OR ItemClasses.itemclass_site_id = '".$this->getId()."') ORDER BY itemclass_name";
 	    $result = $this->database->queryToArray($sql);
 	    $models = array();
 	    
@@ -350,7 +350,10 @@ class SmartestSite extends SmartestBaseSite{
 	        
 	    }else{
 	        return array();
-	    }
+	    } */
+        
+        $du = new SmartestDataUtility;
+        return $du->getModels(false, $this->getSiteId(), false, $top_level);
 	    
 	}
 	

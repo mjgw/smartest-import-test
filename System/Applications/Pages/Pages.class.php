@@ -1861,13 +1861,13 @@ class Pages extends SmartestSystemApplication{
     			}
     		}
     		
-    		
+            // echo "blah";
             
-            if($this->getUser()->hasToken('see_private_models')){
-                $this->send($this->getSite()->getModels(), 'models');
+    		if($this->getUser()->hasToken('see_private_models')){
+                $this->send($this->getSite()->getModels(false), 'models');
             }else{
                 $du = new SmartestDataUtility;
-                $models = $du->getVisibleModels($this->getSite()->getId());
+                $models = $du->getMetaPageModels($this->getSite()->getId());
                 $this->send($models, 'models');
             }
 			
