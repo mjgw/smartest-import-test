@@ -263,7 +263,20 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         $h = new SmartestCmsItemsHelper;
         
         if($model_id && is_numeric($model_id)){
-            $items = $h->hydrateUniformListFromIdsArray($ids, $model_id, $this->getDraftMode());
+            
+            $model = new SmartestModel;
+            
+            if($model->find($model_id)){
+                $s = new SmartestSortableItemReferenceSet($model, $this->getDraftMode());
+                foreach($ids as $id){
+                    $s->insertItemId($id);
+                }
+                $s->sort();
+                $items = $s->getItems();
+            }else{
+                $items = $h->hydrateUniformListFromIdsArray($ids, $model_id, $this->getDraftMode());
+            }
+            
         }else{
             $items = $h->hydrateMixedListFromIdsArray($ids, $this->getDraftMode());
             $this->_item_lookup_attempted['site_'.$site_id] = true;
@@ -638,6 +651,8 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             
             case "description":
             case "description_text_asset":
+            $this->getDescriptionTextAsset()->getTextFragment()->createPreviewFile();
+            $this->getDescriptionTextAsset()->getTextFragment()->publish();
             return $this->getDescriptionTextAsset();
             
             case "slug":

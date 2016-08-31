@@ -213,9 +213,14 @@ class SmartestDataUtility{
 	    
 	}
 	
-	public function getModelIdsWIthMetapageOnSiteId($site_id){
+	public function getModelIdsWIthMetapageOnSiteId($site_id, $draft_mode=false){
 	    
-	    $sql = "SELECT DISTINCT page_dataset_id FROM Pages WHERE page_type = 'ITEMCLASS' AND page_deleted != 'TRUE' AND page_site_id = '{$site_id}'";
+	    $sql = "SELECT DISTINCT page_dataset_id FROM Pages WHERE page_type = 'ITEMCLASS' AND page_site_id = '{$site_id}' AND page_deleted != 'TRUE'";
+        
+        if(!$draft_mode){
+            $sql .= " AND page_is_published='TRUE'";
+        }
+        
 	    $result = $this->database->queryToArray($sql);
 	    $ids = array();
 	    
@@ -249,14 +254,14 @@ class SmartestDataUtility{
 	public function getDataSets($simple = false, $site_id=''){
 		
 		if($simple){
-			$sql = "SELECT set_id FROM Sets";
+			$sql = "SELECT set_id FROM Sets WHERE 1=1";
 		}else{
-			$sql = "SELECT * FROM Sets";
+			$sql = "SELECT * FROM Sets WHERE 1=1";
 		}
 		
 		if(is_numeric($site_id)){
 		    // $sql .= " WHERE (set_site_id='".$site_id."' OR set_shared='1') AND (set_data_source_site_id='".$site_id."' OR set_data_source_site_id='CURRENT' OR set_data_source_site_id='ALL')";
-		    $sql .= " WHERE (set_site_id='".$site_id."' OR set_shared='1')";
+		    $sql .= " AND (set_site_id='".$site_id."' OR set_shared='1')";
 		}
 		
 		$sql .= " AND set_type IN ('DYNAMIC', 'STATIC', 'SM_SET_ITEMS_DYNAMIC', 'SM_SET_ITEMS_STATIC')";

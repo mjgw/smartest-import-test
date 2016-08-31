@@ -219,8 +219,8 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	public function getRenderData(){
 	    return $this->_render_data;
 	}
-	
-	public function offsetGet($offset){
+    
+    public function offsetGet($offset){
 	    
 	    switch($offset){
         
@@ -249,6 +249,14 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
             
             case "is_defined":
             return (bool) $this->getId();
+            
+            case "first_paragraph":
+            if($this->isParsable()){
+                return SmartestStringHelper::getFirstParagraph($this->render());
+            }else{
+                return SmartestStringHelper::getFirstParagraph($this->getContent());
+            }
+            // );
         
         }
         

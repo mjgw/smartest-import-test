@@ -1349,6 +1349,7 @@ class Items extends SmartestSystemApplication{
 	        $this->send($model->getAvailableDescriptionProperties(), 'description_properties');
 	        $this->send($model->getAvailableSortProperties(), 'sort_properties');
 	        $this->send($model->getAvailableThumbnailProperties(), 'thumbnail_properties');
+            $this->send($model->getAvailableDateProperties(), 'date_properties');
 	        
 	        $recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), $model_id);
   	        $this->send($recent, 'recent_items');
@@ -1443,6 +1444,10 @@ class Items extends SmartestSystemApplication{
 
                 if(is_numeric($this->getRequestParameter('itemclass_default_thumbnail_property_id'))){
                     $model->setDefaultThumbnailPropertyId($this->getRequestParameter('itemclass_default_thumbnail_property_id'));
+                }
+                
+                if(is_numeric($this->getRequestParameter('itemclass_default_date_property_id'))){
+                    $model->setDefaultDatePropertyId($this->getRequestParameter('itemclass_default_date_property_id'));
                 }
                 
                 if($this->getRequestParameter('itemclass_primary_property_id')){

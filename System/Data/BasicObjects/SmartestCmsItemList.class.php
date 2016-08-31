@@ -5,6 +5,7 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
     protected $_list_items = array();
     protected $_data_set;
     protected $_fetch_attempted = false;
+    protected $_site_id = null;
     
 	protected function __objectConstruct(){
 		
@@ -20,6 +21,8 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
 	        $sql = "SELECT * FROM Lists WHERE list_name='".$list_name."' AND list_page_id='".$page->getId()."'";
 	        $result = $this->database->queryToArray($sql);
 	        
+            $this->_site_id = $page->getSiteId();
+            
 	        if(count($result)){
 	            $this->hydrate($result[0]);
 	            return true;
@@ -117,8 +120,8 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
             }else if(is_file(SM_ROOT_DIR.'Presentation/ListItems/'.$repeating_template_file_name)){
                 return 'Presentation/ListItems/'.$repeating_template_file_name;
             }
-        }else{
-            return 'Presentation/ListItems/'.$repeating_template_file_name;
+        }elseif($this->getType() == 'SM_LIST_TAG'){
+            return 'Presentation/Layouts/'.$repeating_template_file_name;
         }
         
     }
@@ -147,26 +150,52 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
 	    
 	}
 	
-	public function getItems($draft=false, $limit=null){
+	public function getItems($draft=false, $limit=null, $site_id=null){
 	    
 	    if(!$this->_fetch_attempted){
+	        
+            if($this->getType() == 'SM_LIST_SIMPLE'){
+            
+    	        $this->_data_set = new SmartestCmsItemSet;
 	    
-	        $this->_data_set = new SmartestCmsItemSet;
-	    
-    	    if($draft){
-    	        if(!$this->_data_set->find($this->getDraftSetId())){
-    	            throw new SmartestException('The set chosen as the draft definition for this page (ID='.$this->getDraftSetId().') does not exist.');
-    	        }
-    	    }else{
-    	        if(!$this->_data_set->find($this->getLiveSetId())){
-    	            throw new SmartestException('The set chosen as the live definition for this page (ID='.$this->getLiveSetId().') does not exist.');
-    	        }
-    	    }
+        	    if($draft){
+        	        if(!$this->_data_set->find($this->getDraftSetId())){
+        	            throw new SmartestException('The set chosen as the draft definition for this page (ID='.$this->getDraftSetId().') does not exist.');
+        	        }
+        	    }else{
+        	        if(!$this->_data_set->find($this->getLiveSetId())){
+        	            throw new SmartestException('The set chosen as the live definition for this page (ID='.$this->getLiveSetId().') does not exist.');
+        	        }
+        	    }
 	        
-	        $mode = $draft ? SM_QUERY_ALL_DRAFT_CURRENT : SM_QUERY_PUBLIC_LIVE_CURRENT;
+    	        $mode = $draft ? SM_QUERY_ALL_DRAFT_CURRENT : SM_QUERY_PUBLIC_LIVE_CURRENT;
+                $this->_list_items = $this->_data_set->getMembersPaged($mode, $limit);
 	        
-	        $this->_list_items = $this->_data_set->getMembersPaged($mode, $limit);
-	        
+            }elseif ($this->getType() == 'SM_LIST_TAG'){
+                
+                if($draft){
+                    $tag_id = $this->getDraftSetId();
+                    $model_id = $this->getDraftSetFilter();
+                }else{
+                    $tag_id = $this->getLiveSetId();
+                    $model_id = $this->getLiveSetFilter();
+                }
+                
+                $tag = new SmartestTag;
+                
+                if($tag->find($tag_id)){
+                    
+                    if($this->getMaximumLength() && is_numeric($this->getMaximumLength())){
+                        $data = $tag->getItems($this->_site_id, $model_id);
+                        $this->_list_items = array_slice($data, 0, $this->getMaximumLength());
+                    }else{
+                        $this->_list_items = $tag->getItems($this->_site_id, $model_id);
+                    }
+                    
+                }
+                
+            }
+            
 	        $this->_fetch_attempted = true;
 	    
 	    }

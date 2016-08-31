@@ -185,7 +185,8 @@ class SmartestDataObject implements ArrayAccess{
 	        case "_php_class":
 	        return get_class($this);
 	        
-	        case "_print_r":
+	        case "_debug":
+            case "_print_r":
 	        return '<code>'.print_r($this, true).'</code>';
 	        
 	        case "empty":

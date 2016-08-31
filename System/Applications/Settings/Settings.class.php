@@ -584,6 +584,7 @@ class Settings extends SmartestSystemApplication{
                 
                 $tag->setLabel(strip_tags($this->getRequestParameter('tag_label')));
                 $tag->setName(SmartestStringHelper::toSlug($this->getRequestParameter('tag_name')));
+                $tag->setFeatured(SmartestStringHelper::toRealBool($this->getRequestParameter('tag_featured')));
                 $tag->setIconImageAssetId($this->getRequestParameter('tag_icon_image'));
                 
                 $tag->updateDescriptionTextAssetFromEditor($this->getRequestParameter('tag_description'));
@@ -594,7 +595,7 @@ class Settings extends SmartestSystemApplication{
                 
             }
         }else{
-            $this->addUserMessageToNextRequest('YOu do not have permission to modify tags.', SmartestUserMessage::ACCESS_DENIED);
+            $this->addUserMessageToNextRequest('You do not have permission to modify tags.', SmartestUserMessage::ACCESS_DENIED);
         }
         
         $this->handleSaveAction();

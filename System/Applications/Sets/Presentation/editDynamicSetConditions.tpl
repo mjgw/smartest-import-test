@@ -93,6 +93,9 @@ function updateSetConditionsFormFromOperator(condition, value){
 {/if}
     						  <option value="8" {if $rule.operator == "8"} selected="selected" {/if}>Is tagged with</option>
     						  <option value="9" {if $rule.operator == "9"} selected="selected" {/if}>Is not tagged with</option>
+                  
+                  <option value="128" {if $rule.operator == "128"} selected="selected" {/if}>Has value</option>
+                  
     					  </select>
     					</td>
   						<td>

@@ -952,6 +952,22 @@ class SmartestModel extends SmartestBaseModel{
         
     }
     
+    public function getAvailableDateProperties(){
+        
+        $sql = "SELECT * FROM ItemProperties WHERE itemproperty_datatype IN ('SM_DATATYPE_TIMESTAMP', 'SM_DATATYPE_DATE') AND itemproperty_itemclass_id='".$this->getId()."'";
+        $result = $this->database->queryToArray($sql);
+        $properties = array();
+        
+        foreach($result as $r){
+            $p = new SmartestItemProperty;
+            $p->hydrate($r);
+            $properties[] = $p;
+        }
+        
+        return $properties;
+        
+    }
+    
     public function getDefaultMetaPageId($site_id){
         // TODO: this functionality should be stored in the database
         return SmartestSystemSettingHelper::load('model_'.$this->_properties['id'].'_default_metapage_site_'.$site_id);

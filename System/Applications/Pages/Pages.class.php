@@ -1451,7 +1451,7 @@ class Pages extends SmartestSystemApplication{
                 if(is_object(SmartestSession::get('__newPage_temporary_text')) && SmartestSession::get('__newPage_temporary_text') instanceof SmartestTemporaryTextAsset){
                     $this->send(SmartestSession::get('__newPage_temporary_text')->getContentForEditor(), 'text_editor_content');
                 }else{
-                    $this->send('Test text 1234', 'text_editor_content');
+                    $this->send('Add your the text for your new page here.', 'text_editor_content');
                 }
             
             }elseif(is_object(SmartestSession::get('__newPage')) && SmartestSession::get('__newPage') instanceof SmartestPage){
@@ -1471,6 +1471,9 @@ class Pages extends SmartestSystemApplication{
                 }
                 
             }
+            
+            $this->send(is_writable(SM_ROOT_DIR.'Presentation/Masters/', 'master_templates_dir_writable'));
+            $this->send(is_writable(SM_ROOT_DIR.'Presentation/Layouts/', 'layout_templates_dir_writable'));
             
             ////// Presets stuff //////
             
@@ -4171,12 +4174,14 @@ class Pages extends SmartestSystemApplication{
             
             if($list->load($list_name, $page, true)){
                 // this list was already defined
+                $already_defined = true;
             }else{
                 // this is a new list
+                $already_defined = false;
             }
             
-            $this->send($list->getDraftHeaderTemplate(), 'header_template');
-            $this->send($list->getDraftFooterTemplate(), 'footer_template');
+            // $this->send($list->getDraftHeaderTemplate(), 'header_template');
+            // $this->send($list->getDraftFooterTemplate(), 'footer_template');
             $this->send($list->getDraftTemplateFile(), 'main_template');
             $this->send($list->getDraftSetId(), 'set_id');
             $this->send($list, 'list');
@@ -4184,14 +4189,77 @@ class Pages extends SmartestSystemApplication{
             $this->send(is_writable(SM_ROOT_DIR.'Presentation/Layouts/'), 'can_create_template');
             
             $alh = new SmartestAssetsLibraryHelper;
-            $this->send($alh->getAssetsByTypeCode('SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE', $this->getSite()->getId()), 'compound_list_templates');
+            $this->send($alh->getAssetsByTypeCode('SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE', $this->getSite()->getId()), 'list_templates');
             
             $tlh = new SmartestTemplatesLibraryHelper;
             $this->send($tlh->getArticulatedListTemplates($this->getSite()->getId()), 'art_list_templates');
             
-            $datautil = new SmartestDataUtility;
+            $du = new SmartestDataUtility;
             
-            $sets = $datautil->getDataSetsAsArrays(false, $this->getSite()->getId());
+            // $sets = $datautil->getDataSetsAsArrays(false, $this->getSite()->getId());
+            
+            $models = $du->getVisibleModels($this->getSite()->getId());
+            $tags = $du->getTags();
+            
+            if($already_defined){
+                
+                $model = new SmartestModel;
+                $model_id = $list->getDraftSetFilter();
+                
+                if(is_numeric($model_id) && $model->find($model_id)){
+                    $this->send($model, 'chosen_model');
+                    $model_defined = true;
+                }else{
+                    $models2 = $models;
+                    $model = array_shift($models2);
+                    $model_defined = false;
+                    $this->send($model, 'chosen_model');
+                }
+                
+                $this->send($model_defined, 'model_defined');
+                $sets = $model->getDataSets($this->getSite()->getId());
+                
+                if($list->getType() == 'SM_LIST_TAG'){
+                    
+                    $tag = new SmartestTag;
+                    $tag_id = $list->getDraftSetId();
+                    
+                    if(is_numeric($tag_id) && $tag->find($tag_id)){
+                        $this->send($tag, 'chosen_tag');
+                        $this->send($tag->getId(), 'chosen_tag_id');
+                        $this->send(true, 'tag_defined');
+                    }else{
+                        $this->send(false, 'tag_defined');
+                        $this->send(null, 'chosen_tag_id');
+                    }
+                    
+                    // TODO: Add second tag functionality
+                    // $tag_2 = new SmartestTag;
+                    // $tag_id = $list->getDraftSecondarySetId();
+                    // 
+                    // if(is_numeric($tag_id) && $tag2->find($tag_id)){
+                    //     $this->send($tag2, 'chosen_secondary_tag');
+                    //     $this->send(true, 'secondary_tag_defined');
+                    // }else{
+                    //     $this->send(false, 'secondary_tag_defined');
+                    // }
+                    
+                }elseif($list->getType() == 'SM_LIST_SIMPLE'){
+                    
+                }
+                
+            }else{
+                
+                $models2 = $models;
+                $model = array_shift($models2);
+                $this->send($model, 'chosen_model');
+                $sets = $model->getDataSets($this->getSite()->getId());
+                $this->send(false, 'model_defined');
+                
+            }
+            
+            $this->send($tags, 'tags');
+            $this->send($models, 'models');
             $this->send($sets, 'sets');
             $this->send($page, 'page');
             $this->send($templates, 'templates');
@@ -4249,11 +4317,11 @@ class Pages extends SmartestSystemApplication{
                 $this->addUserMessageToNextRequest("The list \"".$list_name."\" was defined successfully.", SmartestUserMessage::SUCCESS);
             }
             
-            $list_type = in_array($this->getRequestParameter('list_type'), array('SM_LIST_ARTICULATED', 'SM_LIST_SIMPLE')) ? $this->getRequestParameter('list_type') : 'SM_LIST_SIMPLE';
+            $list_type = in_array($this->getRequestParameter('list_type'), array('SM_LIST_TAG', 'SM_LIST_SIMPLE')) ? $this->getRequestParameter('list_type') : 'SM_LIST_SIMPLE';
             
             $list->setType($list_type);
             $list->setMaximumLength((int) $this->getRequestParameter('list_maximum_length'));
-            $list->setTItle($this->getRequestParameter('list_title'));
+            $list->setTitle($this->getRequestParameter('list_title'));
             
             /* if($list_type == 'SM_LIST_ARTICULATED'){
             
@@ -4277,7 +4345,7 @@ class Pages extends SmartestSystemApplication{
             
             }else{ */
                 
-                if(is_numeric($this->getRequestParameter('dataset_id'))){
+                if($list_type == 'SM_LIST_SIMPLE' && is_numeric($this->getRequestParameter('dataset_id'))){
                     
                     $dataset_id = $this->getRequestParameter('dataset_id');
                     $set = new SmartestCmsItemSet;
@@ -4288,6 +4356,34 @@ class Pages extends SmartestSystemApplication{
                     }else{
                         $this->addUserMessageToNextRequest('The selected set or items could not be found.', SmartestUserMessage::ERROR);
                     }
+                    
+                }elseif($list_type == 'SM_LIST_TAG' && is_numeric($this->getRequestParameter('tag_id'))){
+                    
+                    $tag_id = $this->getRequestParameter('tag_id');
+                    $tag = new SmartestTag;
+                    
+                    if($tag->find($tag_id)){
+                        $list->setDraftSetId((int) $tag_id);
+                    }else{
+                        $this->addUserMessageToNextRequest('The selected set or items could not be found.', SmartestUserMessage::ERROR);
+                    }
+                    
+                }
+                
+                $m = new SmartestModel;
+                
+                if(is_numeric($this->getRequestParameter('list_member_filter_id')) && $m->find($this->getRequestParameter('list_member_filter_id'))){
+                    $list->setDraftSetFilter($this->getRequestParameter('list_member_filter_id'));
+                }else{
+                    $this->addUserMessageToNextRequest('The model ID was not recognised', SmartestUserMessage::ERROR, true);
+                }
+                
+                $a = new SmartestAsset;
+                
+                if(is_numeric($this->getRequestParameter('list_header_image_id')) && $a->find($this->getRequestParameter('list_header_image_id'))){
+                    $list->setDraftHeaderImageId($this->getRequestParameter('list_header_image_id'));
+                }else{
+                    $this->addUserMessageToNextRequest('The header image ID was not recognised', SmartestUserMessage::ERROR, true);
                 }
                 
                 if($this->getRequestParameter('art_main_template') == 'NEW'){

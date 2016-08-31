@@ -1,9 +1,17 @@
 roles:
-  admin:
-    label: System Administrator
+  contributor:
+    label: Active contributor
     tokens:
-      - root_permission
+      - author_credit
+      - add_new_pages
+      - add_items
+      - delete_items
+      - modify_page_properties
+      - modify_draft_pages
+      - modify_items
       - site_access
+      - modify_assets
+      - create_assets # users can always delete assets that they have created
   sub_editor:
     label: Sub-Editor
     tokens:
@@ -18,19 +26,6 @@ roles:
       - clear_pages_cache
       - edit_held_pages
       - edit_held_items
-  contributor:
-    label: Contributor
-    tokens:
-      - author_credit
-      - add_new_pages
-      - add_items
-      - delete_items
-      - modify_page_properties
-      - modify_draft_pages
-      - modify_items
-      - site_access
-      - modify_assets
-      - create_assets # users can always delete assets that they have created
   developer:
     label: Developer
     tokens:
@@ -64,8 +59,13 @@ roles:
       - enable_site
       - disable_site
       - edit_pagegroup_name
+  admin:
+    label: System administrator
+    tokens:
+      - root_permission
+      - site_access
   credit_author:
-    label: Author
+    label: Passive author
     tokens:
       - author_credit
       - site_access

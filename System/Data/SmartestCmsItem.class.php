@@ -23,6 +23,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	* @var SmartestModel
 	*/
 	protected $_model = null;
+    protected $_model_varname = null;
 	
 	/** 
 	* A list of the actual properties of the loaded object. The numeric keys are the primary keys of the properties in the Properties table.
@@ -190,6 +191,28 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
     public function disableTemplateProperty($property_id){
         $this->_disabled_template_properties[$property_id] = true;
     }
+    
+    public function getModelVarname(){
+        if(isset($this->_model_varname)){
+            return $this->_model_varname;
+        }else{
+            if($this->_model instanceof SmartestModel){
+                $this->_model_varname = SmartestStringHelper::toVarName($this->_model->getName());
+                return $this->_model_varname;
+            }else{
+                $class_name = get_class($this);
+                if($class_name == 'SmartestCmsItem'){
+                    $this->_model_varname = SmartestStringHelper::toVarName($this->getModel()->getName());
+                    return $this->_model_varname;
+                }else{
+                    $class_name = preg_replace('/([a-z])([A-Z])/', "$1_$2", $class_name);
+                    $class_name =  SmartestStringHelper::toVarName($class_name);
+                    $this->_model_varname = $class_name;
+                    return $this->_model_varname;
+                }
+            }
+        }
+    }
 	
 	public function offsetExists($offset){
 	    return ($this->_item->offsetExists($offset) || isset($this->_varnames_lookup[$offset]) || in_array($offset, array('_workflow_status', '_model', '_properties')));
@@ -209,6 +232,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    if($offset == '_php_class'){
 	        return get_class($this);
 	    }
+        
+        if($offset == '_type_label'){
+            return $this->_item->getModel()->getName();
+        }
 	    
 	    if($offset == 'has_tag'){
 	        return new SmartestTagPresenceChecker($this->getTags());
@@ -216,6 +243,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
         
         if($offset == '_is_linkable'){
             return $this->isLinkable();
+        }
+        
+        if($offset == '_type_varname'){
+            return $this->getModelVarname();
         }
         
         if(is_array($this->_many_to_one_sub_models) && array_key_exists($offset, $this->_many_to_one_sub_models)){
@@ -269,6 +300,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            case 'label':
 	            return $this->getItem()->getName();
                 
+                case '_editor_name':
                 case 'editor_name':
                 return $this->getEditorName();
 	            
@@ -307,7 +339,12 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            return $this->getDescriptionFieldContents();
 	            
 	            case '_auto_date':
-	            return $this->getDate();
+                case '_date':
+	            return new SmartestDateTime($this->getDate());
+                
+	            case '_auto_date_raw':
+                case '_date_raw':
+	            return (int) $this->getDate();
 	            
 	            case '_is_published':
 	            return new SmartestBoolean($this->isPublished());
@@ -334,6 +371,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
                     break;
                 }
                 
+                case '_auto_thumbnail':
                 case '_thumbnail':
                 return $this->getDefaultThumbnailImage();
                 
@@ -457,12 +495,16 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
         }
 	}
 	
+	public function getSiteId(){
+        if ($id = $this->_item->getSiteId()) return (int) $id;
+	}
+    
 	public function getSite(){
 	    return $this->_item->getHomeSite();
 	}
     
     public function getMetapageId(){
-	    return $this->_item->getMetapageId();
+        if($id = $this->_item->getMetapageId()) return (int) $id;
 	}
 	
 	public function getMetaPage(){
@@ -678,7 +720,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	}
 	
 	public function getId(){
-		return $this->getItem()->getId();
+		return (int) $this->getItem()->getId();
 	}
 	
 	public function getName(){
@@ -689,7 +731,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 		return $n;
 	}
     
-    public function getEditorName(){
+    final public function getEditorName(){
         return $this->getItem()->getName();
     }
 	
@@ -702,6 +744,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	}
 	
 	public function setIsPublic($p){
+        $p = SmartestStringHelper::toRealBool($p);
 	    return $this->getItem()->setIsPublic($p);
 	}
 	
@@ -723,7 +766,14 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	}
 	
 	public function getDate(){
-        if(isset($this->_varnames_lookup['date_published'])){
+        
+        // get model's default date property ID. If there is a property set, retrieve the value of thatproperty for this item.
+        
+	    if($propertyid = $this->getModel()->getDefaultDatePropertyId() && $value = $this->getPropertyValueByNumericKey($propertyid, true)){
+	        
+            return $this->getPropertyValueByNumericKey($propertyid, true);
+            
+	    }elseif(isset($this->_varnames_lookup['date_published'])){
             
             $v = $this->getPropertyValueByNumericKey($this->_varnames_lookup['date_published'], $this->getDraftMode(), true);
             
@@ -744,6 +794,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
                 return $this->getItem()->getLastPublished();
             }
         }
+        
 	}
 	
 	public function getDescription(){
@@ -1222,8 +1273,12 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    }
 	}
 	
-	public function getPropertyValueByNumericKey($key, $draft=false){
+	public function getPropertyValueByNumericKey($key, $draft='DEFAULT'){
 	    
+        if($draft == 'DEFAULT'){
+            $draft = $this->getDraftMode();
+        }
+        
 	    if(array_key_exists($key, $this->_properties)){
 	        
 	        // echo "test";

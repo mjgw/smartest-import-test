@@ -203,8 +203,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
     
 	public function __toJson(){
 	    
-	    $obj = $this->__toJsonSafeSimpleObject();
-	    return json_encode($obj);
+	    return json_encode($this->__toJsonSafeSimpleObject());
 	    
 	}
 	
@@ -358,6 +357,8 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    
 	    if($site_id = $this->getCurrentSiteId()){
             return $this->getCreditedItems($site_id, $model_id, $mode);
+        }else{
+            return array();
         }
     }
     
@@ -365,9 +366,9 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
         
         if($this->baseClassHasField('profile_pic_asset_id')){
             if($this->_properties['profile_pic_asset_id']){
-                return $this->_properties['profile_pic_asset_id'];
+                return (int) $this->_properties['profile_pic_asset_id'];
             }else{
-                return $this->getDefaultProfilePicAssetId();
+                return (int) $this->getDefaultProfilePicAssetId();
             }
         }else{
             $this->__call('getProfilePicAssetId', null);
@@ -384,11 +385,11 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
         if($ph->getGlobalPreference('default_user_profile_pic_asset_id', null, $this->getCurrentSiteId(), true)){
             
             // if so, what is it's value?
-            return $ph->getGlobalPreference('default_user_profile_pic_asset_id', null, $this->getCurrentSiteId());
+            return (int) $ph->getGlobalPreference('default_user_profile_pic_asset_id', null, $this->getCurrentSiteId());
         
         }elseif($asset->findBy('url', 'default_user_profile_pic.jpg')){
         
-            return $asset->getId();
+            return (int) $asset->getId();
         
         }else{
             
@@ -409,7 +410,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
             $p = $a->getId();
             
             $ph->setGlobalPreference('default_user_profile_pic_asset_id', $p, null, $this->getCurrentSiteId());
-            return $p;
+            return (int) $p;
             
         }
         
@@ -635,7 +636,9 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
         $content = SmartestStringHelper::sanitize($content);
         
-	    $this->getBioTextAsset()->setContent($content);
+        
+        
+	    $this->getBioTextAsset()->setContentFromEditor($content);
         $this->getBioTextAsset()->setModified(time());
         $this->getBioTextAsset()->save();
         $this->getBioTextAsset()->getTextFragment()->publish();
@@ -1082,13 +1085,14 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
     
     public function getGroups($site_id=null){
         
-        if($site_id != 'ALL'){
+        if($site_id != 'ALL' && !is_numeric($site_id)){
             $site_id = $this->getUserContextSiteId();
         }
         
         $q = new SmartestManyToManyQuery('SM_MTMLOOKUP_USER_GROUP_MEMBERSHIP');
         $q->setTargetEntityByIndex(2);
         $q->addQualifyingEntityByIndex(1, $this->getId());
+        // $q->addForeignTableConstraint('Sets.set_type', 'SM_SET_USERGROUP');
 	    $q->addSortField('Sets.set_name');
         
         if(is_numeric($site_id)){

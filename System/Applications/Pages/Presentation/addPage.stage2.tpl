@@ -144,6 +144,7 @@
   	      {foreach from=$templates item="template"}
   	      <option value="{$template.url}"{if $newPage.draft_template == $template.url} selected="selected"{/if}>{$template.label} ({$template.url})</option>
   	      {/foreach}
+{if $master_templates_dir_writable}          <option value="NEW">Create a new layout template</option>{/if}
   	    </select>
         {else}
         <em style="color:#999">There are no available page master templates. To populate this list, add files to Presentation/Masters/</em>
@@ -157,9 +158,11 @@
       <div class="edit-form-row">
         <div class="form-section-label">Page layout template</div>
         <select name="layout_template_id">
+          <option value="">None for now</option>
 {foreach from=$layout_templates item="template"}
           <option value="{$template.id}"{if $template.id == $selected_layout_template_id} selected="selected"{/if}>{$template.label} ({$template.url})</option>
 {/foreach}
+{if $layout_templates_dir_writable}          <option value="NEW">Create a new layout template</option>{/if}
         </select>
       </div>
     </div>

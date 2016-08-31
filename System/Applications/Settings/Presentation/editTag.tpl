@@ -11,13 +11,18 @@
     <input type="hidden" name="tag_id" value="{$tag.id}" />
     
     <div class="edit-form-row">
-      <div class="form-section-label">Tag label:</div>
+      <div class="form-section-label">Tag label</div>
       <input type="text" name="tag_label" value="{$tag.label|escape:"quotes"}" />
     </div>
     
     <div class="edit-form-row">
-      <div class="form-section-label">Tag slug:</div>
+      <div class="form-section-label">Tag slug</div>
       <input type="text" name="tag_name" value="{$tag.name}" />
+    </div>
+    
+    <div class="edit-form-row">
+      <div class="form-section-label">Tag is featured</div>
+      {boolean name="tag_featured" value=$tag.featured id="tag-featured"}
     </div>
     
     <div class="edit-form-row">

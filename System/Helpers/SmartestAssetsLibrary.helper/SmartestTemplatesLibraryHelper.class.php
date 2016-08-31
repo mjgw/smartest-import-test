@@ -362,5 +362,31 @@ class SmartestTemplatesLibraryHelper{
 	    return $groups;
         
     }
+    
+    public function getSimpleListTemplatesByModel($model_id, $site_id, $allow_unspecified_model=true){
+        
+        $sql = "SELECT * FROM Assets WHERE asset_type='SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE' AND (Assets.asset_site_id='".$site_id."' OR Assets.asset_shared=1)";
+        
+        if($allow_unspecified_model){
+            $sql .= " AND (Assets.asset_model_id=0 OR Assets.asset_model_id='".$model_id."')";
+        }else{
+            $sql .= " AND Assets.asset_model_id='".$model_id."'";
+        }
+        
+        $sql .= " ORDER BY asset_stringid";
+        
+        $result = $this->database->queryToArray($sql);
+        
+        $templates = array();
+        
+        foreach($result as $r){
+            $t = new SmartestTemplateAsset;
+            $t->hydrate($r);
+            $templates[] = $t;
+        }
+        
+        return $templates;
+        
+    }
 
 }

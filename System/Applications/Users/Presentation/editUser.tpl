@@ -83,6 +83,15 @@
     <div class="form-section-label">Sites this user can access</div>
 {if $user_sites._empty}<em>This user does not have access to any sites.</em>{else}{$user_sites}{/if}
   </div>
+  <div class="edit-form-row">
+    <div class="form-section-label">Downgrade user</div>
+    <a class="button" href="{$domain}users/downgradeSystemUser?user_id={$user.id}">Downgrade to ordinary user</a>
+  </div>
+  {else}
+  <div class="edit-form-row">
+    <div class="form-section-label">Upgrade user</div>
+    <a class="button" href="{$domain}users/upgradeOrdinaryUserConfig?user_id={$user.id}">Upgrade to system user</a>
+  </div>
   {/if}
   
   <div class="edit-form-row">
@@ -102,11 +111,8 @@
     <script type="text/javascript">
     
     var userId = {$user.id};
-    
     {literal}
-    
     var tagsInUse = {};
-    
     var removeTagFromClick = function(evt){
       
       evt.stop();
@@ -138,11 +144,8 @@
         });
         
       }else{
-        
-        
-        
+          
       }
-        
     }
     
     $$('#user-tags-list li').each(function(li){

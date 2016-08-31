@@ -132,7 +132,80 @@ class SmartestUsersHelper extends SmartestHelper{
     
     }
     
-    public function getUsersOnSite($site_id){
+    public function applyTokensToUser(SmartestUser $user, $tokens, $site_id, $delete_existing_tokens=false){
+        $this->applyTokensToUserId($user->getId(), $tokens);
+    }
+    
+    public function applyTokensToUserId($user_id, $tokens, $site_id, $delete_existing_tokens=false){
+        
+        if($delete_existing_tokens){
+            $this->deleteUserTokensFromUserId($user_id, $site_id);
+        }
+        
+        if(is_numeric($user_id)){
+            foreach($tokens as $t){
+                $this->applySingleTokenToUserById($user_id, $t->getId(), $site_id, !$delete_existing_tokens);
+            }
+        }
+    }
+    
+    public function applySingleTokenToUserById($user_id, $token_id, $site_id, $avoid_duplicates=false){
+	    
+	    $utl = new SmartestUserTokenLookup;
+		$utl->setUserId($user_id);
+	    $utl->setTokenId($token_id);
+	    $utl->setGrantedTimestamp(time());
+	    
+	    if(is_object(SmartestSession::get('user'))){
+	        $utl->setGrantedByUserId(SmartestSession::get('user')->getId());
+	    }
+	    
+	    if($site_id == "GLOBAL"){
+	        $utl->setIsGlobal(1);
+	        
+	        // Remove any non-global assignments of the same token
+	        if($avoid_duplicates){
+	            $sql = "DELETE FROM UsersTokensLookup WHERE utlookup_token_id='".$token_id."' AND utlookup_is_global != '1' AND utlookup_user_id='".$user_id."'";
+            }
+            
+	        $this->database->rawQuery($sql);
+	        
+	    }else if(is_numeric($site_id)){
+	        
+	        if($avoid_duplicates){
+	            $sql = "DELETE FROM UsersTokensLookup WHERE utlookup_token_id='".$token_id."' AND utlookup_is_global != '1' AND utlookup_site_id='".$site_id."' AND utlookup_user_id='".$user_id."'";
+	            $this->database->rawQuery($sql);
+            }
+            
+	        $utl->setSiteId($site_id);
+	    }
+	    
+	    return $utl->save();
+	    
+	}
+    
+    public function deleteUserTokensFromUserId($user_id, $site_id, $all=false){
+        
+        $user_id = (int) $user_id;
+        
+        if($all){
+            $sql = "DELETE FROM UsersTokensLookup WHERE utlookup_user_id='".$user_id."'";
+        }else{
+            if($site_id == "GLOBAL"){
+                $sql = "DELETE FROM UsersTokensLookup WHERE utlookup_is_global == '1' AND utlookup_user_id='".$user_id."'";
+            }else{
+                $sql = "DELETE FROM UsersTokensLookup WHERE utlookup_is_global != '1' AND utlookup_user_id='".$user_id."' AND utlookup_site_id='".$site_id."'";
+            }
+        }
+        
+        $this->database->rawQuery($sql);
+    }
+    
+    public function applyRoleToUserById(SmartestRole $role){
+        
+    }
+    
+	public function getUsersOnSite($site_id){
         
         $site_id = (int) $site_id;
         $sql = "SELECT Users.*, CONCAT(Users.user_lastname,Users.user_firstname) AS user_fullname FROM `Users`, `UsersTokensLookup` WHERE UsersTokensLookup.utlookup_user_id=Users.user_id AND UsersTokensLookup.utlookup_token_id=21 AND (UsersTokensLookup.utlookup_site_id='".$site_id."' OR UsersTokensLookup.utlookup_is_global='1') ORDER BY user_fullname";

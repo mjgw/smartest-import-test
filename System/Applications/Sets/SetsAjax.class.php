@@ -145,4 +145,24 @@ class SetsAjax extends SmartestSystemApplication{
         
     }
     
+    public function listSetsByModelIdAsDropdownOptions(){
+        
+	    if(is_numeric($this->getRequestParameter('class_id'))){
+	        
+	        $model_id = $this->getRequestParameter('class_id');
+	        $model = new SmartestModel;
+	        
+	        if($model->find($model_id)){
+	        
+	            $sets = $model->getDataSets($this->getSite()->getId());
+	            
+                $this->send($sets, 'sets');
+    		    $this->send($model, 'model');
+    		
+		    }
+	        
+	    }
+        
+    }
+    
 }

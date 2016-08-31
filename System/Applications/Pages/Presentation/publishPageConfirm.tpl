@@ -74,14 +74,14 @@
   <p>What would you like to do?</p>
   <p><select name="itemspace_action">
       <option value="publish">Publish the items and update the page</option>
-      <option value="nothing">Do nothing</option>
+      <option value="nothing">Skip publishing this itemspace</option>
   </select></p>
 </div>
 {/if}
 
 {else}
 
-<div class="instruction">You can't publish this page at the moment</div>
+<div class="warning">You can't publish this page at the moment.</warning>
 
 {/if}{* whether this is an item page *}
 

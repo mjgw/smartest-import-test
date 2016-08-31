@@ -199,7 +199,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     			    
     			    if(constant("SM_OPTIONS_ALLOW_CONTAINER_EDIT_PREVIEW_SCREEN")){
     			        
-		                if(is_object($container_def->getTemplate())){
+		                if(is_object($container_def->getTemplate()) && is_file($container_def->getTemplateFilePath()) && is_writable($container_def->getTemplateFilePath())){
         			        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit template: ".$container_def->getTemplate()->getUrl()."\" href=\"".$this->_request_data->g('domain')."templates/editTemplate?template=".$container_def->getTemplate()->getId()."&amp;type=SM_ASSETTYPE_CONTAINER_TEMPLATE&amp;from=pagePreview\" style=\"text-decoration:none;font-size:11px";
                             if($this->_hide_edit_buttons) $edit_link .= ';display:none;';
                             $edit_link .= "\" target=\"_top\">&nbsp;<img src=\"".$this->_request_data->g('domain')."Resources/Icons/pencil.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this template--></a>";
@@ -812,6 +812,26 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         
     }
     
+    public function renderEditTagButton($params){
+        
+        if($this->getDraftMode()){
+            
+            $url = $this->_request_data->g('domain').'settings/editTag?';
+            
+            if(isset($params['tag'])){
+                
+            }elseif($this->page instanceof SmartestTagPage){
+                
+            }elseif(isset($params['id'])){
+                
+            }elseif(isset($params['name']) || isset($params['slug'])){
+                
+            }
+            
+        }
+        
+    }
+    
     public function renderItemSpaceDefineButton($itemspace_name){
         
         if($this->getDraftMode()){
@@ -925,85 +945,99 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                     $this->raiseError($e->getMessage());
                 }
                 
-                try{
-                    $set = $list->getSet($this->getDraftMode());
-                }catch(SmartestException $e){
-                    $this->raiseError($e->getMessage());
-                }
-                
-                if($list->getType() == 'SM_LIST_ARTICULATED'){
-                
-                    if($list->hasHeaderTemplate($this->getDraftMode())){
-                        $this->run($list->getHeaderTemplate($this->getDraftMode()), array());
-                    }
-                
-                    foreach($data as $item){
-                        
-                        if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
-        				    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit ".$item['_model']['name'].": ".$item['name']."\" href=\"".$this->_request_data->g('domain')."datamanager/editItem?item_id=".$item['id']."&amp;from=pagePreview\" style=\"text-decoration:none;font-size:11px";
-                            if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                            $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this item--></a>";
-        			    }else{
-        				    $edit_link = "<!--edit link-->";
-        			    }
-                        
-                        $child = $this->startChildProcess(substr(md5($list->getName().$item->getId().microtime()), 0, 8));
-            	        $child->assign('repeated_item', $item);
-            	        $child->assign('repeated_item_object', $item); // legacy support
-            	        $child->assign('edit_link', $edit_link);
-            	        $child->setContext(SM_CONTEXT_COMPLEX_ELEMENT);
-            	        $content .= $child->fetch($list->getRepeatingTemplate($this->getDraftMode()));
-            	        
-            	        $this->killChildProcess($child->getProcessId());
-        			    
-                    }
-                
-                    if($list->hasFooterTemplate($this->getDraftMode())){
-                        $this->run($list->getFooterTemplate($this->getDraftMode()), array());
-                    }
-                
-                }else{
+                if($list->getType() == 'SM_LIST_TAG'){
                     
-                    // The list uses a simple list template
+                    $tag = new SmartestTag;
                     
-                    // If the user has chosen to assign the set's items to a variable instead of display the template:
-                    if(isset($params['assign']) && strlen($params['assign'])){
-                        $this->assign(SmartestStringHelper::toVarName($params['assign']), $data);
+                    if($this->getDraftMode()){
+                        $tag_id = $list->getDraftSetId();
                     }else{
-                        // Display the simple list template, having defined the necessary preset variables
-                        $child = $this->startChildProcess(substr(md5($list->getName().microtime()), 0, 8));
-        	            $child->assign('items', $data);
-        	            $child->assign('num_items', count($data));
-        	            $child->assign('title', $list->getTitle());
-                        $child->assign('set', $set);
-                        $child->assign('list', $list);
-        	            $child->setContext(SM_CONTEXT_COMPLEX_ELEMENT);
-        	            $child->setDraftMode($this->getDraftMode());
-        	            $child->caching = false;
+                        $tag_id = $list->getLiveSetId();
+                    }
+                    
+                    if($tag->find($tag_id)){
                         
-                        if($this->getDraftMode()){
-                            $content = "<!--Smartest: Begin list template ".$list->getRepeatingTemplateInSmartest($this->getDraftMode())." -->\n";
-                        }else{
-                            $content = '';
-                        }
-                        
-        	            $content .= $child->fetch($list->getRepeatingTemplate($this->getDraftMode()));
-        	            $this->killChildProcess($child->getProcessId());
-                        
-                        if($this->getDraftMode()){
-                            $content .= "<!--Smartest: End list template ".$list->getRepeatingTemplateInSmartest($this->getDraftMode())." -->\n";
-                        }
-                        
-    	            }
+                    }
+                    
+                }elseif($list->getType() == 'SM_LIST_SIMPLE'){
+                    
+                    try{
+                        $set = $list->getSet($this->getDraftMode());
+                    }catch(SmartestException $e){
+                        $this->raiseError($e->getMessage());
+                    }
                     
                 }
+                
+                $model = new SmartestModel;
+                $header_image = new SmartestRenderableAsset;
+                
+                // The list uses a simple list template
+                
+                // If the user has chosen to assign the set's items to a variable instead of display the template:
+                if(isset($params['assign']) && strlen($params['assign'])){
+                    $this->assign(SmartestStringHelper::toVarName($params['assign']), $data);
+                }else{
+                    // Display the simple list template, having defined the necessary preset variables
+                    $child = $this->startChildProcess(substr(md5($list->getName().microtime()), 0, 8));
+    	            
+                    $child->assign('items', $data);
+    	            $child->assign('num_items', count($data));
+    	            $child->assign('title', $list->getTitle());
+                    
+                    if($list->getType() == 'SM_LIST_SIMPLE'){
+                        $child->assign('set', $set);
+                    }elseif($list->getType() == 'SM_LIST_TAG'){
+                        $child->assign('tag', $tag);
+                    }
+                    
+                    if($this->getDraftMode()){
+                        $model_id = $list->getDraftSetFilter();
+                        $header_image_id = $list->getDraftHeaderImageId();
+                    }else{
+                        $model_id = $list->getLiveSetFilter();
+                        $header_image_id = $list->getLiveHeaderImageId();
+                    }
+                    
+                    if($model->find($model_id)){
+                        $child->assign('model', $model);
+                    }
+                    
+                    if($header_image->find($header_image_id)){
+                        $child->assign('header_image', $header_image);
+                        $child->assign('has_header_image', true);
+                    }else{
+                        $child->assign('has_header_image', false);
+                    }
+                    
+                    $child->assign('list', $list);
+    	            $child->setContext(SM_CONTEXT_COMPLEX_ELEMENT);
+    	            $child->setDraftMode($this->getDraftMode());
+    	            $child->caching = false;
+                    
+                    if($this->getDraftMode()){
+                        $content = "<!--Smartest: Begin list template ".$list->getRepeatingTemplateInSmartest($this->getDraftMode())." -->\n";
+                    }else{
+                        $content = '';
+                    }
+                    
+                    $content .= $child->fetch($list->getRepeatingTemplate($this->getDraftMode()));
+                    $this->killChildProcess($child->getProcessId());
+                    
+                    if($this->getDraftMode()){
+                        $content .= "<!--Smartest: End list template ".$list->getRepeatingTemplateInSmartest($this->getDraftMode())." -->\n";
+                    }
+                    
+	            }
             
+            }else{
+                // no template
             } // end if: the list has repeating template
             
             if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
 			    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definitions for embedded list: ".$list->getName()."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineList?assetclass_id=".$list->getName()."&amp;page_id=".$this->getPage()->getWebid()."\" style=\"text-decoration:none;font-size:11px";
                 if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_blue.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Edit this list--></a>\n\n";
+                $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/list-switch.png\" alt=\"edit\" style=\"display:inline;border:0px;width:16px;height:auto\" /><!-- Edit this list--></a>\n\n";
 		    }else{
 			    $edit_link = "<!--edit link-->";
 		    }
@@ -1015,6 +1049,20 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         }else{
             
             // No definition exists for this list on this page
+            
+            if($this->getDraftMode()){
+                if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
+    			    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definitions for embedded list: ".$list_name."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineList?assetclass_id=".$list_name."&amp;page_id=".$this->getPage()->getWebid()."\" style=\"text-decoration:none;font-size:11px";
+                    if($this->_hide_edit_buttons) $edit_link .= ';display:none';
+                    $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/list-switch.png\" alt=\"edit\" style=\"display:inline;border:0px;width:16px;height:auto\" /><!-- Edit this list--></a>\n\n";
+    		    }else{
+    			    $edit_link = "<!--edit link-->";
+    		    }
+        
+                $content = $edit_link;
+            
+                return $content;
+            }
             
         }
     

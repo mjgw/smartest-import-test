@@ -219,9 +219,7 @@ class Users extends SmartestSystemApplication{
                 $this->formForward();
             }
 			
-			// echo SmartestStringHelper::toHtmlEncoded('Username');
-            
-            $this->send($this->getUser()->hasToken('modify_user_permissions'), 'show_tokens_edit_tab');
+			$this->send($this->getUser()->hasToken('modify_user_permissions'), 'show_tokens_edit_tab');
             $this->send($this->getUser()->hasToken('require_user_password_change'), 'require_password_changes');
             $this->send($this->getUser()->hasToken('modify_usernames'), 'allow_username_change');
         
@@ -873,7 +871,7 @@ class Users extends SmartestSystemApplication{
                 if(is_array($this->getRequestParameter('members'))){
                     // print_r($this->getRequestParameter('members'));
                     foreach($this->getRequestParameter('members') as $mid){
-                        echo "Remove user ID ".$mid." from group ID ".$g->getId().'<br />';
+                        // echo "Remove user ID ".$mid." from group ID ".$g->getId().'<br />';
                         $g->removeUserById($mid);
                     }
                 }
@@ -892,17 +890,204 @@ class Users extends SmartestSystemApplication{
     ///////////// New actions for converting users between 'system' and 'ordinary'
     public function upgradeOrdinaryUserConfig(){
         
+        if($this->getUser()->hasToken('modify_user_permissions')){
+        
+    		$user = new SmartestUser;
+		
+    		if($user->find($this->getRequestParameter('user_id'))){
+                if($user->getType() == 'SM_USERTYPE_ORDINARY_USER'){
+    		        $this->send($user, 'user');
+            	    $uhelper = new SmartestUsersHelper;
+            	    $roles = $uhelper->getRoles();
+                    $this->send($roles, 'roles');
+                    $this->send($this->getUser()->hasToken('grant_global_permissions'), 'allow_all_sites');
+    		    }else{
+                    $this->addUserMessageToNextRequest("The User was the wrong type of user to be upgraded.", SmartestUserMessage::INFO);
+                    $this->formForward();
+    		    }
+            }else{
+                $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
+                $this->formForward();
+            }
+        
+        }else{
+            $this->addUserMessageToNextRequest("You do not have permission to edit other users' permissions.", SmartestUserMessage::ACCESSDENIED);
+            $this->formForward();
+        }
+        
     }
     
     public function upgradeOrdinaryUserAction(){
+        
+		$user = new SmartestUser;
+		
+		if($user->find($this->getRequestParameter('user_id'))){
+            
+            $user->setType('SM_USERTYPE_SYSTEM_USER');
+            $user->save();
+            $h = new SmartestUsersHelper;
+            
+    		if(is_numeric($this->getRequestParameter('user_role'))){
+        
+                // User-created role is being used to assign tokens
+                $role = new SmartestRole;
+        
+                if($role->find($this->getRequestParameter('user_role'))){
+                    $tokens = $role->getTokens();
+                }else{
+                    $tokens = array();
+                }
+        
+                $l = new SmartestManyToManyLookup;
+    	        $l->setType('SM_MTMLOOKUP_USER_INITIAL_ROLE');
+    	        $l->setEntityForeignKeyValue(1, $user->getId());
+    	        $l->setEntityForeignKeyValue(2, $this->getRequestParameter('user_role'));
+    	        $l->save();
+    
+            }else if(substr($this->getRequestParameter('user_role'), 0, 7) == 'system:'){
+        
+                $role_id = substr($this->getRequestParameter('user_role'), 7);
+                $system_roles = $h->getSystemRoles();
+        
+                if(isset($system_roles[$role_id])){
+                    $role = $system_roles[$role_id];
+                    $tokens = $role->getTokens();
+                }else{
+                    $tokens = array();
+                }
+        
+            }else{
+        
+                $tokens = array();
+        
+            }
+	
+    		if($this->getRequestParameter('site_permissions') == 'GLOBAL'){
+    		    
+                if($this->getUser()->hasToken('grant_global_permissions')){
+	        
+    		        // Add tokens from role globally
+                    $h->applyTokensToUserId($user->getId(), $tokens, 'GLOBAL', false);
+    		        /* foreach($tokens as $t){
+                        $user->addTokenById($t->getId(), 'GLOBAL');
+                    } */
+            
+    		    }else{
+                    
+                    $site_id = $this->getSite()->getId();
+                    $h->applyTokensToUserId($user->getId(), $tokens, $site_id, false);
+                    /* foreach($tokens as $t){
+                        $user->addTokenById($t->getId(), $site_id);
+                    } */
+                    
+    		        // $this->addUserMessageToNextRequest('You do not have permission to grant global site access or other tokens');
+    		    }
+                
+		    }else{
+                
+                $site_id = $this->getSite()->getId();
+                $h->applyTokensToUserId($user->getId(), $tokens, $site_id, false);
+                
+                /* foreach($tokens as $t){
+                    $user->addTokenById($t->getId(), $site_id);
+                } */
+                
+		    }
+            
+            $this->addUserMessageToNextRequest("The user has been successfully upgraded.", SmartestUserMessage::SUCCESS);
+            $this->formForward();
+            
+        }else{
+            $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
+            $this->formForward();
+        }
         
     }
     
     public function downgradeSystemUser(){
         
+        if($this->getUser()->hasToken('modify_user_permissions')){
+            
+            $user = new SmartestUser;
+		
+    		if($user->find($this->getRequestParameter('user_id'))){
+                if($user->getType() == 'SM_USERTYPE_SYSTEM_USER'){
+                    
+                    $all_groups = $user->getGroups('ALL');
+                    $system_groups = array();
+                    
+                    foreach($all_groups as $g){
+                        if($g->getAcceptedUserType() == 'SM_USERTYPE_SYSTEM_USER'){
+                            $system_groups[] = $g;
+                        }
+                    }
+                    
+                    $this->send(new SmartestArray($system_groups), 'system_groups');
+    		        $this->send($user, 'user');
+                    
+    		    }else{
+                    $this->addUserMessageToNextRequest("The user was the wrong type of user to be upgraded.", SmartestUserMessage::INFO);
+                    $this->formForward();
+    		    }
+            }else{
+                $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
+                $this->formForward();
+            }
+        
+        }else{
+            $this->addUserMessageToNextRequest("You do not have permission to edit other users' permissions.", SmartestUserMessage::ACCESSDENIED);
+            $this->formForward();
+        }
+        
     }
     
     public function downgradeSystemUserAction(){
+        
+		$user = new SmartestUser;
+		
+        if($this->getUser()->hasToken('modify_user_permissions')){
+        
+    		if($user->find($this->getRequestParameter('user_id'))){
+            
+                $user->setType('SM_USERTYPE_ORDINARY_USER');
+                $user->save();
+                $h = new SmartestUsersHelper;
+                $h->deleteUserTokensFromUserId($user->getId(), null, true);
+                
+                $all_groups = $user->getGroups('ALL');
+                $num_groups_removed = 0;
+                
+                foreach($all_groups as $g){
+                    if($g->getAcceptedUserType() == 'SM_USERTYPE_SYSTEM_USER'){
+                        $g->removeUserById($user->getId());
+                        $num_groups_removed++;
+                    }
+                }
+                
+                if($num_groups_removed > 0){
+                    $this->addUserMessageToNextRequest("The user has been successfully downgraded and removed from ".$num_groups_removed." groups.", SmartestUserMessage::SUCCESS);
+                }else{
+                    $this->addUserMessageToNextRequest("The user has been successfully downgraded.", SmartestUserMessage::SUCCESS);
+                }
+            
+            }else{
+                $this->addUserMessageToNextRequest("The user ID was not recognised.", SmartestUserMessage::ERROR);
+            }
+            
+            $this->formForward();
+        
+        }else{
+            $this->addUserMessageToNextRequest("You do not have permission to edit other users' permissions.", SmartestUserMessage::ERROR);
+            $this->formForward();
+        }
+        
+    }
+    
+    public function convertUserToRole(){
+        
+    }
+    
+    public function convertUserToRoleAction(){
         
     }
     

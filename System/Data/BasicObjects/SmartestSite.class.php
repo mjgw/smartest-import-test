@@ -165,17 +165,21 @@ class SmartestSite extends SmartestBaseSite{
 	
 	public function getSearchResults($query){
 	    
+        $query = strip_tags($query);
 	    $search_query_words = preg_split('/[^\w]+/', $query);
 	    $h = new SmartestCmsItemsHelper;
 	    $search_start_time = microtime(true);
+        // $model_ids = $du->getModelIdsWIthMetapageOnSiteId($this->getId());
 	    
 	    $pages = array();
 	    $pages_sql = "SELECT Pages.* FROM Pages WHERE page_site_id='".$this->getId()."' AND page_deleted != 'TRUE' AND page_id !='".$this->getSearchPageId()."' AND page_id !='".$this->getTagPageId()."' AND page_type='NORMAL' AND page_is_published='TRUE'";
 	    $items_sql = "SELECT Items.item_id FROM Items WHERE item_site_id='".$this->getId()."' AND item_deleted=0 AND item_public='TRUE'";
 	    
 	    if(count($search_query_words) > 0){
-	        $pages_sql .= ' AND ';
-	        $items_sql .= ' AND ';
+	        $pages_sql .= ' AND (';
+	        $items_sql .= ' AND (';
+	    }else{
+	        return array();
 	    }
 	    
 	    foreach($search_query_words as $key=>$word){
@@ -190,12 +194,17 @@ class SmartestSite extends SmartestBaseSite{
 	        
         }
         
+        $pages_sql .= ')';
+        $items_sql .= ')';
+        
         $du = new SmartestDataUtility;
         $model_ids = $du->getModelIdsWithMetapageOnSiteId($this->getId());
         
         if(count($model_ids)){
             $items_sql .= ' AND Items.item_itemclass_id IN (\''.implode("','", $model_ids).'\')';
         }
+        
+        echo $items_sql;
         
         if(count($search_query_words)){
             
@@ -250,7 +259,7 @@ class SmartestSite extends SmartestBaseSite{
 
             }
 
-            ksort($master_array);
+            krsort($master_array);
             
             $search_end_time = microtime(true);
             $this->_last_search_time_taken = ($search_end_time - $search_start_time)*1000;
@@ -263,6 +272,43 @@ class SmartestSite extends SmartestBaseSite{
         }
 	    
 	}
+    
+    public function getSingleModelSearchResults($query, $model_id){
+        
+        $query = strip_tags($query);
+	    $search_query_words = preg_split('/[^\w]+/', $query);
+        
+        if(count($search_query_words)){
+            
+            $du = new SmartestDataUtility;
+            $model_ids = $du->getModelIdsWithMetapageOnSiteId($this->getId());
+        
+            if(in_array($model_id, $model_ids)){
+                $items_sql = "SELECT Items.item_id FROM Items WHERE item_site_id='".$this->getId()."' AND item_deleted=0 AND item_public='TRUE' AND item_itemclass_id='".$model_id."' AND (";
+                
+        	    foreach($search_query_words as $key=>$word){
+	        
+        	        if($key > 0){
+        	            $items_sql .= " OR ";
+        	        }
+	        
+        	        $items_sql .= "(item_search_field LIKE '%".$word."%' OR item_name LIKE '%".$word."%') ";
+	        
+                }
+        
+                $items_sql .= ')';
+                
+            }else{
+                // Model does not have default metapage
+                return array();
+            }
+            
+        }else{
+            // No words entered
+            return array();
+        }
+        
+    }
 	
 	public function getLastSearchTimeTaken(){
 	    

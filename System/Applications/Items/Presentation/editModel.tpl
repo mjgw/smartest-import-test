@@ -224,6 +224,26 @@
       </div>
       
       <div class="edit-form-row">
+        <div class="form-section-label">Default date property</div>
+        {if $can_edit_model}
+        <select name="itemclass_default_date_property_id">
+          {if !$model.default_date_property_id}<option value="0"></option>{/if}
+          {foreach from=$date_properties item="property"}
+          <option value="{$property.id}"{if $model.default_date_property_id == $property.id} selected="selected"{/if}>{$property.name}</option>
+          {/foreach}
+        </select>
+        {else}
+        {if $model.default_description_property_id}
+          {foreach from=$date_properties item="property"}
+            {if $model.default_date_property_id == $property.id}{$property.name}{/if}
+          {/foreach}
+        {else}
+          None
+        {/if}
+        {/if}
+      </div>
+      
+      <div class="edit-form-row">
         <div class="form-section-label">Default thumbnail property</div>
         {if $can_edit_model}
         <select name="itemclass_default_thumbnail_property_id">

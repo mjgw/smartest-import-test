@@ -29,15 +29,19 @@ class SmartestQuery{
 	
 	const GREATERTHAN = 6;
 	const GREATER_THAN = 6;
+    const AFTER = 6;
 	
 	const LESSTHAN = 7;
 	const LESS_THAN = 7;
+    const BEFORE = 7;
 	
 	const TAGGEDWITH = 8;
 	const TAGGED_WITH = 8;
 	
 	const NOTTAGGEDWITH = 9;
 	const NOT_TAGGED_WITH = 9;
+    
+    const HAS_VALUE = 128;
 	
 	const IN = 256;
 	
@@ -93,7 +97,10 @@ class SmartestQuery{
 	
 	public function add($property_id, $value, $operator=0){
 	    
+        // echo $property_id;
+        
 	    if(isset($this->_properties[$property_id])){
+            
 	        $p = $this->_properties[$property_id];
 	        
             if(is_array($value) && $operator == self::IN){
@@ -111,7 +118,7 @@ class SmartestQuery{
                 
                 $c = new SmartestQueryCondition($objectized_values, $p, $operator);
                 $this->conditions[] = $c;
-                
+                 
             }else{
             
     	        try{
@@ -183,7 +190,6 @@ class SmartestQuery{
                 }
                 $objectized_values[] = $v;
             } */
-            
         }else{
 	        // unknown property ID - throw exception?
 	    }
@@ -319,6 +325,14 @@ class SmartestQuery{
     				    $sql = "SELECT DISTINCT itempropertyvalue_item_id FROM Items, ItemPropertyValues WHERE Items.item_itemclass_id='".$this->_model->getId()."' AND ItemPropertyValues.itempropertyvalue_item_id=Items.item_id ";
     				}
 			    
+                }elseif($condition->getOperator() == self::HAS_VALUE){
+            
+                    // echo $property_id;
+                    $sql = "SELECT ItemPropertyValues.itempropertyvalue_item_id FROM Items, ItemPropertyValues WHERE itempropertyvalue_property_id='".$condition->getProperty()->getId()."' AND ItemPropertyValues.itempropertyvalue_item_id=Items.item_id AND ItemPropertyValues.".$value_field." !='' AND ItemPropertyValues.".$value_field." !=0 ";
+                    
+                    // var_dump();
+                    echo $condition->getSql();
+                
 				}else{
 			        
 			        // Standard item property field as added by the user

@@ -537,7 +537,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	public function publish($item_id=false, $item_only=null){
 	    
 	    // update database defs
-		$sql = "UPDATE Lists SET list_live_set_id=list_draft_set_id, list_live_template_file=list_draft_template_file, list_live_header_template=list_draft_header_template, list_live_footer_template=list_draft_footer_template WHERE list_page_id='".$this->_properties['id']."'";
+		$sql = "UPDATE Lists SET list_live_set_id=list_draft_set_id, list_live_template_file=list_draft_template_file, list_live_set_filter=list_draft_set_filter, list_live_header_image_id=list_draft_header_image_id WHERE list_page_id='".$this->_properties['id']."'";
 		$this->database->rawQuery($sql);
 		
 		// delete files in page cache
@@ -1852,6 +1852,12 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
                 $this->_page_downloads = $this->getPageDownloads();
             }
             return new SmartestArray($this->_page_downloads);
+            
+            case "_type_label":
+            return "Page";
+            
+            case "_type_varname":
+            return "page";
             
 	        
 	    }

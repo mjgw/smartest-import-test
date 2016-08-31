@@ -84,10 +84,8 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
         		    $property = $p[$field];
         		    $property_type_info = $property->getTypeInfo();
     		    
-        		    if(!isset($property_type_info['sortable'])){
-    		        
-        		    }else if(!SmartestStringHelper::toRealBool($property_type_info['sortable'])){
-    		        
+        		    if(!isset($property_type_info['sortable']) || !SmartestStringHelper::toRealBool($property_type_info['sortable'])){
+                        
         		    }else{
         		        // Property is not of a sortable type
         		        SmartestLog::getInstance('system')->log('Tried to sort by a property of a non-sortable type');
@@ -114,7 +112,9 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
         	    $sql .= " AND Items.item_id IN (";
     
         	    $i = 0;
-    
+                
+                // print_r($this->_item_ids);
+                
         	    foreach($this->_item_ids as $id){
         
         	        if($i > 0){

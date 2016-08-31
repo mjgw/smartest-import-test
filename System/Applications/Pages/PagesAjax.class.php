@@ -396,5 +396,14 @@ class PagesAjax extends SmartestSystemApplication{
         exit;
         
     }
+    
+    public function getListTemplatesByModel(){
+        
+        $th = new SmartestTemplatesLibraryHelper;
+        $templates = $th->getSimpleListTemplatesByModel((int) $this->getRequestParameter('model_id'), $this->getSite()->getId());
+        $this->send($templates, 'templates');
+        $this->send(is_writable(SM_ROOT_DIR.'Presentation/Layouts/'), 'can_create_template');
+        
+    }
 
 }

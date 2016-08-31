@@ -303,6 +303,12 @@ class SmartestItemPage extends SmartestPage{
 	        
 	        case "model":
 	        return $this->_simple_item->getModel();
+            
+            case "_type_label":
+            return $this->_simple_item->getModel()->getName();
+            
+            case "_type_varname":
+            return $this->_principal_item->getModelVarname();
 	        
 	    }
 	    

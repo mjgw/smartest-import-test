@@ -101,26 +101,6 @@
   <div class="form-hint">Enter a {$model.item_name_field_name|lower} for this {$model.name|lower}</div>
 </div>{/if}
 
-<div class="edit-form-row" id="add-tags-button-row">
-  <div class="form-section-label">&nbsp;</div>
-  <a class="button" href="#add-tags" id="add-tags-button">Add tags</a>
-  <script type="text/javascript">
-  {literal}
-  $('add-tags-button').observe('click', function(e){
-    e.stop();
-    $('add-tags-button-row').hide();
-    $('add-tags-row').show();
-  });
-  {/literal}
-  </script>
-</div>
-
-<div class="edit-form-row" style="display:none" id="add-tags-row">
-  <div class="form-section-label">Add tags</div>
-  <input type="text" name="item_tags" value="" id="item-tags" />
-  <div class="form-hint">Separate tags with commas</div>
-</div>
-
 {if $model.type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}
 
 {if $parent_item}
@@ -139,10 +119,9 @@
 {/if}
 
 {foreach from=$properties key="pid" item="property"}
-
 <div class="edit-form-row">
   <div class="form-section-label">{if $property.required == 'TRUE'}<strong>{/if}{$property.name}{if $property.required == 'TRUE'}</strong> *{/if}{if $can_edit_properties}<a style="float:left" title="Edit this property" href="{$domain}datamanager/editItemClassProperty?from=item_edit&amp;item_id={$item.id}&amp;itemproperty_id={$property.id}"><img src="{$domain}Resources/System/Images/edit_setting_minimal.png" alt="Edit this property" /></a>{/if}</div>
-  {item_field property=$property value=$property.default_value}
+  {item_field property=$property value=$property.default_value value_edit_buttons="false"}
 </div>
 {foreachelse}
 <div class="warning">
