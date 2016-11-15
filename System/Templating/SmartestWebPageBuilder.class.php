@@ -563,9 +563,18 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                                 $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$ph->getName()."&amp;page_id=".$this->page->getWebid();
                             }
                         
-                            $edit_link = "<a class=\"sm-edit-button\" title=\"Click to choose or upload a file for for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
-                            if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                            $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/fill-empty-placeholder.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this file--></a>";
+                            if($this->getPage()->getPlaceholderDefinition($placeholder_name, $this->getDraftMode())->getPlaceholder()->getType() == "SM_ASSETCLASS_RICH_TEXT"){
+                                $edit_link = "<p class=\"sm-edit-area sm-edit-empty-paragraph\"";
+                                if($this->_hide_edit_buttons) $edit_link .= ' style="display:none"';
+                                $edit_link .= "><a class=\"sm-edit-button\" title=\"Click to choose or upload a file for for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
+                                if($this->_hide_edit_buttons) $edit_link .= ';display:none';
+                                $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/fill-empty-placeholder-text.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Upload new text--></a></p>";
+                            }else{
+                                $edit_link = "<a class=\"sm-edit-button\" title=\"Click to choose or upload a file for for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
+                                if($this->_hide_edit_buttons) $edit_link .= ';display:none';
+                                $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/fill-empty-placeholder.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Upload new file--></a>";
+                            }
+                            
                             return $edit_link;
                         
                         }

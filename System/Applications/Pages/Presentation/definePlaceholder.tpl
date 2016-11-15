@@ -56,6 +56,7 @@ function toggleParamsHolder(){
           <option value="{$available_asset.id}"{if $available_asset.id==$asset.id} selected="selected"{/if}>{if $available_asset.id==$live_asset_id}* {/if}{$available_asset.label}</option>
         {/foreach}
       </select>
+      {if !$valid_definition}<br /><a class="button small" style="margin-top:5px" href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}">Upload a new file</a>{/if}
       {/if}
       
     </div>

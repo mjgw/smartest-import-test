@@ -76,6 +76,7 @@ function smartest_filter_preview($html, $filter){
 		
 		$pcss = SmartestFileSystemHelper::load($filter->getDirectory().'previewbar.stylehtml.txt');
 		$pcss = str_replace('%DOMAIN%', $filter->getRequestData()->g('domain'), $pcss);
+        $pcss = str_replace('%TIME%', time(), $pcss);
 		
 		$html = str_replace('</head>', $pcss.'</head>', $html);
 		$html = str_replace($body_tag, $body_tag."\n".$phtml, $html);

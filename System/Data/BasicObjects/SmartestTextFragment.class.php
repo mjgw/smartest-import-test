@@ -292,11 +292,16 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
         
         if(count($matches_a[0])){
             foreach($matches_a[0] as $key => $link){
-                if(strpos($link, 'target="_blank"')){
-                    $string = str_replace($link, '[+'.$matches_a[1][$key].' '.$matches_a[2][$key].']',$string);
+                if(strpos($link, 'class="twitter-')){
+                    
                 }else{
-                    $string = str_replace($link, '['.$matches_a[1][$key].' '.$matches_a[2][$key].']',$string);
+                    if(strpos($link, 'target="_blank"')){
+                        $string = str_replace($link, '[+'.$matches_a[1][$key].' '.$matches_a[2][$key].']',$string);
+                    }else{
+                        $string = str_replace($link, '['.$matches_a[1][$key].' '.$matches_a[2][$key].']',$string);
+                    }
                 }
+                
             }
         }
         

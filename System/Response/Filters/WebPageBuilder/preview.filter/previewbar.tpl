@@ -35,6 +35,10 @@
       for (var i = 0; i < elements.length; i++) {
           elements[i].style.display = 'none';
       }
+      elements = document.getElementsByClassName('sm-edit-area');
+      for (var i = 0; i < elements.length; i++) {
+          elements[i].style.display = 'none';
+      }
       _SM.editButtonsVisible = false;
       
       var state = 1;
@@ -55,6 +59,10 @@
         var elements = document.getElementsByClassName('sm-edit-button');
         for (var i = 0; i < elements.length; i++) {
             elements[i].style.display = 'inline';
+        }
+        elements = document.getElementsByClassName('sm-edit-area');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = 'block';
         }
         _SM.editButtonsVisible = true;
         

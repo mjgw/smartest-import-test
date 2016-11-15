@@ -6,6 +6,7 @@
     <label>Formatted text files</label>
     <accept>SM_ASSETTYPE_RICH_TEXT</accept>
     <accept>SM_ASSETTYPE_TEXTILE_TEXT</accept>
+    <default>SM_ASSETTYPE_RICH_TEXT</default>
     <setfrompreview>true</setfrompreview>
     <descriptive>true</descriptive>
   </type>
@@ -17,6 +18,7 @@
     <accept>SM_ASSETTYPE_PNG_IMAGE</accept>
     <accept>SM_ASSETTYPE_GIF_IMAGE</accept>
     <accept>SM_ASSETTYPE_SVG_IMAGE</accept>
+    <default>SM_ASSETTYPE_JPEG_IMAGE</default>
     <gallery>true</gallery>
   </type>
   
@@ -26,6 +28,7 @@
     <accept>SM_ASSETTYPE_RICH_TEXT</accept>
     <accept>SM_ASSETTYPE_PLAIN_TEXT</accept>
     <accept>SM_ASSETTYPE_TEXTILE_TEXT</accept>
+    <default>SM_ASSETTYPE_RICH_TEXT</default>
     <descriptive>true</descriptive>
   </type>
   
@@ -47,6 +50,7 @@
     <accept>SM_ASSETTYPE_SVG_IMAGE</accept>
     <accept>SM_ASSETTYPE_MP3</accept>
     <accept>SM_ASSETTYPE_OGG_VORBIS</accept>
+    <default>SM_ASSETTYPE_YOUTUBE_CLIP</default>
     <gallery>true</gallery>
   </type>
   
@@ -63,6 +67,7 @@
     <accept>SM_ASSETTYPE_GIF_IMAGE</accept>
     <accept>SM_ASSETTYPE_MP3</accept>
     <accept>SM_ASSETTYPE_OGG_VORBIS</accept>
+    <default>SM_ASSETTYPE_YOUTUBE_CLIP</default>
     <gallery>true</gallery>
   </type>
   
@@ -81,6 +86,7 @@
     <accept>SM_ASSETTYPE_GIF_IMAGE</accept>
     <accept>SM_ASSETTYPE_MP3</accept>
     <accept>SM_ASSETTYPE_OGG_VORBIS</accept>
+    <default>SM_ASSETTYPE_YOUTUBE_CLIP</default>
     <gallery>true</gallery>
   </type>
   
@@ -99,6 +105,7 @@
     <accept>SM_ASSETTYPE_MS_WORD</accept>
     <accept>SM_ASSETTYPE_MS_EXCEL</accept>
     <accept>SM_ASSETTYPE_MS_POWERPOINT</accept>
+    <default>SM_ASSETTYPE_PDF</default>
   </type>
   
   <type id="SM_ASSETCLASS_TEXT_RESOURCE">
@@ -109,6 +116,7 @@
     <accept>SM_ASSETTYPE_MS_WORD</accept>
     <setfrompreview>true</setfrompreview>
     <descriptive>false</descriptive>
+    <default>SM_ASSETTYPE_RICH_TEXT</default>
   </type>
   
   <type id="SM_ASSETCLASS_MOVIE">
@@ -121,6 +129,7 @@
     <accept>SM_ASSETTYPE_MPEG_MOVIE</accept>
     <accept>SM_ASSETTYPE_WMV</accept>
     <gallery>true</gallery>
+    <default>SM_ASSETTYPE_YOUTUBE_CLIP</default>
   </type>
   
    <type id="SM_ASSETCLASS_HOMEPAGE_SPLASH">
@@ -136,6 +145,7 @@
     <accept>SM_ASSETTYPE_GIF_IMAGE</accept>
     <accept>SM_ASSETTYPE_SVG_IMAGE</accept>
     <accept>SM_ASSETTYPE_FLASH_VIDEO</accept>
+    <default>SM_ASSETTYPE_JPEG_IMAGE</default>
     <gallery>true</gallery>
   </type>
   
@@ -157,6 +167,7 @@
     <setfrompreview>false</setfrompreview>
     <accept>SM_ASSETTYPE_STYLESHEET</accept>
     <accept>SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET</accept>
+    <default>SM_ASSETTYPE_STYLESHEET</default>
   </type>
   
   <type id="SM_ASSETCLASS_CUFON_FONT">
@@ -165,6 +176,7 @@
     <accept>SM_ASSETTYPE_CUFON_FONT</accept>
     <accept>SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT</accept>
     <accept>SM_ASSETTYPE_EOT_FONT_FORMAT</accept>
+    <default>SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT</default>
   </type>
   
   <type id="SM_ASSETCLASS_BROWSER_INSTRUCTION">
@@ -174,6 +186,7 @@
     <accept>SM_ASSETTYPE_STYLESHEET</accept>
     <accept>SM_ASSETTYPE_DYNAMIC_CSS</accept>
     <accept>SM_ASSETTYPE_CUFON_FONT</accept>
+    <default>SM_ASSETTYPE_JAVASCRIPT</default>
   </type>
   
   <type id="SM_ASSETCLASS_SHOCKWAVE_FLASH">
@@ -187,6 +200,7 @@
     <setfrompreview>true</setfrompreview>
     <accept>SM_ASSETTYPE_MP3</accept>
     <accept>SM_ASSETTYPE_OGG_VORBIS</accept>
+    <default>SM_ASSETTYPE_MP3</default>
   </type>
   
   <type id="SM_ASSETCLASS_DOWNLOAD">
@@ -196,6 +210,7 @@
     <accept>SM_ASSETTYPE_MS_WORD</accept>
     <accept>SM_ASSETTYPE_MS_EXCEL</accept>
     <accept>SM_ASSETTYPE_MS_POWERPOINT</accept>
+    <default>SM_ASSETTYPE_PDF</default>
   </type>
   
   <type id="SM_ASSETCLASS_EXP1">
