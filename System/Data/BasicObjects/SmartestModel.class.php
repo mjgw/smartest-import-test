@@ -383,6 +383,10 @@ class SmartestModel extends SmartestBaseModel{
 	        case "item_name_field_name":
             case "infn":
 	        return $this->getItemNameFieldName();
+            
+            case "item_name_field_varname":
+            case "infn_varname":
+	        return SmartestStringHelper::toVarName($this->getItemNameFieldName());
 	        
 	        case "item_name_field_visible":
 	        return $this->getItemNameFieldVisible();

@@ -1037,7 +1037,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         }else{
             // Return a dynamic one.
             $url = 'website/renderPageFromId?page_id='.$this->getWebid();
-            if($this->getType() == 'ITEMCLASS' && $this->_simple_item){
+            if($this->getType() == 'ITEMCLASS' && isset($this->_simple_item) && is_object($this->_simple_item)){
                 $url .= '&amp;item_id='.$this->_simple_item->getWebid();
             }
         }

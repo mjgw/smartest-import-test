@@ -57,7 +57,7 @@
     {if $show_layout_template}
       <tr>
         <td style="background-color:#fff" valign="top">Layout template:</td>
-        <td style="background-color:#fff" valign="top">{if $layout_template.id}<code>Presentation/Layouts/{$layout_template.url}</code> {if $use_preset_for_layout} <span class="ui-info-inactive">(from preset)</span>{/if}{else}<span class="ui-info-inactive">None</span>{/if}</td>
+        <td style="background-color:#fff" valign="top">{if $layout_template.id}<code>Presentation/Layouts/{$layout_template.url}</code> {if $use_preset_for_layout} <span class="ui-info-inactive">(from preset)</span>{/if}{elseif $new_layout_template}<span class="ui-info-inactive">Create new template</span>{else}<span class="ui-info-inactive">None</span>{/if}</td>
       </tr>
     {/if}
     {if $newPage.type == 'NORMAL'}

@@ -12,5 +12,5 @@ ALTER TABLE  `Lists` ADD  `list_draft_header_image_id` INT( 11 ) NOT NULL AFTER 
 ALTER TABLE  `Lists` ADD  `list_live_header_image_id` INT( 11 ) NOT NULL AFTER  `list_draft_header_image_id` ;
 ALTER TABLE  `ItemClasses` ADD `itemclass_default_date_property_id` INT( 11 ) NOT NULL AFTER `itemclass_default_thumbnail_property_id` ;
 
-UPDATE `Settings` SET `setting_value` = '834' WHERE `Settings`.`setting_type` ='SM_SETTINGTYPE_SYSTEM_META' AND `Settings`.`setting_name`='database_minimum_revision' LIMIT 1;
+UPDATE `Settings` SET `setting_value` = '824' WHERE `Settings`.`setting_type` ='SM_SETTINGTYPE_SYSTEM_META' AND `Settings`.`setting_name`='database_minimum_revision' LIMIT 1;
 UPDATE `Settings` SET `setting_value` = '23' WHERE `Settings`.`setting_type` ='SM_SETTINGTYPE_SYSTEM_META' AND `Settings`.`setting_name`='database_version' LIMIT 1;

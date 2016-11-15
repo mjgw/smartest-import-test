@@ -1472,19 +1472,17 @@ class Pages extends SmartestSystemApplication{
                 
             }
             
-            $this->send(is_writable(SM_ROOT_DIR.'Presentation/Masters/', 'master_templates_dir_writable'));
-            $this->send(is_writable(SM_ROOT_DIR.'Presentation/Layouts/', 'layout_templates_dir_writable'));
+            $this->send(is_writable(SM_ROOT_DIR.'Presentation/Masters/'), 'master_templates_dir_writable');
+            $this->send(is_writable(SM_ROOT_DIR.'Presentation/Layouts/'), 'layout_templates_dir_writable');
             
             ////// Presets stuff //////
             
 			$page_presets = $helper->getPagePresets($this->getSite()->getId());
             $this->send($page_presets, 'presets');
-            // $this->send((bool) $this->getGlobalPreference('site_default_page_preset_id'), 'hide_template_dropdown');
+            
             $preset = new SmartestPagePreset;
 		    
-            // echo SmartestSession::get('__newPage_preset_id');
-            
- 			if($preset_id = SmartestSession::get('__newPage_preset_id') && $preset->find(SmartestSession::get('__newPage_preset_id'))){
+            if($preset_id = SmartestSession::get('__newPage_preset_id') && $preset->find(SmartestSession::get('__newPage_preset_id'))){
  			    
                 // if there is already a choice of preset in the session, send that
                 $newPage['draft_template'] = $preset->getMasterTemplateName();
@@ -1518,9 +1516,19 @@ class Pages extends SmartestSystemApplication{
                         $this->send(true, 'primary_container_known');
                         $this->send($this->getSite()->getPrimaryContainerId(), 'primary_container_id');
                         $this->send($container->getPossibleAssets(), 'layout_templates');
+                        
                         if(is_numeric(SmartestSession::get('__newPage_layout_template_id'))){
                             $this->send(SmartestSession::get('__newPage_layout_template_id'), 'selected_layout_template_id');
                         }
+                        
+                        if(strlen(SmartestSession::get('__newPage_layout_template_name'))){
+                            $this->send(SmartestSession::get('__newPage_layout_template_name'), 'new_layout_template_name');
+                        }else{
+                            $try_name = SmartestStringHelper::toVarName(SmartestSession::get('__newPage')->getTitle()).'.tpl';
+                            $initial_name = SmartestFileSystemHelper::getFileName(SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Layouts/'.$try_name));
+                            $this->send($initial_name, 'new_layout_template_name');
+                        }
+                        
                     }else{
                         $this->send(false, 'primary_container_known');
                         $this->send(false, 'show_template_selector');
@@ -1546,9 +1554,21 @@ class Pages extends SmartestSystemApplication{
                         $this->send(true, 'primary_container_known');
                         $this->send($this->getSite()->getPrimaryContainerId(), 'primary_container_id');
                         $this->send($container->getPossibleAssets(), 'layout_templates');
+                        
                         if(is_numeric(SmartestSession::get('__newPage_layout_template_id'))){
                             $this->send(SmartestSession::get('__newPage_layout_template_id'), 'selected_layout_template_id');
+                        }elseif(SmartestSession::get('__newPage_layout_template_id') == "NEW"){
+                            $this->send("NEW", 'selected_layout_template_id');
                         }
+                        
+                        if(strlen(SmartestSession::get('__newPage_layout_template_name'))){
+                            $this->send(SmartestSession::get('__newPage_layout_template_name'), 'new_layout_template_name');
+                        }else{
+                            $try_name = SmartestStringHelper::toVarName(SmartestSession::get('__newPage')->getTitle()).'.tpl';
+                            $initial_name = SmartestFileSystemHelper::getFileName(SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Layouts/'.$try_name));
+                            $this->send($initial_name, 'new_layout_template_name');
+                        }
+                        
                     }else{
                         $this->send(false, 'primary_container_known');
                         $this->send(false, 'show_template_selector');
@@ -1607,9 +1627,19 @@ class Pages extends SmartestSystemApplication{
                             $this->send($this->getSite()->getPrimaryContainerId(), 'primary_container_id');
                             $this->send(true, 'primary_container_known');
                             $this->send($container->getPossibleAssets(), 'layout_templates');
+                            
                             if(is_numeric(SmartestSession::get('__newPage_layout_template_id'))){
                                 $this->send(SmartestSession::get('__newPage_layout_template_id'), 'selected_layout_template_id');
                             }
+                            
+                            if(strlen(SmartestSession::get('__newPage_layout_template_name'))){
+                                $this->send(SmartestSession::get('__newPage_layout_template_name'), 'new_layout_template_name');
+                            }else{
+                                $try_name = SmartestStringHelper::toVarName(SmartestSession::get('__newPage')->getTitle()).'.tpl';
+                                $initial_name = SmartestFileSystemHelper::getFileName(SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Layouts/'.$try_name));
+                                $this->send($initial_name, 'new_layout_template_name');
+                            }
+                            
                         }else{
                             $this->send(false, 'show_template_selector');
                             $this->send(false, 'primary_container_known');
@@ -1770,17 +1800,44 @@ class Pages extends SmartestSystemApplication{
             
             if($this->getSite()->getPrimaryContainerId() && $primary_container->find($this->getSite()->getPrimaryContainerId())){
                 
-                if($this->getRequestParameter('page_preset_id') == 'NONE' && is_numeric($this->getRequestParameter('layout_template_id'))){
+                if($this->getRequestParameter('page_preset_id') == 'NONE' && (is_numeric($this->getRequestParameter('layout_template_id')) || $this->getRequestParameter('layout_template_id') == 'NEW')){
                     
-                    $template = new SmartestAsset;
-                    
-                    if($template->find($this->getRequestParameter('layout_template_id'))){
-                        SmartestSession::set('__newPage_layout_template_id', $this->getRequestParameter('layout_template_id'));
-                        $this->send($template, 'layout_template');
+                    if($this->getRequestParameter('layout_template_id') == 'NEW'){
+                        
+                        SmartestSession::set('__newPage_layout_template_id', 'NEW');
+                        
+                        if(strlen($this->getRequestParameter('new_layout_template_name'))){
+                            if(SmartestFileSystemHelper::getDotSuffix(SM_ROOT_DIR.'Presentation/Layouts/'.$this->getRequestParameter('new_layout_template_name')) == 'tpl'){
+                                $entered_name = $this->getRequestParameter('new_layout_template_name');
+                                $entered_name_wo_suffix = SmartestFileSystemHelper::removeDotSuffix($entered_name);
+                                $name = SmartestStringHelper::toVarName($entered_name_wo_suffix).'.tpl';
+                                SmartestSession::set('__newPage_layout_template_name', $name);
+                            }else{
+                                SmartestSession::set('__newPage_layout_template_name', SmartestStringHelper::toVarName($this->getRequestParameter('new_layout_template_name')).'.tpl');
+                            }
+                        }else{
+                            $try_name = SmartestStringHelper::toVarName(SmartestSession::get('__newPage')->getTitle()).'.tpl';
+                            $initial_name = SmartestFileSystemHelper::getFileName(SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Layouts/'.$try_name));
+                            SmartestSession::set('__newPage_layout_template_name', $initial_name);
+                        }
+                        
+                        $this->send(true, 'new_layout_template');
                         $this->send(true, 'show_layout_template');
-                    }else{
-                        // template doesn't exist or wasn't selected
+                        
+                    }elseif(is_numeric($this->getRequestParameter('layout_template_id'))){
+                        
+                        $template = new SmartestAsset;
+                    
+                        if($template->find($this->getRequestParameter('layout_template_id'))){
+                            SmartestSession::set('__newPage_layout_template_id', $this->getRequestParameter('layout_template_id'));
+                            $this->send($template, 'layout_template');
+                            $this->send(true, 'show_layout_template');
+                            $this->send(false, 'new_layout_template');
+                        }else{
+                            // template doesn't exist or wasn't selected
+                        }
                     }
+                    
                     $this->send(false, 'use_preset_for_layout');
                     $this->send(true, 'show_layout_template');
                     
@@ -1897,6 +1954,12 @@ class Pages extends SmartestSystemApplication{
 	            
 	            if($page->getType() == 'NORMAL'){
 	                $page->addAuthorById($this->getUser()->getId());
+                }elseif($page->getType() == 'ITEMCLASS'){
+                    $model = new SmartestModel;
+                    $found_model = $model->find($page->getDatasetId());
+                    if(!$model->hasMetaPageOnSiteId($this->getSite()->getId())){
+                        $model->setDefaultMetaPageId($this->getSite()->getId(), $page->getId());
+                    }
                 }
 	            
 	            // should the page have a preset?
@@ -1927,6 +1990,117 @@ class Pages extends SmartestSystemApplication{
                     }else{
                         // "template not found";
                     }
+                }elseif(SmartestSession::get('__newPage_layout_template_id') == "NEW" && $this->getSite()->getPrimaryContainerId() && strlen(SmartestSession::get('__newPage_layout_template_name')) && SmartestFileSystemHelper::getDotSuffix(SM_ROOT_DIR.'Presentation/Layouts/'.SmartestSession::get('__newPage_layout_template_name')) == 'tpl'){
+                    
+                    if($page->getType() == 'NORMAL'){
+                    
+                        $full_path = SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Layouts/'.SmartestSession::get('__newPage_layout_template_name'));
+                        $file_name = SmartestFileSystemHelper::getFileName($full_path);
+                        $file = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Install/Samples/static_container_template.tpl');
+                        $file = str_replace('%%NAME%%', $file_name, $file);
+                        $file = str_replace('%%PAGENAME%%', $page->getTitle(), $file);
+                    
+                        if($primary_text_placeholder_id = $this->getSite()->getPrimaryTextPlaceholderId()){
+                            $placeholder = new SmartestPlaceholder;
+                            if($placeholder->find($primary_text_placeholder_id)){
+                                $file = str_replace('%%MAINTEXTCODE%%', "<article>\n  <?sm:placeholder name=\"".$placeholder->getName()."\":?>\n</article>", $file);
+                            }
+                        }
+                    
+                        $file = str_replace('%%MAINTEXTCODE%%', '', $file);
+                        SmartestFileSystemHelper::save($full_path, $file);
+                        @chmod($full_path, 0666);
+                    
+                        $t = new SmartestAsset;
+                        $t->setSiteId($this->getSite()->getId());
+                        $t->setUrl($file_name);
+                        $t->setType('SM_ASSETTYPE_CONTAINER_TEMPLATE');
+                        $t->setWebId(SMartestStringHelper::random(36));
+                        $t->setStringId(SmartestStringHelper::toVarName($page->getTitle().'_layout_template'));
+                        $t->setLabel($page->getTitle().' layout template');
+                        $t->setUserId($this->getUser()->getId());
+                        $t->setCreated(time());
+                        $t->save();
+                    
+                        $c = new SmartestContainer;
+                        if($c->find($this->getSite()->getPrimaryContainerId())){
+                            $d = new SmartestContainerDefinition();
+                            if(!$d->loadWithObjects($c, $page, true)){
+                                $d->setPageId($page->getId());
+                                $d->setAssetClassId($c->getId());
+                            }
+                            $d->setDraftAssetId($t->getId());
+                            $d->save();
+                        
+                            if($c->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_TEMPLATEGROUP'){
+                                $tg = new SmartestTemplateGroup;
+                                if($tg->find($c->getFilterValue())){
+                                    $tg->addTemplateById($t->getId());
+                                }
+                            }
+                        
+                        }
+                    
+                    }elseif($page->getType() == 'ITEMCLASS' && $found_model){
+                        
+                        $full_path = SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Layouts/'.SmartestSession::get('__newPage_layout_template_name'));
+                        $file_name = SmartestFileSystemHelper::getFileName($full_path);
+                        $file = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Install/Samples/metapage_container_template.tpl');
+                        $file = str_replace('%%NAME%%', $file_name, $file);
+                        $file = str_replace('%%MODELNAME%%', $model->getName(), $file);
+                        $model_varname = SmartestStringHelper::toVarName($model->getName());
+                        $this_item = '$this.'.$model_varname;
+                        
+                        $main_text_code = '<?sm:*'."\n\nAvailable properties for model ".$model->getName().":\n\n";
+                        $main_text_code .= $this_item.'.'.SmartestStringHelper::toVarName($model->getItemNameFieldName()).' (object type SmartestString)'."\n";
+                        
+                        foreach($model->getProperties() as $property){
+                            $main_text_code .= $this_item.'.'.$property->getVarName().' (object type '.$property->getClass().')'."\n";
+                        }
+                        
+                        $main_text_code .= "\n*:?>";
+                        
+                        $file = str_replace('%%MAINTEXTCODE%%', $main_text_code, $file);
+                        
+                        SmartestFileSystemHelper::save($full_path, $file);
+                        @chmod($full_path, 0666);
+                        
+                        $t = new SmartestAsset;
+                        $t->setSiteId($this->getSite()->getId());
+                        $t->setUrl($file_name);
+                        $t->setType('SM_ASSETTYPE_CONTAINER_TEMPLATE');
+                        $t->setWebId(SMartestStringHelper::random(36));
+                        $t->setStringId(SmartestStringHelper::toVarName($page->getTitle().'_layout_template'));
+                        $t->setLabel($page->getTitle().' layout template');
+                        $t->setUserId($this->getUser()->getId());
+                        $t->setCreated(time());
+                        $t->setModelId($model->getId());
+                        $t->save();
+                        
+                        $c = new SmartestContainer;
+                        if($c->find($this->getSite()->getPrimaryContainerId())){
+                            $d = new SmartestContainerDefinition();
+                            if(!$d->loadWithObjects($c, $page, true)){
+                                $d->setPageId($page->getId());
+                                $d->setAssetClassId($c->getId());
+                            }
+                            $d->setDraftAssetId($t->getId());
+                            $d->save();
+                        
+                            if($c->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_TEMPLATEGROUP'){
+                                $tg = new SmartestTemplateGroup;
+                                if($tg->find($c->getFilterValue())){
+                                    $tg->addTemplateById($t->getId());
+                                }
+                            }
+                        
+                        }
+                        
+                    }
+                    
+                    SmartestSession::clear('__newPage_layout_template_id');
+                    SmartestSession::clear('__newPage_layout_template_name');
+                    
                 }
                 
                 if(SmartestSession::get('__newPage_temporary_text') && is_object(SmartestSession::get('__newPage_temporary_text')) && is_numeric($this->getSite()->getPrimaryTextPlaceholderId())){

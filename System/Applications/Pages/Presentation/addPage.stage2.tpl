@@ -157,15 +157,31 @@
     <div id="page-layout-template-selector" style="clear:both;{if !$show_template_selector}display:none{/if}">
       <div class="edit-form-row">
         <div class="form-section-label">Page layout template</div>
-        <select name="layout_template_id">
+        <select name="layout_template_id" id="layout-template-id">
           <option value="">None for now</option>
+          <option value="NEW"{if !$layout_templates_dir_writable} disabled="disabled"{/if}{if $selected_layout_template_id == 'NEW'} selected="selected"{/if}>Create a new layout template</option>
 {foreach from=$layout_templates item="template"}
           <option value="{$template.id}"{if $template.id == $selected_layout_template_id} selected="selected"{/if}>{$template.label} ({$template.url})</option>
 {/foreach}
-{if $layout_templates_dir_writable}          <option value="NEW">Create a new layout template</option>{/if}
+          
         </select>
       </div>
+      <div class="edit-form-row" style="display:{if $selected_layout_template_id == 'NEW'}block{else}none{/if}" id="new-layout-template-name-holder">
+        <div class="form-section-label">New layout template name</div>
+        <input type="text" name="new_layout_template_name" value="{$new_layout_template_name}" />
+      </div>
     </div>
+    <script type="text/javascript">
+    {literal}
+    $('layout-template-id').observe('change', function(){
+      if($F('layout-template-id') == 'NEW'){
+        $('new-layout-template-name-holder').show();
+      }else{
+        $('new-layout-template-name-holder').hide();
+      }
+    });
+    {/literal}
+    </script>
     {/if}
     
     {if $primary_text_placeholder_known}

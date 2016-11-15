@@ -138,8 +138,8 @@ class Items extends SmartestSystemApplication{
         }
 		 
 	}
-	
-	public function editItemClassPropertyOrder(){
+    
+    public function editItemClassPropertyOrder(){
 	    
 	    $model = new SmartestModel;
 	    

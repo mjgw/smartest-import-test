@@ -338,7 +338,7 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
                 // echo "test";
 	            return $this->getAbsoluteUri();
 	            
-	            case 'description':
+	            // case 'description':
 	            case '_description':
 	            return $this->getDescriptionFieldContents();
 	            

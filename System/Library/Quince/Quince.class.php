@@ -413,7 +413,7 @@ class QuinceRequest{
     }
     
     public function getUrlProtocol(){
-        return isset($_SERVER['HTTPS']) ? "https://" : "http://";
+        return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? "https://" : "http://";
     }
     
 }

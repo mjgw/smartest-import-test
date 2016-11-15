@@ -426,6 +426,19 @@ class ItemsModals extends SmartestSystemApplication{
 	    
 	    
 	}
+    
+    public function showItemClassTemplateAccess(){
+        
+	    $model = new SmartestModel;
+	    
+	    if($model->find($this->getRequestParameter('class_id'))){
+	        
+            $this->send($model, 'model');
+            $this->send($model->getProperties(), 'properties');
+            
+	    }
+        
+    }
 	
 	/* public function updateAssetData($get, $post){
 	    

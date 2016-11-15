@@ -29,7 +29,17 @@
     
     <div class="edit-form-row">
       <div class="form-section-label">Properties</div>
-      {$model.properties} ({$model.properties._count} total)
+      {$model.properties} ({$model.properties._count} total) <a class="button small" href="#template-info" id="model-template-info-link">Template access info</a>
+      <script type="text/javascript">
+      var infoUrl = 'datamanager/showItemClassTemplateAccess?class_id={$model.id}';
+      var infoTitle = 'Working with {$model.name} model';
+      {literal}
+      $('model-template-info-link').observe('click', function(e){
+        e.stop();
+        MODALS.load(infoUrl, infoTitle);
+      });
+      {/literal}
+      </script>
     </div>
       
   </div>

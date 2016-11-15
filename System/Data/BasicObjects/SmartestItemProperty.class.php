@@ -802,6 +802,9 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
             
             case "is_image_property":
             return $this->isImageProperty();
+            
+            case "data_object_class":
+            return $this->getClass();
 	        
 	    }
 	    

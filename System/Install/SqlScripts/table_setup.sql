@@ -162,6 +162,7 @@ CREATE TABLE `ItemClasses` (
   `itemclass_default_description_property_id` int(11) unsigned NOT NULL DEFAULT '0',
   `itemclass_default_sort_property_id` int(9) NOT NULL,
   `itemclass_default_thumbnail_property_id` int(11) NOT NULL,
+  `itemclass_default_date_property_id` int(11) NOT NULL,
   `itemclass_primary_property_id` int(11) NOT NULL,
   `itemclass_settings` text NOT NULL,
   `itemclass_blog_mode` tinyint(1) NOT NULL DEFAULT '0',
@@ -271,20 +272,22 @@ CREATE TABLE `Items` (
 CREATE TABLE `Lists` (
   `list_id` int(9) NOT NULL AUTO_INCREMENT,
   `list_name` varchar(32) NOT NULL DEFAULT '',
-  `list_title` varchar(64) DEFAULT '',
-  `list_type` varchar(32) NOT NULL DEFAULT 'SM_LIST_ARTCULATED',
+  `list_title` varchar(64) CHARACTER SET utf8 DEFAULT '',
+  `list_draft_header_image_id` int(11) NOT NULL,
+  `list_live_header_image_id` int(11) NOT NULL,
+  `list_type` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT 'SM_LIST_SIMPLE',
   `list_draft_set_id` int(9) unsigned NOT NULL DEFAULT '0',
   `list_live_set_id` int(9) unsigned NOT NULL DEFAULT '0',
-  `list_draft_template_file` varchar(64) NOT NULL DEFAULT 'default_list.tpl',
-  `list_live_template_file` varchar(64) NOT NULL DEFAULT 'default_list.tpl',
-  `list_draft_header_template` varchar(64) NOT NULL DEFAULT '',
-  `list_draft_footer_template` varchar(64) NOT NULL DEFAULT '',
-  `list_live_header_template` varchar(64) NOT NULL DEFAULT '',
-  `list_live_footer_template` varchar(64) NOT NULL DEFAULT '',
+  `list_draft_set_filter` varchar(64) NOT NULL,
+  `list_live_set_filter` varchar(64) NOT NULL,
+  `list_draft_secondary_set_id` int(11) DEFAULT NULL,
+  `list_live_secondary_set_id` int(11) DEFAULT NULL,
+  `list_draft_template_file` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'default_list.tpl',
+  `list_live_template_file` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'default_list.tpl',
   `list_maximum_length` int(2) NOT NULL DEFAULT '0',
   `list_page_id` mediumint(9) NOT NULL DEFAULT '0',
   `list_item_id` mediumint(9) NOT NULL,
-  `list_global` tinyint(1) NOT NULL DEFAULT '1',
+  `list_global` tinyint(1) NOT NULL DEFAULT '1'
   PRIMARY KEY (`list_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -598,11 +601,12 @@ CREATE TABLE `Tags` (
   `tag_id` int(9) unsigned NOT NULL AUTO_INCREMENT,
   `tag_name` varchar(64) NOT NULL DEFAULT '',
   `tag_label` varchar(64) NOT NULL DEFAULT '',
+  `tag_featured` tinyint(1) NOT NULL DEFAULT '0',
   `tag_description_text_asset_id` int(9) NOT NULL,
   `tag_icon_image_asset_id` int(9) NOT NULL,
   `tag_site_id` int(11) NOT NULL,
   `tag_language` varchar(8) NOT NULL DEFAULT 'eng',
-  `tag_type` varchar(64) NOT NULL DEFAULT 'SM_TAGTYPE_TAG',
+  `tag_type` varchar(64) NOT NULL DEFAULT 'SM_TAGTYPE_TAG'
   PRIMARY KEY (`tag_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -727,8 +731,8 @@ CREATE TABLE `UsersTokensLookup` (
 
 
 INSERT INTO `Settings` (`setting_id`, `setting_parent_id`, `setting_site_id`, `setting_user_id`, `setting_application_id`, `setting_type`, `setting_name`, `setting_value`) VALUES
-(1, 0, 0, 0, '', 'SM_SETTINGTYPE_SYSTEM_META', 'database_minimum_revision', '744'),
-(2, 0, 0, 0, '', 'SM_SETTINGTYPE_SYSTEM_META', 'database_version', '22');
+(1, 0, 0, 0, '', 'SM_SETTINGTYPE_SYSTEM_META', 'database_minimum_revision', '824'),
+(2, 0, 0, 0, '', 'SM_SETTINGTYPE_SYSTEM_META', 'database_version', '23');
 
 INSERT INTO `AssetClasses` (`assetclass_name`, `assetclass_label`, `assetclass_site_id`, `assetclass_shared`, `assetclass_type`, `assetclass_is_system`) VALUES
 ('page_specific_stylesheet', 'Page-specific Stylesheet', 1, 1, 'SM_ASSETCLASS_STYLESHEET', 1),
