@@ -1253,6 +1253,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	public function getTagsAsArrays(){
 	    return $this->_item->getTagsAsArrays();
 	}
+    
+	public function getFeaturedTags(){
+	    return $this->_item->getFeaturedTags();
+	}
 	
 	public function updateTagsFromStringsArray($strings_array){
 	    $this->_item->updateTagsFromStringsArray($strings_array);

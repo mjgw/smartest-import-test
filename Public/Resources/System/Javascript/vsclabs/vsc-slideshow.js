@@ -1,5 +1,5 @@
 // Written by Marcus Gilroy-Ware
-// © VSC Creative Ltd. 2013
+// © VSC Creative Ltd. 2014
 
 VSC.Slideshow = Class.create({
     
@@ -9,6 +9,7 @@ VSC.Slideshow = Class.create({
         this.name = 'slideshow';
         this.options.holderId = holderId;
         this.options.frequency = options.frequency ? options.frequency : 4;
+        this.options.transitionDuration = options.duration ? options.duration : 0.7;
         this.goToSlide($$('#'+holderId+' .slides .slide').first().id);
         this.currentPosition = 0;
         var IDs = [];
@@ -29,6 +30,12 @@ VSC.Slideshow = Class.create({
             this.startAutoAdvance();
         }
         
+        if(this.hasNav()){
+            this.setupNavEvents();
+        }
+        
+        alert(this.options.transitionDuration);
+        
     },
     
     goToSlide: function(slideId){
@@ -42,18 +49,18 @@ VSC.Slideshow = Class.create({
                         // this.fadeEffect.cancel();
                     }
                     
-                    this.fadeEffect = new Effect.Fade($$('#'+this.options.holderId+' .slides #'+this.currentSlideId)[0], {duration:0.7, transition: Effect.Transitions.sinoidal, to:0});
+                    this.fadeEffect = new Effect.Fade($$('#'+this.options.holderId+' .slides #'+this.currentSlideId)[0], {duration:this.options.transitionDuration, transition: Effect.Transitions.sinoidal, to:0});
                     
                     // $$('#'+this.options.holderId+' .slides #'+slideId)[0].appear({duration:0.7, transition: Effect.Transitions.sinoidal});
                     if(this.hasOwnProperty('appearEffect')){
                         this.appearEffect.cancel();
                     }
                     
-                    this.appearEffect = new Effect.Appear($$('#'+this.options.holderId+' .slides #'+slideId)[0], {duration:0.7, transition: Effect.Transitions.sinoidal, to:1});
+                    this.appearEffect = new Effect.Appear($$('#'+this.options.holderId+' .slides #'+slideId)[0], {duration:this.options.transitionDuration, transition: Effect.Transitions.sinoidal, to:1});
                     this.updateNav(slideId);
                     
                 }else{
-                    $$('#'+this.options.holderId+' .slides #'+slideId)[0].appear({duration:0.6});
+                    $$('#'+this.options.holderId+' .slides #'+slideId)[0].appear({duration:this.options.transitionDuration});
                 }
                 
                 this.currentSlideId = slideId;
@@ -68,6 +75,10 @@ VSC.Slideshow = Class.create({
         }
     },
     
+    hasNav: function(){
+        return $$('#'+this.options.holderId+' ul.slides-nav').length ? true : false;
+    },
+    
     updateNav: function(slideId){
         if($('#'+this.options.holderId+' .slides-nav')){
             $$('#'+this.options.holderId+' .slides-nav li').each(function(b){
@@ -75,6 +86,12 @@ VSC.Slideshow = Class.create({
             });
             $$('#'+this.options.holderId+' .slides-nav li')[this.getSlideIndexFromId(slideId)].addClassName('current');
         }
+    },
+    
+    setupNavEvents: function(){
+        $$('#'+this.options.holderId+' ul.slides-nav li').each(function(b, key){
+            b.observe('click', this.goToSlideFromClickByPositionFromEvent.bindAsEventListener(this, key));
+        }, this);
     },
     
     getSlideIndexFromId: function(slideId){
@@ -125,6 +142,15 @@ VSC.Slideshow = Class.create({
         if(this.options.autostart){
             this.startAutoAdvance();
         }
+    },
+    
+    goToSlideFromClickByPositionFromEvent: function(event, pos){
+        this.pause();
+        this.goToSlideByPosition(pos);
+        if(this.options.autostart){
+            this.startAutoAdvance();
+        }
+        event.stop();
     },
     
     goToNextSlideFromClick: function(){

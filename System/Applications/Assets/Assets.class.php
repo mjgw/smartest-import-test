@@ -351,10 +351,11 @@ class Assets extends SmartestSystemApplication{
         $this->requireOpenProject();
 		$alh = new SmartestAssetsLibraryHelper;
 		
-		if($this->getRequestParameter('group_id') && !$this->getRequestParameter('for')){
+		if($this->getRequestParameter('group_id') && (!$this->getRequestParameter('for') || $this->getRequestParameter('for') == 'group')){
 		    $group = new SmartestAssetGroup;
 		    if($group->find($this->getRequestParameter('group_id'))){
 		        $this->send($group, 'group');
+                $this->send('group', 'for');
 		    }
 	    }
         
@@ -379,7 +380,7 @@ class Assets extends SmartestSystemApplication{
                 // what input options are available
                 
                 $num_input_options = count($type['input_options']);
-                $preference_name = 'preferred_input_method_'.substr(md5($asset_type), 0, 8);
+                // $preference_name = 'preferred_input_method_'.substr(md5($asset_type), 0, 8);
                 
                 if($num_input_options == 1){
                     
@@ -493,21 +494,128 @@ class Assets extends SmartestSystemApplication{
         }else{
             
             if($this->getRequestParameter('group_id') && $group->getId() && !$this->getRequestParameter('asset_type')){
-	            $types = $group->getTypes();
+                
+                $types = $group->getTypes();
+                $this->send($group, 'group');
+                // $this->send('group', 'for');
+                
 	            if(count($types) == 1){
-	                $this->send($types[0]['id'], 'type_code');
+	                
+                    $this->send($types[0]['id'], 'type_code');
 	                $this->send($types[0], 'new_asset_type_info');
 	                $this->send(false, 'require_type_selection');
-	                
+                    
+                    $asset_type = $types[0]['id'];
+                    
+                    $type = $types[0];
+                    $this->send('Unnamed '.addslashes($type['label']), 'start_name');
+                    $num_input_options = count($type['input_options']);
+                    // $preference_name = 'preferred_input_method_'.substr(md5($asset_type), 0, 8);
+                
+                    if($num_input_options == 1){
+                    
+                        $input_method_id = $type['input_options'][0];
+                        $this->send(array(), 'input_methods');
+                    
+                    }else if($num_input_options > 1){
+                        
+                        $input_methods = $alh->getInputTypesForAssetType($asset_type);
+                        $this->send($input_methods, 'input_methods');
+                        
+                        if($this->getRequestParameter('input_method')){
+                            // does the specified type code exist, and can it be used with this asset type?
+                            if(in_array($this->getRequestParameter('input_method'), $alh->getInputTypeCodes()) && in_array($this->getRequestParameter('input_method'), $type['input_options'])){
+                                // yes, so use it
+                                $input_method_id = $this->getRequestParameter('input_method');
+                            }else{
+                                // no, so load the first one
+                                $input_method_id = $type['input_options'][0];
+                                // TODO: make this a user preference (dependent on implementation of FS#388)
+                            }
+                        
+                        }else{
+                            $input_method_id = $type['input_options'][0];
+                            // TODO: make this a user preference (dependent on implementation of FS#388)
+                        }
+                        
+                    }
+                    
 	                // Can a new file be saved?
                     if($types[0]['storage']['type'] != 'database' && $types[0]['storage']['type'] != 'external_translated'){
         	            $path = SM_ROOT_DIR.$types[0]['storage']['location'];
         	            $allow_save = is_writable($path);
-        	            $this->send($allow_save, 'allow_save');
         	            $this->send($path, 'path');
                     }else{
-                        $this->send(true, 'allow_save');
+                        $allow_save = true;
                     }
+                    
+                    switch($input_method_id){
+    		        
+        		        case "SM_ASSETINPUTTYPE_DIRECT_INPUT":
+    		        
+        		        // load input template and send name
+        		        if(isset($type['input_panel'])){
+        		            $this->send($type['input_panel'], 'input_panel');
+        		            $this->send(true, 'input_panel_set');
+    		            }else{
+    		                $this->send(false, 'input_panel_set');
+    		            }
+		            
+        		        break;
+    		        
+        		        case "SM_ASSETINPUTTYPE_FTP_UPLOAD":
+        		        // get available unimported files
+                        
+                        $unimported_files = $alh->getUnimportedFilesByType($asset_type);
+                        
+                        if(!count($unimported_files)){
+                            // $allow_save = false;
+                        }
+                        
+        		        $this->send($unimported_files, 'unimported_files');
+        		        $this->send($type['storage']['location'], 'directory');
+        		        break;
+    		        
+        		        case "SM_ASSETINPUTTYPE_BROWSER_UPLOAD":
+                    
+                        $this->send($alh->getFilenameExtensionTestRegex($asset_type), 'file_suffix_regex');
+                    
+                        if(ini_get('post_max_size') != '0'){
+                    
+                            preg_match('/(\d+)M$/', ini_get('post_max_size'), $matches);
+                            $post_max_size = $matches[1]*1;
+                    
+                            preg_match('/(\d+)M$/', ini_get('upload_max_filesize'), $matches);
+                            $upload_max_filesize = $matches[1]*1;
+        
+                            if($post_max_size < $upload_max_filesize){
+                                $this->send(true, 'post_max_size_warning');
+                                $this->send(new SmartestNumeric($post_max_size), 'post_max_size_in_megs');
+                            }else{
+                                $this->send(false, 'post_max_size_warning');
+                            }
+                        
+                        }else{
+                            preg_match('/(\d+)M$/', ini_get('upload_max_filesize'), $matches);
+                            $upload_max_filesize = $matches[1]*1;
+                        }
+                    
+                		$this->send(new SmartestNumeric($upload_max_filesize), 'max_upload_size_in_megs');
+                    
+        		        break;
+    		        
+        		        case "SM_ASSETINPUTTYPE_URL_INPUT":
+        		        $this->send(SmartestHttpRequestHelper::curlInstalled(), 'curl_installed');
+        		        break;
+    		        
+        		    }
+                    
+                    $this->send($input_method_id, 'input_method');
+                    $all_input_types = $alh->getInputTypes();
+                    $template = $all_input_types[$input_method_id]['template'];
+                    $this->send($template, 'interface_file');
+                    $this->send('Name this file', 'name_instruction');
+                    $this->send($allow_save, 'allow_save');
                     
 	            }else{
 	                $types = $group->getTypes();
@@ -646,9 +754,8 @@ class Assets extends SmartestSystemApplication{
 
             }
             
-        }else if($this->getRequestParameter('for') == 'filegroup'){ // If the point of this is to add a new file to a gallery
-            
-            
+        }else if($this->getRequestParameter('for') == 'group' || (is_object($group) && $group->getId())){ // If the point of this is to add a new file to a gallery
+            // echo $group->getLabel();
             
         }
 		

@@ -645,7 +645,7 @@ class AssetsAjax extends SmartestSystemApplication{
                         
                             case 'placeholder':
                         
-                            if($placeholder_id = $this->getRequestParameter('placeholder_id')){
+                            if($placeholder_id = (int) $this->getRequestParameter('placeholder_id')){
                             
                                 $assetSimpleObj->placeholder_id = $this->getRequestParameter('placeholder_id');
                             
@@ -665,6 +665,17 @@ class AssetsAjax extends SmartestSystemApplication{
                             }
                         
                             break;
+                            
+                            case 'group':
+                            
+                            if($group_id = (int) $this->getRequestParameter('group_id')){
+                                
+                                $group = new SmartestAssetGroup;
+                                if($group->find($group_id)){
+                                    $group->addAssetById($asset->getId());
+                                }
+                                
+                            }
                         
                         }
                     
