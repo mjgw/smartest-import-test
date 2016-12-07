@@ -1,0 +1,2 @@
+<link rel="icon" href="<?sm:$asset_info.web_path:?>?h=<?sm:$render_data.hash:?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?sm:$asset_info.web_path:?>?h=<?sm:$render_data.hash:?>" type="image/x-icon">

@@ -698,10 +698,35 @@ class SmartestSite extends SmartestBaseSite{
             // return $this->getHomePage()->setDraftMode(true)->getSerializedPageTree();
             return $this->getPagesList(true, true);
             
+            case "favicon_id":
+            return $this->getFaviconId();
+            
+            case "favicon":
+            return $this->getFavicon();
+            
         }
         
         return parent::offsetGet($offset);
         
+    }
+    
+    public function getFaviconId(){
+        $ph = new SmartestPreferencesHelper;
+        return $ph->getGlobalPreference('site_favicon_id', null, $this->getId());
+    }
+    
+    public function setFaviconId($id){
+        $ph = new SmartestPreferencesHelper;
+        return $ph->setGlobalPreference('site_favicon_id', $id, null, $this->getId());
+    }
+    
+    public function getFavicon(){
+        if($id = $this->getFaviconId()){
+            $asset = new SmartestRenderableAsset;
+            if($asset->find($id)){
+                return $asset;
+            }
+        }
     }
     
     /** User Page **/

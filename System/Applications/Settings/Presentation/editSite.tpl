@@ -63,6 +63,44 @@
 </div>
 
 <div class="edit-form-row">
+  <div class="form-section-label">Favourite Icon</div>
+  <select name="site_favicon_asset_id">
+    <option value="">None</option>
+{foreach from=$favicon_assets item="favicon_asset"}
+    <option value="{$favicon_asset.id}"{if $site.favicon_id == $favicon_asset.id} selected="selected"{/if}>{$favicon_asset.label}</option>
+{/foreach}
+  </select>
+  <div class="breaker"></div>
+  <div class="form-hint">The favourite icon (or favicon) is a small icon that accompanies your site in people's web browsers and some search results.</div>
+  <div class="form-hint warning-color" style="display:none" id="favicon-type-warning">The file you have selected is not the correct file type. The file must be in .ico format.</div>
+  <div class="form-section-label"></div>
+  <input type="file" name="site_favicon" id="site-favicon" />
+  
+  
+  
+  <script type="text/javascript">
+  {literal}
+  var suffixRegex = /\.ico/;
+  
+  $('site-favicon').observe('change', function(){
+    if(suffixRegex.match($('site-favicon').value)){
+      if($('favicon-type-warning').visible()){
+        $('favicon-type-warning').fade({duration: 0.3});
+      }
+      if(!$('save-button').visible()){
+        $('save-button').appear({duration: 0.3});
+      }
+    }else{
+      $('favicon-type-warning').appear({duration: 0.3});
+      $('save-button').fade({duration: 0.3});
+    }
+  });
+  {/literal}
+  </script>
+  
+</div>
+
+<div class="edit-form-row">
   <div class="form-section-label">Site ID</div>
   <code>{$site.unique_id}</code> {help id="desktop:install_ids" buttonize="true"}What&rsquo;s this?{/help}
 </div>
@@ -80,7 +118,7 @@
 
 <div class="buttons-bar">
   <input type="button" value="Cancel" onclick="window.location='{$domain}smartest/settings'" />
-  <input type="submit" name="action" value="Save Changes" />
+  <input type="submit" name="action" value="Save Changes" id="save-button" />
 </div>
 
 </form>

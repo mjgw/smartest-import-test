@@ -55,6 +55,10 @@ class Settings extends SmartestSystemApplication{
                 $this->send($this->getSite()->getOrganizationName(), 'site_organisation');
                 
                 $this->send($logos, 'logo_assets');
+                
+                $alh = new SmartestAssetsLibraryHelper;
+                $icos = $alh->getAssetsByTypeCode('SM_ASSETTYPE_ICO_FAVICON', $this->getSite()->getId());
+                $this->send($icos, 'favicon_assets');
             
                 $this->setTitle("Edit site settings");
     		    $this->send($sitedetails, 'site');
@@ -149,6 +153,31 @@ class Settings extends SmartestSystemApplication{
 	            $site->setLogoImageAssetId($this->getRequestParameter('site_logo_image_asset_id'));
 	            $site->save();
 	        }
+            
+            if(SmartestUploadHelper::uploadExists('site_favicon')){
+                
+	            $alh = new SmartestAssetsLibraryHelper;
+	            $upload = new SmartestUploadHelper('site_favicon');
+                $upload->setUploadDirectory(SM_ROOT_DIR.'System/Temporary/');
+                
+                $t = 'SM_ASSETTYPE_ICO_FAVICON';
+                
+                $ach = new SmartestAssetCreationHelper($t);
+                $ach->createNewAssetFromFileUpload($upload, "Favicon for ".$site->getInternalLabel().' - '.date('M d Y'));
+                
+                $file = $ach->finish();
+                $file->setShared(1);
+                $file->setIsSystem(1);
+                $file->setIsHidden(1);
+                $file->save();
+                
+                $site->setFaviconId($file->getId());
+                $site->save();
+                
+            }else{
+                $site->setFaviconId($this->getRequestParameter('site_favicon_asset_id'));
+                $site->save();
+            }
 	        
 	        /* if($this->getRequestParameter('site_user_page') == 'NEW' && !is_numeric($site->getUserPageId())){
 	            $p = new SmartestPage;

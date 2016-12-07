@@ -30,3 +30,4 @@ admin_menu_contracted:0:1:Should the main toolbar be contracted to show icons on
 site_oembed_enabled:1:0:Enable OEmbed?
 site_oembed_width:1:0:Default width for OEmbed embed codes
 site_oembed_height:1:0:Default height for OEmbed embed codes
+site_favicon_id:1:0:ICO file for favourite icon

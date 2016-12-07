@@ -219,7 +219,39 @@ type:
 #      - {name: class, label: "CSS class attribute", type: SM_DATATYPE_SL_TEXT, required: false}
 #      - {name: style, label: "Style attribute", type: SM_DATATYPE_SL_TEXT,  required: false}
 #      - {name: link_href, label: Link destination, type: SM_DATATYPE_URL, required: false}
-      
+  SM_ASSETTYPE_ICO_FAVICON:
+    id: SM_ASSETTYPE_ICO_FAVICON
+    category: image
+    label: ICO icon
+    description: "An image in ICO format, normally used for site favicons"
+    class: SmartestImageAsset
+    icon: picture.png
+    fa_iconname: file-image-o
+    attachable: true
+    captionable: true
+    parsable: false
+    show_preview_edit_link: false
+    maximum_filesize_before_warning: 1048576
+    storage:
+      type: file
+      location: Public/Resources/Images/
+      system_location: Public/Resources/System/Images/
+    render:
+      template: System/Presentation/WebPageBuilder/display.favicon.tpl
+    input_options:
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
+      - SM_ASSETINPUTTYPE_FTP_UPLOAD
+    suffix:
+      - {mime: image/x-icon, _content: ico}
+#    param:
+#      - {name: credit, label: "Credit", type: SM_DATATYPE_SL_TEXT, required: false}
+#      - {name: source_url, label: "Source URL", type: SM_DATATYPE_URL, required: false}
+#      - {name: alt_text, label: "Text alternative", type: SM_DATATYPE_SL_TEXT, required: false}
+#      - {name: id, label: "DOM ID", type: SM_DATATYPE_SL_TEXT, required: false}
+#      - {name: class, label: "CSS class attribute", type: SM_DATATYPE_SL_TEXT, required: false}
+#      - {name: style, label: "Style attribute", type: SM_DATATYPE_SL_TEXT,  required: false}
+#      - {name: link_href, label: Link destination, type: SM_DATATYPE_URL, required: false}
+
   SM_ASSETTYPE_INSTAGRAM_IMAGE:
     id: SM_ASSETTYPE_INSTAGRAM_IMAGE
     category: image

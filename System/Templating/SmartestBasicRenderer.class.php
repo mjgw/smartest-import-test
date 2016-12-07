@@ -367,10 +367,6 @@ class SmartestBasicRenderer extends SmartestEngine{
         
         $show_preview_edit_link = (!isset($asset_type_info['show_preview_edit_link']) || SmartestStringHelper::toRealBool($asset_type_info['show_preview_edit_link']));
         
-        /* var_dump(isset($asset_type_info['editable']) && SmartestStringHelper::toRealBool($asset_type_info['editable']));
-        
-        print_r($asset_type_info); */
-        
         if($render_data instanceof SmartestParameterHolder && $render_data->hasParameter('show_preview_edit_link')){
             $show_preview_edit_link = SmartestStringHelper::toRealBool($render_data->getParameter('show_preview_edit_link'));
         }else if(is_array($render_data) && isset($render_data['show_preview_edit_link'])){

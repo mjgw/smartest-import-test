@@ -525,6 +525,10 @@ div.form-section-label-full{
     color:#666;
 }
 
+.form-hint.warning-color{
+    color:#c30;
+}
+
 div.edit-form-row{
     
 }
