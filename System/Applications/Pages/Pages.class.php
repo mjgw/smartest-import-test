@@ -2205,6 +2205,8 @@ class Pages extends SmartestSystemApplication{
                     $page->setIconImageId($this->getRequestParameter('page_icon_image_id'));
                 }else if($page->getId() == $this->getSite()->getErrorPageId()){
                     $page->setMetaDescription(strip_tags($this->getRequestParameter('page_meta_description')));
+                }else if($page->getId() == $this->getSite()->getHoldingPageId()){
+                    $page->setIconImageId($this->getRequestParameter('page_icon_image_id'));
                 }
             }
             

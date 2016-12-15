@@ -317,21 +317,31 @@
 	
   </div>
   
-  {if $page.type == "NORMAL"}
-  <div class="edit-form-row">
-    <div class="form-section-label">Page thumbnail image</div>
-    {image_select for="page_icon" page_id=$page.id name="page_icon_image_id" id="page_icon_image_input" value=$page.thumbnail_image}
-    <!--<select name="page_icon_image_id">
-      <option value="">None</option>
-      {foreach from=$available_icons item="icon"}
-      <option value="{$icon.id}"{if $page.thumbnail_image.id == $icon.id} selected="selected"{/if}>{$icon.label} ({$icon.url})</option>
-      {/foreach}
-    </select>-->
-    <div class="form-hint">This image can be used when referring to a page from another page.</div>
-  </div>
-  {/if}
+    {/if}
   
   {/if}
+  
+  
+  
+  {if $page.id == $site.holding_page_id || !$is_special_page}
+    {if $page.type == "NORMAL"}
+    <div class="edit-form-row">
+      <div class="form-section-label">Page thumbnail image</div>
+      {image_select for="page_icon" page_id=$page.id name="page_icon_image_id" id="page_icon_image_input" value=$page.thumbnail_image}
+      <!--<select name="page_icon_image_id">
+        <option value="">None</option>
+        {foreach from=$available_icons item="icon"}
+        <option value="{$icon.id}"{if $page.thumbnail_image.id == $icon.id} selected="selected"{/if}>{$icon.label} ({$icon.url})</option>
+        {/foreach}
+      </select>-->
+      <div class="form-hint">This image can be used when referring to a page from another page.</div>
+    </div>
+    {/if}
+  {/if}
+  
+  
+  
+  {if !$is_special_page}
   
     {if $page.type == "NORMAL"}
     <div class="edit-form-row">
@@ -534,6 +544,10 @@
       </script>
     
     </div>
+    {else}
+    
+    <div class="v-spacer"></div>
+    
     {/if}
   
   {if !$ishomepage}
