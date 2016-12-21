@@ -778,6 +778,7 @@ class SmartestImage extends SmartestFile{
             return 'width:'.ceil($this->getWidth()/2).'px;height:'.ceil($this->getHeight()/2).'px;background-image:url(\''.$this->getWebPath().'\');background-size:'.ceil($this->getWidth()/2).'px '.ceil($this->getHeight()/2).'px';
             
             case "css_background_image":
+            case "background_css":
             // $request_data = SmartestPersistentObject::get('request_data');
             // $domain = $request_data->g('domain');
             return "background-image:url('".$this->getWebPath()."');";

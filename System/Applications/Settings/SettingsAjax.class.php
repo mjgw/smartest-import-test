@@ -67,6 +67,20 @@ class SettingsAjax extends SmartestSystemApplication{
         
     }
     
+    public function toggleTagFeatured(){
+        
+        $tag = new SmartestTag;
+        
+        if($tag->find($this->getRequestParameter('tag_id'))){
+            
+            $state = (int) ($this->requestParameterIsSet('featured') && SmartestStringHelper::toRealBool($this->getRequestParameter('featured')));
+            $tag->setFeatured($state);
+            $tag->save();
+            
+        }
+        
+    }
+    
     public function createNewTag(){
         
         $tag_label = $this->getRequestParameter('new_tag_label');

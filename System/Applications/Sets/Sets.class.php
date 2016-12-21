@@ -807,6 +807,12 @@ class Sets extends SmartestSystemApplication{
 	    }
         
     }
+    
+    public function deleteItemForward(){
+        
+        $this->forward('datamanager', 'deleteItem');
+        
+    }
 	
 	public function setExternalFeedAggregator(){
 	    

@@ -42,7 +42,7 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 					
 				}
 				
-				if($bother_with_tokens){
+				if($bother_with_tokens && get_class($this) == 'SmartestSystemUser'){
 				    $this->getTokens();
 			    }
                 

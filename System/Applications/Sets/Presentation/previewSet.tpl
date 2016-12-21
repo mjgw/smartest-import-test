@@ -89,6 +89,7 @@ var itemList = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'item'
       <li><b>Selected Item</b></li>
       <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/openItem?item_id='+selectedPage+'&amp;from=previewSet'"><i class="fa fa-pencil"></i> Edit this {$model.name|strtolower}</a></li>	
       <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/publishItem?item_id='+selectedPage"><i class="fa fa-globe"></i> Publish this {$model.name|strtolower}</a></li>	
+      <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('deleteItemForward', {ldelim}confirm: 'Are you sure you want to delete this {$model.name|lower} ?'{rdelim});"><i class="fa fa-times-circle"></i> Delete this {$model.name|strtolower}</a></li>
     </ul>
     
     <ul class="actions-list">

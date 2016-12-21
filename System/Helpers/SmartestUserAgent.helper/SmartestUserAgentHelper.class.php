@@ -14,9 +14,23 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
 	
 	public function __construct(){
     	
-    	$this->_userAgent = $_SERVER['HTTP_USER_AGENT'];
-        $this->_detector = new Mobile_Detect;
+    	$this->_detector = new Mobile_Detect;
         $this->_preferences_helper = new SmartestPreferencesHelper;
+        
+        if(isset($_SERVER['HTTP_USER_AGENT']) && (!SmartestSession::hasData('user_agent_string') || $_SERVER['HTTP_USER_AGENT'] != SmartestSession::get('user_agent_string'))) {
+            SmartestSession::set('user_agent_string', $_SERVER['HTTP_USER_AGENT']);
+        }
+        
+        if(isset($_SERVER['HTTP_USER_AGENT'])){
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        }elseif(SmartestSession::hasData('user_agent_string')){
+            $user_agent = SmartestSession::get('user_agent_string');
+        }else{
+            $user_agent = '';
+            SmartestLog::getInstance('system')->log("Empty or unset user agent string used at ".$_SERVER['REQUEST_URI'].' by IP '.$_SERVER['REMOTE_ADDR'], SmartestLog::WARNING);
+        }
+        
+        $this->_userAgent = $user_agent;
     	
     	//language
 		if($languages = getenv('HTTP_ACCEPT_LANGUAGE')){
@@ -27,7 +41,7 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
     	
         $this->_browser['language'] = $languages;
         
-        $uadata = parse_user_agent();
+        $uadata = parse_user_agent($user_agent);
         
         if(isset($uadata['platform'])){
             $this->_browser['platform'] = $uadata['platform'];
@@ -89,7 +103,20 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
     	 	    $this->_browser['platform'] = 'Unknown';
     	    } */
                 
-            $uadata = parse_user_agent();
+            if(isset($_SERVER['HTTP_USER_AGENT']) && (!SmartestSession::hasData('user_agent_string') || $_SERVER['HTTP_USER_AGENT'] != SmartestSession::get('user_agent_string'))) {
+                SmartestSession::set('user_agent_string', $_SERVER['HTTP_USER_AGENT']);
+            }
+    
+            if(isset($_SERVER['HTTP_USER_AGENT'])){
+                $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            }elseif(SmartestSession::hasData('user_agent_string')){
+                $user_agent = SmartestSession::get('user_agent_string');
+            }else{
+                $user_agent = '';
+                SmartestLog::getInstance('system')->log("Empty or unset user agent string used at ".$_SERVER['REQUEST_URI'].' by IP '.$_SERVER['REMOTE_ADDR'], SmartestLog::WARNING);
+            }
+                
+            $uadata = parse_user_agent($user_agent);
     
             if(isset($uadata['platform'])){
                 $this->_browser['platform'] = $uadata['platform'];

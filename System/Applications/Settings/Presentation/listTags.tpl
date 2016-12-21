@@ -9,7 +9,7 @@
 
 <ul class="checkbox-array-list" id="tags-list">
 {foreach from=$tags item="tag" key="key"}
-  <li data-tagid="{$tag.id}" data-taglabel="{$tag.label}"><label>{$tag.label}<a href="#tag-info" data-tag="{$tag.name}" class="tag-info tag-icon-button"><i class="fa fa-info-circle"></i></a>{if $allow_delete_tags} <a href="#tag-delete" data-tag="{$tag.name}" class="tag-delete tag-icon-button"><i class="fa fa-times"></i></a>{/if}{if $allow_edit_tags} <a href="{$domain}settings/editTag?tag_id={$tag.id}" data-tag="{$tag.name}" class="tag-edit tag-icon-button"><i class="fa fa-pencil"></i></a>{/if}</label></li>
+  <li data-tagid="{$tag.id}" data-taglabel="{$tag.label}"{if $tag.featured} class="featured"{/if}><label>{$tag.label}<a href="#tag-info" data-tag="{$tag.name}" class="tag-info tag-icon-button"><i class="fa fa-info-circle"></i></a>{if $allow_delete_tags} <a href="#tag-delete" data-tag="{$tag.name}" class="tag-delete tag-icon-button"><i class="fa fa-times"></i></a>{/if}{if $allow_edit_tags} <a href="{$domain}settings/editTag?tag_id={$tag.id}" data-tag="{$tag.name}" class="tag-edit tag-icon-button"><i class="fa fa-pencil"></i></a>{/if}<a href="#featured" class="tag-feature-toggle tag-icon-button"><i class="fa fa-star{if !$tag.featured}-o{/if}" ></i></a></label></li>
 {/foreach}
 </ul>
 
@@ -54,6 +54,55 @@ $$('#tags-list li label a.tag-delete').each(function(tagLink){
   });
 });
 
+{/literal}
+</script>
+
+<script type="text/javascript">
+{literal}
+$$('#tags-list li label a.tag-feature-toggle').each(function(tagLink){
+  tagLink.observe('click', function(evt){
+    
+    evt.stop();
+    
+    var tagLabel = tagLink.up(1).readAttribute('data-taglabel');
+    var tagId = tagLink.up(1).readAttribute('data-tagid');
+    
+    if(tagLink.up(1).hasClassName('featured')){
+      
+      // is featured - remove featured status
+      tagLink.up(1).removeClassName('featured');
+      tagLink.down('i').removeClassName('fa-star');
+      tagLink.down('i').addClassName('fa-star-o');
+      new Ajax.Request(sm_domain+'ajax:settings/toggleTagFeatured', {
+        
+        parameters: 'featured=false&tag_id='+tagId,
+        onSuccess: function(response) {
+          
+        }
+      
+      });
+      
+    }else{
+      
+      // is not featured
+      tagLink.up(1).addClassName('featured');
+      tagLink.down('i').removeClassName('fa-star-o');
+      tagLink.down('i').addClassName('fa-star');
+      
+      new Ajax.Request(sm_domain+'ajax:settings/toggleTagFeatured', {
+        
+        parameters: 'featured=true&tag_id='+tagId,
+        onSuccess: function(response) {
+          
+        }
+      
+      });
+      
+    }
+    
+    // MODALS.load('settings/getTaggedObjects?tag='+tagLink.readAttribute('data-tag'), 'Objects tagged with &lsquo;'+tagLabel+'&rsquo;');
+  });
+});
 {/literal}
 </script>
 

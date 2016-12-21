@@ -131,19 +131,22 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 		    } 
 		
 		    $properties = array();
-			
-		    foreach($result as $key => $raw_property){
+            if(is_array($result)){
+    		    foreach($result as $key => $raw_property){
 		        
-		        $property = new SmartestItemPropertyValueHolder;
-		        $property->hydrate($raw_property);
+    		        $property = new SmartestItemPropertyValueHolder;
+    		        $property->hydrate($raw_property);
 		        
-		        if($property->getDatatype() == 'SM_DATATYPE_CMS_ITEM'){
-		            // print_r($property->getOriginalDbRecord());
-		        }
+    		        if($property->getDatatype() == 'SM_DATATYPE_CMS_ITEM'){
+    		            // print_r($property->getOriginalDbRecord());
+    		        }
 		        
-		        $this->_properties[$raw_property['itemproperty_id']] = $property;
+    		        $this->_properties[$raw_property['itemproperty_id']] = $property;
 		        
-		    }
+    		    }
+            }else{
+                SmartestLog::getInstance('system')->log('Result from properties query should be array. '.gettype($result).' given instead. (Model ID: '.$this->_model_id.')', SmartestLog::WARNING);
+            }
 		    
 		    $this->_model_built = true;
 		

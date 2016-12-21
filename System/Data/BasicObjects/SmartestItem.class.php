@@ -117,6 +117,9 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	        
 	        case "tags":
 	        return new SmartestArray($this->getTags());
+            
+	        case "featured_tags":
+	        return new SmartestArray($this->getFeaturedTags());
 	        
 	        case "authors":
 	        return new SmartestArray($this->getAuthors());
@@ -150,7 +153,7 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	
 	public function offsetExists($offset){
 	    
-	    return parent::offsetExists($offset) || in_array($offset, array('name', 'title', 'created', 'modified', 'last_published', 'title', 'link_contents', 'class', 'model', '_model', 'tags', 'authors', 'url', 'has_metapage', 'metapage_id'));
+	    return parent::offsetExists($offset) || in_array($offset, array('name', 'title', 'created', 'modified', 'last_published', 'title', 'link_contents', 'class', 'model', '_model', 'tags', 'featured_tags', 'authors', 'url', 'has_metapage', 'metapage_id'));
 	    
 	}
 	

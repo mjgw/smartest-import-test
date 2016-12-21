@@ -132,6 +132,7 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             case "urlencoded":
             return urlencode($this->_string);
             case "wordcount":
+            case "num_words":
             return $this->getWordCount();
             case "charcount":
             case "charactercount":

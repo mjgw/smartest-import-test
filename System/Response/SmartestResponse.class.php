@@ -579,9 +579,7 @@ class SmartestResponse{
 	
 	protected function checkAuthenticationStatus(){
 	    
-        // var_dump($this->_authentication->getUserIsLoggedIn());
-        // http://new-ui-1.dev.smartestproject.org/website/renderEditableDraftPage?page_id=TD64D52880EoruCw09q4VZJo7$AyH3Rf
-	    if($this->isSystemClass() && !$this->isPublicMethod()){
+        if($this->isSystemClass() && !$this->isPublicMethod()){
 		    
 		    if(!$this->_authentication->getUserIsLoggedIn()){
 				if($this->_controller->getCurrentRequest()->getRequestString() != "smartest/login"){

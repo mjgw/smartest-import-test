@@ -4258,7 +4258,7 @@ class Pages extends SmartestSystemApplication{
 		        }
 		        
 		        $page->publishItemSpaces($published_unpublished_items, $item_id);
-		        $page->setLastModified(time());
+		        $page->setModified(time());
 		        $page->save();
 		        
 		        SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} published page: {$page->getTitle()}.", SmartestLog::USER_ACTION);

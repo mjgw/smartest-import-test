@@ -845,7 +845,7 @@ a.tag:hover, label.checkbox-array:hover, ul.checkbox-array-list li label:hover{
     box-shadow: 0px 0px 5px rgba(30,30,30,0.2);
 }
 
-a.tag.selected, label.checkbox-array.selected, ul.checkbox-array-list li.selected label{
+a.tag.selected, label.checkbox-array.selected, ul.checkbox-array-list li.selected label, ul.checkbox-array-list li.featured label{
     border:1px solid #FF9900;
     color:#FF9900;
     box-shadow: 0px 0px 5px rgba(244,132,42,0.4);
@@ -864,7 +864,7 @@ ul.checkbox-array-list li label a.tag-icon-button{
     margin-left:3px;
 }
 
-ul.checkbox-array-list li label a.tag-icon-button:hover{
+ul.checkbox-array-list li label a.tag-icon-button:hover, ul.checkbox-array-list li.featured label a.tag-icon-button i.fa.fa-star{
     color:#FF9900;
 }
 
