@@ -13,6 +13,7 @@
     {if $show_item_options}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
     <input type="hidden" name="container_id" value="{$container.id}" />
     <input type="hidden" name="asset_id" id="item_id_input" value="" />
+    <input type="hidden" name="instance" id="instance" value="{$instance}" />
   
     <div class="edit-form-row">
       <div class="form-section-label">Container:</div>
@@ -95,7 +96,7 @@
 
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Options</b></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}templates/importNewTemplateForContainerDefinition?container_id={$container.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}';" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_add.png" border="0" alt=""> Import new template...</a></li>
+    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}templates/importNewTemplateForContainerDefinition?container_id={$container.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}';" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_add.png" border="0" alt=""> Import new template...</a></li>
     <li class="permanent-action"><a href="#" onclick="window.location=sm_cancel_uri;" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Cancel</a></li>
   </ul>
   

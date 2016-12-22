@@ -4,8 +4,10 @@
 
 <script type="text/javascript">
 {literal}
-  var elementTree = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'page-element', 'tree-root', function(){
-    
+  var elementTree = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'page-element', 'tree-root', function(id, lastId, data){
+    if($('instance_name')){
+        $('instance_name').value = data.params.instance;
+    }
   });
 {/literal}
 </script>
@@ -22,29 +24,29 @@
     <li {if $smarty.foreach.$foreach_name.last}class="last"{elseif $smarty.foreach.$foreach_name.first}class="first"{else}class="middle"{/if}>
     {if ($assetclass.info.defined == "PUBLISHED" || $assetclass.info.defined == "DRAFT") && in_array($assetclass.info.assetclass_type, array("SM_ASSETTYPE_JAVASCRIPT", "SM_ASSETTYPE_STYLESHEET", "SM_ASSETTYPE_RICH_TEXT", "SM_ASSETTYPE_PLAIN_TEXT", "SM_ASSETTYPE_SL_TEXT")) && $version == "draft"}<a href="{$domain}assets/editAsset?asset_id={$assetclass.info.asset_id}&amp;from=pageAssets" style="float:right;display:block;margin-right:5px;">Edit This File</a>{/if}
       {if !empty($assetclass.children)}
-      <a href="{dud_link}" onclick="toggleParentNodeFromOpenState('{$foreach_id}_{$smarty.foreach.$foreach_name.iteration}')"><img src="{$domain}Resources/System/Images/open.gif" alt="" border="0" id="toggle_{$foreach_id}_{$smarty.foreach.$foreach_name.iteration}" /></a>
+      <a href="{dud_link}" {if $assetclass.state == 'open'}onclick="toggleParentNodeFromOpenState('{$foreach_id}_{$smarty.foreach.$foreach_name.iteration}')"{else}onclick="toggleParentNodeFromClosedState('{$foreach_id}_{$smarty.foreach.$foreach_name.iteration}')"{/if}>{if $assetclass.state == 'open'}<img src="{$domain}Resources/System/Images/open.gif" alt="" border="0" id="toggle_{$foreach_id}_{$smarty.foreach.$foreach_name.iteration}" />{else}<img src="{$domain}Resources/System/Images/close.gif" alt="" border="0" id="toggle_{$foreach_id}_{$smarty.foreach.$foreach_name.iteration}" />{/if}</a>
       {else}
       <img src="{$domain}Resources/System/Images/blank.gif" alt="" border="0" />
       {/if}
       
-      <a id="{$assetclass.info.type|lower}_{$assetclass.info.assetclass_name|escape:quotes}" class="option" href="#" onclick="{if $version == "draft"}return elementTree.setSelectedItem('{$assetclass.info.assetclass_name|escape:quotes}', '{$assetclass.info.type|lower}');{else}return false;{/if}">		 
+      <!--Start clickable option link--><a id="{$assetclass.info.type|lower}_{$assetclass.info.assetclass_id|escape:quotes}" class="option" href="#" onclick="{if $version == "draft"}return elementTree.setSelectedItem('{$assetclass.info.assetclass_name|escape:quotes}', '{$assetclass.info.type|lower}'{if isset($assetclass.info.instance)}, {ldelim}instance: '{$assetclass.info.instance}'{rdelim}{/if});{else}return false;{/if}"{if isset($assetclass.info.instance)}data-instance="{$assetclass.info.instance}"{/if}>
     {if $assetclass.info.exists == 'true'}
         
 		{if $assetclass.info.defined == "PUBLISHED"}
 		  {if $assetclass.info.type == 'attachment'}
-		  <img border="0" style="width:16px;height:16px;" src="{$domain}Resources/Icons/attach.png" />
+      <i class="fa fa-paperclip"></i>
 		  {elseif $assetclass.info.type == 'asset'}
 		    {if $assetclass.info.asset_type == "SM_ASSETTYPE_JPEG_IMAGE" || $assetclass.info.asset_type == "SM_ASSETTYPE_PNG_IMAGE" || $assetclass.info.asset_type == "SM_ASSETTYPE_GIF_IMAGE"}
-	        <img src="{$domain}Resources/Icons/picture.png" style="border:0px" />
+	        <i class="fa fa-file-image-o"></i>
 	      {elseif $assetclass.info.asset_type == "SM_ASSETTYPE_PLAIN_TEXT"}
 	        <img src="{$domain}Resources/Icons/page_white_text.png" style="border:0px" />
 	      {elseif $assetclass.info.asset_type == "SM_ASSETTYPE_RICH_TEXT"}
-	        <img src="{$domain}Resources/Icons/style.png" style="border:0px" />
+	        <i class="fa fa-font"></i>
 	      {else}
 	        <img src="{$domain}Resources/Icons/page_white.png" style="border:0px" />
 	      {/if}
 		  {elseif $assetclass.info.type == 'template'}
-  		  <img src="{$domain}Resources/Icons/page_white_code.png" style="border:0px" />
+  		  <i class="fa fa-file-code-o"></i>
   		{elseif $assetclass.info.type == 'item'}
     		<img src="{$domain}Resources/System/Images/edit-item-icon-2x.png" style="border:0px;width:16px;height:16px" />
       {else}
@@ -61,8 +63,10 @@
 		{/if}
 	  
 	  {if $assetclass.info.type != 'asset' && $assetclass.info.type != 'template'}
-	  <b>{$assetclass.info.assetclass_name|end|escape:html}</b>
+	  <strong>{$assetclass.info.assetclass_name|end|escape:html}</strong>
 	  {/if}
+    
+    {if $assetclass.info.instance && $assetclass.info.instance != 'default' && !$assetclass.info.instance_inherited_from_parent} ({$assetclass.info.instance}){/if}
 	  
 	  {if $assetclass.info.filename != ""}
 	    {$assetclass.info.filename}
@@ -102,9 +106,10 @@
 	  {/if}
 	  
 	{/if}
-      </a>
+      </a><!--End clickable option link-->
+      
       {if !empty($assetclass.children)}
-      <ul class="tree-parent-node-open" id="{$foreach_name}_{$smarty.foreach.$foreach_name.iteration}">
+      <ul class="tree-parent-node-{$assetclass.state}" id="{$foreach_name}_{$smarty.foreach.$foreach_name.iteration}"{if $assetclass.state == 'closed'} style="display:none"{/if}>
         {fun name="menurecursion" list=$assetclass.children}
       </ul>
       {/if}

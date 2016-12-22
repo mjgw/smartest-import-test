@@ -39,6 +39,7 @@ function toggleParentNodeFromClosedState(node_id){
 		
 		document.getElementById('toggle_'+node_id).src = sm_domain+'Resources/System/Images/close.gif';
 		treeNodes[list_id] = 0;
+        
 	}else{
 		
 		if(!getUIEffectsAreOk()){

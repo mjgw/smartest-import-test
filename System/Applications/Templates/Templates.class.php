@@ -637,7 +637,9 @@ class Templates extends SmartestSystemApplication{
             if($page->find($this->getRequestParameter('page_id'))){
             
                 $container = new SmartestContainer;
-            
+                $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
+                $this->send($instance_name, 'instance');
+                
                 if($container->find($this->getRequestParameter('container_id'))){
                         
                     $alh = new SmartestAssetsLibraryHelper;
@@ -650,8 +652,54 @@ class Templates extends SmartestSystemApplication{
                     $this->send($page, 'page');
                     
                     if(is_numeric($this->getRequestParameter('item_id'))){
-                        $this->send($this->getRequestParameter('item_id'), 'item_id');
+                        if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                            $this->send($item, 'item');
+                        }
+                        $this->send((int) $this->getRequestParameter('item_id'), 'item_id');
                     }
+                    
+    	            $page_definition = new SmartestContainerDefinition;
+	            
+    	            if($page_definition->loadWithObjects($container, $page, true, null, $instance_name)){
+	                
+    	                if($type_index[$page_webid] == 'ITEMCLASS'){
+	                    
+    	                    $item_definition = new SmartestContainerDefinition;
+	                    
+    	                    if($item_definition->loadWithObjects($container, $page, true, $item_id, $instance_name)){
+	                        
+    	                        if($page_definition->getDraftAssetId() == $item_definition->getDraftAssetId()){
+    	                            $item_uses_default = true;
+    	                        }else{
+    	                            $item_uses_default = false;
+    	                        }
+	                        
+    	                        $this->send($item_definition->getDraftAssetId(), 'selected_template_id');
+	                        
+    	                    }else{
+	                        
+    	                        $this->send($page_definition->getDraftAssetId(), 'selected_template_id');
+    	                        $item_uses_default = true;
+	                        
+    	                    }
+	                    
+    	                    $this->send($item_uses_default, 'item_uses_default');
+	                    
+    	                }else{
+	                
+    	                    // container has live definition
+        	                $this->send($page_definition->getDraftAssetId(), 'selected_template_id');
+        	                $this->send(true, 'is_defined');
+	                
+                        }
+	                
+    	            }else{
+    	                // container has no live definition
+    	                $this->send(0, 'selected_template_id');
+    	                $this->send(false, 'is_defined');
+    	            }
+                    
+                    // selected_template_id
                         
                         // print_r($potential_templates);
                         
@@ -731,13 +779,15 @@ class Templates extends SmartestSystemApplication{
                     $template->setWebId(SmartestStringHelper::random(32));
                     $template->save();
                     
+                    $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
+                    
                     // Next create Container definition
                     
                     $definition = new SmartestContainerDefinition;
                     
                     if($type_index[$page_id] == 'NORMAL' || ($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id')) && $this->getRequestParameter('definition_scope') != 'THIS')){
 	                
-    	                if($definition->loadForUpdate($container->getName(), $page, true)){
+    	                if($definition->loadForUpdate($container->getName(), $page, true, null, $instance_name)){
     	                    
                             $definition->setDraftAssetId($template->getId());
                             $log_message = $this->getUser()->__toString()." defined container '".$container->getName()."' on page '".$page->getTitle(true)."' with newly imported template ".$template->getUrl().".";
@@ -747,7 +797,7 @@ class Templates extends SmartestSystemApplication{
     	                    // wasn't already defined
     	                    $definition->setDraftAssetId($template->getId());
     	                    $definition->setAssetclassId($container->getId());
-    	                    $definition->setInstanceName('default');
+    	                    $definition->setInstanceName($instance_name);
     	                    $definition->setPageId($page->getId());
     	                    $log_message = $this->getUser()->__toString()." defined container '".$container->getName()."' on page '".$page->getTitle(true)."' with newly imported template ".$template->getUrl().".";
 	                
@@ -766,7 +816,7 @@ class Templates extends SmartestSystemApplication{
                     }else if($type_index[$page_id] == 'ITEMCLASS' && ($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id')) && $this->getRequestParameter('definition_scope') == 'THIS')){
                         
                         // If this is an item meta-page the user has opted to use this definition only for the current item
-                        if($definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'))){
+                        if($definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'), $instance_name)){
 	                    
     	                    // all-items definition doesn't exist but per-item for this item does
     	                    $definition->setDraftAssetId($template->getId());
@@ -784,7 +834,7 @@ class Templates extends SmartestSystemApplication{
     	                    $definition->setDraftAssetId($template->getId());
     	                    $definition->setAssetclassId($container->getId());
     	                    $definition->setItemId($this->getRequestParameter('item_id'));
-    	                    $definition->setInstanceName('default');
+    	                    $definition->setInstanceName($instance_name);
     	                    $definition->setPageId($page->getId());
     
     	                    if(is_array($this->getRequestParameter('params'))){

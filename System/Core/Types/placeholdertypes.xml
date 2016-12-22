@@ -36,6 +36,7 @@
     <label>Markup fragments</label>
     <setfrompreview>true</setfrompreview>
     <accept>SM_ASSETTYPE_HTML_FRAGMENT</accept>
+    <accept>SM_ASSETTYPE_OEMBED_URL</accept>
   </type>
   
   <type id="SM_ASSETCLASS_RICH_MEDIA">

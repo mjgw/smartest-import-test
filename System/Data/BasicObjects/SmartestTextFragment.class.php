@@ -81,24 +81,32 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
     public function getAttachmentsForElementsTree($level, $version){
         if($version == 'draft'){
             
-            $attachments = $this->getAttachmentsAsArrays(true);
+            $attachments = $this->getAttachments();
             $children = array();
+            $parent_asset = $this->getAsset();
             
             foreach($attachments as $key=>$a){
                 
-                $child = array();
-                $child['info']['asset_id'] = $a['asset']['id'];
-                $child['info']['asset_webid'] = $a['asset']['webid'];
-                $child['info']['asset_type'] = $a['asset']['type'];
-                $child['info']['assetclass_name'] = $key;
-                $child['info']['assetclass_id'] = $key;
-                $child['info']['defined'] = 'PUBLISHED';
-                $child['info']['exists'] = 'true';
-                $child['info']['filename'] = '';
-                $child['info']['type'] = 'attachment';
+                $asset = $a->getAsset();
                 
-                $child['asset_object'] = $a['asset_object'];
-                $children[] = $child;
+                if(is_object($asset)){
+                    
+                    $child = array();
+                    $child['state'] = 'closed';
+                    $child['info']['asset_id'] = $asset->getId();
+                    $child['info']['asset_webid'] = $asset->getWebId();
+                    $child['info']['asset_type'] = $asset->getType();
+                    $child['info']['assetclass_name'] = $key;
+                    $child['info']['assetclass_id'] = 'asset_'.$parent_asset->getId().'_attachment'.$key;
+                    $child['info']['defined'] = 'PUBLISHED';
+                    $child['info']['exists'] = 'true';
+                    $child['info']['filename'] = '';
+                    $child['info']['type'] = 'attachment';
+                
+                    $child['asset_object'] = $asset;
+                    $children[] = $child;
+                }
+                
             }
             
             return $children;

@@ -10,7 +10,11 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
     
     public function __toString(){
         if(defined('SM_CMS_PAGE_CONSTRUCTION_IN_PROGRESS') && constant('SM_CMS_PAGE_CONSTRUCTION_IN_PROGRESS') && defined('SM_CMS_PAGE_ID') && !SmartestStringHelper::containsEscapedEntities($this->_string)){
-            return (string) str_replace('///', '<br />', SmartestStringHelper::toXmlEntities($this->_string));
+            if(SmartestStringHelper::containsEscapedXmlEntities($this->_string)){
+                return (string) str_replace('///', '<br />', $this->_string);
+            }else{
+                return (string) str_replace('///', '<br />', SmartestStringHelper::toXmlEntities($this->_string));
+            }
         }else{
             return (string) $this->_string;
         }
@@ -160,6 +164,8 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             return SmartestStringHelper::toTitleCase($this->_string, true);
             case "_php_class":
             return get_class($this);
+            case "raw":
+            return $this->_string;
             default:
             if(preg_match('/^truncate_(\d+)$/', $offset, $matches)){
                 return SmartestStringHelper::truncate($this->_string, $matches[1]);

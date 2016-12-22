@@ -268,11 +268,13 @@ class SmartestItemPage extends SmartestPage{
             if($def_array['assetclass_type'] == 'SM_ASSETCLASS_CONTAINER'){
                 $def = new SmartestContainerDefinition;
                 $def->hydrateFromGiantArray($def_array);
-                $this->_containers[$def_array['assetclass_name']] = $def;
+                // $this->_containers[$def_array['assetclass_name']] = $def;
+                $this->_containers[$def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name']] = $def;
             }else{
                 $def = new SmartestPlaceholderDefinition;
                 $def->hydrateFromGiantArray($def_array);
-                $this->_placeholders[$def_array['assetclass_name']] = $def;
+                // $this->_placeholders[$def_array['assetclass_name']] = $def;
+                $this->_placeholders->setParameter($def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name'], $def);
             }
         }
         

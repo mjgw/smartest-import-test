@@ -330,6 +330,8 @@ type:
       preview_template: System/Presentation/WebPageBuilder/preview.javascript.tpl
     suffix:
       - {mime: text/javascript, _content: js}
+    param:
+      - {name: async, label: "Load asyncronously?", type: SM_DATATYPE_BOOLEAN, required: true}
       
   SM_ASSETTYPE_STYLESHEET:
     id: SM_ASSETTYPE_STYLESHEET

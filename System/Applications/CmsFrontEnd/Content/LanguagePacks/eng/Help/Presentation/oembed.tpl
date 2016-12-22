@@ -1,0 +1,2 @@
+<p>OEmbed is a protocol for automatically embedding content on a web page based on a URL alone.</p>
+<p>Smartest serves oEmbed responses from the <code>/embed</code> endpoint of each site where it is enabled, using the <code>url</code> parameter to specify the full URL of the content that is requested, so a valid oEmbed request would be: <code>http://www.example.com/embed?url=http:/www.example.com/sample-url/</code></p>

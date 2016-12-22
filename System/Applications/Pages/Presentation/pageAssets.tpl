@@ -46,6 +46,7 @@ function viewLivePage(parameters){
       <input type="hidden" name="assetclass_id" id="item_id_input" value="" />
       <input type="hidden" name="page_id" value="{$page.webid}" />
       {if $item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+      <input type="hidden" name="instance" value="" id="instance_name" />
     </form>
 
     {if $show_deleted_warning}

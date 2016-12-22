@@ -1298,13 +1298,13 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    $info['asset_webid'] = $this->getWebid();
 	    $info['asset_type'] = $this->getType();
 	    $info['assetclass_name'] = $this->getStringid();
-	    $info['assetclass_id'] = 'asset_'.$this->getId();
+	    $info['assetclass_id'] = $this->getStringid();
 	    $info['defined'] = 'PUBLISHED';
 	    $info['exists'] = 'true';
 	    $info['filename'] = $this->getUrl();
 	    $info['type'] = 'asset';
 	    $level++;
-	    return array('info'=>$info, 'level'=>$level);
+	    return array('info'=>$info, 'level'=>$level, 'state'=>'closed');
 	}
 	
 	public function getLiveInstances(){

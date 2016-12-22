@@ -2990,12 +2990,15 @@ class Pages extends SmartestSystemApplication{
 	    
 	    $container_name = $this->getRequestParameter('assetclass_id');
 	    $page_webid = $this->getRequestParameter('page_id');
+        $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
 	    
 	    $this->setTitle('Define Container');
 	    
 	    $helper = new SmartestPageManagementHelper;
 		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
 		$this->send($this->getApplicationPreference('define_container_list_view', 'grid'), 'list_view');
+        
+        $this->send($instance_name, 'instance');
 	    
 	    if(isset($type_index[$page_webid])){
 		    
@@ -3061,13 +3064,13 @@ class Pages extends SmartestSystemApplication{
 	            
 	            $page_definition = new SmartestContainerDefinition;
 	            
-	            if($page_definition->load($container_name, $page, true)){
+	            if($page_definition->load($container_name, $page, true, null, $instance_name)){
 	                
 	                if($type_index[$page_webid] == 'ITEMCLASS'){
 	                    
 	                    $item_definition = new SmartestContainerDefinition;
 	                    
-	                    if($item_definition->load($container_name, $page, true, $item_id)){
+	                    if($item_definition->load($container_name, $page, true, $item_id, $instance_name)){
 	                        
 	                        if($page_definition->getDraftAssetId() == $item_definition->getDraftAssetId()){
 	                            $item_uses_default = true;
@@ -3100,8 +3103,7 @@ class Pages extends SmartestSystemApplication{
 	                $this->send(false, 'is_defined');
 	            }
 	            
-                // echo "boo";
-	            $assets = $container->getPossibleAssets($this->getSite()->getId());
+                $assets = $container->getPossibleAssets($this->getSite()->getId());
 	            
 	            $this->send($assets, 'templates');
 	            $this->send(count($assets), 'num_templates');
@@ -3128,6 +3130,7 @@ class Pages extends SmartestSystemApplication{
 	    $container_id = $this->getRequestParameter('container_id');
 	    $page_id = $this->getRequestParameter('page_id');
 	    $asset_id = $this->getRequestParameter('asset_id');
+        $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
 	    
 	    $helper = new SmartestPageManagementHelper;
 		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
@@ -3174,7 +3177,7 @@ class Pages extends SmartestSystemApplication{
                 
                 if($type_index[$page_id] == 'NORMAL' || ($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id')) && $this->getRequestParameter('definition_scope') != 'THIS')){
 	                
-	                if($definition->loadForUpdate($container->getName(), $page, true)){
+	                if($definition->loadForUpdate($container->getName(), $page, true, null, $instance_name)){
 	                    
 	                    // update container
 	                    $definition->setDraftAssetId($asset_id);
@@ -3185,7 +3188,7 @@ class Pages extends SmartestSystemApplication{
 	                    // wasn't already defined
 	                    $definition->setDraftAssetId($asset_id);
 	                    $definition->setAssetclassId($container_id);
-	                    $definition->setInstanceName('default');
+	                    $definition->setInstanceName($instance_name);
 	                    $definition->setPageId($page->getId());
 	                    $log_message = $this->getUser()->__toString()." defined container '".$container->getName()."' on page '".$page->getTitle(true)."' with asset ID ".$asset_id.".";
 	                
@@ -3203,7 +3206,7 @@ class Pages extends SmartestSystemApplication{
 	            
                 }else if($type_index[$page_id] == 'ITEMCLASS' && ($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id')) && $this->getRequestParameter('definition_scope') == 'THIS')){
                     
-                    if($definition->loadForUpdate($container->getName(), $page, true)){ // looks for all-items definition
+                    if($definition->loadForUpdate($container->getName(), $page, true, null, $instance_name)){ // looks for all-items definition
 	                    
 	                    $item_def = new SmartestContainerDefinition;
 	                    
@@ -3211,7 +3214,7 @@ class Pages extends SmartestSystemApplication{
 	                    if($definition->getDraftAssetId() == $asset_id){ 
 	                        
 	                        // if there is already a per-item definitions for this item
-	                        if($item_def->loadForUpdate($container->getName(), $page, false, $this->getRequestParameter('item_id'))){
+	                        if($item_def->loadForUpdate($container->getName(), $page, false, $this->getRequestParameter('item_id'), $instance_name)){
 	                            
 	                            $item_def->delete();
                                 
@@ -3221,7 +3224,7 @@ class Pages extends SmartestSystemApplication{
 	                    
 	                    }else{
 	                        
-	                        if($item_def->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'))){
+	                        if($item_def->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'), $instance_name)){
 	                            // just update container
 	                            $item_def->setDraftAssetId($asset_id);
 	                            $log_message = $this->getUser()->__toString()." updated container '".$container->getName()."' on meta-page '".$page->getTitle(true)."' to use asset ID ".$asset_id." when displaying item ID ".$this->getRequestParameter('item_id').".";
@@ -3229,7 +3232,7 @@ class Pages extends SmartestSystemApplication{
 	                            $item_def->setDraftAssetId($asset_id);
         	                    $item_def->setAssetclassId($container_id);
         	                    $item_def->setItemId($this->getRequestParameter('item_id'));
-        	                    $item_def->setInstanceName('default');
+        	                    $item_def->setInstanceName($instance_name);
         	                    $item_def->setPageId($page->getId());
 	                            $log_message = $this->getUser()->__toString()." defined container '".$container->getName()."' on meta-page '".$page->getTitle(true)."' to use asset ID ".$asset_id." when displaying item ID ".$this->getRequestParameter('item_id').".";
 	                        }
@@ -3238,7 +3241,7 @@ class Pages extends SmartestSystemApplication{
 	                        
 	                    }
 	                
-	                }else if($definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id')) && $this->getRequestParameter('definition_scope') == 'THIS'){
+	                }else if($definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'), $instance_name) && $this->getRequestParameter('definition_scope') == 'THIS'){
 	                    
 	                    // all-items definition doesn't exist but per-item for this item does
 	                    $definition->setDraftAssetId($asset_id);
@@ -3246,8 +3249,8 @@ class Pages extends SmartestSystemApplication{
 	                    if(is_array($this->getRequestParameter('params'))){
     	                    $definition->setDraftRenderData(serialize($this->getRequestParameter('params')));
     	                }
-    	                
-    	                $definition->save();
+                        
+                        $definition->save();
     	                $log_message = $this->getUser()->__toString()." updated container '".$container->getName()."' on meta-page '".$page->getTitle(true)."' to use asset ID ".$asset_id." when displaying item ID ".$this->getRequestParameter('item_id').".";
 	                    
 	                }else{
@@ -3256,10 +3259,10 @@ class Pages extends SmartestSystemApplication{
 	                    $definition->setDraftAssetId($asset_id);
 	                    $definition->setAssetclassId($container_id);
 	                    if($this->getRequestParameter('definition_scope') == 'THIS'){$definition->setItemId($this->getRequestParameter('item_id'));}
-	                    $definition->setInstanceName('default');
+	                    $definition->setInstanceName($instance_name);
 	                    $definition->setPageId($page->getId());
-	                    
-	                    if(is_array($this->getRequestParameter('params'))){
+                        
+                        if(is_array($this->getRequestParameter('params'))){
     	                    $definition->setDraftRenderData(serialize($this->getRequestParameter('params')));
     	                }
     	                
@@ -3304,7 +3307,11 @@ class Pages extends SmartestSystemApplication{
 	    
     	    $helper = new SmartestPageManagementHelper;
     		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
-	    
+            
+            $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
+            // $instance_name = 'default';
+            $this->send($instance_name, 'instance');
+            
     	    if(isset($type_index[$page_webid])){
 		    
     		    if($type_index[$page_webid] == 'ITEMCLASS'){
@@ -3371,7 +3378,7 @@ class Pages extends SmartestSystemApplication{
                 
                     $page_definition = new SmartestPlaceholderDefinition;
                 
-                    if($page_definition->load($placeholder_name, $page, true, $this->getRequestParameter('item_id'))){
+                    if($page_definition->load($placeholder_name, $page, true, $this->getRequestParameter('item_id'), $instance_name)){
 	                
     	                $is_defined = true;
 	                
@@ -3430,7 +3437,7 @@ class Pages extends SmartestSystemApplication{
             	        if($is_defined){
         	            
             	            // if file is chosen
-            	            if($type_index[$page_webid] == 'ITEMCLASS' && $item_definition->load($placeholder_name, $page, true, $item_id)){
+            	            if($type_index[$page_webid] == 'ITEMCLASS' && $item_definition->load($placeholder_name, $page, true, $item_id, $instance_name)){
             	                $chosen_asset_id = $item_definition->getDraftAssetId();
             	            }else{
             	                $chosen_asset_id = $page_definition->getDraftAssetId();
@@ -3542,7 +3549,11 @@ class Pages extends SmartestSystemApplication{
 	    
 	    $helper = new SmartestPageManagementHelper;
 		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
-    
+        
+        $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
+        // $instance_name = 'default';
+        $this->send($instance_name, 'instance');
+        
 	    if(isset($type_index[$page_webid])){
 	    
 		    if($type_index[$page_webid] == 'ITEMCLASS'){
@@ -3602,7 +3613,10 @@ class Pages extends SmartestSystemApplication{
 	    
 	    $helper = new SmartestPageManagementHelper;
 		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
-		
+        
+        $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
+		// $instance_name = 'default';
+        
 	    if(isset($type_index[$page_id])){
 		    if($type_index[$page_id] == 'ITEMCLASS' && $this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
 		        $page = new SmartestItemPage;
@@ -3624,7 +3638,7 @@ class Pages extends SmartestSystemApplication{
 	            
 	            if($type_index[$page_id] == 'NORMAL' || ($this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id')) && $this->getRequestParameter('definition_scope') != 'THIS')){
 	                
-	                if($definition->loadForUpdate($placeholder->getName(), $page)){
+                    if($definition->loadForUpdate($placeholder->getName(), $page, null, $instance_name)){
 	                
 	                    // update placeholder
 	                    $definition->setDraftAssetId($asset_id);
@@ -3635,7 +3649,7 @@ class Pages extends SmartestSystemApplication{
 	                    // wasn't already defined
 	                    $definition->setDraftAssetId($asset_id);
 	                    $definition->setAssetclassId($placeholder_id);
-	                    $definition->setInstanceName('default');
+	                    $definition->setInstanceName($instance_name);
 	                    $definition->setPageId($page->getId());
 	                    $log_message = $this->getUser()->__toString()." defined placeholder '".$placeholder->getName()."' on page '".$page->getTitle(true)."' with asset ID ".$asset_id.".";
 	                
@@ -3787,6 +3801,9 @@ class Pages extends SmartestSystemApplication{
 	    $placeholder_id = $this->getRequestParameter('assetclass_id');
 	    $page_id = $this->getRequestParameter('page_id');
 	    $item_id = $this->getRequestParameter('item_id') ? $this->getRequestParameter('item_id') : false;
+        
+        $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
+        // $instance_name = 'default';
 	    
 	    $this->setTitle('Un-Define Placeholder');
 	    
@@ -3802,13 +3819,13 @@ class Pages extends SmartestSystemApplication{
 	            
 	            $definition = new SmartestPlaceholderDefinition;
 	            
-	            if(is_numeric($item_id) && $definition->loadForUpdate($placeholder->getName(), $page, $item_id)){
+	            if(is_numeric($item_id) && $definition->loadForUpdate($placeholder->getName(), $page, $item_id, $instance_name)){
 	                
 	                // update placeholder
 	                $definition->delete();
 	                $this->addUserMessageToNextRequest('The placeholder definition was removed for this item.', SmartestUserMessage::SUCCESS);
 	            
-	            }else if($definition->loadForUpdate($placeholder->getName(), $page)){
+	            }else if($definition->loadForUpdate($placeholder->getName(), $page, null, $instance_name)){
 	                
 	                // update placeholder
 	                $definition->setDraftAssetId(null);
@@ -3848,6 +3865,7 @@ class Pages extends SmartestSystemApplication{
 	    $placeholder_id = $this->getRequestParameter('assetclass_id');
 	    $page_id = $this->getRequestParameter('page_id');
 	    $item_id = $this->getRequestParameter('item_id');
+        $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
 	    
 	    $this->setTitle('Un-Define Placeholder');
 	    
@@ -3863,7 +3881,7 @@ class Pages extends SmartestSystemApplication{
 	            
 	            $definition = new SmartestPlaceholderDefinition;
 	            
-	            if($definition->loadForUpdate($placeholder->getName(), $page, $item_id)){
+	            if($definition->loadForUpdate($placeholder->getName(), $page, $item_id, $instance_name)){
 	                
 	                // update placeholder
 	                $definition->delete();
@@ -3901,6 +3919,7 @@ class Pages extends SmartestSystemApplication{
 	    
 	    $container_id = $this->getRequestParameter('assetclass_id');
 	    $page_id = $this->getRequestParameter('page_id');
+        $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
 	    
 	    $page = new SmartestPage;
 	    
@@ -3914,12 +3933,12 @@ class Pages extends SmartestSystemApplication{
 	            
 	            $definition = new SmartestContainerDefinition;
 	            
-	            if($this->getRequestParameter('item_id') && $definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'))){
+	            if($this->getRequestParameter('item_id') && $definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'), $instance_name)){
 	            
 	                $definition->delete();
 	                $this->addUserMessageToNextRequest('The container definition was removed.', SmartestUserMessage::SUCCESS);
 	            
-	            }else if($definition->loadForUpdate($container->getName(), $page, true)){
+	            }else if($definition->loadForUpdate($container->getName(), $page, true, null, $instance_name)){
 	                
 	                // update placeholder
 	                // $definition->delete();
@@ -3959,6 +3978,7 @@ class Pages extends SmartestSystemApplication{
 	    
 	    $container_id = $this->getRequestParameter('assetclass_id');
 	    $page_id = $this->getRequestParameter('page_id');
+        $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
 	    
 	    $page = new SmartestPage;
 	    
@@ -3972,7 +3992,7 @@ class Pages extends SmartestSystemApplication{
 	            
 	            $definition = new SmartestContainerDefinition;
 	            
-	            if($this->getRequestParameter('item_id') && $definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'))){
+	            if($this->getRequestParameter('item_id') && $definition->loadForUpdate($container->getName(), $page, true, $this->getRequestParameter('item_id'), $instance_name)){
 	            
 	                $definition->delete();
 	                $this->addUserMessageToNextRequest('The container definition was removed.', SmartestUserMessage::SUCCESS);
@@ -4050,8 +4070,8 @@ class Pages extends SmartestSystemApplication{
 	    $id = $this->getRequestParameter('assetclass_id');
 	    $page_webid = $this->getRequestParameter('page_id');
 	    $asset = new SmartestTemplateAsset;
-	    
-	    if($asset->findBy('stringid', $id)){
+        
+        if($asset->findBy('stringid', $id, $this->getSite()->getId())){
             $this->redirect('/templates/editTemplate?type=SM_ASSETTYPE_CONTAINER_TEMPLATE&template='.$asset->getId().'&from=pageAssets');
         }else{
             if(strlen($page_webid) == 32){

@@ -31,6 +31,7 @@ function toggleParamsHolder(){
     
     <input type="hidden" name="assetclass_id" value="{$placeholder.name}" />
     <input type="hidden" name="page_id" value="{$page.webid}" />
+    <input type="hidden" name="instance" id="instance" value="{$instance}" />
     
     <select name="item_id" onchange="$('item_chooser').submit()" style="width:300px">
       {foreach from=$items item="possible_item"}
@@ -56,7 +57,7 @@ function toggleParamsHolder(){
           <option value="{$available_asset.id}"{if $available_asset.id==$asset.id} selected="selected"{/if}>{if $available_asset.id==$live_asset_id}* {/if}{$available_asset.label}</option>
         {/foreach}
       </select>
-      {if !$valid_definition}<br /><a class="button small" style="margin-top:5px" href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}">Upload a new file</a>{/if}
+      {if !$valid_definition}<br /><a class="button small" style="margin-top:5px" href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}">Upload a new file</a>{/if}
       {/if}
       
     </div>
@@ -64,6 +65,7 @@ function toggleParamsHolder(){
     <input type="hidden" name="assetclass_id" value="{$placeholder.name}" />
     <input type="hidden" name="page_id" value="{$page.webid}" />
     {if $show_item_options}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+    <input type="hidden" name="instance" id="instance" value="{$instance}" />
     
     </form>
     
@@ -72,6 +74,7 @@ function toggleParamsHolder(){
       <input type="hidden" name="page_id" value="{$page.id}" />
       <input type="hidden" name="placeholder_id" value="{$placeholder.id}" />
       {if $show_item_options}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
+      <input type="hidden" name="instance" id="instance" value="{$instance}" />
     
     {if $valid_definition}
     
@@ -79,7 +82,15 @@ function toggleParamsHolder(){
     
       <div class="edit-form-row">
         <div class="form-section-label">Chosen File:</div>
-        <b>{$asset.label}</b> <code>({if $asset_type.storage.type == 'file'}{$asset_type.storage.location}{/if}{$asset.url})</code> - {$asset_type.label}{if $asset.is_image} ({$asset.width} x {$asset.height} pixels){/if}
+        {if $asset.is_binary_image}
+        {$asset.image.constrain_150}
+        <div class="breaker"></div>
+        <div class="edit-form-sub-row">
+          <b>{$asset.label}</b> <code>({if $asset_type.storage.type == 'file'}{$asset_type.storage.location}{/if}{$asset.url})</code> - {$asset_type.label} ({$asset.width} x {$asset.height} pixels)
+        </div>
+        {else}
+        <b>{$asset.label}</b> <code>({if $asset_type.storage.type == 'file'}{$asset_type.storage.location}{/if}{$asset.url})</code> - {$asset_type.label}
+        {/if}
       </div>
       
       {if $show_item_options}
@@ -195,13 +206,13 @@ function toggleParamsHolder(){
 
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Options</b></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}'" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Define with a new file</a></li>
+    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}'" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Define with a new file</a></li>
     {* <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/pageAssets?page_id={$page.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Cancel</a></li> *}
 {if $item}
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder</a></li>
+    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;instance={$instance}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder for all {$item.model.plural_name|strtolower}</a></li>
     <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholderOnItemPage?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear or this {$item.model.name|strtolower} only</a></li>
 {else}
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder</a></li>
+    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;instance={$instance}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder</a></li>
 {/if}
   </ul>
   

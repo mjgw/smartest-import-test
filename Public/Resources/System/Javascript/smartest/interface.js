@@ -382,7 +382,9 @@ Smartest.UI.OptionSet = Class.create({
         
         if(!params)
             params = {};
-            
+        
+        // alert(id);
+        
         this.currentCategoryName = category ? category : 'default';
         
         if(this.currentCategoryName == 'default' || !this.currentCategoryName){
@@ -411,12 +413,28 @@ Smartest.UI.OptionSet = Class.create({
     	
     	if(this.lastItemId){
     	    var lastDomID = this.lastItemCategoryName+'_'+this.lastItemId;
+            
+            if(this.lastItemInstanceName){
+                lastDomID += '_'+this.lastItemInstanceName;
+            }
+            
     	    if($(lastDomID)){
     		    $(lastDomID).className = "option";
 		    }
     	}
     	
     	var domID = this.currentCategoryName+'_'+id;
+        
+        // alert(domID);
+        
+        if(params.hasOwnProperty('instance')){
+            
+            domID += '_'+params.instance;
+            this.currentInstanceName = params.instance;
+            
+        }else{
+            this.currentInstanceName = null;
+        }
         
         if($(domID)){
     		$(domID).className = "selected-option";
@@ -425,17 +443,25 @@ Smartest.UI.OptionSet = Class.create({
     	/* if(params.scroll){
     	    new Effect.ScrollTo(domID);
     	} */
-    	
-    	if(params && params.updateFields){
+            
+            if(params && params.updateFields){
     	    $H(params.updateFields).each(function(f){
     	        new Smartest.UI().updateSpansByClassName(f.key, f.value);
     	    });
     	}
     	
+        console.log({
+            linkId: domID,
+            formValue: id,
+            instance: params.instance,
+            lastInstance: this.lastItemInstanceName
+        });
+        
     	this.lastItemCategoryName = this.currentCategoryName;
+        this.lastItemInstanceName = this.currentInstanceName;
     	this.primaryInput.value = id;
         
-        this.clickCallback(id, this.lastItemId);
+        this.clickCallback(id, this.lastItemId, {category: category, params: params});
         
         this.lastItemId = id;
     	

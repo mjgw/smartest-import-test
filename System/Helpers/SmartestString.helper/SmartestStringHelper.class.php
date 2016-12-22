@@ -723,6 +723,10 @@ class SmartestStringHelper extends SmartestHelper{
 	public static function containsEscapedEntities($string){
 	    return preg_match('/&(#\d+|\w+);/i', $string);
 	}
+    
+	public static function containsEscapedXmlEntities($string){
+	    return preg_match('/&lt;/i', $string);
+	}
 	
 	public static function isEmailAddress($string){
 		return preg_match(self::EMAIL_ADDRESS, $string);
@@ -838,7 +842,7 @@ class SmartestStringHelper extends SmartestHelper{
     }
     
     public static function toXmlEntitiesSmart($string){
-        if(self::containsEscapedEntities($string)){
+        if(self::containsEscapedXmlEntities($string)){
             return $string;
         }else{
             return self::toXmlEntities($string);

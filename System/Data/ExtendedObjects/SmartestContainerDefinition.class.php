@@ -14,12 +14,12 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
 		
 	}
 	
-    public function load($name, $page, $draft=false, $item_id=false){
+    public function load($name, $page, $draft=false, $item_id=null, $instance_name='default'){
         
         if(strlen($name) && is_object($page)){
             
             $this->_page = $page;
-            
+            $instance_name = SmartestStringHelper::toVarName($instance_name);
             $container = new SmartestContainer;
             
             $sql = "SELECT * FROM AssetClasses WHERE assetclass_type = 'SM_ASSETCLASS_CONTAINER' AND assetclass_name='".$name."' AND (assetclass_site_id='".$page->getSiteId()."' OR assetclass_shared=1)";
@@ -38,7 +38,11 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
                 }else{
                     $sql .= " AND assetidentifier_item_id IS NULL";
                 }
-
+                
+                if(strlen($instance_name)){
+                    $sql .= " AND assetidentifier_instance_name='".$instance_name."'";
+                }
+                
                 $result = $this->database->queryToArray($sql);
                 
                 if(count($result)){
@@ -69,34 +73,32 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
                         
                     }else{
                         // Template doesn't exist
-                        // echo "Template doesn't exist<br />";
                         $this->_loaded = false;
                         return false;
                     }
                 }else{
                     // Container not defined
-                    // echo "Container not defined<br />";
                     $this->_loaded = false;
                     return false;
                 }
                 
             }else{
                 // Container by that name doesn't exist
-                // echo "Container by that name doesn't exist<br />";
                 $this->_loaded = false;
                 return false;
             }
         }
     }
     
-    public function loadForUpdate($name, $page, $draft=false, $item_id=false){
+    public function loadForUpdate($name, $page, $draft=false, $item_id=null, $instance_name='default'){
         
         if(strlen($name) && is_object($page)){
             
             $container = new SmartestContainer;
+            $instance_name = SmartestStringHelper::toVarName($instance_name);
             
             if($container->findBy('name', $name)){
-                return $this->loadWithObjects($container, $page, $draft, $item_id);
+                return $this->loadWithObjects($container, $page, $draft, $item_id, $instance_name);
             }else{
                 // Container by that name doesn't exist
                 $this->_loaded = false;
@@ -105,10 +107,11 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
         }
     }
     
-    public function loadWithObjects(SmartestContainer $container, SmartestPage $page, $draft=false, $item_id=false){
+    public function loadWithObjects(SmartestContainer $container, SmartestPage $page, $draft=false, $item_id=null, $instance_name='default'){
         
         $this->_asset_class = $container;
         $this->_page = $page;
+        $instance_name = SmartestStringHelper::toVarName($instance_name);
         
         $sql = "SELECT * FROM AssetIdentifiers, AssetClasses WHERE assetclass_type = 'SM_ASSETCLASS_CONTAINER' AND assetidentifier_assetclass_id=assetclass_id AND assetidentifier_assetclass_id='".$this->_asset_class->getId()."' AND assetidentifier_page_id='".$this->_page->getId()."'";
         
@@ -118,7 +121,12 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
             $sql .= " AND assetidentifier_item_id IS NULL";
         }
         
+        if(strlen($instance_name)){
+            $sql .= " AND assetidentifier_instance_name='".$instance_name."'";
+        }
+        
         $result = $this->database->queryToArray($sql);
+        $container->getType();
         
         if(count($result)){
             
@@ -161,6 +169,10 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
     }
     
     public function getTemplateFilePathInSmartest(){
+        
+        if(!$this->getDraftAssetId()){
+            var_dump($this->getId());
+        }
         
         if($this->_template->getFile()->exists()){
             // var_dump($this->_template->getFile()->getPath());

@@ -56,6 +56,7 @@ class SmartestCmsItemList extends SmartestBaseCmsItemList{
 	    $info['exists'] = 'true';
 	    $info['defined'] = $this->hasChanged() ? 'DRAFT' : 'PUBLISHED';
 	    $info['assetclass_name'] = $this->_properties['name'];
+        $info['assetclass_id'] = $this->_properties['name'].'_default';
 		$info['type'] = "list";
 		$info['level'] = $level;
 		return $info;

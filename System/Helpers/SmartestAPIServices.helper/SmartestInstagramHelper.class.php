@@ -47,16 +47,26 @@ class SmartestInstagramHelper implements SmartestOAuthController{
             // echo "loaded from cache";
         }else{
             
-            $i = new Instagram(array(
-              'apiKey'      => $this->_account->getOAuthConsumerToken(),
-              'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
-              'apiCallback' => $this->_service->getCallbackUri()
-            ));
+            try{
             
-            $i->setAccessToken($this->_account->getOAuthAccessToken());
-            $data = $i->getUserMedia($id, $limit);
-            SmartestCache::save('instagram_user_media_'.$this->_account->getId(), $data, -1, true);
-            // echo "loaded live data";
+                $i = new Instagram(array(
+                  'apiKey'      => $this->_account->getOAuthConsumerToken(),
+                  'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
+                  'apiCallback' => $this->_service->getCallbackUri()
+                ));
+                
+                $i->setAccessToken($this->_account->getOAuthAccessToken());
+                $data = $i->getUserMedia($id, $limit);
+                SmartestCache::save('instagram_user_media_'.$this->_account->getId(), $data, -1, true);
+                // echo "loaded live data";
+            
+            }catch(MetzWeb\Instagram\InstagramException $e){
+                
+                // TODO: feed back error appropriately
+                return array();
+                
+            }
+            
         }
         
         $result = array();
@@ -83,15 +93,26 @@ class SmartestInstagramHelper implements SmartestOAuthController{
         if($d = SmartestCache::load('instagram_user_search_'.md5($username), true, 600)){
             $data = $d;
         }else{
-             $i = new Instagram(array(
-              'apiKey'      => $this->_account->getOAuthConsumerToken(),
-              'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
-              'apiCallback' => $this->_service->getCallbackUri()
-            ));
             
-            $i->setAccessToken($this->_account->getOAuthAccessToken());
-            $data = $i->searchUser($username);
-            SmartestCache::save('instagram_user_search_'.md5($username), $data, -1, true);
+            try{
+            
+                $i = new Instagram(array(
+                  'apiKey'      => $this->_account->getOAuthConsumerToken(),
+                  'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
+                  'apiCallback' => $this->_service->getCallbackUri()
+                ));
+            
+                $i->setAccessToken($this->_account->getOAuthAccessToken());
+                $data = $i->searchUser($username);
+                SmartestCache::save('instagram_user_search_'.md5($username), $data, -1, true);
+            
+            }catch(MetzWeb\Instagram\InstagramException $e){
+            
+                // TODO: feed back error appropriately
+                return null;
+            
+            }
+            
         }
         
         if(count($data->data)){
@@ -109,15 +130,25 @@ class SmartestInstagramHelper implements SmartestOAuthController{
             $data = $d;
         }else{
             
-            $i = new Instagram(array(
-              'apiKey'      => $this->_account->getOAuthConsumerToken(),
-              'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
-              'apiCallback' => $this->_service->getCallbackUri()
-            ));
+            try{
             
-            $i->setAccessToken($this->_account->getOAuthAccessToken());
-            $data = $i->searchUser($username);
-            SmartestCache::save('instagram_user_search_'.md5($username), $data, -1, true);
+                $i = new Instagram(array(
+                  'apiKey'      => $this->_account->getOAuthConsumerToken(),
+                  'apiSecret'   => $this->_account->getOAuthConsumerSecret(),
+                  'apiCallback' => $this->_service->getCallbackUri()
+                ));
+            
+                $i->setAccessToken($this->_account->getOAuthAccessToken());
+                $data = $i->searchUser($username);
+                SmartestCache::save('instagram_user_search_'.md5($username), $data, -1, true);
+            
+            }catch(MetzWeb\Instagram\InstagramException $e){
+        
+                // TODO: feed back error appropriately
+                return null;
+        
+            }
+            
         }
         
         if(strtolower($data->data[0]->username) == strtolower($username)){

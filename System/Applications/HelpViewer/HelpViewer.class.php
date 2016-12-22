@@ -28,6 +28,8 @@ class HelpViewer extends SmartestSystemApplication{
                     if(is_file($template)){
                         $this->send($help_config['help'][$node_id]['title'], 'title');
                         $this->send($template, 'content');
+                        $this->send($this->getSite(), 'site');
+                        $this->send($this->getUser(), 'user');
                         $this->send(isset($help_config['help'][$node_id]['wiki_url']) ? new SmartestExternalUrl($help_config['help'][$node_id]['wiki_url']) : null, 'wiki_url');
                     }else{
                         // help content file not found

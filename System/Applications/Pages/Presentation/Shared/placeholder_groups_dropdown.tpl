@@ -1,5 +1,5 @@
 {if empty($groups)}
-  <span class="form-hint">No groups currently exist that exlusively contain files that accepted by this placeholder type (<a href="{$domain}assets/newAssetGroup?filter_type={$selected_type}">create one</a>)</span>
+  <span class="form-hint">No groups currently exist that exlusively contain files that accepted by this placeholder type <a href="{$domain}assets/newAssetGroup?filter_type={$selected_type}" class="button small">create one</a></span>
   <input type="hidden" name="placeholder_filegroup" value="NONE" />
 {else}
   <select name="placeholder_filegroup">

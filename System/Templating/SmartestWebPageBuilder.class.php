@@ -177,9 +177,11 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         
         if($this->_context == SM_CONTEXT_CONTENT_PAGE){
             
-            if($this->getPage()->hasContainerDefinition($container_name)){
+            $instance_name = isset($params['instance']) ? SmartestStringHelper::toVarName($params['instance']) : 'default';
+            
+            if($this->getPage()->hasContainerDefinition($container_name, $instance_name)){
                 
-                $container_def = $this->getPage()->getContainerDefinition($container_name, $this->getDraftMode());
+                $container_def = $this->getPage()->getContainerDefinition($container_name, $instance_name);
                 
                 if($this->getDraftMode()){
                     echo "<!--Smartest: Begin container template ".$container_def->getTemplateFilePathInSmartest()." -->\n";
@@ -187,7 +189,12 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 
                 $this->_tpl_vars['this'] = new SmartestPageRenderingDataRequestHandler($this->page);
                 $this->_tpl_vars['sm_draft_mode'] = $this->getDraftMode();
-                $this->run($container_def->getTemplateFilePath(), array());
+                
+                if($instance_name == 'default'){
+                    $this->run($container_def->getTemplateFilePath(), array());
+                }else{
+                    $this->run($container_def->getTemplateFilePath(), array('__parent_container_instance'=>$instance_name));
+                }
                 
                 if($this->getDraftMode()){
                     echo "\n<!--Smartest: End container template ".$container_def->getTemplateFilePathInSmartest()." -->\n";
@@ -339,128 +346,84 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     
     public function renderPlaceholder($placeholder_name, $params, $parent){
         
-        if(isset($params['display']) && SmartestStringHelper::isFalse($params['display'])){
+        // does definition exist?
+        if($this->getPage()->hasPlaceholderDefinition($placeholder_name, $params['instance'])){ // If the Placeholder is defined
             
-            if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
+            $display = (isset($params['display']) && in_array(strtolower($params['display']), array('file', 'filename', 'full', 'path', 'normal', 'download', 'size', 'false'))) ? $params['display'] : 'normal';
             
-                $ph = new SmartestPlaceholder;
+            // If display not set, or explicitly set to something other than false, display file appropriately
+            
+            if(!SmartestStringHelper::isFalse($display)){
                 
-                if(isset($params['showcontrol']) && SmartestStringHelper::isFalse($params['showcontrol'])){
-                    
-                }else{
-                    
-                    if($ph->findBy('name', $placeholder_name)){
-                        
-                        $show_edit_link = isset($params['showeditbutton']) ? (SmartestStringHelper::toRealBool($params['showeditbutton']) && $this->_request_data->g('action') == "renderEditableDraftPage") : ($ph->isEditableFromPreview() && $this->_request_data->g('action') == "renderEditableDraftPage");
-                        
-                        if($show_edit_link){
-                        
-                            if($this->getPage() instanceOf SmartestItemPage){
-                                $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$ph->getName()."&amp;page_id=".$this->page->getWebid().'&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
-                            }else{
-                                $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$ph->getName()."&amp;page_id=".$this->page->getWebid();
-                            }
-                        
-                            $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
-                            if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                            $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/placeholder-switch.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this file--></a>";
-                            
-                            return $edit_link;
-                        
-                        }
-                        
-                    }else{
-                        
-                        $edit_link = "<a class=\"sm-edit-button\" title=\"Placeholder ".$placeholder_name." does not exist. Click to create.\" href=\"".$this->_request_data->g('domain')."websitemanager/addPlaceholder?placeholder_name=".$placeholder_name."\" style=\"text-decoration:none;font-size:11px";
-                        if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                        $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/error.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
-                        
-                        return $edit_link;
-                        
-                    }
+                $placeholder_def = $this->getPage()->getPlaceholderDefinition($placeholder_name, $params['instance']);
+                $asset = $placeholder_def->getAsset($this->getDraftMode());
                 
-                }
-            
-            }
-            
-            return;
-        }
-        
-        $assetclass_types = SmartestDataUtility::getAssetClassTypes();
-        
-        $display = (isset($params['display']) && in_array($params['display'], array('file', 'filename', 'full', 'path', 'normal', 'download', 'size'))) ? $params['display'] : 'normal';
-        
-        if($this->getPage()->hasPlaceholderDefinition($placeholder_name, $this->getDraftMode())){
-            
-            $placeholder = $this->getPage()->getPlaceholderDefinition($placeholder_name, $this->getDraftMode());
-            
-            if(array_key_exists($placeholder->getType(), $assetclass_types)){
+                if($asset instanceof SmartestRenderableAsset){
                 
-                $asset = $placeholder->getAsset($this->getDraftMode());
-                
-                if(is_object($asset)){
-                    
                     $type_info = $asset->getTypeInfo();
-                    
-                    if($display == 'file' || $display == 'filename'){
+                
+                    switch($display){
+                        
+                        case "file":
+                        case "filename":
                         
                         return $asset->getUrl();
                         
-                    }else if($display == 'full' || $display == 'path'){
+                        
+                        case "full":
+                        case "path":
                         
                         if($asset->usesLocalFile()){
                             
+                            // Return is used because an edit button is not used when alternative displays are requested
                             return $asset->getFullWebPath();
-                            
+                        
                         }else{
-                            
+                        
                             return $this->raiseError('display="'.$display.'" used on asset type that does not have a local file: '.$asset->getType());
-                            
+                        
                         }
                         
-                    }else if($display == 'download'){
+                        break;
                         
+                        case "download":
                         return $asset->getAbsoluteDownloadUri();
-                    
-                    }else if($display == 'size'){
+                        
+                        case "size":
                         
                         if($asset->usesLocalFile()){
-                            
                             return $asset->getSize();
-                            
                         }else{
-                            
                             return $this->raiseError('display="size" used on asset type that does not have a local file: '.$asset->getType());
-                            
                         }
-                    
-                    }else{
+                        
+                        default:
                         
                         $render_data = array();
-                        
+                    
                         if(isset($params['transform'])){
                             $transform_param_values = SmartestStringHelper::parseNameValueString($params['transform']);
                             // TODO: Allow inline transformations on certain asset types - resize, (rotate?)
                         }
-                        
+                    
                         // apply render data from the placeholder definition
                         if($this->getDraftMode()){
-                            $rd = $placeholder->getDraftRenderData();
+                            $rd = $placeholder_def->getDraftRenderData();
                         }else{
-                            $rd = $placeholder->getLiveRenderData();
+                            $rd = $placeholder_def->getLiveRenderData();
                         }
-                        
+                    
                         if($data = unserialize($rd)){
                             $external_render_data = $data;
                             $asset->setAdditionalRenderData($data, true);
                         }else{
                             $external_render_data = array();
                         }
-                        
+                    
                         foreach($external_render_data as $key => $value){
                             $render_data[$key] = $value;
                         }
-                        
+                    
                         // Lastly, apply any render data from the template
                         foreach($params as $key => $value){
                             if($key != 'name'){
@@ -473,126 +436,144 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 	            }
             	            }
         	            }
-                        
+                    
                         // Second parameter here is for whether blank values should be skipped when passing render data. As of revision 716, blank values entered on the define placeholder creen DO override other values, including asset and type defaults
-                        // $asset->setAdditionalRenderData($render_data, true);
                         $asset->setAdditionalRenderData($render_data);
-                        
-                        // print_r($render_data);
-        	            
-        	            $html = $asset->render($this->getDraftMode());
-        	            
+                    
+                        $html = $asset->render($this->getDraftMode());
+    	            
         	            // This code makes sure that if internal link codes are input as values on an image placeholder, the link will be built
         	            if($asset->isImage() && isset($render_data['link_href']) && strlen($render_data['link_href'])){
-        	                
+    	                
         	                $link_properties = SmartestLinkParser::parseSingle($render_data['link_href']);
         	                $link = new SmartestCmsLink($link_properties, array());
         	                $image = $asset->getImage();
-                            // print_r($render_data);
-        	                $image->setAdditionalRenderData($render_data);
+                            $image->setAdditionalRenderData($render_data);
         	                $link->setImageAsContent($image);
-        	                
+    	                
         	                if($GLOBALS['CURRENT_PAGE']){
                     		    $link->setHostPage($GLOBALS['CURRENT_PAGE']);
                     		}
-        	                
+    	                
         	                $html = $link->render($this->getDraftMode());
-        	                
+    	                
         	            }
-                    
-                    }
-                    
-                }
-                
-	        }else{
-	            // some sort of error? unsupported type.
-	            return $this->raiseError("Placeholder type '".$placeholder->getType()."' is unsupported");
-	            
-	        }
-            
-            if(isset($params['showcontrol']) && SmartestStringHelper::isFalse($params['showcontrol'])){
-                
-            }else{
-                
-                $show_edit_link = isset($params['showeditbutton']) ? (SmartestStringHelper::toRealBool($params['showeditbutton']) && $this->_request_data->g('action') == "renderEditableDraftPage") : ($placeholder->getPlaceholder()->isEditableFromPreview() && $this->_request_data->g('action') == "renderEditableDraftPage");
-                
-                if($show_edit_link){
-                
-                    if($this->_request_data->g('action') == "renderEditableDraftPage"){
-                        if($this->getPage() instanceOf SmartestItemPage){
-                            $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$placeholder->getPlaceholder()->getName()."&amp;page_id=".$this->page->getWebid().'&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
-                            $delete_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$placeholder->getPlaceholder()->getName()."&amp;page_id=".$this->page->getWebid().'&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
-                        }else{
-                            $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$placeholder->getPlaceholder()->getName()."&amp;page_id=".$this->page->getWebid();
-                        }
                         
-    			        $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for placeholder: ".$placeholder->getPlaceholder()->getLabel()." (".$placeholder->getPlaceholder()->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
-                        if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                        $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/placeholder-switch.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this file--></a>";
-    			        
-                        // $edit_link .= "<a title=\"Click to clear definition for placeholder: ".$placeholder->getPlaceholder()->getLabel()." (".$placeholder->getPlaceholder()->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/arrow_refresh_small.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /><!-- Swap this file--></a>";
-    		        }else{
-    			        $edit_link = "<!--edit link-->";
-    		        }
-		        
-	            }
-		    
-		    }
+                        break;
+                        
+                    } // end of $display switch statement
+                
+                } // if the asset is present and an instance of SmartestRenderableAsset
             
-            return $html.$edit_link;
+            } // end of if $display is not false
+          
+        }else{ // placeholder is not defined.
             
+            $html = '<!--Placeholder "'.$placeholder_name.'" not defined-->';
+            
+        }
+        
+        $html .= $this->renderEditPlaceholderButton($placeholder_name, $params);
+        
+        return $html;
+        
+    }
+    
+    public function renderEditPlaceholderButton($placeholder_name, $params){
+        
+        $placeholder_def = $this->getPage()->getPlaceholderDefinition($placeholder_name, $this->getDraftMode());
+        // $type_code = $placeholder_def->getType();
+        $placeholder = new SmartestPlaceholder;
+        
+        $instance_name = isset($params['instance']) ? SmartestStringHelper::toVarName($params['instance']) : 'default';
+        
+        if($placeholder->findBy('name', SmartestStringHelper::toVarName($placeholder_name))){
+            
+            $type_code = $placeholder->getType();
+            $assetclass_types = SmartestDataUtility::getAssetClassTypes();
+            $edit_link = '';
+        
+            if(isset($assetclass_types[$type_code])){
+            
+                if((isset($assetclass_types[$type_code]['setfrompreview']) && SmartestStringHelper::isFalse($assetclass_types[$type_code]['setfrompreview'])) || (isset($params['showcontrol']) && SmartestStringHelper::isFalse($params['showcontrol']))){ 
+                
+                    if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
+                        $edit_link = "<!--This placeholder cannot be set from preview mode-->";
+                    }
+                
+                }else{
+                
+                    $show_edit_link = ($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment");
+            
+                    if($show_edit_link){
+            
+                        if($this->_request_data->g('action') == "renderEditableDraftPage"){
+                        
+                            if($this->getPage() instanceOf SmartestItemPage){
+                                $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$placeholder_def->getPlaceholder()->getName()."&amp;page_id=".$this->page->getWebid().'&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
+                                $delete_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$placeholder_def->getPlaceholder()->getName()."&amp;page_id=".$this->page->getWebid().'&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
+                            }else{
+                                $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$placeholder_def->getPlaceholder()->getName()."&amp;page_id=".$this->page->getWebid();
+                            }
+                            
+                            $edit_url .= '&amp;instance='.$instance_name;
+                        
+                            if($this->getPage()->hasPlaceholderDefinition($placeholder_name, $instance_name)){
+                        
+            			        $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definition for placeholder: ".$placeholder_def->getPlaceholder()->getLabel()." (".$placeholder_def->getPlaceholder()->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
+                                if($this->_hide_edit_buttons) $edit_link .= ';display:none';
+                                $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/placeholder-switch.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this file--></a>";
+                        
+                            }else{
+                            
+                                if($this->getPage()->getPlaceholderDefinition($placeholder_name, $this->getDraftMode())->getPlaceholder()->getType() == "SM_ASSETCLASS_RICH_TEXT"){
+                                    $edit_link = "<p class=\"sm-edit-area sm-edit-empty-paragraph\"";
+                                    if($this->_hide_edit_buttons) $edit_link .= ' style="display:none"';
+                                    $edit_link .= "><a class=\"sm-edit-button\" title=\"Click to choose or upload a file for for placeholder: ".$placeholder_def->getPlaceholder()->getLabel()." (".$placeholder_def->getPlaceholder()->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
+                                    if($this->_hide_edit_buttons) $edit_link .= ';display:none';
+                                    $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/fill-empty-placeholder-text.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Upload new text--></a></p>";
+                                }else{
+                                    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to choose or upload a file for for placeholder: ".$placeholder_def->getPlaceholder()->getLabel()." (".$placeholder_def->getPlaceholder()->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
+                                    if($this->_hide_edit_buttons) $edit_link .= ';display:none';
+                                    $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/fill-empty-placeholder.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Upload new file--></a>";
+                                }
+                            
+                            }
+                        
+        		        }else{
+        			        $edit_link = "<!--edit link-->";
+        		        }
+	        
+    	            }else{
+    	                // Not draft mode, so display nothing
+                        $edit_link = "<!--Not draft mode, so display nothing-->";
+    	            }
+                }
+            
+            }else{
+                // placeholder type does not exist
+                $edit_link = "<!--placeholder type '".$type_code."' does not exist-->";
+            }
+        
         }else{
+            
+            // placeholder does not exist, so the type cannot be known
             
             if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
             
-                $ph = new SmartestPlaceholder;
-                
-                if((isset($params['showcontrol']) && SmartestStringHelper::isFalse($params['showcontrol'])) || (isset($params['display']) && SmartestStringHelper::isFalse($params['display']))){
-                    
+                if(isset($params['showcontrol']) && SmartestStringHelper::isFalse($params['showcontrol'])){
+                    $edit_link = "<!--placeholder '".$placeholder_name."' does not exist-->";
                 }else{
-                    
-                    if($ph->findBy('name', $placeholder_name)){
-                        
-                        $show_edit_link = isset($params['showeditbutton']) ? (SmartestStringHelper::toRealBool($params['showeditbutton']) && $this->_request_data->g('action') == "renderEditableDraftPage") : ($ph->isEditableFromPreview() && $this->_request_data->g('action') == "renderEditableDraftPage");
-                        
-                        if($show_edit_link){
-                        
-                            if($this->getPage() instanceOf SmartestItemPage){
-                                $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$ph->getName()."&amp;page_id=".$this->page->getWebid().'&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
-                            }else{
-                                $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$ph->getName()."&amp;page_id=".$this->page->getWebid();
-                            }
-                        
-                            if($this->getPage()->getPlaceholderDefinition($placeholder_name, $this->getDraftMode())->getPlaceholder()->getType() == "SM_ASSETCLASS_RICH_TEXT"){
-                                $edit_link = "<p class=\"sm-edit-area sm-edit-empty-paragraph\"";
-                                if($this->_hide_edit_buttons) $edit_link .= ' style="display:none"';
-                                $edit_link .= "><a class=\"sm-edit-button\" title=\"Click to choose or upload a file for for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
-                                if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                                $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/fill-empty-placeholder-text.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Upload new text--></a></p>";
-                            }else{
-                                $edit_link = "<a class=\"sm-edit-button\" title=\"Click to choose or upload a file for for placeholder: ".$ph->getLabel()." (".$ph->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
-                                if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                                $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/fill-empty-placeholder.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Upload new file--></a>";
-                            }
-                            
-                            return $edit_link;
-                        
-                        }
-                        
-                    }else{
-                        
-                        $edit_link = "<a class=\"sm-edit-button\" title=\"Placeholder ".$placeholder_name." does not exist. Click to create.\" href=\"".$this->_request_data->g('domain')."websitemanager/addPlaceholder?placeholder_name=".$placeholder_name."\" style=\"text-decoration:none;font-size:11px";
-                        if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                        $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/error.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
-                        return $edit_link;
-                        
-                    }
-                
+                    $edit_link = "<a class=\"sm-edit-button\" title=\"Placeholder ".$placeholder_name." does not exist. Click to create.\" href=\"".$this->_request_data->g('domain')."websitemanager/addPlaceholder?placeholder_name=".$placeholder_name."\" style=\"text-decoration:none;font-size:11px";
+                    if($this->_hide_edit_buttons) $edit_link .= ';display:none';
+                    $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/error.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
                 }
             
             }
             
         }
+        
+        return $edit_link;
         
     }
     
@@ -1354,7 +1335,6 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 
                 if($set->findBy('name', $name, $this->page->getSiteId()) || $this->getDataSetsHolder()->h((string) $name)){
         		    
-        		    // echo "site ".$this->page->getSiteId();
         		    $dah = new SmartestDataAppearanceHelper;
                     $dah->setDataSetAppearsOnPage($set->getId(), $this->getPage()->getId());
                     $start = (isset($params['start']) && is_numeric($params['start'])) ? $params['start'] : 1;

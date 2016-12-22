@@ -18,15 +18,16 @@ ul.tree-parent-node-closed{
 	margin-left:16px;
 	background-image:url(../Images/top.gif);
 	background-repeat:no-repeat;
-	display:none;
 }
 
 ul.tree-parent-node-open li.first, ul.tree-parent-node-closed li.first{
 	background-image:url(../Images/first.gif);
 	background-repeat:no-repeat;
 	margin:0px;
-	padding-bottom:3px;
+	padding:2px 0px;
 	margin-left:2px;
+    min-height:24px;
+    box-sizing:border-box;
 	/*border:1px solid #0f0;*/
 	/*padding-left:15px;*/
 }
@@ -35,8 +36,10 @@ ul.tree-parent-node-open li.middle, ul.tree-parent-node-closed li.middle{
 	background-image:url(../Images/middle.gif);
 	background-repeat:repeat-y;
 	margin:0px;
-	padding-bottom:3px;
+	padding:2px 0px;
 	margin-left:2px;
+    min-height:24px;
+    box-sizing:border-box;
 	/*border:1px solid #f90;*/
 	/*padding-left:15px;*/
 }
@@ -45,8 +48,10 @@ ul.tree-parent-node-open li.last, ul.tree-parent-node-closed li.last{
 	background-image:url(../Images/last.gif);
 	background-repeat:no-repeat;
 	margin:0px;
-	padding-bottom:3px;
+	padding:2px 0px;
 	margin-left:2px;
+    min-height:24px;
+    box-sizing:border-box;
 	/*border:1px solid #f00;*/
 	/*padding-left:15px;*/
 }

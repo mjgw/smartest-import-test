@@ -134,7 +134,6 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
         }
         
         if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
-            // echo "blah";
             $this->_render_data->setParameter('markup', $this->getContent());
         }
 	    

@@ -1,0 +1,6 @@
+help:
+  oembed:
+    title: OEmbed
+    keywords: [content, api, embed]
+    content: oembed.tpl
+    wiki_url: http://wiki.smartestproject.org/OEmbed_support

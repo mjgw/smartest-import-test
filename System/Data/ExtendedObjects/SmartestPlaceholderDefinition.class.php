@@ -16,13 +16,15 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
 		
 	}
 	
-	public function load($name, $page, $draft=false, $item_id=''){
+	public function load($name, $page, $draft=false, $item_id=null, $instance_name='default'){
         
         if(strlen($name) && is_object($page)){
             
             $this->_page = $page;
             
             $placeholder = new SmartestPlaceholder;
+            
+            $instance_name = SmartestStringHelper::toVarName($instance_name);
             
             $sql = "SELECT * FROM AssetClasses WHERE assetclass_type != 'SM_ASSETCLASS_CONTAINER' AND assetclass_type != 'SM_ASSETCLASS_ITEM_SPACE' AND assetclass_name='".$name."' AND (assetclass_site_id='".$page->getSiteId()."' OR assetclass_shared=1)";
             $result = $this->database->queryToArray($sql);
@@ -38,6 +40,10 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
                     $sql .= " AND assetidentifier_item_id='".$item_id."'";
                 }else{
                     $sql .= " AND assetidentifier_item_id IS NULL";
+                }
+                
+                if(strlen($instance_name)){
+                    $sql .= " AND assetidentifier_instance_name='".$instance_name."'";
                 }
                 
                 $result = $this->database->queryToArray($sql);
@@ -80,15 +86,17 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
         }
     }
     
-    public function loadForUpdate($name, $page, $item_id=false){
+    public function loadForUpdate($name, $page, $item_id=null, $instance_name='default'){
         
         if(strlen($name) && is_object($page)){
             
             $placeholder = new SmartestPlaceholder;
             
+            $instance_name = SmartestStringHelper::toVarName($instance_name);
+            
             if($placeholder->hydrateBy('name', $name)){
                 
-                return $this->loadWithObjects($placeholder, $page, $item_id);
+                return $this->loadWithObjects($placeholder, $page, $item_id, $instance_name);
                 
             }else{
                 // Placeholder by that name doesn't exist
@@ -98,10 +106,11 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
         }
     }
     
-    public function loadWithObjects(SmartestPlaceholder $placeholder, SmartestPage $page, $item_id=false){
+    public function loadWithObjects(SmartestPlaceholder $placeholder, SmartestPage $page, $item_id=null, $instance_name='default'){
         
         $this->_asset_class = $placeholder;
         $this->_page = $page;
+        $instance_name = SmartestStringHelper::toVarName($instance_name);
         
         $sql = "SELECT * FROM AssetIdentifiers WHERE assetidentifier_assetclass_id='".$this->_asset_class->getId()."' AND assetidentifier_page_id='".$this->_page->getId()."'";
         
@@ -109,6 +118,10 @@ class SmartestPlaceholderDefinition extends SmartestAssetIdentifier{
             $sql .= " AND assetidentifier_item_id='".$item_id."'";
         }else{
             $sql .= " AND assetidentifier_item_id IS NULL";
+        }
+        
+        if(strlen($instance_name)){
+            $sql .= " AND assetidentifier_instance_name='".$instance_name."'";
         }
         
         $result = $this->database->queryToArray($sql);

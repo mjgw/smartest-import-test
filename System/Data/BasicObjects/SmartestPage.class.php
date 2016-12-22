@@ -2301,15 +2301,23 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             if($def_array['assetclass_type'] == 'SM_ASSETCLASS_CONTAINER'){
                 $def = new SmartestContainerDefinition;
                 $def->hydrateFromGiantArray($def_array);
-                $this->_containers[$def_array['assetclass_name']] = $def;
+                $this->_containers[$def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name']] = $def;
+                
+                // var_dump($def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name']);
+                
             }else{
                 $def = new SmartestPlaceholderDefinition;
                 $def->hydrateFromGiantArray($def_array);
                 $def->setAssetDraftMode($this->getDraftMode());
                 // $this->_placeholders[$def_array['assetclass_name']] = $def;
-                $this->_placeholders->setParameter($def_array['assetclass_name'], $def);
+                $this->_placeholders->setParameter($def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name'], $def);
+                
+                // print_r(array_keys($this->_placeholders->getParameters()));
+                
             }
         }
+        
+        // print_r(array_keys($this->_containers));
         
         $this->_asset_class_definitions_retrieved = true;
 	    
@@ -2343,16 +2351,21 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    
 	}
 	
-	public function hasContainerDefinition($container_name){
+	public function hasContainerDefinition($container_name, $instance_name='default'){
 	    
-	    return array_key_exists($container_name, $this->_containers);
+        $key = $container_name.':'.$instance_name;
+        // print_r(array_keys($this->_containers));
+	    return array_key_exists($key, $this->_containers);
 	    
 	}
 	
-	public function hasPlaceholderDefinition($placeholder_name){
+	public function hasPlaceholderDefinition($placeholder_name, $instance_name='default'){
 	    
+        $key = $placeholder_name.':'.$instance_name;
 	    // return array_key_exists($placeholder_name, $this->_placeholders);
-	    return $this->_placeholders->hasParameter($placeholder_name);
+        // print_r(array_keys($this->_placeholders->getParameters()));
+        // var_dump($key);
+	    return $this->_placeholders->hasParameter($key);
 	    
 	}
 	
@@ -2477,18 +2490,21 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         
     }
 	
-	public function getContainerDefinition($container_name){
+	public function getContainerDefinition($container_name, $instance_name='default'){
 	    
-	    if(array_key_exists($container_name, $this->_containers)){
+        $key = $container_name.':'.$instance_name;
+        
+        if(array_key_exists($key, $this->_containers)){
 	        
-	        $container = $this->_containers[$container_name];
+	        $container = $this->_containers[$key];
 	        return $container;
 	        
 	    }else{
-	    
+	        
 	        $container = new SmartestContainerDefinition;
-            $container->load($container_name, $this, $this->getDraftMode());
-            return $container;
+            if($container->load($container_name, $this, $this->getDraftMode(), null, $instance_name)){
+                return $container;    
+            }
         
         }
 	    
@@ -2505,17 +2521,19 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    return $this->_containers;
 	}
 	
-	public function getPlaceholderDefinition($placeholder_name){
+	public function getPlaceholderDefinition($placeholder_name, $instance_name='default'){
 	    
-	    if($this->_placeholders->getParameter($placeholder_name)){
+        $key = $placeholder_name.':'.$instance_name;
+        
+	    if($this->_placeholders->getParameter($key)){
 	        
 	        // $placeholder = $this->_placeholders[$placeholder_name];
-	        return $this->_placeholders->getParameter($placeholder_name);
+	        return $this->_placeholders->getParameter($key);
 	        
 	    }else{
 	    
 	        $placeholder = new SmartestPlaceholderDefinition;
-            $placeholder->load($placeholder_name, $this, $this->getDraftMode());
+            $placeholder->load($placeholder_name, $this, $this->getDraftMode(), null, $instance_name);
             return $placeholder;
         
         }

@@ -50,7 +50,8 @@ class SmartestAssetClassesHelper{
 	    
 	    if(isset($ptypes[$type])){
 	        $atypes = $ptypes[$type]['accept'];
-	        if(is_array($atypes)){
+            
+            if(is_array($atypes)){
 	            $h = new SmartestAssetsLibraryHelper;
 	            return $h->getSelectedTypes($atypes);
 	        }else{

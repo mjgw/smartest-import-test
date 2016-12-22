@@ -81,7 +81,7 @@ var setEUCookieMode = function(state){
     <div class="edit-form-row">
       <div class="form-section-label">Enable OEmbed?</div>
       {boolean name="site_oembed_enabled" id="site-oembed-enabled" value=$oembed_enabled}
-      <div class="form-hint">OEmbed allows small previews to be built for pages on your site and embedded on other web pages</div>
+      <div class="form-hint">OEmbed allows small previews to be built for pages on your site and embedded on other web pages. {help id="website:oembed"}More about oEmbed{/help}</div>
       {* boolean name="site_oembed_enabled" id="site-oembed-enabled" value=$oembed_enabled changehook="setEUCookieMode" *}
     </div>
     

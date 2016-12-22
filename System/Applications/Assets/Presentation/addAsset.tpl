@@ -110,11 +110,19 @@ function validateUploadSuffix(){
     
     <form action="{$domain}smartest/file/new" method="get" id="file-type-form">
       <div class="edit-form-row">
+{if $for=='placeholder'}
+        <select name="asset_type" id="file-type-select">
+{foreach from=$types item="type"}
+          <option value="{$type.id}">{$type.label}</option>
+{/foreach}
+        </select>
+{else}
         <select name="asset_type" id="file-type-select">
 {foreach from=$types item="type"}
           {if !isset($type.hidden) || !_b($type.hidden)}<option value="{$type.id}">{$type.label}</option>{/if}
 {/foreach}
-        </select>
+        </select>        
+{/if}        
       </div>
       
     {if $for}
@@ -123,6 +131,7 @@ function validateUploadSuffix(){
         <input type="hidden" name="placeholder_id" value="{$placeholder.id}" class="purpose_inputs" />
         <input type="hidden" name="page_id" value="{$page.id}" class="purpose_inputs" />
         {if $item}<input type="hidden" name="item_id" value="{$item.id}" class="purpose_inputs" />{/if}
+        {if $instance}<input type="hidden" name="instance" value="{$instance}" class="purpose_inputs" />{/if}
       {elseif $for=='ipv'}
         <input type="hidden" name="for" value="ipv" class="purpose_inputs" />
         <input type="hidden" name="property_id" value="{$property.id}" class="purpose_inputs" />
@@ -149,6 +158,8 @@ function validateUploadSuffix(){
         <input type="hidden" name="for" value="placeholder" class="purpose_inputs" />
         <input type="hidden" name="placeholder_id" value="{$placeholder.id}" class="purpose_inputs" />
         <input type="hidden" name="page_id" value="{$page.id}" class="purpose_inputs" />
+        <input type="hidden" name="instance" value="{$instance}" class="purpose_inputs" />
+        {if $item}<input type="hidden" name="item_id" value="{$item.id}" class="purpose_inputs" />{/if}
       {elseif $for=='ipv'}
         <input type="hidden" name="for" value="ipv" class="purpose_inputs" />
         <input type="hidden" name="property_id" value="{$property.id}" class="purpose_inputs" />

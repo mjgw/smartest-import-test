@@ -6,12 +6,30 @@
     
     <input type="hidden" name="page_id" value="{$page.id}" />
     <input type="hidden" name="container_id" value="{$container.id}" />
+    <input type="hidden" name="instance" value="{$instance}" />
     {if $item_id}<input type="hidden" name="item_id" value="{$item_id}" />{/if}
     
     <div class="edit-form-row">
       <div class="form-section-label">Template name</div>
       <input type="text" name="new_template_label" id="new-template-label" value="New container template" class="unfilled" />
     </div>
+    
+    {if $item_id}
+    <div class="edit-form-row">
+      <div class="form-section-label">Define container on this meta-page for:</div>
+      <select name="definition_scope">
+        
+        <option value="THIS">This {$item._model.name|strtolower} only</option>
+        {if $selected_template_id > 0}
+        <option value="ALL">All {$item._model.plural_name|strtolower} (removes all other per-item definitions)</option>
+        {else}
+        <option value="DEFAULT">All {$item.model.plural_name|strtolower} without per-item definitions</option>
+        <option value="ALL">All {$item.model.plural_name|strtolower} (removes all other per-item definitions)</option>
+        {/if}
+        
+      </select>
+    </div>
+    {/if}
   
     <div class="edit-form-row">
       <div class="form-section-label">Which file would you like to import?</div>
@@ -24,6 +42,7 @@
     </div>
     
     <div class="buttons-bar">
+      <input type="button" value="Cancel" onclick="cancelForm();" />
       <input type="submit" value="Import selected template" disabled="disabled" id="submit-button" />
     </div>
   
