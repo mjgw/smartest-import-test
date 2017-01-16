@@ -131,6 +131,9 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
             
             case "page":
             return $this->_page;
+            
+            case "is_page":
+            return ($this instanceof SmartestItemPage) ? false : true;
         
             case "site":
             return $this->getSite();

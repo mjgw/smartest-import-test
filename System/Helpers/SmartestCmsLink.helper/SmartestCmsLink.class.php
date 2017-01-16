@@ -63,6 +63,10 @@ class SmartestCmsLink extends SmartestHelper{
             $this->_model = $this->recognizeModel($this->_render_data->getParameter('model'));
         }
         
+        if($this->_destination_properties->hasParameter('_is_twitter')){
+            $this->addClass('sm-link-twitter');
+        }
+        
         /* if($this->_destination_properties->hasParameter('metapage')){
             $this->_hash = $this->_destination_properties->getParameter('metapage');
         }

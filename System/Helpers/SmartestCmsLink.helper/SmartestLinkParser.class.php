@@ -34,7 +34,11 @@ class SmartestLinkParser{
                     if(strlen($m[7])){
                         $l->setParameter('newwin', true);
                     }
-                
+                    
+                    if(strpos($m[8], '://twitter.com/')){
+                        $l->setParameter('_is_twitter', true);
+                    }
+                    
                     if($m[10]){
                         $l->setParameter('text', $m[10]);
                     }else{

@@ -89,6 +89,7 @@ var setEUCookieMode = function(state){
       <div class="form-section-label">Google Analytics Site ID</div>
       <input type="text" name="site_ga_id" value="{$site_ga_id}" />
       <div class="form-hint">Usually takes the form <em>UA-1234567-1</em></div>
+      <div class="edit-form-sub-row">To make yourself invisible to the analytics tag embedded on web pages for three weeks, <a href="http://{$site.domain}/website/setAnalyticsIgnoreCookie?returnTo={$cookie_set_return}" class="button small">Click here</a></div>
     </div>
 
     <div class="edit-form-row">

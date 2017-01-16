@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 833
+    revision: 834
     minimum_php_version: 5.3
     minimum_database_version: 21
     default_timezone: Europe/London
@@ -40,6 +40,7 @@ system:
     - website/pageFragment
     - website/pageInfo
     - website/setPrivacyCookieNoJS
+    - website/setAnalyticsIgnoreCookie
     - website/renderDynamicBrowserInstruction
     - website/getDataSetFeed
     - website/oEmbedFragment
@@ -58,6 +59,7 @@ system:
     - website/pageFragment
     - website/pageInfo
     - website/setPrivacyCookieNoJS
+    - website/setAnalyticsIgnoreCookie
     - website/renderDynamicBrowserInstruction
     - website/getDataSetFeed
     - website/oEmbedFragment

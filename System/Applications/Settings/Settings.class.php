@@ -200,6 +200,8 @@ class Settings extends SmartestSystemApplication{
 	    }
 	}
     
+    
+    
     public function editCmsSettings(){
         
         $this->requireOpenProject();
@@ -209,7 +211,9 @@ class Settings extends SmartestSystemApplication{
     	    if($this->getSite() instanceof SmartestSite){
 		    
     		    $site_id = $this->getSite()->getId();
-		    
+                
+                $this->send($this->getSite(), 'site');
+            
     		    $main_page_templates = SmartestFileSystemHelper::load(SM_ROOT_DIR.'Presentation/Masters/');
                 
                 $default_suffix = $this->getGlobalPreference('default_url_suffix', 'html');
@@ -248,6 +252,15 @@ class Settings extends SmartestSystemApplication{
                 $this->send($ga_id, 'site_ga_id');
                 
                 $this->send(!(bool) $this->getSite()->getIsEnabled(), 'site_disabled');
+                
+                // $this->send(, 'current_hostname');
+                // $this->send($_SERVER['HTTPS'], 'is_secure');
+                
+                $protocol = $_SERVER['HTTPS'] ? 'https' : 'http';
+                $host = $_SERVER['HTTP_HOST'];
+                $domain = $this->getRequest()->getDomain();
+                $returnTo = $protocol.'://'.$host.$domain.'smartest/cmssettings';
+                $this->send(urlencode($returnTo), 'cookie_set_return');
                 
                 // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
                     $distinguish_mobiles = $this->getGlobalPreference('site_responsive_distinguish_mobile');

@@ -776,6 +776,14 @@ class CmsFrontEnd extends SmartestSystemApplication{
         
     }
     
+    public function setAnalyticsIgnoreCookie(){
+        
+        $v = setcookie('SMARTEST_ANALYTICS_IGNORE', '1', time()+3600*24*21, '/'); // Sets the cookie for three weeks
+        header('Location:'.$this->getRequestParameter('returnTo'));
+        exit;
+        
+    }
+    
     public function setPrivacyCookieNoJS(){
         
         // TODO: A server-side setting of the SMARTEST_COOKIE_CONSENT cookie
