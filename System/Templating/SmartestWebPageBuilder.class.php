@@ -469,7 +469,20 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
           
         }else{ // placeholder is not defined.
             
-            $html = '<!--Placeholder "'.$placeholder_name.'" not defined-->';
+            $display = (isset($params['display']) && in_array(strtolower($params['display']), array('file', 'filename', 'full', 'path', 'normal', 'download', 'size', 'false'))) ? $params['display'] : 'normal';
+            
+            switch($display){
+                
+                case "file":
+                case "filename":
+                case "full":
+                case "path":
+                return;
+                
+                default:
+                $html = '<!--Placeholder "'.$placeholder_name.'" not defined-->';
+                
+            }
             
         }
         

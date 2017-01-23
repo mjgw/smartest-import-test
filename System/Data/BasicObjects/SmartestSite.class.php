@@ -542,6 +542,10 @@ class SmartestSite extends SmartestBaseSite{
     
     public function getContentByUrl($url){
         
+        if($url == '/'){
+            return $this->getHomePage();
+        }
+        
         if(strlen($url) > 1 && $url{0} == '/'){
             $url = substr($url, 1);
         }

@@ -1,0 +1,80 @@
+body{
+background-color:#FFFFFF;color:#000000;font-family:Georgia,serif;font-size:16px;scrollbar-3dlight-color:#F0F0EE;scrollbar-arrow-color:#676662;scrollbar-base-color:#F0F0EE;scrollbar-darkshadow-color:#DDDDDD;scrollbar-face-color:#E0E0DD;scrollbar-highlight-color:#F0F0EE;scrollbar-shadow-color:#F0F0EE;scrollbar-track-color:#F5F5F5}
+
+p,li{line-height:1.4em;}
+td,th{font-family:Georgia,serif;font-size:11px}
+
+.sm-attachment-proxy{
+    border:1px solid #999;
+    padding:15px;
+    max-width:50%;
+    font-size:14px;
+    font-family:courier,monospace;
+    border-radius:3px;
+    -webkit-border-radius:3px;
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.35);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.35);
+    box-sizing:border-box;
+    cursor:default;
+}
+
+h2, h3, h4, h5, h6{
+    margin:0.8em 0 0.4em 0;
+}
+
+.sm-attachment-proxy.center{
+    margin: 0 auto 10px auto;
+}
+
+.mce-object{
+    border:1px dotted #3A3A3A;background:#d5d5d5 url(img/object.gif) no-repeat center
+}
+
+.mce-pagebreak{
+    cursor:default;display:block;border:0;width:100%;height:5px;border:1px dashed #666;margin-top:15px;page-break-before:always
+}
+
+@media print{
+    .mce-pagebreak{border:0px}
+}
+
+.mce-item-anchor{
+   cursor:default;
+   display:inline-block;
+   -webkit-user-select:all;
+   -webkit-user-modify:read-only;
+   -moz-user-select:all;
+   -moz-user-modify:read-only;
+   user-select:all;
+   user-modify:read-only;
+   width:9px !important;
+   height:9px !important;
+   border:1px dotted #3A3A3A;
+   background:#d5d5d5 url(img/anchor.gif) no-repeat center
+}
+
+.mce-nbsp{
+    background:#AAA
+}
+
+hr{
+    cursor:default
+}
+
+.mce-match-marker{background:#AAA;color:#fff}
+.mce-match-marker-selected{background:#3399ff;color:#fff}
+.mce-spellchecker-word{border-bottom:2px solid #F00;cursor:default}
+.mce-spellchecker-grammar{border-bottom:2px solid #008000;cursor:default}
+
+.mce-item-table,.mce-item-table td, .mce-item-table th,.mce-item-table caption{
+    border:1px dashed #BBB
+}
+
+td.mce-item-selected,th.mce-item-selected{
+    background-color:#3399ff !important
+}
+
+.mce-edit-focus{
+    outline:1px dotted #333
+}

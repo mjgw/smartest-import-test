@@ -1,5 +1,7 @@
-<!--Smartest Text Attachment: <?sm:$_textattachment._name:?>-->
-<div class="sm-attachment <?sm:$_textattachment.alignment:?>" style="<?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>width:<?sm:$_textattachment.div_width :?>px;<?sm:/if:?><?sm:if $_textattachment.border :?>border: 1px solid #ccc;padding:6px;<?sm:/if:?><?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>float: <?sm:else:?>text-align: <?sm:/if:?><?sm:$_textattachment.alignment:?>; margin:<?sm:if $_textattachment.alignment == "right" :?>0 0 10px 10px;<?sm:else if $_textattachment.alignment == "left" :?>0 10px 10px 0;<?sm:/if:?>">
+<?sm:if $sm_user_agent.is_unsupported_browser:?><?sm:/if:?>
+
+<?sm:if !$_textattachment.float:?><div class="sm-attachment-outer <?sm:$_textattachment.alignment:?>"><?sm:/if:?>
+<figure class="sm-attachment<?sm:if $_textattachment.float:?> float<?sm:else:?> nofloat<?sm:/if:?> <?sm:$_textattachment.alignment:?><?sm:if $_textattachment.border :?> sm-border<?sm:/if:?>" style="">
 
 <?sm:* $_textattachment.asset.render_data_debug *:?>
 
@@ -18,13 +20,17 @@
 <?sm:/if:?>
 
 <?sm:if strlen($_textattachment.caption) || strlen($_textattachment.asset.credit) :?>
-<div class="sm-attachment-caption" style="text-align:<?sm:$_textattachment.caption_alignment :?>;display:block; margin:5px 0 0 0;font-size:0.8em;<?sm:if $_textattachment.float && $_textattachment.alignment != 'center' :?>width:<?sm:$_textattachment.div_width :?>px<?sm:/if:?>">
-  <?sm:$_textattachment.caption:?>
-  <?sm:if strlen($_textattachment.asset.credit):?>Image: <?sm:$_textattachment.asset.credit:?><?sm:/if:?>
-  <?sm:$_textattachment.edit_link:?>
-</div>
+  <figcaption class="sm-attachment-caption" style="text-align:<?sm:$_textattachment.caption_alignment :?><?sm:if $_textattachment.alignment != 'center' :?>;max-width:<?sm:$_textattachment.div_width :?>px<?sm:/if:?>">
+    <?sm:$_textattachment.caption:?>
+    <?sm:if strlen($_textattachment.asset.credit):?>
+    <?sm:if $_textattachment.asset.type == 'SM_ASSETTYPE_JPEG_IMAGE':?>Photo<?sm:else:?>Image<?sm:/if:?>: <?sm:$_textattachment.asset.credit:?>
+    <?sm:/if:?>
+    <?sm:$_textattachment.edit_link:?>
+  </figcaption>
 <?sm:else:?>
   <?sm:$_textattachment.edit_link:?>
 <?sm:/if:?>
 
-</div>
+</figure>
+<?sm:if !$_textattachment.float:?></div><?sm:/if:?>
+<!SM_ATT_HB>

@@ -107,3 +107,12 @@ oembed:
     response_type: json
     fa_iconname: vine
     provider_name: Vine
+  SM_OEMBED_WISTIA:
+    id: SM_OEMBED_WISTIA
+    label: Wistia Video
+    provides_html: true
+    url: http://fast.wistia.com/oembed?url=$URL
+    url_pattern: '(.+)?(wistia.com|wi.st)\/(medias|embed)\/(.*)'
+    response_type: json
+    fa_iconname: video-camera
+    provider_name: Wistia

@@ -103,7 +103,10 @@
             editor.on('change', function () {
                 editor.save();
             });
-        }
+        },
+        relative_urls : false,
+        document_base_url : sm_domain,
+        skin: "smartest"
 
     });
   

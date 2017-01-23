@@ -79,7 +79,7 @@ class SmartestEngine extends Smarty{
 		$cp->assign('method', isset($this->_tpl_vars['method']) ? $this->_tpl_vars['method'] : null);
 		$cp->assign('domain', $this->_tpl_vars['domain']);
 		$cp->assign('class', isset($this->_tpl_vars['class']) ? $this->_tpl_vars['class'] : null);
-		$cp->assign('sm_user_agent', isset($this->_tpl_vars['sm_user_agent']) ? $this->_tpl_vars['sm_user_agent'] : null);
+		$cp->assign('sm_user_agent', isset($this->_tpl_vars['sm_user_agent']) ? $this->_tpl_vars['sm_user_agent'] : $this->getUserAgent());
 		$cp->assign('request_parameters', $this->_request_data->getParameter('request_parameters'));
 		$cp->caching = (bool) $caching;
 		

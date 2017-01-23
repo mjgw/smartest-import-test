@@ -251,7 +251,15 @@ class SmartestItemPage extends SmartestPage{
         return $data;*/
         
 	}
-	
+    
+    public function getLinkCode(){
+        return "[[".SmartestStringHelper::toVarName($this->_simple_item->getModel()->getName()).":".$this->_simple_item->getSlug()."]]";
+    }
+    
+	public function getLinkCodeWithTextField(){
+        return "[[".SmartestStringHelper::toVarName($this->_simple_item->getModel()->getName()).":".$this->_simple_item->getSlug()."|%%TEXT%%]]";
+    }
+    
 	public function loadAssetClassDefinitions(){
 	    
 	    parent::loadAssetClassDefinitions();
@@ -301,7 +309,7 @@ class SmartestItemPage extends SmartestPage{
 	        return "website/renderPageFromId?page_id=".$this->getWebid().'&item_id='.$this->_simple_item->getWebId();
 	        
 	        case "link_code":
-	        return "[[".SmartestStringHelper::toVarName($this->_simple_item->getModel()->getName()).":".$this->_simple_item->getSlug()."]]";
+	        return $this->getLinkCode();
 	        
 	        case "model":
 	        return $this->_simple_item->getModel();

@@ -219,6 +219,7 @@ type:
 #      - {name: class, label: "CSS class attribute", type: SM_DATATYPE_SL_TEXT, required: false}
 #      - {name: style, label: "Style attribute", type: SM_DATATYPE_SL_TEXT,  required: false}
 #      - {name: link_href, label: Link destination, type: SM_DATATYPE_URL, required: false}
+
   SM_ASSETTYPE_ICO_FAVICON:
     id: SM_ASSETTYPE_ICO_FAVICON
     category: image
@@ -227,7 +228,7 @@ type:
     class: SmartestImageAsset
     icon: picture.png
     fa_iconname: file-image-o
-    attachable: true
+    attachable: false
     captionable: true
     parsable: false
     show_preview_edit_link: false

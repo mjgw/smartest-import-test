@@ -4034,7 +4034,7 @@ class Pages extends SmartestSystemApplication{
 	    $attachment = $parts[1];
 	    $asset = new SmartestAsset;
 	    
-	    if($asset->hydrateBy('stringid', $asset_stringid)){
+	    if($asset->hydrateBy('stringid', $asset_stringid, $this->getSite()->getId())){
 	        $this->redirect('/assets/defineAttachment?attachment='.$attachment.'&asset_id='.$asset->getId());
 	    }else{
 	        
@@ -5538,6 +5538,33 @@ class Pages extends SmartestSystemApplication{
     public function addPageDownload(){
         
         
+        
+    }
+    
+    //////// Blocklists stuff ///////
+    
+    public function editBlocklist(){
+        
+		$helper = new SmartestPageManagementHelper;
+		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
+		
+		if(isset($type_index[$page_webid])){
+		    if(($type_index[$page_webid] == 'ITEMCLASS' || $type_index[$page_webid] == 'SM_PAGETYPE_ITEMCLASS' || $type_index[$page_webid] == 'SM_PAGETYPE_DATASET') && $this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
+		        $page = new SmartestItemPage;
+		    }else{
+		        $page = new SmartestPage;
+		    }
+		}else{
+		    $page = new SmartestPage;
+		}
+        
+        $page_webid = $this->getRequestParameter('page_id');
+        
+        if($page->smartFind($page_webid)){
+            
+            
+            
+        }
         
     }
 

@@ -677,6 +677,13 @@ class PagesManager{
                 case 'blocklist':
                 
                 // echo $name;
+                $info[$i]['info']['exists'] = 'true';
+			    $info[$i]['info']['assetclass_name'] = $name;
+                $info[$i]['info']['assetclass_id'] = $name;
+                $info[$i]['info']['type'] = "blocklist";
+                $info[$i]['info']['defined'] = 'PUBLISHED';
+                $info[$i]['info']['instance'] = $instance;
+                $info[$i]['state'] = 'open';
                 
                 break;
                 
@@ -732,8 +739,15 @@ class PagesManager{
                 
                 break;
                 
+                case 'parameter':
                 
+                // var_dump($parent_instance);
+                // $info[$i]['info']['type'] = "parameter";
+                // $info[$i]['info']['assetclass_name'] = $name;
+                // $info[$i]['state'] = 'open';
+                // $info[$i]['info']['instance'] = $instance;
                 
+                break;
                 
                 case 'itemspace':
                 
@@ -1392,7 +1406,7 @@ class PagesManager{
 	
 	public function getTemplateTags($template_file_path){
 		
-        $capture_tags = array('list', 'container', 'placeholder', 'template', 'itemspace', 'blocklist', 'var', 'field');
+        $capture_tags = array('list', 'container', 'placeholder', 'template', 'itemspace', 'blocklist', 'var', 'field', 'parameter');
         
 		if(is_file($template_file_path)){
 			

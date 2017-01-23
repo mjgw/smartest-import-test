@@ -2,15 +2,14 @@
 
 class SmartestImage extends SmartestFile{
     
+    // A class for handling binary images such as JPEGs and PNGs
+    
     protected $_resource;
     protected $_image_type = null;
     protected $_width;
     protected $_height;
     protected $_thumbnail_resource;
     protected $_render_data;
-    // these vars are already declared in SmartestFile:
-    // protected $_original_file_path;
-    // protected $_current_file_path;
     
     const JPEG = 'jpeg';
     const JPG = 'jpeg';

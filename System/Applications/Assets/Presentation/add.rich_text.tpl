@@ -44,7 +44,9 @@ tinymce.init({
         /<\?sm:.*?:\?>/g  // Protect php code
     ],
     paste_word_valid_elements: "b,strong,i,em,h2,h3,h4,p",
-    toolbar: "insertfile undo redo | styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code"
+    toolbar: "insertfile undo redo | styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code",
+    document_base_url : sm_domain,
+    skin: "smartest"
 });
 
 {/literal}

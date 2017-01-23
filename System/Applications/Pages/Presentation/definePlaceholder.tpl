@@ -57,7 +57,7 @@ function toggleParamsHolder(){
           <option value="{$available_asset.id}"{if $available_asset.id==$asset.id} selected="selected"{/if}>{if $available_asset.id==$live_asset_id}* {/if}{$available_asset.label}</option>
         {/foreach}
       </select>
-      {if !$valid_definition}<br /><a class="button small" style="margin-top:5px" href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}">Upload a new file</a>{/if}
+      {if !$valid_definition}<br /><a class="button small" style="margin-top:5px" href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}">{if $placeholder.type == 'SM_ASSETCLASS_RICH_TEXT'}Write new text{else}Upload a new file{/if}</a>{/if}
       {/if}
       
     </div>
@@ -82,7 +82,7 @@ function toggleParamsHolder(){
     
       <div class="edit-form-row">
         <div class="form-section-label">Chosen File:</div>
-        {if $asset.is_binary_image}
+        {if $asset.is_binary_image && $placeholder.type != 'SM_ASSETCLASS_STATIC_IMAGE'}
         {$asset.image.constrain_150}
         <div class="breaker"></div>
         <div class="edit-form-sub-row">

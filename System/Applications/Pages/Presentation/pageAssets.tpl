@@ -122,7 +122,7 @@ function viewLivePage(parameters){
 <!--Navigation Bar-->
 
 <ul class="invisible-actions-list" id="placeholder-specific-actions" style="display:none">
-  <li><b>Placeholder Options</b></li>
+  <li><b>Placeholder options</b></li>
   <li class="permanent-action" id="placeholder-add" style="display:none"><a href="#" onclick="elementTree.workWithItem('addPlaceholder');">Add this placeholder</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('definePlaceholder');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define this placeholder</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('definePlaceholderWithNewFile');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_add.png" border="0" alt=""> Add a new file here</a></li>
@@ -136,7 +136,7 @@ function viewLivePage(parameters){
 </ul>
 
 <ul class="invisible-actions-list" id="container-specific-actions" style="display:none">
-  <li><b>Container Options</b></li>
+  <li><b>Container options</b></li>
   <li class="permanent-action" id="container-add" style="display:none"><a href="#" onclick="elementTree.workWithItem('addContainer');">Add this container</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define this container</a></li>
   {if $item}
@@ -149,37 +149,42 @@ function viewLivePage(parameters){
 </ul>
 
 <ul class="invisible-actions-list" id="list-specific-actions" style="display:none">
-  <li><b>List Options</b></li>
+  <li><b>List options</b></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineList');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define List Parameters</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('clearList');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear List Parameters</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="attachment-specific-actions" style="display:none">
-  <li><b>Attachment Options</b></li>
+  <li><b>Attachment options</b></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editAttachment');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Edit Attachment Settings</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="asset-specific-actions" style="display:none">
-  <li><b>File Options</b></li>
+  <li><b>File options</b></li>
   <li class="permanent-action"><a href="#" onclick="return elementTree.workWithItem('editFile');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Edit this file</a></li>
   <li class="permanent-action"><a href="#" onclick="return MODALS.load('assets/assetCommentStream?asset_id='+elementTree.lastItemId, 'File notes');" class="right-nav-link"><img src="{$domain}Resources/Icons/note.png" border="0" alt=""> View notes on this File</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="template-specific-actions" style="display:none">
-  <li><b>Template Options</b></li>
+  <li><b>Template options</b></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Edit This Template</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="itemspace-specific-actions" style="display:none">
-  <li><b>Itemspace Options</b></li>
+  <li><b>Itemspace options</b></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineItemspace');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define This Itemspace</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editItemspace');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit This Itemspace</a></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('clearItemspaceDefinition');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear This Itemspace</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="item-specific-actions" style="display:none">
-  <li><b>Item Options</b></li>
+  <li><b>Item options</b></li>
   <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('openItem');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit This Item</a></li>
+</ul>
+
+<ul class="invisible-actions-list" id="blocklist-specific-actions" style="display:none">
+  <li><b>Blocklist options</b></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editBlocklist');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this blocklist</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="field-specific-actions" style="display:none">

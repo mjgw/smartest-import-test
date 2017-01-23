@@ -258,12 +258,49 @@ document.observe('dom:loaded', function(){
     
     <div class="edit-form-row">
       <div class="form-section-label">Position</div>
+      <a class="attachment-position-selector{if $alignment == "left" && $float} selected{/if}" href="#float-left" id="attachment-float-left" data-float="true" data-align="left"></a>
+      <a class="attachment-position-selector{if $alignment == "right" && $float} selected{/if}" href="#float-right" id="attachment-float-right" data-float="true" data-align="right"></a>
+      <a class="attachment-position-selector{if $alignment == "center"} selected{/if}" href="#align-center" id="attachment-align-center" data-float="false" data-align="center"></a>
+      <a class="attachment-position-selector{if $alignment == "left" && !$float} selected{/if}" href="#align-left" id="attachment-align-left" data-float="false" data-align="left"></a>
+      <a class="attachment-position-selector{if $alignment == "right" && !$float} selected{/if}" href="#align-right" id="attachment-align-right" data-float="false" data-align="right"></a>
+      
+      {makebool value=$float assign="floatbool"}
+      
+      <input type="hidden" name="attached_file_alignment" id="attached-file-alignment" value="{$alignment}" />
+      <input type="hidden" name="attached_file_float" id="attached-file-float" value="{$floatbool.truefalse}" />
+      
+      <script type="text/javascript">
+      {literal}
+      $$('a.attachment-position-selector').each(function(a){
+        a.observe('click', function(e){
+          e.stop();
+          $$('a.attachment-position-selector').each(function(aa){
+            aa.removeClassName('selected');
+          });
+          a.addClassName('selected');
+          $('attached-file-float').value = a.readAttribute('data-float');
+          $('attached-file-alignment').value = a.readAttribute('data-align');
+        });
+      });
+      {/literal}
+      </script>
+      
+    </div>
+    
+    {* <div class="edit-form-row">
+      <div class="form-section-label">Position</div>
       <select name="attached_file_alignment">
         <option value="left"{if $alignment == "left"} selected="selected"{/if}>On the left</option>
         <option value="right"{if $alignment == "right"} selected="selected"{/if}>On the right</option>
         <option value="center"{if $alignment == "center"} selected="selected"{/if}>In the center (non-floating only)</option>
       </select>
     </div>
+    
+    <div class="edit-form-row">
+      <div class="form-section-label">Float within the text</div>
+      {boolean name="attached_file_float" id="attached-file-float" value=$float}
+      <!--<input type="checkbox" name="attached_file_float" value="TRUE"{if $float} checked="checked"{/if} id="attached_file_float" />&nbsp;<label for="attached_file_float">Float within the text.</label>-->
+    </div> *}
     
     <div class="edit-form-row">
       <div class="form-section-label">Caption</div>
@@ -277,12 +314,6 @@ document.observe('dom:loaded', function(){
         <option value="right"{if $caption_alignment == "right"} selected="selected"{/if}>From Right</option>
         <option value="center"{if $caption_alignment == "center"} selected="selected"{/if}>Centered</option>
       </select>
-    </div>
-    
-    <div class="edit-form-row">
-      <div class="form-section-label">Float within the text</div>
-      {boolean name="attached_file_float" id="attached-file-float" value=$float}
-      <!--<input type="checkbox" name="attached_file_float" value="TRUE"{if $float} checked="checked"{/if} id="attached_file_float" />&nbsp;<label for="attached_file_float">Float within the text.</label>-->
     </div>
     
     <div class="edit-form-row">

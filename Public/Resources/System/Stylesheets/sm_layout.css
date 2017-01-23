@@ -1053,3 +1053,16 @@ ul.authors-list li a div.user-name-holder-inner{
 #smartest-favourites.closed ul{
     display:none;
 }
+
+/** Attachments control **/
+
+a.attachment-position-selector{
+    display:inline-block;
+    width:73px;
+    height:55px;
+    padding:5px;
+    border:1px solid #ccc;
+    background-size:73px 55px;
+    background-position:5px 5px;
+    background-repeat:no-repeat;
+}

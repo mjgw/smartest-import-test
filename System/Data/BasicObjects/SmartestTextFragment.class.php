@@ -272,15 +272,38 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
         $num_tags = count($matches[0]);
         
         if($num_tags){
+            
+            $att_objects = $this->getAttachments();
+            
             $i = 1;
             foreach($matches[0] as $key => $attachment){
+                
+                $att_name = str_replace('-', '_', $matches[1][$key]);
+                
+                if(isset($att_objects[$att_name]) && is_object($att_objects[$att_name])){
+                    $float = (bool) $att_objects[$att_name]->getFloat();
+                    $alignment = $att_objects[$att_name]->getAlignment();
+                    if($alignment == 'left' || $alignment == 'right'){
+                        if($float){
+                            $additional_style .= 'float:'.$alignment.';';
+                        }
+                        if($alignment == 'left'){
+                            $additional_style .= 'margin:0 10px 10px 0;';
+                        }else{
+                            $additional_style .= 'margin:0 0 10px 10px;';
+                        }
+                    }else{
+                        $additional_style .= 'margin:0 auto 10px auto;';
+                    }
+                }
+                
                 if($num_tags == $i){
                     
                     // We are on the last one - check if it is at the bottom of the file
                     $text = trim($string);
                     $start = strlen($attachment) * -1;
                     $last_chars = substr($text, $start);
-                    $attachment_div_text = '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy mceNonEditable" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Media attachment: <strong>'.$matches[1][$key].'</strong></div>';
+                    $attachment_div_text = '<figure id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy mceNonEditable '.$alignment.'" data-attachmentname="'.$matches[1][$key].'" style="'.$additional_style.'">Media attachment: <strong>'.$matches[1][$key].'</strong></figure>';
                     
                     if($last_chars == $attachment){
                         $string = str_replace($attachment, $attachment_div_text.'<p class="sm-attachment-buffer"></p>', $string);
@@ -289,7 +312,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
                     }
                     
                 }else{
-                    $attachment_div_text = '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy mceNonEditable" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Media attachment: <strong>'.$matches[1][$key].'</strong></div>';
+                    $attachment_div_text = '<figure id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy mceNonEditable" data-attachmentname="'.$matches[1][$key].'" style="'.$additional_style.'">Media attachment: <strong>'.$matches[1][$key].'</strong></figure>';
                     $string = str_replace($attachment, $attachment_div_text, $string);
                 }
                 $i++;
@@ -313,11 +336,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
             }
         }
         
-        // echo $string;
-        
         $regexp = preg_match_all('/<a href="mailto:([^"]+)+"[^>]*>([^<]*)?<\/a>/', $string, $matches_m);
-        
-        // print_r($matches_m);
         
         if(count($matches_m[0])){
             foreach($matches_m[0] as $key => $link){
@@ -329,17 +348,58 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
             }
         }
         
+        $regexp = preg_match_all('/<a[^>]+?href="((\.{0,2}\/)*([^"]+)?)"[^>]*>([^<]*)?<\/a>/', $string, $matches_ai);
+        
+        // print_r($matches_ai[2]);
+        
+        if(is_object($this->getCurrentSite())){
+            $site = $this->getCurrentSite();
+            $error_page_id = $site->getErrorPageId();
+            // echo $this->getCurrentSite()->getInternalLabel();
+            foreach($matches_ai[3] as $key=>$url){
+                // var_dump($url);
+                $linked_page = $this->getCurrentSite()->getContentByUrl($url);
+                if(is_object($linked_page) && $linked_page->getId() != $error_page_id){
+                    // echo $linked_page->getTitle();
+                    $replacement = $linked_page->getLinkCodeWithTextField();
+                    $replacement = str_replace('%%TEXT%%', $matches_ai[4][$key], $replacement);
+                    // echo $replacement;
+                    $string = str_replace($matches_ai[0][$key], $replacement, $string);
+                }
+            }
+        }
+        
+        $regexp = preg_match_all('/<\?sm:link[^>]+?to="([\w-]+:[\w-]+)"[^(with)>]*(with="([^">]*)")?[^(style)>]*(style="([^">]*)")*[^>]*:\?>/', $string, $matches_lt);
+        
         // echo $string;
         
         /* $regexp = preg_match_all('/<\?sm:link.+?to="([\w_-]+:[\w_-]+(\|[^"]+))".*:\?>/', $string, $matches_l); */
         
-        // print_r($matches_l);
+        // print_r($matches_lt);
         
-        /* if(count($matches[0])){
-            foreach($matches[0] as $key => $attachment){
-                $string = str_replace($attachment, '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Smartest Attachment: <strong>'.$matches[1][$key].'</strong></div>', $string);
+        if(count($matches_lt[0])){
+            foreach($matches_lt[0] as $key => $template_style_link){
+                // $string = str_replace($attachment, '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Smartest Attachment: <strong>'.$matches[1][$key].'</strong></div>', $string);
+                
+                if(strlen($matches_lt[4][$key])){
+                    $opening_span = '<span '.$matches_lt[4][$key].'>';
+                    $closing_span = '</span>';
+                }else{
+                    $opening_span = $closing_span = '';
+                }
+                
+                $new_link = $opening_span.'[['.$matches_lt[1][$key];
+                
+                if(strlen($matches_lt[2][$key])){
+                    $new_link .= '|'.$matches_lt[3][$key];
+                }
+                
+                $new_link .= ']]'.$closing_span;
+                
+                $string = str_replace($matches_lt[0][$key], $new_link, $string);
+                
             }
-        } */
+        }
         
         return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
         
@@ -382,7 +442,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
             if($element = simplexml_load_string(str_replace('&', '&amp;', html_entity_decode('<div>'.$content.'</div>', ENT_QUOTES, 'UTF-8')))){
             
                 $content = preg_replace( "/\r|\n/", "", $content);
-                $divs = (array) $element->xpath('/div/div');
+                $divs = (array) $element->xpath('/div/figure');
             
                 foreach($divs as $divelement){
                     $attributes = (array) $divelement->attributes();
@@ -392,7 +452,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
                     }
                 }
             
-                $divs = (array) $element->xpath('/div/ul/li/div');
+                $divs = (array) $element->xpath('/div/ul/li/figure');
             
                 foreach($divs as $divelement){
                     $attributes = (array) $divelement->attributes();
@@ -508,5 +568,11 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
         return parent::offsetGet($offset);
         
     }
+    
+    /* public function getCurrentSite(){
+        
+        
+        
+    } */
     
 }

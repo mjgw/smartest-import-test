@@ -1106,6 +1106,48 @@ div.image-picker-caption{
     border-top:2px solid #ddd;
 }
 
+/*** Attachment control ***/
+
+#attachment-float-left{
+    background-image:url('../Images/attachment-float-left-off.png');
+}
+
+#attachment-float-right{
+    background-image:url('../Images/attachment-float-right-off.png');
+}
+
+#attachment-align-center{
+    background-image:url('../Images/attachment-align-center-off.png');
+}
+
+#attachment-align-left{
+    background-image:url('../Images/attachment-align-left-off.png');
+}
+
+#attachment-align-right{
+    background-image:url('../Images/attachment-align-right-off.png');
+}
+
+#attachment-float-left.selected{
+    background-image:url('../Images/attachment-float-left-on.png');
+}
+
+#attachment-float-right.selected{
+    background-image:url('../Images/attachment-float-right-on.png');
+}
+
+#attachment-align-center.selected{
+    background-image:url('../Images/attachment-align-center-on.png');
+}
+
+#attachment-align-left.selected{
+    background-image:url('../Images/attachment-align-left-on.png');
+}
+
+#attachment-align-right.selected{
+    background-image:url('../Images/attachment-align-right-on.png');
+}
+
 /*** Retina display stuff ***/
 
 @media

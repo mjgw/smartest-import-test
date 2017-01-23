@@ -1,0 +1,48 @@
+figure.sm-attachment.float.left{
+    float:left;
+    margin:0 10px 10px 0;
+}
+
+figure.sm-attachment.float.right{
+    float:right;
+    margin:0 0 10px 10px;
+}
+
+figure.sm-attachment.nofloat.left{
+    display:inline-block;
+    margin:0 auto 10px 0;
+}
+
+div.sm-attachment-outer.left{
+    text-align:left;
+}
+
+figure.sm-attachment.nofloat.right{
+    display:inline-block;
+    margin:0 0 10px auto;
+}
+
+div.sm-attachment-outer.right{
+    text-align:right;
+}
+
+figure.sm-attachment.nofloat.center{
+    text-align:center;
+    display:inline-block;
+    margin:0 auto 10px auto;
+}
+
+div.sm-attachment-outer.center{
+    text-align:center;
+}
+
+figure.sm-attachment.sm-border{
+    border: 1px solid #ccc;
+    padding:6px;
+}
+
+figure.sm-attachment figcaption.sm-attachment-caption{
+    display:block;
+    margin:5px 0 0 0;
+    font-size:0.8em;
+}

@@ -1002,6 +1002,14 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        return 'page:'.$this->getName();
         }
 	}
+    
+    public function getLinkCode(){
+        return "[[page:".$this->getName()."]]";
+    }
+    
+    public function getLinkCodeWithTextField(){
+        return "[[page:".$this->getName()."|%%TEXT%%]]";
+    }
 	
 	public function getDefaultUrl(){
 	    
@@ -1751,7 +1759,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        break;
 	        
 	        case "link_code":
-	        return "[[page:".$this->getName()."]]";
+	        return $this->getLinkCode();
 	        
 	        case "is_tag_page":
 	        return $this->isTagPage();
