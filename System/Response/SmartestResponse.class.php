@@ -116,7 +116,8 @@ class SmartestResponse{
         	'System/Data/ExtendedTypes/SmartestTwitterAccountName.class.php',
         	'System/Data/ExtendedTypes/SmartestExternalFeed.class.php',
             'System/Data/ExtendedTypes/SmartestDbStorageParameterHolder.class.php',
-        	'System/Data/ExtendedTypes/SmartestEmailAddress.class.php'
+        	'System/Data/ExtendedTypes/SmartestEmailAddress.class.php',
+            'System/Data/ExtendedTypes/SmartestAssetClassDefinitionsHolder.class.php'
 
         );
         

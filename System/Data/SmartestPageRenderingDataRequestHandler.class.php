@@ -160,6 +160,7 @@ class SmartestPageRenderingDataRequestHandler implements ArrayAccess{
             return $this->_page->getPageFieldDefinitions();
             
             case "placeholders":
+            // print_r($this->_page->getPlaceholderDefinitions()->getAliases());
             return $this->_page->getPlaceholderDefinitions();
             
             case "containers":

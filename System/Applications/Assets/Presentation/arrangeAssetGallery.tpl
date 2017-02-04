@@ -119,6 +119,12 @@ var itemsList = Sortable.create('sortable-gallery-members', {
 
 <div id="actions-area">
   
+  <ul class="actions-list" id="non-specific-actions">
+    <li><b>Gallery options</b></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/file/new?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/add.png" border="0" alt="" /> Upload a file into this gallery</a></li>
+  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}assets/browseAssetGroup?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_magnify.png" border="0" alt="" style="width:16px;height:16px" /> Browse this group</a></li>
+  </ul>
+  
   {if $request_parameters.from}
   <ul class="actions-list">
     <li><b>Workflow options</b></li>

@@ -802,6 +802,11 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 $html = '<a class="sm-edit-button" href="'.$this->_request_data->g('domain').'assets/arrangeAssetGallery?group_id='.$g->getId().'&amp;from=pagePreview" target="_top"';
                 if($this->_hide_edit_buttons) $html .= ' style="display:none"';
                 $html .= '><img src="'.$this->_request_data->g('domain').'Resources/Icons/arrow_switch.png" alt="" /></a>';
+                
+                $html .= '&nbsp;<a class="sm-edit-button" href="'.$this->_request_data->g('domain').'smartest/file/new?group_id='.$g->getId().'&amp;from=pagePreview" target="_top"';
+                if($this->_hide_edit_buttons) $html .= ' style="display:none"';
+                $html .= '><img src="'.$this->_request_data->g('domain').'Resources/Icons/add.png" alt="" /></a>';
+                
                 return $html;
             }else{
                 return $this->raiseError("File group '".$set->getLabel()."' is not a gallery.");

@@ -5,6 +5,7 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
     protected $_data = array();
     protected $_name;
     protected $_read_only = false;
+    protected $_aliases = array();
     
     public function __construct($name, $read_only=false){
         $this->_name = $name;
@@ -78,7 +79,26 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
     }
     
     public function getParameter($n, $default=null){
-        return isset($this->_data[$n]) ? $this->_data[$n] : (isset($default) ? $default : null);
+        if(isset($this->_data[$n])){
+            return $this->_data[$n];
+        }elseif(isset($this->_aliases[$n])){
+            if(isset($this->_data[$this->_aliases[$n]])){
+                return $this->_data[$this->_aliases[$n]];
+            }else{
+                SmartestLog::getInstance('Alias \''.$alias_name.'\' exists but  original offset\''.$original_name.'\' is missing, in SmartestParameterHOlder \''.$this->_name.'\'.');
+                if(isset($default)){
+                    return $default;
+                }else{
+                    return null;
+                }
+            }
+        }else{
+            if(isset($default)){
+                return $default;
+            }else{
+                return null;
+            }
+        }
     }
     
     public function getParameterOrFalse($n){
@@ -97,6 +117,24 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
         }else{
             return $v;
         }
+    }
+    
+    public function addAlias($alias_name, $original_name){
+        if(!isset($this->_data[$original_name])){
+            SmartestLog::getInstance('Alias \''.$alias_name.'\' created for original offset\''.$original_name.'\' that is not set, in SmartestParameterHOlder \''.$this->_name.'\'.');
+        }
+        // echo "added alias ".$alias_name;
+        $this->_aliases[$alias_name] = $original_name;
+    }
+    
+    public function removeAlias($alias_name){
+        if(isset($this->_aliases[$alias_name])){
+            unset($this->_aliases[$alias_name]);
+        }
+    }
+    
+    public function getAliases(){
+        return array_keys($this->_aliases);
     }
     
     public function g($n, $d=null){
@@ -204,10 +242,8 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
             return "<code>".print_r($this->_data, true)."</code>";
         }
         
-        if($this->hasParameter($offset)){
-            return $this->getParameter($offset);
-        }
-        // return $this->getParameterOrNull($offset);
+        return $this->getParameter($offset);
+        
     }
     
     public function offsetExists($offset){

@@ -1833,7 +1833,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             
             case "placeholders":
             if(!$this->_placeholders) $this->loadAssetClassDefinitions();
-            return $this->_placeholders;
+            return $this->getPlaceholderDefinitions();
             
             case "fields":
             return $this->getPageFieldDefinitions();
@@ -2295,37 +2295,37 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	
 	public function loadAssetClassDefinitions(){
 	    
-	    if($this->getDraftMode()){
-	        $sql = "SELECT * FROM Assets, AssetClasses, AssetIdentifiers WHERE AssetIdentifiers.assetidentifier_assetclass_id=AssetClasses.assetclass_id AND AssetIdentifiers.assetidentifier_item_id IS NULL AND AssetIdentifiers.assetidentifier_page_id='".$this->_properties['id']."' AND AssetIdentifiers.assetidentifier_draft_asset_id=Assets.asset_id";
+        if($this->getDraftMode()){
+            $sql = "SELECT * FROM Assets, AssetClasses, AssetIdentifiers WHERE AssetIdentifiers.assetidentifier_assetclass_id=AssetClasses.assetclass_id AND AssetIdentifiers.assetidentifier_item_id IS NULL AND AssetIdentifiers.assetidentifier_page_id='".$this->_properties['id']."' AND AssetIdentifiers.assetidentifier_draft_asset_id=Assets.asset_id";
         }else{
             $sql = "SELECT * FROM Assets, AssetClasses, AssetIdentifiers WHERE AssetIdentifiers.assetidentifier_assetclass_id=AssetClasses.assetclass_id AND AssetIdentifiers.assetidentifier_item_id IS NULL AND AssetIdentifiers.assetidentifier_page_id='".$this->_properties['id']."' AND AssetIdentifiers.assetidentifier_live_asset_id=Assets.asset_id";
         }
         
-        $this->_placeholders = new SmartestParameterHolder("Placeholder definitions for page '".$this->getTitle()."'");
+        $this->_placeholders = new SmartestAssetClassDefinitionsHolder("Placeholder definitions for page '".$this->getTitle()."'");
         
         $result = $this->database->queryToArray($sql);
         
         foreach($result as $def_array){
+            
             if($def_array['assetclass_type'] == 'SM_ASSETCLASS_CONTAINER'){
                 $def = new SmartestContainerDefinition;
                 $def->hydrateFromGiantArray($def_array);
                 $this->_containers[$def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name']] = $def;
                 
-                // var_dump($def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name']);
-                
             }else{
                 $def = new SmartestPlaceholderDefinition;
                 $def->hydrateFromGiantArray($def_array);
                 $def->setAssetDraftMode($this->getDraftMode());
-                // $this->_placeholders[$def_array['assetclass_name']] = $def;
                 $this->_placeholders->setParameter($def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name'], $def);
                 
-                // print_r(array_keys($this->_placeholders->getParameters()));
+                if($def_array['assetidentifier_instance_name'] == 'default'){
+                    $this->_placeholders->addAlias($def_array['assetclass_name'], $def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name']); 
+                }else{
+                    $this->_placeholders->addAlias($def_array['assetclass_name'].'__'.$def_array['assetidentifier_instance_name'], $def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name']); 
+                }
                 
             }
         }
-        
-        // print_r(array_keys($this->_containers));
         
         $this->_asset_class_definitions_retrieved = true;
 	    

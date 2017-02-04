@@ -89,6 +89,7 @@ function executeTransfer(){
   
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Group options</b></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/file/new?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/add.png" border="0" alt="" /> Upload a file into this group</a></li>
   	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}assets/browseAssetGroup?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_magnify.png" border="0" alt="" style="width:16px;height:16px" /> Browse this group</a></li>
   </ul>
   
