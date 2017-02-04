@@ -41,6 +41,11 @@ figure.sm-attachment.sm-border{
     padding:6px;
 }
 
+figure.sm-attachment img{
+    max-width:100%;
+    height:auto;
+}
+
 figure.sm-attachment figcaption.sm-attachment-caption{
     display:block;
     margin:5px 0 0 0;
