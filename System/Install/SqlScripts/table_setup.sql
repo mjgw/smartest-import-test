@@ -287,7 +287,7 @@ CREATE TABLE `Lists` (
   `list_maximum_length` int(2) NOT NULL DEFAULT '0',
   `list_page_id` mediumint(9) NOT NULL DEFAULT '0',
   `list_item_id` mediumint(9) NOT NULL,
-  `list_global` tinyint(1) NOT NULL DEFAULT '1'
+  `list_global` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`list_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -606,7 +606,7 @@ CREATE TABLE `Tags` (
   `tag_icon_image_asset_id` int(9) NOT NULL,
   `tag_site_id` int(11) NOT NULL,
   `tag_language` varchar(8) NOT NULL DEFAULT 'eng',
-  `tag_type` varchar(64) NOT NULL DEFAULT 'SM_TAGTYPE_TAG'
+  `tag_type` varchar(64) NOT NULL DEFAULT 'SM_TAGTYPE_TAG',
   PRIMARY KEY (`tag_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
