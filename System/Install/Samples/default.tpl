@@ -4,9 +4,11 @@
 
   <head>
   	<title><?sm:$this.page.formatted_title:?></title>
+    <meta property="og:title" content="<?sm:$this.page.formatted_title:?>" />
   	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   	<meta name="keywords" content="<?sm:$this.page.meta_keywords:?>" />
   	<meta name="description" content="<?sm:$this.page.meta_description:?>" />
+    <meta name="og:description" content="<?sm:$this.page.meta_description:?>" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <?sm:site_favicon:?>

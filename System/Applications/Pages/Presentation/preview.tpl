@@ -42,12 +42,15 @@ $('tagged-object-model-selector').observe('change', function(){
         $('preview-iframe').addClassName('built');
         $('preview').appear({duration: 0.4});
         $('preview-loading').fade({duration: 0.4});
+        $('preview-slow').fade({duration: 0.4});
+        $('preview-failed').fade({duration: 0.4});
         clearTimeout(t1);
         clearTimeout(t2);
     }
     
     function cancelWait(){
       $('preview-slow').fade({duration: 0.4});
+      $('preview-failed').fade({duration: 0.4});
       showPreview();
     }
     
@@ -71,8 +74,10 @@ $('tagged-object-model-selector').observe('change', function(){
     }
     
     function previewTimedOut(){
-        $('preview-slow').style.display = 'none';
-        $('preview-failed').style.display = 'block';
+        /* $('preview-slow').style.display = 'none';
+        $('preview-failed').style.display = 'block'; */
+        $('preview-slow').fade({duration: 0.4});
+        $('preview-failed').appear({duration: 0.4});
     }
     
     t1 = setTimeout(function(){previewSlow();}, 8000);

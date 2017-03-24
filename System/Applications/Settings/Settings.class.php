@@ -19,13 +19,13 @@ class Settings extends SmartestSystemApplication{
         
 	}
     
-    public function getPreferencePanels(){
+    /* public function getPreferencePanels(){
         
         // $c = SmartestPersistentObject::get('controller');
         // print_r($c->getAllModulesById());
         // print_r(SmartestSystemHelper::getSystemApplicationDirectories());
         
-    }
+    } */
     
     public function editSite(){
 	    
