@@ -14,10 +14,12 @@ class SmartestRssOutputHelper{
     protected $_data_array = array();
     protected $_request;
     protected $_site;
+    protected $_channel_image;
     
     public function __construct($data=null){
+        
         if(is_array($data)){
-            $this->_items = $data;
+            $this->_items = array_slice($data, 0, 20);
             $this->_request = SmartestPersistentObject::get('controller')->getCurrentRequest();
         }else{
             // do nothing
@@ -36,10 +38,6 @@ class SmartestRssOutputHelper{
     	    $channel = $this->_domObject->createElement("channel");
     	    $this->_domRootTagElement->appendChild($channel);
 	    
-    	    $author = $this->_domObject->createElement("author");
-    	    $author_text = $this->_domObject->createTextNode($this->getAuthor());
-    	    $author->appendChild($author_text);
-	    
     	    $title = $this->_domObject->createElement("title");
     	    $title_text = $this->_domObject->createTextNode($this->getTitle());
     	    $title->appendChild($title_text);
@@ -48,11 +46,32 @@ class SmartestRssOutputHelper{
     	    $description_text = $this->_domObject->createCDATASection($this->getDescription());
     	    $description->appendChild($description_text);
             
+    	    $link = $this->_domObject->createElement("link");
+    	    $link_text = $this->_domObject->createTextNode($this->_site->getHomepageFullUrl());
+    	    $link->appendChild($link_text);
+            
     	    $image = $this->_domObject->createElement("image");
     	    $image_url = $this->_domObject->createElement("url");
             $image_title = $this->_domObject->createElement("title");
-	    
-    	    $generator = $this->_domObject->createElement("generator");
+            $image_link = $this->_domObject->createElement("link");
+            
+            if($this->_channel_image instanceof SmartestImage){
+                
+                $image_url_text = $this->_domObject->createTextNode($this->_site->getTopLevelUrl().substr($this->_channel_image->getWebPath(), 1));
+                $image_url->appendChild($image_url_text);
+                $image->appendChild($image_url);
+                
+                $image_title_text = $this->_domObject->createTextNode($this->getTitle());
+                $image_title->appendChild($image_title_text);
+                $image->appendChild($image_title);
+                
+                $image_link_text = $this->_domObject->createTextNode($this->_site->getHomepageFullUrl());
+                $image_link->appendChild($image_link_text);
+                $image->appendChild($image_link);
+                
+            }
+            
+            $generator = $this->_domObject->createElement("generator");
     	    $generator_text = $this->_domObject->createTextNode('Smartest v'.SmartestInfo::$version);
     	    $generator->appendChild($generator_text);
             
@@ -60,11 +79,14 @@ class SmartestRssOutputHelper{
             $ttl_value = $this->_domObject->createTextNode('15');
             $ttl->appendChild($ttl_value);
 	    
-    	    $channel->appendChild($author);
+    	    $channel->appendChild($link);
     	    $channel->appendChild($title);
             $channel->appendChild($description);
             $channel->appendChild($ttl);
     	    $channel->appendChild($generator);
+            if($this->_channel_image instanceof SmartestImage){
+                $channel->appendChild($image);
+            }
 	    
     	    $this->addItems();
 	    
@@ -125,8 +147,9 @@ class SmartestRssOutputHelper{
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT\r\n");
         header('Last-Modified: '.gmdate( 'D, d M Y H:i:s' ). ' GMT'."\r\n");
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        // header('Content-Type: application/rss+xml; charset=utf-8');
-        header('Content-Type: text/plain; charset=utf-8');
+        header('Content-Type: application/rss+xml; charset=utf-8');
+        // header('Content-Type: text/xml; charset=utf-8');
+        // header('Content-Type: text/plain; charset=utf-8');
         // $this->getXml();
         echo $this->getXml();
         exit;
@@ -200,6 +223,20 @@ class SmartestRssOutputHelper{
         $this->_description = $t;
     }
     
+    public function getImage(){
+        return $this->_channel_image;
+    }
+    
+    public function setImage($image){
+        if($image instanceof SmartestImage){
+            $this->_channel_image = $image;
+        }elseif($image instanceof SmartestAsset && $image->isBinaryImage()){
+            $this->_channel_image = $image->getImage();
+        }else{
+            // Supplied value for $image was not compatible
+        }
+    }
+    
     public function addItems(){
         
         // var_dump($this->_items);
@@ -223,12 +260,20 @@ class SmartestRssOutputHelper{
 	        $pubDate->appendChild($pubDate_text);
 	        
 	        $link = $this->_domObject->createElement("link");
-	        $link_text = $this->_domObject->createTextNode($this->_request->getUrlProtocol().$_SERVER['HTTP_HOST'].$object->getUrl());
+            $guid = $this->_domObject->createElement("guid");
+            
+            $url = $this->_request->getUrlProtocol().$_SERVER['HTTP_HOST'].$object->getUrl();
+            
+	        $link_text = $this->_domObject->createTextNode($url);
+            $guid_text = $this->_domObject->createTextNode($url);
+            
 	        $link->appendChild($link_text);
+            $guid->appendChild($guid_text);
 	        
 	        $item->appendChild($title);
     	    $item->appendChild($description);
     	    $item->appendChild($link);
+            $item->appendChild($guid);
     	    $item->appendChild($pubDate);
 	        
 	        $channel->appendChild($item);

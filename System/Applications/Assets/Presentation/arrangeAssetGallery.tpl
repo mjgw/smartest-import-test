@@ -12,21 +12,25 @@
 
     <li style="padding:10px;border:1px solid #ccc;border-radius:6px;margin-bottom:8px;background-color:#fff;cursor:move;position:relative" id="membership_{$membership.file.id}">
       
-      <a href="#remove" style="position:absolute;top:10px;right:10px" id="membership-remove-{$membership.id}"><i class="fa fa-times-circle"></i></a>
+      <a href="#remove" style="position:absolute;top:10px;right:10px;font-size:2em;color:#999" id="membership-remove-{$membership.id}"><i class="fa fa-times-circle"></i></a>
       
-      <p style="clear:both;margin:0 0 10px 0"><strong>File: {$membership.file.label}</strong> ({$membership.file.url}) <a href="{$domain}assets/editAsset?asset_id={$membership.file.id}"><img src="{$domain}Resources/Icons/pencil.png" alt="" /></a> <a href="{$domain}assets/assetInfo?asset_id={$membership.file.id}"><img src="{$domain}Resources/Icons/information.png" alt="" /></a></p>
+      <p style="clear:both;margin:0 0 10px 0"><strong>File: {$membership.file.label}</strong> ({$membership.file.url}) <a href="{$domain}assets/editAsset?asset_id={$membership.file.id}"><i class="fa fa-pencil"></i></a> <a href="{$domain}assets/assetInfo?asset_id={$membership.file.id}"><i class="fa fa-info-circle"></i></a></p>
   
       <div class="asset-gallery-membership-file" style="float:left;width:150px">
         {if $membership.file.is_image}
           {$membership.file.image.constrain_150x150}
         {else}
-          {$membership.file}
+          {if $membership.file.thumbnail_image.id}
+          {$membership.file.thumbnail_image.image.constrain_180x150}
+          {else}
+          {$membership.file.icon_code}
+          {/if}
         {/if}
       </div>
   
       <div class="asset-gallery-membership-file" style="float:right;width:400px">
         
-        <div class="editable" id="membership-caption-{$membership.id}">{$membership.caption}</div>
+        <div class="editable" id="membership-caption-{$membership.id}" style="min-height:1.3em">{$membership.caption}</div>
         
         <script type="text/javascript">
         

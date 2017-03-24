@@ -294,7 +294,7 @@ class Items extends SmartestSystemApplication{
                 
                 if($m->find($this->getRequestParameter('sub_model_id'))){
                     
-                    // $this->setFormReturnUri();
+                    $this->setTemporaryFormReturnUri();
                     // $this->setFormReturnDescription($m->getPluralName());
                     
                     $m->init();

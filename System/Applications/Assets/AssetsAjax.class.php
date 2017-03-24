@@ -839,4 +839,63 @@ class AssetsAjax extends SmartestSystemApplication{
         
     }
     
+    public function insertGalleryForIpv(){
+        
+        if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+            
+            $property = new SmartestItemProperty;
+            
+            if($property->find($this->getRequestParameter('property_id'))){
+                if($property->getItemClassId() == $item->getModelId()){
+                    
+            	    $set = new SmartestAssetGroup;
+            	    $set->setLabel($this->getRequestParameter('asset_gallery_label'));
+            	    $set->setName(SmartestStringHelper::toVarName($this->getRequestParameter('asset_gallery_label')));
+                    $set->setIsGallery(true);
+        
+                    $type_var = $this->getRequestParameter('asset_gallery_type');
+        
+            	    if($type_var == 'ALL'){
+            	        $set->setFilterType('SM_SET_FILTERTYPE_NONE');
+            	    }else{
+            	        switch(substr($type_var, 0, 1)){
+            	            case 'A':
+            	            $set->setFilterType('SM_SET_FILTERTYPE_ASSETTYPE');
+            	            break;
+            	            case 'P':
+            	            $set->setFilterType('SM_SET_FILTERTYPE_ASSETCLASS');
+            	            break;
+            	            case 'G':
+            	            $set->setFilterType('SM_SET_FILTERTYPE_ASSETGROUP');
+            	            break;
+            	        }
+            	    }
+        
+            	    $set->setFilterValue(($type_var == 'ALL') ? null : substr($type_var, 2));
+            	    $set->setSiteId($this->getSite()->getId());
+            	    $set->setShared(0);
+            	    $set->save();
+                    
+                    $item->setPropertyValueByNumericKey($property->getId(), $set->getId());
+                    $item->save();
+                    
+                    $obj = $set->__toSimpleObject();
+            
+                    header('Content-Type: application/json; charset=UTF8');
+                    echo json_encode($obj);
+                    exit;
+                    
+                }else{
+                    // property and item are from diff models
+                }
+            }else{
+                // property ID doesn't exist
+            }
+            
+        }else{
+            // Item doesn't exist
+        }
+        
+    }
+    
 }

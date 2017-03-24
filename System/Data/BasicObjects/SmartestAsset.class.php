@@ -261,7 +261,11 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             return $this->getTags();
             
             case "fa_icon":
+            case "icon_name":
             return $this->getFontAwesomeIcon();
+            
+            case "icon_code":
+            return $this->getIconCode();
             
         }
         
@@ -279,24 +283,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         
 	}
     
-    public function getFontAwesomeIcon(){
-        if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
-            if($s = $this->getOEmbedService()){
-                return $s->getParameter('fa_iconname');
-            }else{
-                if(substr($this->getOEmbedServiceId(), 0, 20) == 'OEMBED_SMARTEST_SITE'){
-                    return 'clone';
-                }else{
-                    return 'file-code-o';
-                }
-            }
-        }else{
-            $type_info = $this->getTypeInfo();
-            return $type_info['fa_iconname'];
-        }
-    }
-	
-	// The next two methods are for the SmartestStorableValue interface
+    // The next two methods are for the SmartestStorableValue interface
     public function getStorableFormat(){
         return $this->_properties['id'];
     }
@@ -404,7 +391,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	
 	public function getWordCount(){
 	    
-	    if($this->usesTextFragment()){
+	    if($this->usesTextFragment() && is_object($this->getTextFragment())){
 	        return $this->getTextFragment()->getWordCount();
 	    }else{
 	        return 0;
@@ -1731,6 +1718,37 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    }
 	    
 	}
+    
+    public function getIconName(){
+        // Newer Icon functionality that produces a fontawesome icon for the asset
+        $type = $this->getTypeInfo();
+        if(isset($type['fa_iconname'])){
+            return $type['fa_iconname'];
+        }else{
+            return 'file-o';
+        }
+    }
+    
+    public function getIconCode(){
+        return '<i class="fa fa-'.$this->getFontAwesomeIcon().'"></i>';
+    }
+    
+    public function getFontAwesomeIcon(){
+        if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL'){
+            if($s = $this->getOEmbedService()){
+                return $s->getParameter('fa_iconname');
+            }else{
+                if(substr($this->getOEmbedServiceId(), 0, 20) == 'OEMBED_SMARTEST_SITE'){
+                    return 'clone';
+                }else{
+                    return 'file-code-o';
+                }
+            }
+        }else{
+            $type_info = $this->getTypeInfo();
+            return $this->getIconName();
+        }
+    }
 	
 	public function getLargeIcon(){
 	    

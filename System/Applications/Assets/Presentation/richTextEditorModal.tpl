@@ -105,6 +105,7 @@
             });
         },
         relative_urls : false,
+        convert_urls: false,
         document_base_url : sm_domain,
         skin: "smartest"
 

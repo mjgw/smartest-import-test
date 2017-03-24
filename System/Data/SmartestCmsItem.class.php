@@ -265,8 +265,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
             if(isset($this->_disabled_template_properties[$this->_varnames_lookup[$offset]])){
 	            return "Recursion disallowed";
 	        }else{
-	            $v = $this->getPropertyValueByNumericKey($this->_varnames_lookup[$offset], $this->getDraftMode(), true);
+                $v = $this->getPropertyValueByNumericKey($this->_varnames_lookup[$offset], $this->getDraftMode(), true);
 	            if(is_null($v)){
+                    // Null value returned. Should be logged.
 	                return new SmartestString('');
 	            }else{
 	                return $v;
@@ -815,6 +816,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	public function getWebid(){
 		return $this->getItem()->getWebid();
 	}
+    
+    public function getRelatedItems(){
+        return $this->getItem()->getRelatedItems($this->getDraftMode());
+    }
 	
 	public function getIsPublic(){
 		return ($this->getItem()->getPublic() == 'TRUE') ? 'TRUE' : 'FALSE';

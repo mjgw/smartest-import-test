@@ -971,14 +971,16 @@ class SmartestCmsItemSet extends SmartestSet implements SmartestSetApi, Smartest
         $this->setSettingValue('rss_channel_image_id_site_'.$current_site_id, (int) $id);
     }
     
-    public function getRssChannelImageId(){
-        $current_site_id = $this->getCurrentSiteId();
-        return $this->getSettingValue('rss_channel_image_id_site_'.$current_site_id);
+    public function getRssChannelImageId($site_id=null){
+        if(is_null($site_id)){
+            $site_id = $this->getCurrentSiteId();
+        }
+        return $this->getSettingValue('rss_channel_image_id_site_'.$site_id);
     }
     
-    public function getRssChannelImage(){
+    public function getRssChannelImage($site_id=null){
         $a = new SmartestRenderableAsset;
-        if($a->find($this->getRssChannelImageId())){
+        if($a->find($this->getRssChannelImageId($site_id))){
             return $a;
         }
     }

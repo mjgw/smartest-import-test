@@ -636,10 +636,7 @@ class Assets extends SmartestSystemApplication{
         if($this->getRequestParameter('for') == 'placeholder'){
             
             if($this->getRequestParameter('placeholder_id') && $this->getRequestParameter('page_id')){
-                
-                $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
-                $this->send($instance_name, 'instance');
-                
+            
                 $page = new SmartestPage;
             
                 if($page->find($this->getRequestParameter('page_id'))){
@@ -651,7 +648,7 @@ class Assets extends SmartestSystemApplication{
                         if(!$this->getRequestParameter('asset_type')){
                             $types = $placeholder->getPossibleFileTypes();
                             if(count($types) == 1){
-                                $fwd = '/smartest/file/new?for=placeholder&asset_type='.$types[0]['id'].'&placeholder_id='.$placeholder->getId().'&page_id='.$page->getId().'&instance='.$instance_name;
+                                $fwd = '/smartest/file/new?for=placeholder&asset_type='.$types[0]['id'].'&placeholder_id='.$placeholder->getId().'&page_id='.$page->getId();
                                 if($this->getRequestParameter('item_id')) $fwd .= '&item_id='.$this->getRequestParameter('item_id');
                                 $this->redirect($fwd);
                             }
@@ -759,7 +756,7 @@ class Assets extends SmartestSystemApplication{
             
         }else if($this->getRequestParameter('for') == 'group' || (is_object($group) && $group->getId())){ // If the point of this is to add a new file to a gallery
             // echo $group->getLabel();
-            
+            // print_r($_POST);
         }
 		
 	}
@@ -767,8 +764,6 @@ class Assets extends SmartestSystemApplication{
 	public function startNewFileCreationForPlaceholderDefinition(){
 	    
 	    if($this->getRequestParameter('placeholder_id') && $this->getRequestParameter('page_id')){
-            
-            $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
             
             $page = new SmartestPage;
             
@@ -784,9 +779,9 @@ class Assets extends SmartestSystemApplication{
                         $this->send($types, 'types');
                         
                         if(count($types) == 1){
-                            $url = '/smartest/file/new?for=placeholder&asset_type='.$types[0]['id'].'&placeholder_id='.$placeholder->getId().'&page_id='.$page->getId().'&instance='.$instance_name;
+                            $url = '/smartest/file/new?for=placeholder&asset_type='.$types[0]['id'].'&placeholder_id='.$placeholder->getId().'&page_id='.$page->getId();
                         }else{
-                            $url = '/smartest/file/new?for=placeholder&placeholder_id='.$placeholder->getId().'&page_id='.$page->getId().'&instance='.$instance_name;
+                            $url = '/smartest/file/new?for=placeholder&placeholder_id='.$placeholder->getId().'&page_id='.$page->getId();
                         }
                         
                         if($this->getRequestParameter('item_id')) $url .= '&item_id='.$this->getRequestParameter('item_id');
@@ -1003,9 +998,7 @@ class Assets extends SmartestSystemApplication{
 		        if($this->getRequestParameter('for')){
 		            if($this->getRequestParameter('for') == 'placeholder'){
 		                if($this->getRequestParameter('placeholder_id') && $this->getRequestParameter('page_id')){
-                            
-                            $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
-                            
+
                             $page = new SmartestPage;
 
                             if($page->find($this->getRequestParameter('page_id'))){
@@ -1023,7 +1016,7 @@ class Assets extends SmartestSystemApplication{
                                         
                                         $item_id = is_numeric($this->getRequestParameter('item_id')) ? $this->getRequestParameter('item_id') : null;
                                     
-                                        if($definition->loadForUpdate($placeholder->getName(), $page, $item_id, $instance_name)){
+                                        if($definition->loadForUpdate($placeholder->getName(), $page, $item_id)){
 
                     	                    // update placeholder
                     	                    $definition->setDraftAssetId($asset->getId());
@@ -1034,7 +1027,7 @@ class Assets extends SmartestSystemApplication{
                     	                    // wasn't already defined
                     	                    $definition->setDraftAssetId($asset->getId());
                     	                    $definition->setAssetclassId($placeholder->getId());
-                    	                    $definition->setInstanceName($instance_name);
+                    	                    $definition->setInstanceName('default');
                     	                    $definition->setPageId($page->getId());
                 	                    
                     	                    if($item_id){
@@ -1070,7 +1063,6 @@ class Assets extends SmartestSystemApplication{
                                         $url .= '&item_id='.$this->getRequestParameter('continue_item_id');
                                     }
                                     
-                                    $url .= '&instance='.$instance_name;
                                     $this->redirect($url);
                                     
                                 }else{
@@ -1141,14 +1133,21 @@ class Assets extends SmartestSystemApplication{
                             $this->addUserMessageToNextRequest("A property ID was not provided.", SmartestUserMessage::ERROR);
                         }
 		                
-		            }else if($this->getRequestParameter('for') == 'filegroup'){ // add file directly to file group
+		            }else if($this->getRequestParameter('for') == 'group'){ // add file directly to file group
 		                
 		                // Add file to the group or gallery
+                        
+                        $group = new SmartestAssetGroup;
+                        
+                        if($group->find($this->getRequestParameter('group_id'))){
+                            $group->addAssetById($asset->getId());
+                            $this->formForward(true);
+                        }
 		                
 		            }
 		            
 		        }else{
-		            $this->formForward();
+		            $this->formForward(true);
 		        }
     		        
     		    /* }else{
@@ -3075,6 +3074,26 @@ class Assets extends SmartestSystemApplication{
         }else{
             $this->send("You do not have permission to edit files.", 'message');
             $this->send(false, 'show_editor');
+        }
+        
+    }
+    
+    public function createAssetGalleryForItemPropertyValue(){
+        
+        if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+            
+            $this->send($item, 'item');
+            $property = new SmartestItemProperty;
+            
+            if($property->find($this->getRequestParameter('property_id'))){
+                $this->send($property, 'property');
+                $alh = new SmartestAssetsLibraryHelper;
+        	    $this->send($alh->getGalleryPlaceholderTypes(), 'gallery_placeholder_types');
+        	    $this->send($alh->getGalleryAssetTypes(), 'gallery_asset_types');
+        	    $this->send($alh->getGalleryAssetGroups($this->getSite()->getId()), 'gallery_groups');
+                $this->send($property->getName().' for '.$item->getName(), 'start_name');
+            }
+            
         }
         
     }

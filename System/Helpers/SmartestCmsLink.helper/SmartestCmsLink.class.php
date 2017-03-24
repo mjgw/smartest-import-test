@@ -116,13 +116,10 @@ class SmartestCmsLink extends SmartestHelper{
     
     public function applyMarkupAttributes($markup_attributes){
         
-        // print_r($this->_markup_attributes);
-        
         if($this->_markup_attributes){
             
             if($this->_markup_attributes->hasParameter('class')){
                 if(isset($markup_attributes['class'])){
-                    // print_r($markup_attributes['class']);
                     $new_classes = $markup_attributes['class'];
                     unset($markup_attributes['class']);
                     foreach(explode(' ', $new_classes) as $classname){
@@ -136,8 +133,6 @@ class SmartestCmsLink extends SmartestHelper{
         }else{
             $this->_markup_attributes = $this->getSeparatedAttributes($markup_attributes)->getParameter('html');
         }
-        
-        // print_r($this->_markup_attributes['class']);
         
         if($this->_render_data){
             $this->_render_data->absorb($this->getSeparatedAttributes($markup_attributes)->getParameter('other'));
@@ -629,7 +624,7 @@ class SmartestCmsLink extends SmartestHelper{
                     if(count($result2)){
                         
                         $d = new SmartestItemPage;
-                        $d->hydrate($result[0]);
+                        $d->hydrate($result2[0]);
                         $d->setPrincipalItem($item);
                     
                         $this->_destination = $d;
@@ -886,8 +881,6 @@ class SmartestCmsLink extends SmartestHelper{
     }
     
     public function getContent($draft_mode=false){
-        
-        // echo "getting content";
         
         if($this->_preset_content_markup){
             

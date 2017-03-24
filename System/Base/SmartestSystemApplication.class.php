@@ -73,6 +73,9 @@ class SmartestSystemApplication extends SmartestBaseApplication{
 	    }
 		
 		$this->send($this->getUserAgent()->isExplorer(), 'is_msie');
+        
+        // echo SmartestSession::get("form:return:temp_location");
+        // print_r($_SESSION);
 	    
     }
     
@@ -269,13 +272,9 @@ class SmartestSystemApplication extends SmartestBaseApplication{
 		}
 		
 		if(SmartestSession::hasData("form:return:temp_vars") && (SmartestSession::get("form:return:temp_vars") instanceof SmartestParameterHolder) && SmartestSession::get("form:return:temp_vars")->hasData()){
-		    
-			$form_return_uri .= "?".SmartestStringHelper::toQueryString(SmartestSession::get("form:return:temp_vars")->getParameters(), $escape);
-		
+			$form_return_uri .= "?".SmartestStringHelper::toQueryString(SmartestSession::get("form:return:temp_vars")->getParameters(), $escape);		
 		}else if(SmartestSession::hasData("form:return:vars") && (SmartestSession::get("form:return:vars") instanceof SmartestParameterHolder) && SmartestSession::get("form:return:vars")->hasData()){
-		    
-			$form_return_uri .= "?".SmartestStringHelper::toQueryString(SmartestSession::get("form:return:vars")->getParameters(), $escape);
-			
+			$form_return_uri .= "?".SmartestStringHelper::toQueryString(SmartestSession::get("form:return:vars")->getParameters(), $escape);			
 		}
 		
 		return $form_return_uri;

@@ -414,6 +414,10 @@ class CmsFrontEnd extends SmartestSystemApplication{
             	            $rss->setTitle($this->_site->getName()." | ".$set->getLabel());
                             $rss->setAuthor($set->getFeedAuthor());
                             $rss->setDescription($set->getFeedDescription());
+                            $rss->setSite($this->_site);
+                            if(is_object($set->getRssChannelImage()) && $set->getRssChannelImageId()){
+                                $rss->setImage($set->getRssChannelImage());
+                            }
             	            $rss->send();
                         }else{
                             exit;
@@ -427,6 +431,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
             	            $atom->setTitle($this->_site->getName()." | ".$set->getLabel());
                             $atom->setAuthor($set->getFeedAuthor());
                             $atom->setDescription($set->getFeedDescription());
+                            $rss->setSite($this->_site);
             	            $atom->sendAtom();
                         }else{
                             exit;
@@ -440,6 +445,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
             	            $atom->setTitle($this->_site->getName()." | ".$set->getLabel());
                             $atom->setAuthor($set->getFeedAuthor());
                             $atom->setDescription($set->getFeedDescription());
+                            $rss->setSite($this->_site);
             	            $atom->sendItunes();
                         }else{
                             exit;

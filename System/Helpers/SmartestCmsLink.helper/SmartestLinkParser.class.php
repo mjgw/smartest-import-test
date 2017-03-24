@@ -49,6 +49,7 @@ class SmartestLinkParser{
                     
                 }else if(isset($m[11])){
                     
+                    // The link is to a Quince Route, and starts with '@'
                     $l = new SmartestParameterHolder("Parsed Link Destination Properties: ".$m[11]);
                     
                     $l->setParameter('route', $m[11]);

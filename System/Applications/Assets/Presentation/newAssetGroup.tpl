@@ -137,7 +137,7 @@
             
             <optgroup label="Existing file groups">
 {foreach from=$gallery_groups item="group"}
-              <option value="G:{$type.id}">Files from '{$group.label}'</option>
+              <option value="G:{$group.id}">Files from '{$group.label}'</option>
 {foreachelse}
               <option value="" disabled="disabled">No matching file groups</option>
 {/foreach}
