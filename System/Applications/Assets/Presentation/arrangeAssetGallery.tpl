@@ -114,7 +114,7 @@ var itemsList = Sortable.create('sortable-gallery-members', {
   {else}
   
   <div class="special-box">
-    There are no files in this gallery yet. <a href="{$domain}assets/editAssetGroupContents?group_id={$group.id}" class="button">Add files</a>
+    There are no files in this gallery yet. <a href="{$domain}assets/editAssetGroupContents?group_id={$group.id}{if $request_parameters.from == 'pagePreview'}&amp;from=pagePreview{/if}" class="button">Add existing files</a> <a href="{$domain}smartest/file/new?group_id={$group.id}{if $request_parameters.from == 'pagePreview'}&amp;from=pagePreview{/if}" class="button">Upload new files</a>
   </div>
   
   {/if}

@@ -34,6 +34,7 @@ function executeTransfer(){
 
     <input type="hidden" id="transferAction" name="transferAction" value="" /> 
     <input type="hidden" name="group_id" value="{$group.id}" />
+    {if $from}<input type="hidden" name="from" value="{$from}" />{/if}
 
     <table width="100%" border="0" cellpadding="0" cellspacing="5" style="border:1px solid #ccc">
       <tr>
@@ -99,5 +100,17 @@ function executeTransfer(){
   	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/assets'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_old.png" border="0" alt="" style="width:16px;height:16px" /> View all files by type</a></li>
   	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}assets/newAssetGroup'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_add.png" border="0" alt="" style="width:16px;height:16px" /> Create a new file group</a></li>
   </ul>
+  
+  {if $request_parameters.from}
+  <ul class="actions-list">
+    <li><b>Workflow options</b></li>
+    {if $request_parameters.item_id}
+    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>
+    {/if}
+    {if $request_parameters.from == 'pagePreview'}
+    <li class="permanent-action"><a href="#" onclick="cancelForm();"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to page preview</a></li>
+    {/if}
+  </ul>
+  {/if}
   
 </div>

@@ -124,7 +124,9 @@ function validateUploadSuffix(){
         </select>        
 {/if}        
       </div>
-      
+    
+    {if $from}<input type="hidden" name="from" value="{$from}" class="purpose_inputs" />{/if}
+    
     {if $for}
       {if $for=='placeholder'}
         <input type="hidden" name="for" value="placeholder" class="purpose_inputs" />
@@ -153,7 +155,9 @@ function validateUploadSuffix(){
     {if $allow_save}
       
     <form action="{$domain}smartest/file/new/save" method="post" enctype="multipart/form-data" id="new-asset-form">  
-    
+      
+      {if $from}<input type="hidden" name="from" value="{$from}" class="purpose_inputs" />{/if}
+      
       {if $for=='placeholder'}
         <input type="hidden" name="for" value="placeholder" class="purpose_inputs" />
         <input type="hidden" name="placeholder_id" value="{$placeholder.id}" class="purpose_inputs" />
@@ -174,7 +178,7 @@ function validateUploadSuffix(){
 {if count($input_methods) > 1}
     <ul class="tabset">
 {foreach from=$input_methods key="input_method_code" item="input_method_tab"}
-      <li{if $input_method_code == $input_method} class="current"{/if}><a href="{$domain}smartest/file/new?asset_type={$type_code}&amp;input_method={$input_method_code}{if $for}&amp;for={$for}{/if}{if $for == "placeholder"}&amp;placeholder_id={$placeholder.id}&amp;page_id={$page.id}{/if}{if $for == "ipv"}&amp;property_id={$property.id}{/if}{if $item.id}&amp;item_id={$item.id}{/if}{if $for == 'group' && $group && $group.id}&amp;group_id={$group.id}{/if}">{$input_method_tab.label}</a></li>
+      <li{if $input_method_code == $input_method} class="current"{/if}><a href="{$domain}smartest/file/new?asset_type={$type_code}&amp;input_method={$input_method_code}{if $for}&amp;for={$for}{/if}{if $for == "placeholder"}&amp;placeholder_id={$placeholder.id}&amp;page_id={$page.id}{/if}{if $for == "ipv"}&amp;property_id={$property.id}{/if}{if $item.id}&amp;item_id={$item.id}{/if}{if $for == 'group' && $group && $group.id}&amp;group_id={$group.id}{/if}{if $from}&amp;from={$from}{/if}">{$input_method_tab.label}</a></li>
 {/foreach}
     </ul>
 {/if}

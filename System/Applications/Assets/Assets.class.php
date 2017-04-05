@@ -359,6 +359,10 @@ class Assets extends SmartestSystemApplication{
 		    }
 	    }
         
+        if($this->getRequestParameter('from')){
+            $this->send($this->getRequestParameter('from'), 'from');
+        }
+        
         $this->send($this->getSite()->getLanguageCode(), 'site_language');
 	    
 	    if($this->getRequestParameter('asset_type')){
@@ -1565,8 +1569,12 @@ class Assets extends SmartestSystemApplication{
 	    
 	    $group_id = $this->getRequestParameter('group_id');
 	    
-	    $this->setFormReturnUri();
-	    
+	    if($this->requestParameterIsSet('from')){
+            $this->send($this->getRequestParameter('from'), 'from');
+        }else{
+            $this->setFormReturnUri();
+        }
+        
 	    $group = new SmartestAssetGroup;
 	    
 	    if($group->find($group_id)){
@@ -1646,14 +1654,24 @@ class Assets extends SmartestSystemApplication{
 	            }
 	            
 	        }
+            
+            $url = '/assets/editAssetGroupContents?group_id='.$group->getId();
+            
+            if($this->getRequestParameter('from')){
+                $url .= '&from='.$this->getRequestParameter('from');
+            }
+            
+            $this->redirect($url);
 	        
 	    }else{
 	        
 	        $this->addUserMessageToNextRequest("The group ID was not recognized.", SmartestUserMessage::ERROR);
+            $this->formForward();
 	        
 	    }
 	    
-	    $this->formForward();
+        
+	    // 
 	    
 	}
 	
