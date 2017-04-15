@@ -689,11 +689,11 @@ class SmartestSite extends SmartestBaseSite{
             case "organisation":
             case "organization_name":
             case "organisation_name":
-            return $this->getOrganisationName();
+            return new SmartestString($this->getOrganisationName());
             
             case "organization_name_safe":
             case "organisation_name_safe":
-            return $this->getOrganizationNameOrSiteName();
+            return new SmartestString($this->getOrganizationNameOrSiteName());
             
             case "pages_list":
             return $this->getPagesList();

@@ -141,6 +141,8 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             case "charcount":
             case "charactercount":
             return strlen($this->_string);
+            case "contentlength":
+            return strlen(trim($this->_string));
             case "paracount":
             return count(SmartestStringHelper::splitBySingleLineBreaks($this->_string));
             case "textile":

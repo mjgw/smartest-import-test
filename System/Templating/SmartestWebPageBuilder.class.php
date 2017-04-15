@@ -517,10 +517,10 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 }else{
                 
                     $show_edit_link = ($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment");
-            
+                    
                     if($show_edit_link){
             
-                        if($this->_request_data->g('action') == "renderEditableDraftPage"){
+                        if($this->getDraftMode()){
                         
                             if($this->getPage() instanceOf SmartestItemPage){
                                 $edit_url = $this->_request_data->g('domain')."websitemanager/definePlaceholder?assetclass_id=".$placeholder_def->getPlaceholder()->getName()."&amp;page_id=".$this->page->getWebid().'&amp;item_id='.$this->getPage()->getSimpleItem()->getId();
@@ -553,7 +553,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                             
                             }
                         
-        		        }else{
+                        }else{
         			        $edit_link = "<!--edit link-->";
         		        }
 	        

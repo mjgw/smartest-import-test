@@ -74,6 +74,7 @@ span.smartest-preview-warning{
 	position:fixed;
 	top:0px;
 	right:0px;
+    z-index:999;
     
     padding:7px;
     width:30px;

@@ -130,14 +130,18 @@ class SmartestWebPagePreparationHelper{
         
         if($this->_page->hasContainerDefinition($container_name)){
             
-            $container_def = $this->_page->getContainerDefinition($container_name, $draft_mode);
+            if($container_def = $this->_page->getContainerDefinition($container_name)){
+                
+                ob_start();
+                $b->run($container_def->getTemplateFilePath(), array());
+                $content = ob_get_contents();
+                ob_end_clean();
             
-            ob_start();
-            $b->run($container_def->getTemplateFilePath(), array());
-            $content = ob_get_contents();
-            ob_end_clean();
-            
-            return $content;
+                return $content;
+                
+            }else{
+                echo 'container '.$container_name.' is not defined';
+            }
             
         }else{
             
