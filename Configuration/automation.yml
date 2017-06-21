@@ -1,0 +1,17 @@
+# Automation settings
+
+# In seconds. This is subject to requests hitting the site. If no requests, no trigger.
+# For traffic independent triggers, curl /smartest/automate from one of the IPs specified below
+internal_trigger_maintenance_interval: 7200
+internal_trigger_publication_interval: 3600
+
+# IP addresses from which external request can be made to trigger automatic functions
+allowed_cron_ips:
+  - 127.0.0.1
+#  - 172.20.*.*
+#  - 10.0.*.*
+#  - 192.168.*.*
+
+
+# in days - the maximum age data cache files can have before being removed
+data_cache_file_max_age: 30

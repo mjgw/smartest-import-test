@@ -46,6 +46,8 @@ class SmartestUnimportedTemplate implements ArrayAccess{
             $type = $this->getProbableAssetType();
         }
         
+        var_dump($this->_sites);
+        
         if(!count($this->_sites[$type])){
         
             $base_name = SmartestFileSystemHelper::baseName($this->_file->getPath());
@@ -113,6 +115,98 @@ class SmartestUnimportedTemplate implements ArrayAccess{
     public function getStorageLocation($include_smartest_root=false){
         $root = $include_smartest_root ? SM_ROOT_DIR : null;
         return $root.SmartestFileSystemHelper::dirName($this->_file->getSmartestPath());
+    }
+    
+    public function getMentionedCSSClasses(){
+        
+	    $regex1 = '/class="([\w\s_-]+)"/mi';
+	    $result = preg_match_all($regex1, $this->getContent(), $matches1);
+        
+        if(isset($matches1[1])){
+            $classes = array();
+            foreach($matches1[1] as $raw_value){
+                $class_names = explode(' ', $raw_value);
+                if(count($class_names) > 1){
+                    $classes[] = implode('.', $class_names);
+                }
+                foreach($class_names as $class){
+                    $classes[] = $class;
+                }
+            }
+            return $classes;
+        }else{
+            return array();
+        }
+        
+    }
+    
+    public function getMentionedCSSIds(){
+        
+	    $regex1 = '/id="([\w\s_-]+)"/mi';
+	    $result = preg_match_all($regex1, $this->getContent(), $matches1);
+        
+        if(isset($matches1[1])){
+            $ids = array();
+            foreach($matches1[1] as $id){
+                $ids[] = $id;
+            }
+            return $ids;
+        }else{
+            return array();
+        }
+        
+    }
+    
+    public function getMentionedCSSTokens(){
+        
+        $tokens = array();
+        
+        foreach($this->getMentionedCSSClasses() as $class){
+            $tokens[$class] = 'class';
+        }
+        
+        foreach($this->getMentionedCSSIds() as $id){
+            $tokens[$id] = 'id';
+        }
+        
+        return $tokens;
+        
+    }
+    
+    public function scanStylesheetsForMentions($site_id=null){
+        
+        $alh = new SmartestAssetsLibraryHelper;
+        $tokens = $this->getMentionedCSSTokens();
+        
+        $stylesheets = $alh->getAssetsByTypeCode('SM_ASSETTYPE_STYLESHEET', $site_id);
+        $relevant_stylesheets = array();
+        $ids = array();
+        
+        foreach($stylesheets as $stylesheet){
+            $content = $stylesheet->getContent();
+            foreach($tokens as $name=>$type){
+                if($type == 'id'){
+                    if(strpos($content, '#'.$name.'{') !== false){
+                        // echo 'found ID \''.$name.'\' in stylesheet '.$stylesheet->getUrl().'<br />';
+                        if(!in_array($stylesheet->getId(), $ids)){
+                            $relevant_stylesheets[] = $stylesheet;
+                            $ids[] = $stylesheet->getId();
+                        }
+                    }
+                }elseif($type == 'class'){
+                    if(strpos($content, '.'.$name.'{') !== false){
+                        // echo 'found class \''.$name.'\' in stylesheet '.$stylesheet->getUrl().'<br />';
+                        if(!in_array($stylesheet->getId(), $ids)){
+                            $relevant_stylesheets[] = $stylesheet;
+                            $ids[] = $stylesheet->getId();
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $relevant_stylesheets;
+        
     }
     
     public function getContent(){

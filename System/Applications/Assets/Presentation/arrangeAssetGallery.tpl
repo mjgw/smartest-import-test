@@ -6,11 +6,11 @@
 
 {if count($assets)}
 
-  <ul id="sortable-gallery-members" style="margin:0px;padding:0px;list-style-type:none">
+  <ul id="sortable-gallery-members" class="sortable-content">
   
 {foreach from=$assets item="membership"}
 
-    <li style="padding:10px;border:1px solid #ccc;border-radius:6px;margin-bottom:8px;background-color:#fff;cursor:move;position:relative" id="membership_{$membership.file.id}">
+    <li id="membership_{$membership.file.id}">
       
       <a href="#remove" style="position:absolute;top:10px;right:10px;font-size:2em;color:#999" id="membership-remove-{$membership.id}"><i class="fa fa-times-circle"></i></a>
       

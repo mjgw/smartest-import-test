@@ -93,14 +93,21 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	}
 	
 	public function __toString(){
-	    // This function has to return a string:
-	    try{
+	    
+        // This function has to return a string:
+        try{
     	    $output = $this->render();
+            
+            if($this->getType() == 'SM_ASSETTYPE_FLASH_VIDEO'){
+                // var_dump($output);
+            }
+            
     	    if(strlen($output)){
     	        return $output;
     	    }else{
     	        return '';
     	    }
+            
         }catch(SmartestException $e){
             return 'Error: '.$e->getMessage();
         }

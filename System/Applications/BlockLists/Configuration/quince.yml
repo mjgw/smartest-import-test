@@ -1,0 +1,34 @@
+module:
+  class: BlockLists
+  shortname: blocklists
+  identifier: com.smartest.BlockLists
+  longname: BlockList editor
+  default_action: listBlockListStyles
+  routes:
+    edit_blocklist:
+      action: editBlockList
+      url: /smartest/blocklist/edit
+    add_block:
+      action: createBlock
+      url: /smartest/blocklist/add_block
+    create_blocklist:
+      action: createBlockList
+      url: /smartest/blocklist/create
+    create_blocklist_style:
+      action: createBlockListStyle
+      url: /smartest/blocklists/style/create
+    edit_blocklist_style:
+      action: editBlockListStyle
+      url: /smartest/blocklists/style/edit
+    list_blocklist_styles:
+      action: listBlockListStyles
+      url: /smartest/blocklists/styles
+  meta:
+    system: true
+    author: Marcus Gilroy-Ware
+  namespaces:
+    ajax:
+      class: BlockListsAjax
+      meta:
+        template: _blank.tpl # Can also be 'none'
+        presentation_subfolder: Ajax/

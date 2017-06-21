@@ -23,3 +23,8 @@ module:
   meta:
     system: true
     author: Marcus Gilroy-Ware
+  namespaces:
+    ajax:
+      class: TemplatesAjax
+      meta:
+        template: _blank.tpl

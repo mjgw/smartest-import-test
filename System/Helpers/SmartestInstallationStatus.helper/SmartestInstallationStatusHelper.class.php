@@ -8,7 +8,7 @@ class SmartestInstallationStatusHelper{
         
         // Add this in a few installlations time SmartestSystemSettingsHelper::load('successful_install') === true
         // if(SmartestCache::load('installation_status', true) === SM_INSTALLSTATUS_COMPLETE && !$purge && (is_file(SM_ROOT_DIR.'Public/.htaccess') && is_file(SM_ROOT_DIR.'Configuration/database.ini'))){
-        if(!$purge && (is_file(SM_ROOT_DIR.'Public/.htaccess') && is_file(SM_ROOT_DIR.'Configuration/database.ini'))){
+        if(!$purge && (is_file(SM_ROOT_DIR.'Public/.htaccess') && (is_file(SM_ROOT_DIR.'Configuration/database.ini') || is_file(SM_ROOT_DIR.'Configuration/database.yml')))){
             // echo "installed";
             return SmartestCache::load('installation_status', true);
         }else{
@@ -299,7 +299,7 @@ class SmartestInstallationStatusHelper{
             
             // ok, now the status can be checked again
             
-            if(file_exists(SM_ROOT_DIR.'Configuration/database.ini')){
+            if(file_exists(SM_ROOT_DIR.'Configuration/database.yml')){
                 // Config files are in place, so try connecting to the database
                 try{
                     $db = SmartestDatabase::getInstance('SMARTEST', true);
@@ -327,7 +327,7 @@ class SmartestInstallationStatusHelper{
                         
                         case SmartestDatabaseException::CONNECTION_IMPOSSIBLE:
                         default:
-                        SmartestLog::getInstance('installer')->log('Database error: Smartest could not connect to the database with the details provided in ./Configuration/database.ini', SM_LOG_WARNING);
+                        SmartestLog::getInstance('installer')->log('Database error: Smartest could not connect to the database with the details provided in ./Configuration/database.yml', SM_LOG_WARNING);
                         $ph = new SmartestParameterHolder('Database connection parameters');
                         $ph->setParameter('username', $e->getUsername());
                         $ph->setParameter('database', $e->getDatabase());

@@ -518,7 +518,7 @@ class SmartestManyToManyQuery{
         
     }
     
-    public function retrieveLookups($all_phases=false){
+    public function retrieveLookups($all_phases=false, $use_numeric_indices=false){
         
         $result = $this->database->queryToArray($this->buildQuery(true, $all_phases));
         $objects = array();

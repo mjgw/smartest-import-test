@@ -101,15 +101,15 @@ class SmartestInstaller{
     
     public function createNewDatabaseConfig(SmartestParameterHolder $ph){
         
-        $c = file_get_contents(SM_ROOT_DIR."System/Install/Samples/database-sample.ini");
+        $c = file_get_contents(SM_ROOT_DIR."System/Install/Samples/database-sample.yml");
         $c = str_replace("__USERNAME__", $ph->getParameter('username'), $c);
         $c = str_replace("__PASSWORD__", $ph->getParameter('password'), $c);
         $c = str_replace("__DATABASE__", $ph->getParameter('database'), $c);
         $c = str_replace("__HOST__", $ph->getParameter('host'), $c);
         $c = str_replace("__NOW__", date("Y-m-d h:i:s"), $c);
         
-        if (file_put_contents(SM_ROOT_DIR."Configuration/database.ini", $c)){
-            SmartestLog::getInstance('installer')->log('Created file ./Configuration/database.ini', SM_LOG_DEBUG);
+        if (file_put_contents(SM_ROOT_DIR."Configuration/database.yml", $c)){
+            SmartestLog::getInstance('installer')->log('Created file ./Configuration/database.yml', SM_LOG_DEBUG);
             return true;
         }
         

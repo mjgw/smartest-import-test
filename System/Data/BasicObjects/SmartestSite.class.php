@@ -162,8 +162,49 @@ class SmartestSite extends SmartestBaseSite{
         }
         
 	}
+    
+    public function getDefaultBlockListStyle(){
+        
+        $id = $this->getDefaultBlockListStyleId();
+        $style = new SmartestBlockListStyle;
+        
+        if($id && $style->find($id)){
+            return $style;
+        }else{
+            
+            $style->setLabel('Default BlockList style for '.$this->getName());
+            $style->setName(SmartestStringHelper::toVarName($style->getLabel()));
+            $style->setSiteId($this->getId());
+            $style->save();
+            
+            $this->setDefaultBlockListStyleId($style->getId());
+            $this->database->rawQuery("UPDATE Sites SET Sites.site_default_blocklist_style_id='".$style->getId()."' WHERE Sites.site_id='".$this->getId()."' LIMIT 1");
+            
+            return $style;
+        }
+        
+    }
+    
+    public function getBlockListStyles(){
+        
+        $h = new SmartestBlockListHelper;
+        return $h->getBlockListStyles($this->getId());
+        
+    }
 	
-	public function getSearchResults($query){
+    public function getSearchResults($query){
+        
+        return $this->getNativeSearchResults($query);
+        
+    }
+    
+    public function getElasticSearchResults($query){
+        
+        
+        
+    }
+    
+	public function getNativeSearchResults($query){
 	    
         $query = strip_tags($query);
 	    $search_query_words = preg_split('/[^\w]+/', $query);
@@ -204,7 +245,7 @@ class SmartestSite extends SmartestBaseSite{
             $items_sql .= ' AND Items.item_itemclass_id IN (\''.implode("','", $model_ids).'\')';
         }
         
-        echo $items_sql;
+        // echo $items_sql;
         
         if(count($search_query_words)){
             
@@ -353,7 +394,7 @@ class SmartestSite extends SmartestBaseSite{
 	    } */
         
         $du = new SmartestDataUtility;
-        return $du->getModels(false, $this->getSiteId(), false, $top_level);
+        return $du->getModels(false, $this->getId(), true, $top_level);
 	    
 	}
 	

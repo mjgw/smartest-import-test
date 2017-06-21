@@ -112,7 +112,16 @@ oembed:
     label: Wistia Video
     provides_html: true
     url: http://fast.wistia.com/oembed?url=$URL
-    url_pattern: '(.+)?(wistia.com|wi.st)\/(medias|embed)\/(.*)'
+    url_pattern: '(.+)?(wistia\.com|wi.st)\/(medias|embed)\/(.*)'
     response_type: json
     fa_iconname: video-camera
     provider_name: Wistia
+  SM_OEMBED_TUMBLR:
+    id: SM_OEMBED_TUMBLR
+    label: Tumblr Post
+    provides_html: true
+    url: https://www.tumblr.com/oembed/1.0?url=$URL
+    url_pattern: ([\w-]+)\.tumblr\.com\/post\/(\d+)(\/[\w-]+)?
+    response_type: json
+    fa_iconname: tumblr
+    provider_name: Tumblr

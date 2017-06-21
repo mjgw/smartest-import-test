@@ -611,7 +611,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 $dah->setItemAppearsOnPage($def->getSimpleItem($this->getDraftMode())->getId(), $this->getPage()->getId());
                 
                 if($def->getItemspace()->usesTemplate()){
-                
+                    
                     $template_id = $def->getItemspace()->getTemplateAssetId();
                     $template = new SmartestTemplateAsset;
                     
@@ -620,7 +620,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                         $template_path = SM_ROOT_DIR.'Presentation/Layouts/'.$template->getUrl();
                         $render_process_id = SmartestStringHelper::toVarName('itemspace_template_'.SmartestStringHelper::removeDotSuffix($template->getUrl()).'_'.substr(microtime(true), -6));
             	        
-            	        $child = $this->startChildProcess($render_process_id);
+                        $child = $this->startChildProcess($render_process_id);
             	        $child->setContext(SM_CONTEXT_ITEMSPACE_TEMPLATE);
             	        $item = $def->getItem(false, $this->getDraftMode());
             	        $item->setDraftMode($this->getDraftMode());
@@ -943,7 +943,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             
             $content = '';
             
-            if($list->hasRepeatingTemplate($this->getDraftMode())){
+            // if($list->hasRepeatingTemplate($this->getDraftMode())){
                 
                 $limit = $list->getMaximumLength() > 0 ? $list->getMaximumLength() : null;
                 
@@ -963,18 +963,29 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                         $tag_id = $list->getLiveSetId();
                     }
                     
-                    if($tag->find($tag_id)){
+                    if($tag_id){
+                        if($tag->find($tag_id)){
                         
+                        }else{
+                            echo $this->raiseError("A tag with ID ".$tag_id.' could not be found.');
+                        }
+                    }else{
+                        echo $this->raiseError('No tag ID could be found.');
                     }
+                    
                     
                 }elseif($list->getType() == 'SM_LIST_SIMPLE'){
                     
                     try{
                         $set = $list->getSet($this->getDraftMode());
                     }catch(SmartestException $e){
-                        $this->raiseError($e->getMessage());
+                        return $this->raiseError($e->getMessage());
                     }
                     
+                }elseif($list->getType() == 'SM_LIST_ARTICULATED'){
+                    // These lists are no longer supported
+                    echo $this->raiseError("Articulated lists are no longer supported");
+                    return;
                 }
                 
                 $model = new SmartestModel;
@@ -1038,9 +1049,9 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                     
 	            }
             
-            }else{
-                // no template
-            } // end if: the list has repeating template
+            // }else{
+            //     // no template
+            // } // end if: the list has repeating template
             
             if($this->_request_data->g('action') == "renderEditableDraftPage" || $this->_request_data->g('action') == "pageFragment"){
 			    $edit_link = "<a class=\"sm-edit-button\" title=\"Click to edit definitions for embedded list: ".$list->getName()."\" href=\"".$this->_request_data->g('domain')."websitemanager/defineList?assetclass_id=".$list->getName()."&amp;page_id=".$this->getPage()->getWebid()."\" style=\"text-decoration:none;font-size:11px";
@@ -1074,6 +1085,12 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
             
         }
     
+    }
+    
+    public function renderBlockList($style, $params){
+        
+        echo '<p>BlockList style: <strong>'.$style.'</strong></p>';
+        
     }
     
     public function renderBreadcrumbs($params){

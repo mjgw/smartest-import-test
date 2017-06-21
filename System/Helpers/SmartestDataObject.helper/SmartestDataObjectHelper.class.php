@@ -143,6 +143,7 @@ class SmartestDataObjectHelper{
 	        
 	        $file_contents = str_replace('__CLASSNAME__', $class_name, $file_contents);
 	        $file_contents = str_replace('__BASE_CLASS__', $table_info['class'], $file_contents);
+            $file_contents = str_replace('__REVISION__', SmartestInfo::$revision, $file_contents);
 	        
 	        foreach($columns as $column){
 		    

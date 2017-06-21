@@ -162,4 +162,22 @@
     <entity table="Sets" class="SmartestCmsItemSet" foreignkey="set_id" index="2" required="true" />
   </type>
   
+  <type id="SM_MTMLOOKUP_BLOCKLISTSTYLE_TPL" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps Templates to Block List Styles</label>
+    <entity table="Tags" class="SmartestBlockListStyle" foreignkey="tag_id" index="1" required="true" defaultsort="asset_label" />
+    <entity table="Assets" class="SmartestTemplateAsset" foreignkey="asset_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_BLOCKLISTSTYLE_CSS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps Stylesheets to Block List Styles</label>
+    <entity table="Tags" class="SmartestBlockListStyle" foreignkey="tag_id" index="1" required="true" />
+    <entity table="Assets" class="SmartestAsset" foreignkey="asset_id" index="2" required="true" />
+  </type>
+  
+  <type id="SM_MTMLOOKUP_BLOCKLISTSTYLE_JS" return="meta:targetEntityClass" method="SM_MTMLOOKUPMETHOD_MAP">
+    <label>Maps Javascript to Block List Styles</label>
+    <entity table="Tags" class="SmartestBlockListStyle" foreignkey="tag_id" index="1" required="true" />
+    <entity table="Assets" class="SmartestAsset" foreignkey="asset_id" index="2" required="true" />
+  </type>
+  
 </relationshiptypes>

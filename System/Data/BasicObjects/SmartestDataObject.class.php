@@ -47,6 +47,11 @@ class SmartestDataObject implements ArrayAccess{
 	    }catch(SmartestException $e){
 	        throw new SmartestException($e->getMessage());
 	    }
+        
+        if(!isset($this->__revision_num) || $this->__revision_num != SmartestInfo::$revision){
+            $this->refreshDataStructure();
+            $this->refreshClass();
+        }
 		
 	}
 	
@@ -345,14 +350,15 @@ class SmartestDataObject implements ArrayAccess{
 		// Has the database structure changed?
 	    if ($f3 == 'get' || $f3 == 'set') {
 		    
-		    $this->clearTableColumnsCache();
+		    // $this->clearTableColumnsCache();
 		    $class_file = $this->getBaseClassFilename();
 			
 			if(is_file($class_file)){
 			    
 			    // refresh cache of columns and delete so that it can regenerate
-			    SmartestLog::getInstance('system')->log('Call to undefined get/set function: '.get_class($this).'->'.$name.'(). Auto-generated class SmartestBase'.$this->_base_class.' ('.$class_file.') has been deleted to allow for re-caching.', SmartestLog::NOTICE);
-			    unlink($class_file);
+			    SmartestLog::getInstance('system')->log('Call to undefined get/set function: '.get_class($this).'->'.$name.'(). Auto-generated class SmartestBase'.$this->_base_class.' ('.$class_file.') will be deleted to allow for re-caching.', SmartestLog::NOTICE);
+			    // $this->removeClassFile();
+                $this->refreshClass();
 			    
 			    /* $data = SmartestDataObjectHelper::getBasicObjectSchemaInfo();
 			    $table_info = $data[$this->_table_name];
@@ -367,6 +373,25 @@ class SmartestDataObject implements ArrayAccess{
 		}
 		
 	}
+    
+    public function refreshClass(){
+        $this->clearTableColumnsCache();
+        $this->removeClassFile();
+    }
+    
+    public function removeClassFile(){
+        
+        $class_file = $this->getBaseClassFilename();
+        
+        if(is_file($class_file)){
+            SmartestLog::getInstance('system')->log('Auto-generated class SmartestBase'.$this->_base_class.' ('.$class_file.') has been deleted.', SmartestLog::NOTICE);
+            return unlink($class_file);
+        }else{
+            SmartestLog::getInstance('system')->log('Auto-generated class SmartestBase'.$this->_base_class.' ('.$class_file.') could not be found so has not been deleted.', SmartestLog::NOTICE);
+            return false;
+        }
+        
+    }
 	
 	public function baseClassHasField($field_name){
 	    return isset($this->_properties[$field_name]);

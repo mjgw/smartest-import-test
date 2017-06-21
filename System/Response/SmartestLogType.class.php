@@ -73,8 +73,15 @@ class SmartestLogType extends SmartestParameterHolder{
             date_default_timezone_set('Europe/London');
         }
         
-        $file = SM_ROOT_DIR.$this->getParameter('file');
+        if($this->hasParameter('systemfile') && SmartestPersistentObject::get('request_data')->g('application')->g('is_system')){
+            $file = SM_ROOT_DIR.$this->getParameter('systemfile');
+        }else{
+            $file = SM_ROOT_DIR.$this->getParameter('file');
+        }
+        
         $file = str_replace('%DAY%', date('Ymd'), $file);
+        $file = str_replace('%MONTH%', date('Ym'), $file);
+        $file = str_replace('%APP%', SmartestPersistentObject::get('request_data')->g('application')->g('name'), $file);
         $file = str_replace('%SITEID%', $this->getCurrentSiteId(), $file);
         return $file;
         

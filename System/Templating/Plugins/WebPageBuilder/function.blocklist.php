@@ -2,8 +2,8 @@
 
 function smarty_function_blocklist($params, &$smartest_engine){
     
-    $name = isset($params['name']) ? SmartestStringHelper::toVarName($params['name']) : 'default';
+    $style = isset($params['style']) ? SmartestStringHelper::toVarName($params['style']) : 'default';
     
-    echo '<p>BlockList name: '.$name.'</p>';
+    return $smartest_engine->renderBlockList($style, $params);
     
 }

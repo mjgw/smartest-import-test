@@ -56,6 +56,10 @@ class Settings extends SmartestSystemApplication{
                 
                 $this->send($logos, 'logo_assets');
                 
+                $elastic_search_is_possible = SmartestSystemHelper::elasticSearchIsPossible();
+                $this->send($elastic_search_is_possible, 'allow_elastic_search');
+                $this->send(($this->getGlobalPreference('site_search_type') == 'ELASTICSEARCH' && $elastic_search_is_possible) ? 'ELASTICSEARCH' : 'BASIC', 'search_type');
+                
                 $alh = new SmartestAssetsLibraryHelper;
                 $icos = $alh->getAssetsByTypeCode('SM_ASSETTYPE_ICO_FAVICON', $this->getSite()->getId());
                 $this->send($icos, 'favicon_assets');
@@ -98,6 +102,8 @@ class Settings extends SmartestSystemApplication{
                 $site->setLanguageCode($this->getRequestParameter('site_language'));
     	        $this->addUserMessageToNextRequest('Your site settings have been updated.', SmartestUserMessage::SUCCESS);
     	        $site->save();
+                
+                $this->setGlobalPreference('site_search_type', $this->getRequestParameter('site_search_type'));
 	        
             }else{
                 
@@ -253,10 +259,13 @@ class Settings extends SmartestSystemApplication{
                 
                 $this->send(!(bool) $this->getSite()->getIsEnabled(), 'site_disabled');
                 
-                // $this->send(, 'current_hostname');
-                // $this->send($_SERVER['HTTPS'], 'is_secure');
+                $default_blocklist_style = $this->getSite()->getDefaultBlockListStyle();
+                $this->send($default_blocklist_style, 'default_blocklist_style');
+        
+                $blocklist_styles = $this->getSite()->getBlockListStyles();
+                $this->send($blocklist_styles, 'blocklist_styles');
                 
-                $protocol = $_SERVER['HTTPS'] ? 'https' : 'http';
+                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https' : 'http';
                 $host = $_SERVER['HTTP_HOST'];
                 $domain = $this->getRequest()->getDomain();
                 $returnTo = $protocol.'://'.$host.$domain.'smartest/cmssettings';

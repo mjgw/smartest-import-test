@@ -4,20 +4,69 @@ class SmartestSystemHelper{
     
     public static function getOperatingSystem(){
         
-        $linux = `head -n 1 /etc/issue`;
-        $linux = trim(str_replace('\n', '', $linux));
-        $linux = trim(str_replace('\l', '', $linux));
         
-        if(strlen($linux)){
-            return $linux;
-        }else if(self::isOsx()){
+        
+        if(self::isOsx()){
             // sw_vers | grep 'ProductVersion:' | grep -o '[0-9]*\.[0-9]*\.[0-9]*'
             $linux = "Mac OS X ".`sw_vers | grep 'ProductVersion:' | grep -o '[0-9]*\.[0-9]*\.[0-9]*'`;
             return $linux;
         }else{
-            return "Unknown";
+            
+            $linux = `head -n 1 /etc/issue`;
+            
+            if(strlen($linux)){
+                $linux = trim(str_replace('\n', '', $linux));
+                $linux = trim(str_replace('\l', '', $linux));
+                return $linux;
+            }else{
+                return "Unknown";
+            }
+            
         }
         
+    }
+    
+    public static function getJavaVersion(){
+        
+        if(SmartestCache::hasData('java_version', true)){
+            return SmartestCache::load('java_version', true);
+        }else{
+            if(self::isOsx()){
+                if(is_dir('/System/Library/Frameworks/JavaVM.framework/Versions/')){
+                    $versions = array();
+                    foreach(SmartestFileSystemHelper::getDirectoryContents('/System/Library/Frameworks/JavaVM.framework/Versions/') as $version){
+                        if(preg_match('/\d\.\d(\.\d)?/', $version, $matches)){
+                            $versions[] = $matches[0];
+                        }
+                    }
+                    usort($versions, 'version_compare');
+                    $v = end($versions);
+                    SmartestCache::save('java_version', $v, null, true);
+                    return $v;
+                }else{
+                    return false;
+                }
+            }else{
+                $java = shell_exec( 'command -v java >/dev/null' );
+                if(strpos($java, 'version')){ // no need to use strict !== operator as position will never be 0
+                    preg_match('/java version "?([\d\._])"?/mi', $java, $matches);
+                    $v = $matches[0];
+                    SmartestCache::save('java_version', $v, null, true);
+                    return $v;
+                }else{
+                    return false;
+                }
+            }
+        }
+        
+    }
+    
+    public function elasticSearchIsPossible(){
+        if(version_compare(self::getJavaVersion(), '1.8.0') >= 0 && version_compare(PHP_VERSION, '5.6.0') >= 0){
+            return true;
+        }else{
+            return false;
+        }
     }
     
     public static function isOsx(){

@@ -31,3 +31,4 @@ site_oembed_enabled:1:0:Enable OEmbed?
 site_oembed_width:1:0:Default width for OEmbed embed codes
 site_oembed_height:1:0:Default height for OEmbed embed codes
 site_favicon_id:1:0:ICO file for favourite icon
+site_search_type:1:0:Search type

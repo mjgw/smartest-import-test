@@ -8,12 +8,77 @@
 
 <div class="instruction">You are editing the draft property values of the {$item._model.name|strtolower} &quot;<strong class="item-name-update">{$item.name}</strong>&quot; <a href="{$domain}{$section}/getItemClassMembers?class_id={$item._model.id}" class="button small">Back to {$item._model.plural_name|lower}</a></div>
 
+<div class="instruction">
+  <input type="checkbox" id="item-autosave" name="item_autosave" value="1"{if $autosave} checked="checked"{/if} /> <label for="item-autosave">Automatically save changes as I work</label>
+</div>
+
+<script type="text/javascript">
+  {literal}
+  
+  var autosaveMode, saver, restartSavingTimer, listenForUserActions;
+  
+  $('item-autosave').observe('click', function(){
+    var isChecked = $('item-autosave').checked ? 1 : 0;
+    autosaveMode = $('item-autosave').checked;
+    new Ajax.Request(sm_domain+'datamanager/setApplicationPreferenceFromAjax', {
+      parameters: 'pref_name=autosave_items&pref_value='+isChecked
+    });
+    if(isChecked){
+      listenForUserActions = true;
+      // startSaving();
+    }else{
+      listenForUserActions = false;
+      stopSaving();
+    }
+  });
+  
+  autosaveMode = $('item-autosave').checked;
+  
+  var startSaving = function(){
+    if($('item-autosave')){
+      /* saver = new PeriodicalExecuter(function(){
+        if(autosaveMode){
+          saveItemData();
+        }
+      }, 4.0); */
+    }
+  }
+  
+  var stopSaving = function(){
+    // console.log(saver);
+    if(saver !== undefined && saver !== null){
+      // saver.stop();
+      // saver = null;
+    }
+  }
+  
+  var respondToUserAction = function(){
+    if(autosaveMode){
+      console.log('autosave triggered...');
+      stopSaving();
+      clearTimeout(restartSavingTimer);
+      restartSavingTimer = setTimeout(function(){
+        saveItemData();
+        console.log('autosaving...');
+        // startSaving();
+      }, 2500);
+    }
+  }
+  
+  // if(autosaveMode){
+  //   listenForUserActions = true;
+  //   startSaving();
+  // }
+  
+  {/literal}
+</script>
+
 {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}
 <div class="instruction">This <strong>{$item._model|lower}</strong> is attached to the {$parent_model.name|lower} &ldquo;{$parent_item.name}&rdquo; <a href="{$parent_item.action_url}" class="button">Edit {$parent_model.name|lower}</a> <a href="{$domain}datamanager/getSubModelItems?item_id={$parent_item.id}&amp;sub_model_id={$item._model.id}" class="button">See all {$item._model.plural_name|lower} for this {$parent_model.name|lower}</a></div>
 {/if}
 
 <div id="sets" class="special-box">
-     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em> <a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}" class="button">Create one</a>{/if}
+     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em> <a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}" class="button small">Create one</a>{/if}
 {if count($possible_sets)}
        <div>
          <form action="{$domain}sets/transferSingleItem" method="post">
@@ -74,9 +139,9 @@
   {if $allow_edit_item_slug}
   <input type="text" name="item_slug" value="{$item.slug}" /><div class="form-hint">Numbers, lowercase letters and hyphens only, please</div>
   {else}
-  {$item.slug}
+  <code>{$item.slug}<code>
   {/if}
-  {if $allow_edit_item_slug && $item.public == "TRUE" && count($metapages)}<p style="clear:both">Warning: This {$item._model.name|strtolower} is live. Editing its short name may cause links to it to break.</p>{/if}
+  {if $allow_edit_item_slug && $item.public == "TRUE" && count($metapages)}<div class="edit-form-sub-row">Warning: This {$item._model.name|strtolower} is live. Editing its short name may cause links to it to break.</div>{/if}
 </div>
 
 {/if}
@@ -348,9 +413,13 @@
 {literal}
 var saveItemData = function(callbackFunction){
   $('primary-ajax-loader').show();
+  $('form-save-button').disabled = true;
+  $('form-save-button').value = 'Saving...';
   $('edit-item-form').request({
     onSuccess: function(){
       $('primary-ajax-loader').hide();
+      $('form-save-button').disabled = false;
+      $('form-save-button').value = 'Save';
       if(callbackFunction && typeof callbackFunction == 'function'){
         callbackFunction();
       }
@@ -361,6 +430,14 @@ var saveItemData = function(callbackFunction){
 $('form-save-button').observe('click', function(e){
   e.stop();
   saveItemData();
+});
+
+$('edit-item-form').observe('keyup', respondToUserAction);
+$('edit-item-form').observe('click', respondToUserAction);
+$('edit-item-form').observe('image:chosen', respondToUserAction);
+$('edit-item-form').observe('switch:changed', respondToUserAction);
+$$('#edit-item-form select').each(function(select){
+  select.observe('change', respondToUserAction);
 });
 
 {/literal}
@@ -374,14 +451,13 @@ $('form-save-button').observe('click', function(e){
     <li><b>This {$item._model.name}</b></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id={$item.id}', '{$item._model.name} info');" class="right-nav-link"><i class="fa fa-info-circle"></i>&nbsp;About this {$item._model.name}</a></li>
     {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/editItem?item_id={$parent_item.id}';"><i class="fa fa-cube"></i>&nbsp;Back to {$parent_model.name}</a></li>{/if}
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/releaseItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-unlock"></i>&nbsp;Release for others to edit</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="{if $item.is_held && $item.held_by == $_user.id} window.location='{$domain}{$section}/releaseItem?item_id={$item.id}{else}{$domain}{$section}/getItemClassMembers?class_id={$item.itemclass_id}{/if}';" class="right-nav-link"><i class="fa fa-check-circle"></i>&nbsp;Finish editing</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/approveItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-check"></i>&nbsp;Approve changes</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addTodoItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-share-square-o"></i>&nbsp;Assign To-do</a></li>
     {if $default_metapage_id}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/preview?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-eye"></i>&nbsp;Preview it</a></li>{/if}
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/publishItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-globe"></i>&nbsp;Publish it</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/duplicateItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-clipboard"></i>&nbsp;Duplicate it</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/toggleItemArchived?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-archive"></i>&nbsp;{if $item.is_archived}Un-archive this {$item._model.name}{else}Archive this {$item._model.name}{/if}</a></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassMembers?class_id={$item.itemclass_id}';" class="right-nav-link"><i class="fa fa-check-circle"></i>&nbsp;Finish editing for now</a></li>
   </ul>
   
   <ul class="actions-list">

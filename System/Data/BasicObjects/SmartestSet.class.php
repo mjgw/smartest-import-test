@@ -4,6 +4,7 @@ class SmartestSet extends SmartestBaseSet{
     
     protected $_membership_type;
     protected $_set_settings;
+    protected $_members;
     
     public function __objectConstruct(){
         

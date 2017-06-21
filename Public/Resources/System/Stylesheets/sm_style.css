@@ -967,6 +967,25 @@ ul.objects-list > li input[type="text"]:focus{
     outline-width: 0;
 }
 
+ul.sortable-content{
+    margin:0px;
+    padding:0px;
+    list-style-type:none;
+}
+
+ul.sortable-content li{
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    margin-bottom:8px;
+    background-color:#fff;
+    position:relative;
+    cursor:move;
+    cursor:grab;
+    cursor:-webkit-grab;
+    cursor:-moz-grab;
+}
+
 ul.auto-fk-ipv-items{
     list-style-type:none;
     margin:0px;

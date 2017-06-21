@@ -431,7 +431,7 @@ span.form-hint{
 
 div.form-hint{
     float:left;
-    padding:1px 6px 6px 198px;
+    padding:6px 6px 6px 198px;
     clear:both;
     width:100%;
     box-sizing:border-box;
@@ -605,7 +605,7 @@ div.image-picker-caption{
     }
     
     div.form-hint{
-        padding:1px 6px 6px 165px;
+        padding:6px 6px 6px 165px;
     }
     
     div.edit-form-row input[type="text"], div.edit-form-row input[type="password"], div.special-box input[type="text"], table.info-table tr td input[type="text"]{
@@ -633,7 +633,7 @@ div.image-picker-caption{
     }
     
     div.form-hint{
-        padding:1px 6px 6px 135px;
+        padding:6px 6px 6px 135px;
     }
     
     div.edit-form-row input[type="text"], div.edit-form-row input[type="password"], div.special-box input[type="text"], table.info-table tr td input[type="text"]{

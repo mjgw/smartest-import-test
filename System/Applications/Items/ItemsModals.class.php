@@ -664,6 +664,8 @@ class ItemsModals extends SmartestSystemApplication{
 	            }else{
 	                $mode = 'pages';
 	            }
+            }else{
+                $mode = 'pages';
             }
 	        
 	        $this->send($mode, 'mode');
@@ -739,6 +741,7 @@ class ItemsModals extends SmartestSystemApplication{
 	        $multiple_sites = (count($sites_where_used) > 1);
 	        
 	        $site_ids = array();
+            
 	        foreach($sites_where_used as $s){
 	            $site_ids[] = $s->getId();
 	        }
@@ -766,7 +769,7 @@ class ItemsModals extends SmartestSystemApplication{
 	        $this->send($this->getSite()->getId(), 'current_site_id');
 	        
 	        if($model->getSiteId() == '0'){
-	            $this->send('Not set', 'main_site_name');
+	            $this->send(new SmartestString('Not set'), 'main_site_name');
             }else{
                 $this->send(new SmartestString($model->getMainSite()->getName()), 'main_site_name');
             }

@@ -424,9 +424,9 @@ class Pages extends SmartestSystemApplication{
                                     
                                 }else{
                                     
-                                    // there are no properties in this meta-page that point to the data type of the parent meta-page. this is a problem so we nnotify the user.
+                                    // there are no properties in this meta-page that point to the data type of the parent meta-page. this is a problem so we notify the user.
                                     if($page->getParentPage(false)->getDatasetId() == $page->getDatasetId()){
-                                        $this->addUserMessage("This ".$model->getName()." meta-page is the child of a meta-page that is also used to represent ".$model->getPluralName().", but the ".$model->getName()." model has no foreign-key properties that refer to other ".$model->getPluralName().". This page will assign its own item to it's parent meta-page.", SmartestUserMessage::WARNING);
+                                        $this->addUserMessage("This ".$model->getName()." meta-page is the child of a meta-page that is also used to represent ".$model->getPluralName().", but the ".$model->getName()." model has no foreign-key properties that refer to other ".$model->getPluralName().". This page will assign its own item to its parent meta-page.", SmartestUserMessage::WARNING, true);
                                         $page->setParentMetaPageReferringPropertyId('_SELF');
                                         $this->send('_SELF', 'parent_meta_page_property');
                                         $this->send('text', 'parent_mpp_control_type');

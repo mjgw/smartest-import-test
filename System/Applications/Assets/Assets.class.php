@@ -1968,11 +1968,10 @@ class Assets extends SmartestSystemApplication{
     			        $formTemplateInclude = "edit.default.tpl";
     			    }
 			    
-    			    if($asset_type['storage']['type'] != 'database'){
+    			    if($asset_type['storage']['type'] == 'file'){
     	            
         	            // if(SmartestStringHelper::toRealBool($asset_type['editable'])){
-    	            
-            	            $path = SM_ROOT_DIR.$asset_type['storage']['location'];
+    	                    $path = SM_ROOT_DIR.$asset_type['storage']['location'];
             	            $dir_is_writable = is_writable($path);
             	            $file_is_writable = is_writable($path.$asset->getUrl());
         	            
@@ -2110,13 +2109,17 @@ class Assets extends SmartestSystemApplication{
                 
 		        $param_values = serialize($this->getRequestParameter('params'));
     		    $asset->setParameterDefaults($param_values);
-
-    		    $content = $this->getRequestParameter('asset_content');
+                
+                
+    		    $content = mb_convert_encoding($this->getRequestParameter('asset_content'), 'UTF-8');
+                // echo $this->getRequestParameter('asset_content');
+                // echo mb_convert_encoding($_POST['asset_content'], 'UTF-8');
+                
     		    $content = SmartestStringHelper::unProtectSmartestTags($content);
     		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
     		    
                 if($filter){
-                    $update_success = $asset->setContentFromEditor($content);
+        		    $update_success = $asset->setContentFromEditor($content);
                 }else{
                     $asset->setContent($content);
                     $update_success = true;

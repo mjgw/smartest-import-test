@@ -273,8 +273,8 @@ class SmartestCmsItemSet extends SmartestSet implements SmartestSetApi, Smartest
 	    }
 	    
 	    $draft = $mode < 6;
-	    // echo $this->getType();
-	    if($refresh || !$this->_fetch_attempted){
+	    
+        if(!$this->_fetch_attempted){
 	    
 	        if($this->getType() == 'STATIC'){
 	            

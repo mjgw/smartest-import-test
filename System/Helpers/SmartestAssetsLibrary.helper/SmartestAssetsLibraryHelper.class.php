@@ -1297,8 +1297,8 @@ class SmartestAssetsLibraryHelper{
                 }
                 
                 foreach($types as $check_type){
-
-	                if(is_array($check_type['suffix'])){
+                    
+                    if(isset($check_type['suffix']) && is_array($check_type['suffix'])){
 
 	                    foreach($check_type['suffix'] as $check_type_suffix){
     	                    
@@ -1320,6 +1320,12 @@ class SmartestAssetsLibraryHelper{
 	    }
 	    
 	}
+    
+    public function getAssetTypeCodesThatShareLocation($type_code){
+        
+        $types = $this->getTypes();
+        
+    }
 	
 	public function getAssetTypeCodesThatShareSuffixAndLocation($type_code){
 	    

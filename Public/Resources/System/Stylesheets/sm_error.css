@@ -23,6 +23,15 @@ a img{
     font-weight: bold;
 }
 
+p a{
+    color:#ff6600;
+    text-decoration:none;
+}
+
+p a:hover{
+    text-decoration:underline;
+}
+
 div.breaker{
     clear:both;
     height:0px;
@@ -31,7 +40,7 @@ div.breaker{
 
 #fixed-width{
     
-    width:980px;
+    width:800px;
     margin-left:auto;
     margin-right:auto;
     text-align:left;
@@ -53,7 +62,7 @@ div.breaker{
     
     #fixed-width{
     
-        width:700px;
+        width:650px;
     
     }
     

@@ -66,14 +66,16 @@ class QuinceAction{
                     $this->_action = $this->_request->getAction();
                 }
                 
-                $default_action = $this->_module_info['default_action'];
+                $default_action = isset($this->_module_info['default_action']) ? $this->_module_info['default_action'] : null;
                 
-                // echo $this->_class;
-                // echo "not default";
             }else{
                 $this->_class = $this->_module_info['class'];
                 $this->_action = $this->_request->getAction();
-                $default_action = $this->_module_info['default_action'];
+                if(isset($this->_module_info['default_action'])){
+                    $default_action = $this->_module_info['default_action'];
+                }else{
+                    // Module does not name the default action
+                }
             }
 
             // $this->_class = $this->_module_info['class'];
@@ -1255,7 +1257,9 @@ class Quince{
                                     $fra['action'] = $r['action'];
                                     $fra['module'] = $conf['shortname'];
                                     $fra['url'] = $r['url'];
-                                    $fra['params'] = $r['params'];
+                                    if(isset($r['params'])){
+                                        $fra['params'] = $r['params'];
+                                    }
                                     $fake_route_aliases[] = $fra;
                                 }
                             }

@@ -775,7 +775,7 @@ type:
   SM_ASSETTYPE_VCARD:
     id: SM_ASSETTYPE_VCARD
     category: other
-    label: VCF Contact File
+    label: VCF Contact Card
     description: A contact card in VCARD Format
     class: SmartestAsset
     html_friendly: false
@@ -948,6 +948,23 @@ type:
 #      location: Presentation/ListItems/
 #    suffix:
 #      - {mime: application/octet-stream, _content: tpl}
+
+  SM_ASSETTYPE_BLOCKLIST_TEMPLATE:
+    id: SM_ASSETTYPE_BLOCKLIST_TEMPLATE
+    template_type: SM_BLOCKLIST_TEMPLATE
+    category: templates
+    label: BlockList block template
+    description: "Template used for the individual blocks in a BlockList"
+    editable: true
+    model_specific: sometimes
+    icon: layout.png
+    fa_iconname: object-group
+    class: SmartestTemplateAsset
+    storage: 
+      type: file
+      location: Presentation/Layouts/
+    suffix:
+      - {mime: application/octet-stream, _content: tpl}
   
   SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE:
     id: SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE

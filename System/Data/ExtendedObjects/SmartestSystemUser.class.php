@@ -847,6 +847,12 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
 	        case "temporary_colour":
             case "temporary_color":
 	        return $this->getTemporaryColour();
+            
+            case "can_publish_items":
+            return $this->hasToken('publish_all_items');
+            
+            case "can_publish_pages":
+            return $this->hasToken('publish_all_pages');
 	        
 	    }
 	    

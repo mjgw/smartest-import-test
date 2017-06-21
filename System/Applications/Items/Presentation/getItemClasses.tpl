@@ -49,6 +49,8 @@
     <li class="permanent-action"><a href="{dud_link}" onclick="modelList.workWithItem('addItem');"><i class="fa fa-plus-circle"></i> Create a new <span class="model_name_field">item</span></a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="modelList.workWithItem('getItemClassMembers');"><i class="fa fa-search"></i> Browse <span class="model_plural_name_field">items</span></a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="return MODALS.load('datamanager/modelInfo?class_id='+modelList.lastItemId, 'Model info')"><i class="fa fa-info-circle"></i> Model info</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="return MODALS.load('datamanager/showItemClassTemplateAccess?class_id='+modelList.lastItemId, 'Template data')"><i class="fa fa-file-code-o"></i> Template data</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="modelList.workWithItem('exportModelKit');"><i class="fa fa-arrow-circle-down"></i> Download model kit</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="modelList.workWithItem('getItemClassProperties');"><i class="fa fa-sliders"></i> Edit Model Properties</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="modelList.workWithItem('editModel');"><i class="fa fa-pencil"></i> Edit Model</a></li>
     {* <li class="permanent-action"><a href="{dud_link}" onclick="modelList.workWithItem('getItemClassComments');"><i class="fa fa-comments"></i> Browse comments</a></li> *}

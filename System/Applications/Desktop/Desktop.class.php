@@ -534,4 +534,46 @@ class Desktop extends SmartestSystemApplication{
         
     }
     
+    public function cronTrigger(){
+        
+        $modules = SmartestPersistentObject::get('controller')->getAllModulesById();
+        
+        // Check IP address (in case of limit in Configuration/cron_ips.yml)
+        $ips = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'Configuration/automation.yml');
+        
+        if(isset($ips['allowed_cron_ips']) && is_array($ips['allowed_cron_ips'])){
+            
+            $allowed = false;
+            
+            foreach($ips['allowed_cron_ips'] as $ip){
+                
+                $ip = '/'.str_replace('*', '\d+', $ip).'/i';
+                $ip = str_replace('.', '\.', $ip);
+                
+                if(preg_match($ip, $_SERVER['REMOTE_ADDR'])){
+                    $allowed = true;
+                }
+                
+            }
+            
+            if($allowed){
+                $cron = new SmartestAutomationHelper($this->getSite());
+                $cron->externalTrigger();
+            }else{
+                SmartestLog::getInstance('auth')->log('Attempted access to Smartest via hostname \''.$_SERVER['HTTP_HOST'].'\' from IP address '.$_SERVER['REMOTE_ADDR'].' was prevented because of backend hostname restrictions in Configuration/admin_domains.yml.');
+                include SM_ROOT_DIR.'System/Response/ErrorPages/cronipnotpermitted.php';
+                exit;
+            }
+            
+        }else{
+            // The file is there, but is incorrectly formatted.
+            SmartestLog::getInstance('system')->log('File Configuration/cron_ips.yml is incorrectly formatted and cron jobs cannot be triggered.');
+        }
+        
+        
+        
+        exit;
+        
+    }
+    
 }

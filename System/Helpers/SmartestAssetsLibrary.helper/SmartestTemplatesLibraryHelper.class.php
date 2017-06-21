@@ -27,8 +27,7 @@ class SmartestTemplatesLibraryHelper{
             // var_dump($foreign_template_asset['asset_site_id']);
 		    if($foreign_template_asset['asset_shared'] != '1'){
 		        if($key = array_search($foreign_template_asset['asset_url'], $all_templates)){
-                    echo "unsetting ".$all_templates[$key];
-    		        unset($all_templates[$key]);
+                    unset($all_templates[$key]);
 		        }
 	        }
 		}
@@ -159,6 +158,7 @@ class SmartestTemplatesLibraryHelper{
     public function getUnimportedTemplatesByType($type_code){
         
         $types = $this->getTypes();
+        $alh = new SmartestAssetsLibraryHelper;
 	    
 	    if(isset($types[$type_code])){
 	        
@@ -168,11 +168,11 @@ class SmartestTemplatesLibraryHelper{
 	            
 	            $dir = SM_ROOT_DIR.$type['storage']['location'];
 	            
-	            $type_codes = $this->getAssetTypeCodesThatShareLocation($type_code);
+	            $type_codes = $alh->getAssetTypeCodesThatShareSuffixAndLocation($type_code);
 	            
 	            $files = SmartestFileSystemHelper::load($dir);
 	            $regex = '/\.tpl$/';
-	            $imported = $this->getImportedFilenamesByType($type_codes);
+	            $imported = $alh->getImportedFilenamesByType($type_codes);
 	            
 	            $unimported = array();
 	            
@@ -184,8 +184,12 @@ class SmartestTemplatesLibraryHelper{
 	            
 	            return $unimported;
 	            
+	        }else{
+	            return array();
 	        }
 	        
+	    }else{
+	        return array();
 	    }
         
     }
@@ -200,7 +204,6 @@ class SmartestTemplatesLibraryHelper{
         
         $sql .= " LIMIT 1";
         
-        // echo $sql;
         $result = $this->database->queryToArray($sql);
         
         if(count($result)){

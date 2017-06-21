@@ -1505,7 +1505,7 @@ class PagesManager{
 	
 	public function getAssetClassDefinedOnPage($assetclass_name, $page_id, $item_id=false, $instance='default'){
 
-		$sql = "SELECT assetidentifier_draft_asset_id, assetidentifier_live_asset_id FROM AssetIdentifiers, AssetClasses WHERE assetidentifier_assetclass_id=assetclass_id AND assetidentifier_page_id='$page_id' AND assetclass_name='$assetclass_name'";
+		$sql = "SELECT assetidentifier_draft_asset_id, assetidentifier_live_asset_id, assetidentifier_draft_render_data, assetidentifier_live_render_data FROM AssetIdentifiers, AssetClasses WHERE assetidentifier_assetclass_id=assetclass_id AND assetidentifier_page_id='$page_id' AND assetclass_name='$assetclass_name'";
 		
         if($instance != 'default'){
             $sql .= " AND assetidentifier_instance_name='".$instance."'";

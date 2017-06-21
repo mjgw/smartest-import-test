@@ -71,7 +71,7 @@
             
             {if !$is_movable}
               <div class="warning">
-                The following files must be writable by the web server before you can {if $shared}unshare this model{else}share this model with other sites{/if}:<br />
+                The following files or directories must be writable by the web server before you can {if $shared}unshare this model{else}share this model with other sites{/if}:<br />
                 {foreach from=$unwritable_files item="unwritable_file"}
                 <div><code>{$unwritable_file}</code></div>
                 {/foreach}
@@ -233,7 +233,7 @@
           {/foreach}
         </select>
         {else}
-        {if $model.default_description_property_id}
+        {if $model.default_date_property_id}
           {foreach from=$date_properties item="property"}
             {if $model.default_date_property_id == $property.id}{$property.name}{/if}
           {/foreach}
@@ -242,6 +242,18 @@
         {/if}
         {/if}
       </div>
+      
+      {if $model.default_date_property_id}
+      <div class="edit-form-row">
+        <div class="form-section-label">Enable scheduling</div>
+        {if $can_edit_model}
+        {boolean name="itemclass_publish_items_after_date" id="itemclass-auto-publish" value=$model.auto_publish}
+        <div class="form-hint">Allow items to be scheduled when date specified in default date property passes</div>
+        {else}
+        
+        {/if}
+      </div>
+      {/if}
       
       <div class="edit-form-row">
         <div class="form-section-label">Default thumbnail property</div>
@@ -352,6 +364,7 @@
       <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/releaseUserHeldItems?class_id={$model.id}'"><i class="fa fa-unlock"></i> Release all {$model.plural_name}</a></li>
       <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/addSet?class_id={$model.id}'"><i class="fa fa-plus-square-o"></i> Create a new set from this model</a></li>
       <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/getItemClassSets?class_id={$model.id}'"><i class="fa fa-folder-open"></i> View data sets for this model</a></li>
+      <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}datamanager/exportModelKit?class_id={$model.id}'"><i class="fa fa-external-link"></i> Export this model as kit</a></li>
     {* <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/importData?class_id={$itemBaseValues.itemclass_id}';"><img border="0" src="{$domain}Resources/Icons/page_code.png" /> Import data from CSV</a></li> *}
     </ul>
 

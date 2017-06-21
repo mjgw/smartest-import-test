@@ -1,7 +1,7 @@
 <div{if $value.is_never} style="display:none"{/if} id="{$_input_data.id}-datefields">
   <div style="float:left;margin-right:10px;">
     Month<br />
-    <select name="{$_input_data.name}[M]" style="width:100px">
+    <select name="{$_input_data.name}[M]" style="width:100px" id="{$_input_data.id}-month">
     	<option value="{$_input_data.default_month}"{if $value.M == "00"} selected="selected"{/if}></option>
     	<option value="01"{if $value.M == "01" || (!$value.M && $_input_data.default_month == "01")} selected="selected"{/if}>January</option>
     	<option value="02"{if $value.M == "02" || (!$value.M && $_input_data.default_month == "02")} selected="selected"{/if}>February</option>
@@ -19,7 +19,7 @@
   </div>
   <div style="float:left;margin-right:10px">
     Day<br />
-    <select name="{$_input_data.name}[D]" style="width:70px">
+    <select name="{$_input_data.name}[D]" style="width:70px" id="{$_input_data.id}-day">
     	<option value="{$_input_data.default_day}"{if $value.D == "00"} selected="selected"{/if}></option>
     	<option value="01"{if $value.D == "01" || (!$value.D && $_input_data.default_day == "01")} selected="selected"{/if}>1st</option>
     	<option value="02"{if $value.D == "02" || (!$value.D && $_input_data.default_day == "02")} selected="selected"{/if}>2nd</option>
@@ -57,7 +57,7 @@
   
   <div style="float:left">
     Year<br />
-    <input type="text" name="{$_input_data.name}[Y]" size="5" maxlength="4" value="{if $value.Y}{$value.Y}{else}{$_input_data.default_year}{/if}" style="width:85px" />
+    <input type="text" name="{$_input_data.name}[Y]" size="5" maxlength="4" value="{if $value.Y}{$value.Y}{else}{$_input_data.default_year}{/if}" style="width:85px" id="{$_input_data.id}-year" />
   </div>
   
   <div class="breaker"></div>
@@ -79,12 +79,16 @@
   var linkId = propertyId+'-add-value';
   var inputDivId = propertyId+'-datefields';
   var noteId = propertyId+'-no-value';
+  var daySelectId = propertyId+'-day';
+  var monthSelectId = propertyId+'-month';
+  var yearInputId = propertyId+'-year';
   
   $(linkId).observe('click', function(e){
     e.stop();
     Effect.Fade(noteId, {duration:0.15});
     Effect.Appear(inputDivId, {duration:0.15, delay:0.16});
     $(propertyId+'-is-never').value = 0;
+    $(inputDivId).fire('date:changed', {date: {day: $F(daySelectId), month: $F(monthSelectId), year: $F(yearInputId)}});
   });
   
   $(propertyId+'-neverize').observe('click', function(e){
@@ -92,6 +96,19 @@
     Effect.Fade(inputDivId, {duration:0.15});
     Effect.Appear(noteId, {duration:0.15, delay:0.16});
     $(propertyId+'-is-never').value = 1;
+    $(inputDivId).fire('date:changed', {date: {day: 1, month: 1, year: 1970}});
+  });
+  
+  $(daySelectId).observe('change', function(){
+    $(inputDivId).fire('date:changed', {date: {day: $F(daySelectId), month: $F(monthSelectId), year: $F(yearInputId)}});
+  });
+  
+  $(monthSelectId).observe('change', function(){
+    $(inputDivId).fire('date:changed', {date: {day: $F(daySelectId), month: $F(monthSelectId), year: $F(yearInputId)}});
+  });
+  
+  $(yearInputId).observe('keyup', function(){
+    $(inputDivId).fire('date:changed', {date: {day: $F(daySelectId), month: $F(monthSelectId), year: $F(yearInputId)}});
   });
   
 {/literal}

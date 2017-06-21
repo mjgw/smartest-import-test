@@ -62,3 +62,5 @@ id:type:scope:code:category:description
 58:p:s:see_private_models:SM_USERTOKEN_ITEMS:See private models
 59:p:s:clean_data_cache:SM_USERTOKEN_SYSTEM:Clean the data cache
 60:p:s:delete_oauth_accounts:SM_USERTOKEN_SYSTEM:Delete OAuth accounts
+61:p:s:view_phpinfo:SM_USERTOKEN_SYSTEM:View PHP setup info
+62:p:s:modify_passwords:SM_USERTOKEN_USERS:Change a user's login password

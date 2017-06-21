@@ -41,8 +41,8 @@ class SmartestMysql{
 	    if($this->dblink = @mysql_connect($this->connection_config['host'], $this->connection_config['username'], $this->connection_config['password'])){
 			
 			$this->queryHistory = array();
-			$this->rawQuery("SET NAMES 'utf8'");
-			mysql_set_charset('utf8');
+			$this->rawQuery("SET NAMES 'utf8mb4'");
+			mysql_set_charset('utf8mb4');
 			
 			if(!mysql_select_db($this->connection_config['database'], $this->dblink)){
 			    if($this->connection_config['short_name']) SmartestCache::clear('dbc_'.$this->connection_config['short_name'], true);
@@ -71,7 +71,7 @@ class SmartestMysql{
 	
 	protected function reconnect(){
         if($this->dblink = @mysql_connect($this->connection_config['host'], $this->connection_config['username'], $this->connection_config['password'])){
-			$this->rawQuery("SET NAMES 'utf8'");
+			$this->rawQuery("SET NAMES 'utf8mb4'");
 			if(mysql_select_db($this->connection_config['database'], $this->dblink)){
 			    return true;
 			}else{

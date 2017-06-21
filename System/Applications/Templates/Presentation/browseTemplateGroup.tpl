@@ -57,6 +57,7 @@
   <li><b>Template group options</b></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editTemplateGroupContents?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_edit.png" border="0" alt="" /> Edit this group</a></li>
 	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addTemplateGroup'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_add.png" border="0" alt="" /> Create a new template group</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/startSingleTemplateImport?group_id={$group.id}&amp;type={$group.template_type}'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_add.png" border="0" alt="" /> Import a template to this group</a></li>
 </ul>
 
 <ul class="actions-list" id="non-specific-actions">

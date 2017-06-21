@@ -1,5 +1,20 @@
 <div id="work-area">
+  
   <h3>Import a template</h3>
+  
+  {if $type_specified}
+  <input type="hidden" name="template_type" value="{$template_type.id}" />
+  {else}
+  <div class="special-box">
+    Template type:
+    <select name="template_type">
+      {foreach from=$template_types item="new_template_type"}
+      <option value="{$new_template_type.id}"{if !$new_template_type.storage.writable} disabled="disabled"{/if}>{$new_template_type.label}{if !$new_template_type.storage.writable} (directory not writable){/if}</option>
+      {/foreach}
+    </select>
+  </div>
+  {/if}
+  
   {if $show_form}
   <div class="special-box">You are importing <strong><code>{$template.file_path}</code></strong> into Smartest's templates database</div>
   <form action="{$domain}{$section}/addSingleTemplateToDatabase" method="post">

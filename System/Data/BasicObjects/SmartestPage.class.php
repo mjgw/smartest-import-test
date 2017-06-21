@@ -918,7 +918,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
     
     public function getIconImage(){
         
-        if($this->_thumbnail_image_asset){
+        if(isset($this->_thumbnail_image_asset) && is_object($this->_thumbnail_image_asset)){
             // Stay consistent with old API and return a filename
             return $this->_thumbnail_image_asset->getUrl();
         }else{

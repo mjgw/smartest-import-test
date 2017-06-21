@@ -20,7 +20,7 @@
   <input type="hidden" id="item_id_input" name="type" value="" />
 </form>
 
-<div class="form-section-label-full">There are five different kinds of template.</div>
+<div class="form-section-label-full">There are six different kinds of template.</div>
 
 <ul class="options-grid-no-scroll" style="margin-top:0px">
   {foreach from=$types item="assetType"}

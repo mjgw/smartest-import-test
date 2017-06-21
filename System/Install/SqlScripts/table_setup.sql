@@ -94,6 +94,30 @@ CREATE TABLE `Assets` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Blocks`
+--
+
+CREATE TABLE IF NOT EXISTS `Blocks` (
+  `block_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `block_webid` varchar(64) NOT NULL,
+  `block_title` varchar(255) NOT NULL,
+  `block_name` varchar(255) NOT NULL,
+  `block_draft_asset_id` int(11) NOT NULL,
+  `block_live_asset_id` int(11) NOT NULL,
+  `block_info` text NOT NULL,
+  `block_created` int(11) unsigned NOT NULL,
+  `block_modified` int(11) unsigned NOT NULL,
+  `block_last_published` int(11) unsigned NOT NULL,
+  `block_parent_block_id` int(11) unsigned NOT NULL,
+  `block_blocklist_id` int(11) NOT NULL,
+  `block_type` varchar(64) NOT NULL,
+  `block_status` varchar(64) NOT NULL,
+  `block_order_index` smallint(5) unsigned NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Comments`
 --
 
@@ -239,7 +263,7 @@ CREATE TABLE `Items` (
   `item_type` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'SM_ITEMTYPE_NORMAL',
   `item_alt_title_tag` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `item_use_alt_title_tag` tinyint(1) NOT NULL DEFAULT '0',
-  `item_public` varchar(5) CHARACTER SET utf8 NOT NULL DEFAULT 'FALSE',
+  `item_public` varchar(16) CHARACTER SET utf8 NOT NULL DEFAULT 'FALSE',
   `item_parent_id` int(11) DEFAULT NULL,
   `item_metapage_id` int(11) unsigned NOT NULL DEFAULT '0',
   `item_search_field` text CHARACTER SET utf8 NOT NULL,

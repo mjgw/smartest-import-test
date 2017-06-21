@@ -17,6 +17,11 @@
     <class>Asset</class>
   </table>
   
+  <table name="Blocks">
+    <prefix>block_</prefix>
+    <class>Block</class>
+  </table>
+  
   <table name="Comments">
     <prefix>comment_</prefix>
     <class>Comment</class>

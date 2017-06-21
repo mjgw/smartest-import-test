@@ -12,14 +12,12 @@
 </form>
 
 <ul class="options-list" id="tree-root">
-  {defun name="menurecursion" list=$definition}
-       {foreach from=$list item="element"}
+    {foreach from=$list item="element"}
     <li>
        <a id="item_{$element.id}" class="option" href="javascript:nothing()" onclick="setSelectedItem('{$element.id}');" ondblclick="window.location='{$domain}{$section}/editItemClassProperty?class_id={$model.id}&amp;itemproperty_id={$element.id}'">		 
          <i class="fa fa-tag"></i>{$element.name}</a>
      </li>
     {/foreach}
-  {/defun}
 </ul>
 
 </div>

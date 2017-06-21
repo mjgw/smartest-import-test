@@ -43,7 +43,7 @@
 	      {elseif $assetclass.info.asset_type == "SM_ASSETTYPE_RICH_TEXT"}
 	        <i class="fa fa-font"></i>
 	      {else}
-	        <img src="{$domain}Resources/Icons/page_white.png" style="border:0px" />
+	        <i class="fa fa-file-o"></i>
 	      {/if}
 		  {elseif $assetclass.info.type == 'template'}
   		  <i class="fa fa-file-code-o"></i>

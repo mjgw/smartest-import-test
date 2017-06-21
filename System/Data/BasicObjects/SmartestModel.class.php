@@ -940,6 +940,17 @@ class SmartestModel extends SmartestBaseModel{
         
     }
     
+    /* public function getDefaultThumbnailPropertyId(){
+        return $this->getSettingValue('default_thumbnail_property_id');
+    } */
+    
+    public function getDefaultThumbnailProperty(){
+        $p = new SmartestItemProperty;
+        if($p->find($this->getDefaultThumbnailPropertyId())){
+            return $p;
+        }
+    }
+    
     public function getAvailableThumbnailProperties(){
         
         $sql = "SELECT * FROM ItemProperties WHERE itemproperty_datatype='SM_DATATYPE_ASSET' AND itemproperty_foreign_key_filter IN ('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE', 'SM_ASSETCLASS_STATIC_IMAGE') AND itemproperty_itemclass_id='".$this->getId()."'";
@@ -1146,7 +1157,9 @@ class SmartestModel extends SmartestBaseModel{
     
     public function getSitesWhereUsed(){
         
-        $sql = str_replace('%', $this->getid(), "SELECT DISTINCT Sites.* FROM Sites, Items, ItemClasses, Pages WHERE (Items.item_itemclass_id=ItemClasses.itemclass_id AND Items.item_site_id=Sites.site_id AND ItemClasses.itemclass_id='%') OR (Pages.page_type='ITEMCLASS' AND Pages.page_dataset_id='%' AND Pages.page_site_id=Sites.site_id)");
+        // $sql = str_replace('%', $this->getid(), "SELECT DISTINCT Sites.* FROM Sites, Items, ItemClasses, Pages WHERE (Items.item_itemclass_id=ItemClasses.itemclass_id AND Items.item_site_id=Sites.site_id AND ItemClasses.itemclass_id='%') OR (Pages.page_type='ITEMCLASS' AND Pages.page_dataset_id='%' AND Pages.page_site_id=Sites.site_id)");
+        $sql = str_replace('%', $this->getid(), "SELECT DISTINCT Sites.* FROM Sites, Items, ItemClasses, Pages WHERE (Items.item_itemclass_id=ItemClasses.itemclass_id AND Items.item_site_id=Sites.site_id AND ItemClasses.itemclass_id='%')");
+        // echo $sql;
         $result = $this->database->queryToArray($sql);
         
         $sites = array();
@@ -1687,6 +1700,69 @@ class SmartestModel extends SmartestBaseModel{
         }
         
         return $code;
+        
+    }
+    
+    public function buildKitFile(){
+        
+        if($this->getId()){
+            
+            $properties = $this->getProperties();
+
+    		$data = array();
+            $data['modelkit'] = array(
+                'name'=>$this->getName(),
+                'plural'=>$this->getPluralName(),
+                'name_field_label'=>$this->getItemNameFieldName(),
+                'long_id_format'=>$this->getLongIdFormat()
+            );
+        
+            if($tp = $this->getDefaultThumbnailProperty()){
+                $data['modelkit']['default_thumbnail_property'] = $tp->getVarName();
+            }
+        
+            if($sp = $this->getDefaultSortProperty()){
+                $data['modelkit']['default_sort_property'] = $sp->getVarName();
+                $data['modelkit']['default_sort_dir'] = $this->getDefaultSortPropertyDirection();
+            }
+        
+            $data['modelkit']['properties'] = array();
+        
+            foreach($properties as $p){
+            
+                $varname = $p->getVarName();
+            
+                $data['modelkit']['properties'][$varname] = array(
+                    'label'=>$p->getName(),
+                    'type'=>$p->getDataType()
+                );
+            
+                if(strlen($p->getDefaultValue())){
+                    $data['modelkit']['properties'][$varname]['default_value'] = $p->getDefaultValue();
+                }
+            
+                if($p->getDataType() == 'SM_DATATYPE_ASSET' || $p->getDataType() == 'SM_DATATYPE_ASSET_GROUP' || $p->getDataType() == 'SM_DATATYPE_ASSET_SELECTION'){
+                    $data['modelkit']['properties'][$varname]['filetype'] = $p->getForeignKeyFilter();
+                }
+            
+                if($p->getDataType() == 'SM_DATATYPE_DROPDOWN_MENU'){
+                    $d = new SmartestDropdown;
+                    if($d->find($p->getForeignKeyFilter())){
+                        $data['modelkit']['properties'][$varname]['dropdown_identifier'] = $d->getIdentifier();
+                        $data['modelkit']['properties'][$varname]['values'] = array();
+                        foreach($d->getOptions() as $option){
+                            $data['modelkit']['properties'][$varname]['values'][$option->getValue()] = $option->getLabel();
+                        }
+                    }
+                }
+            
+            }
+            
+            return SmartestYamlHelper::create($data);
+            
+        }else{
+            return '';
+        }
         
     }
 	

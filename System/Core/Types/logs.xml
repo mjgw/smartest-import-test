@@ -30,6 +30,14 @@
     <format>%TIMESTAMP%: (%LEVEL%) %MESSAGE%</format>
   </log>
   
+  <log id="SM_LOG_APP_ACTIONS">
+    <name>app</name>
+    <description>Per-site User Actions Log</description>
+    <file>Logs/%APP%_%MONTH%_actions.log</file>
+    <systemfile>System/Logs/%APP%_%MONTH%_actions.log</systemfile>
+    <format>%TIMESTAMP%: (%LEVEL%) %MESSAGE%</format>
+  </log>
+  
   <log id="SM_LOG_INSTALL">
     <name>installer</name>
     <description>Default log, used in cases of ambiguity</description>

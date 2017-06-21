@@ -1,3 +1,7 @@
+#work-area #html-preview h1, #work-area #html-preview h2, #work-area #html-preview h3, #work-area #html-preview h4, #work-area #html-preview h5, #work-area #html-preview h6, #work-area #html-preview p {
+    clear:none!important;
+}
+
 figure.sm-attachment.float.left{
     float:left;
     margin:0 10px 10px 0;

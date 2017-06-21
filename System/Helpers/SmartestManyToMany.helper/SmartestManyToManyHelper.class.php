@@ -91,7 +91,7 @@ class SmartestManyToManyHelper{
         }
     }
     
-    public function createLookup($type, $e1_fk, $e2_fk, $e3_fk='', $e4_fk=''){
+    public function createLookupObject($type, $e1_fk, $e2_fk, $e3_fk=null, $e4_fk=null){
         
         $l = new SmartestManyToManyLookup;
         $l->setType($type);
@@ -107,6 +107,13 @@ class SmartestManyToManyHelper{
         }
         
         $l->save();
+        return $l;
+        
+    }
+    
+    public function createLookup($type, $e1_fk, $e2_fk, $e3_fk=null, $e4_fk=null){
+        
+        $l = $this->createLookupObject($type, $e1_fk, $e2_fk, $e3_fk, $e4_fk);
         return $l->getId();
         
     }

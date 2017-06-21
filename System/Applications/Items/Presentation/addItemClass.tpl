@@ -48,7 +48,7 @@ var checkParentModelPropertyName = function(){
 
 <h3>Build a new model</h3>
 
-{if $permissions_issue}
+{if !$cache_om_dir_is_writable || ($site_om_dir_is_writable && $central_om_dir_is_writable)}
 <div class="warning">
   <p>The following directories need to be writeable before you can save models.</p>
   <ul class="location-list">
@@ -74,6 +74,8 @@ var checkParentModelPropertyName = function(){
   <div class="form-section-label">Model Plural Name:</div>
   <input id="plural" onkeyup="turnOffAutoPlural()" type="text" name="itemclass_plural_name" style="width:200px" /><span class="form-hint">ie "Articles", "Cars", "People"</span>
 </div>
+
+<div class="special-box">Using a pre-made model kit? <a href="{$domain}datamanager/addItemClassFromKit" class="button">Upload here</a></div>
 
 {if $allow_sub_models}
 <div class="edit-form-row">
@@ -120,12 +122,14 @@ var checkParentModelPropertyName = function(){
 {if $central_om_dir_is_writable}
 <div class="edit-form-row">
   <div class="form-section-label">Shared</div>
-  <input id="shared" type="checkbox" name="itemclass_shared" checked="checked" value="1"{if !$site_om_dir_is_writable} disabled="disabled"{/if} /><label for="shared">Make this model available to all sites</label> {help id="desktop:multisite"}What does this mean?{/help}
+  <input id="shared" type="checkbox" name="itemclass_shared" value="1"{if !$site_om_dir_is_writable} checked="checked" disabled="disabled"{/if} /><label for="shared">Make this model available to all sites</label> {help id="desktop:multisite"}What does this mean?{/help}
+  {if !$site_om_dir_is_writable}<div class="form-hint">This option is disabled because the directory <code>{$site_om_dir}</code> is not writable</div>{/if}
 </div>
 {elseif $site_om_dir_is_writable && !$central_om_dir_is_writable}
 <div class="edit-form-row">
   <div class="form-section-label">Shared</div>
   <input id="shared" type="checkbox" name="itemclass_shared" value="1" disabled="disabled" /><label for="shared">Make this model available to all sites</label> {help id="desktop:multisite"}What does this mean?{/help}
+  <div class="form-hint">This option is cannot be enabled because the directory <code>{$site_om_dir}</code> is not writable</div>
 </div>
 {/if}
 

@@ -51,6 +51,15 @@
 </div>
 
 <div class="edit-form-row">
+  <div class="form-section-label">Search type</div>
+  <select name="site_search_type">
+    <option value="BASIC"{if $search_type == 'BASIC' || !$allow_elastic_search} selected="selected"{/if}>Basic</option>
+    <option value="ELASTICSEARCH"{if $search_type == 'ELASTICSEARCH'} selected="selected"{/if}{if !$allow_elastic_search} disabled="disabled"{/if}>Advanced</option>
+  </select>
+  <div class="form-hint">Basic search has no additional requirements; Advanced search requires ElasticSearch (PHP 5.6 and Java 8)</div>
+</div>
+
+<div class="edit-form-row">
   <div class="form-section-label">Logo</div>
   <select name="site_logo_image_asset_id">
     <option value="">None</option>

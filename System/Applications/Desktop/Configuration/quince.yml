@@ -3,7 +3,7 @@ module:
   shortname: desktop
   identifier: com.smartest.Desktop
   longname: Desktop
-  default_action: startpage
+  default_action: startPage
   aliases:
 #    - {url: /smartest/_start, action: newDesktop}
     - {url: /smartest/about, action: aboutSmartest}
@@ -22,5 +22,8 @@ module:
     site_dashboard:
       action: siteDashboard
       url: /smartest/dashboard
+    cron:
+      action: cronTrigger
+      url: /smartest/automate
   meta:
     system: true

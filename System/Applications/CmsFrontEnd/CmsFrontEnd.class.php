@@ -554,6 +554,11 @@ class CmsFrontEnd extends SmartestSystemApplication{
     		if($this->_page instanceof SmartestItemPage){
     		    $this->_page->addHit();
     		}
+            
+            if(!$draft_mode){
+                $cron = new SmartestAutomationHelper($this->_site);
+                $cron->internalPublicationTrigger();
+            }
 		
     		define("SM_OVERHEAD_TIME", $overhead_time_taken);
     		SmartestPersistentObject::get('timing_data')->setParameter('overhead_time', microtime(true));
@@ -575,6 +580,11 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	        }
 	        
     	    echo $html;
+            
+            if(!$draft_mode){
+                $cron->internalMaintenanceTrigger();
+            }
+            
 	        exit;
 	    
         }else{
@@ -611,7 +621,9 @@ class CmsFrontEnd extends SmartestSystemApplication{
         }
         
         $this->_page->setDraftMode($draft_mode);
-        define('SM_CMS_PAGE_SITE_ID', $this->_page->getSiteId());
+        if(!defined('SM_CMS_PAGE_SITE_ID')){
+            define('SM_CMS_PAGE_SITE_ID', $this->_page->getSiteId());
+        }
         
         if($draft_mode){
             if($this->getRequestParameter('request')){

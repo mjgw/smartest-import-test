@@ -58,8 +58,20 @@ class SmartestDatabase{
     
     public static function readConfiguration($connection_name){
         
-        $actual_md5 = md5_file(SM_ROOT_DIR."Configuration/database.ini");
-        $stored_md5 = SmartestCache::load('db_config_file_md5');
+        if(is_file(SM_ROOT_DIR."Configuration/database.yml")){
+            $actual_md5 = md5_file(SM_ROOT_DIR."Configuration/database.yml");
+            $stored_md5 = SmartestCache::load('db_config_yaml_file_md5', true);
+        }else{
+            $actual_md5 = md5_file(SM_ROOT_DIR."Configuration/database.ini");
+            $stored_md5 = SmartestCache::load('db_config_file_md5', true);
+            if(is_writable(SM_ROOT_DIR."Configuration/")){
+                if(!date_default_timezone_get()){
+                    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
+                    date_default_timezone_set($sd['system']['info']['default_timezone']);
+                }
+                file_put_contents(SM_ROOT_DIR."Configuration/database.yml", '# Migrated database config info at '.date('Y-m-d, H:i')." (default timezone)\n#\n#\n".SmartestYamlHelper::create(parse_ini_file(SM_ROOT_DIR."Configuration/database.ini", true)));
+            }
+        }
         
         $config_file_changed = ($actual_md5 != $stored_md5);
         
@@ -68,9 +80,15 @@ class SmartestDatabase{
             return $d;
             
         }else{
-        
-            $dbconfig = parse_ini_file(SM_ROOT_DIR."Configuration/database.ini", true);
-        
+            
+            if(is_file(SM_ROOT_DIR."Configuration/database.yml")){
+                $dbconfig = SmartestYamlHelper::load(SM_ROOT_DIR."Configuration/database.yml");
+                $mode = "yaml";
+            }else{
+                $dbconfig = parse_ini_file(SM_ROOT_DIR."Configuration/database.ini", true);
+                $mode = "ini";
+            }
+            
             if(isset($dbconfig[$connection_name])){
         
     		    $ph = new SmartestParameterHolder($dbconfig[$connection_name]['name']);
@@ -82,7 +100,13 @@ class SmartestDatabase{
     		    $ph->setParameter('short_name', $connection_name);
 		        
 		        SmartestCache::save('dbc_'.$connection_name, $ph, -1, true);
-		        SmartestCache::save('db_config_file_md5', $actual_md5, -1, true);
+                
+                if($mode == 'yaml'){
+                    SmartestCache::save('db_config_yaml_file_md5', $actual_md5, -1, true);
+                }else{
+                    SmartestCache::save('db_config_file_md5', $actual_md5, -1, true);
+                }
+		        
     		    return $ph;
 		
     	    }else{

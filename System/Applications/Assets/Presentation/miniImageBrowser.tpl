@@ -75,7 +75,7 @@
           'for': purpose
         }
       });
-      $(inputId).fire('image:chosen');
+      $(inputId).fire('image:chosen', {inputId: inputId});
       // Close modal
       MODALS.hideViewer();
     });
@@ -152,7 +152,7 @@
           }
         });
         
-        $(inputId).fire('image:chosen');
+        $(inputId).fire('image:chosen', {inputId: inputId});
         $(inputId+'-edit-metadata').show();
         MODALS.hideViewer();
 

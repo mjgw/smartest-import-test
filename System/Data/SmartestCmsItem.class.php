@@ -1723,9 +1723,9 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    $this->_item = $i;
 	}
 	
-	public function publish(){
+	public function publish($automated=false){
 	    
-        if(!SmartestStringHelper::toRealBool($this->_item->getPublic())){
+        if($this->_item->getPublic() == 'FALSE' && !$automated){
             // If the item is not already published, look for a property called "date_published", and if it exists, set it to today's date.
         }
         

@@ -417,16 +417,16 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
         
         if($this->getAsset()->getType() == 'SM_ASSETTYPE_RICH_TEXT'){
             
-            if(class_exists('tidy')){
+		    /* if(class_exists('tidy')){
             
                 $tidy = new tidy;
-                $tidy->ParseString($content);
+                $tidy->ParseString($content, array(), 'utf8');
                 $new = $tidy->repairString($content, array( 
                     'output-xml' => true, 
                     'input-xml' => true,
                     'bare' => true,
                     'wrap' => 0 
-                ));
+                ), 'utf8');
             
                 if(strlen(trim($new))){
                     $content = $new;
@@ -434,11 +434,14 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
             
                 $content = preg_replace( "/\r|\n/", "", $content);
             
-            }
+            } */
+            
+		    // echo $content;
+            // exit;
         
             $content = str_replace('<p>&nbsp;</p>', '', $content);
             $content = str_replace('&nbsp;', ' ', $content);
-        
+            
             if($element = simplexml_load_string(str_replace('&', '&amp;', html_entity_decode('<div>'.$content.'</div>', ENT_QUOTES, 'UTF-8')))){
             
                 $content = preg_replace( "/\r|\n/", "", $content);

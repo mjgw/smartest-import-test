@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_dropdown_menu.css?r={$smartest_info.revision}" />
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_columns.css?r={$smartest_info.revision}" />
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_tabs.css?r={$smartest_info.revision}" />
-    {* <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_buttons.css" /> *}
+    {if $section=="assets" && $method=="previewAsset"}<link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_attachments.css?r={$smartest_info.revision}" />{/if}
     <link rel="stylesheet" type="text/css" href="{$domain}Resources/System/Stylesheets/sm_modals.css" />
     <link rel="stylesheet" href="{$domain}Resources/System/Javascript/CodeMirror-5.2/lib/codemirror.css">
     <link rel="stylesheet" href="{$domain}Resources/System/Javascript/CodeMirror-5.2/addon/display/fullscreen.css">

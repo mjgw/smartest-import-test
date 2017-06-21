@@ -190,6 +190,8 @@ function openPage(pageAction){
   {if $allow_create_new}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/addItem?class_id={$model.id}'"><i class="fa fa-plus-circle"></i> New {$model.name|lower}</a></li>{/if}
   <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/releaseUserHeldItems?class_id={$model.id}';"><i class="fa fa-unlock"></i> Release all {$model.plural_name|lower}</a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/modelInfo?class_id={$model.id}', 'Model info');"><i class="fa fa-info"></i> Model info</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="return MODALS.load('datamanager/showItemClassTemplateAccess?class_id={$model.id}', 'Template data')"><i class="fa fa-file-code-o"></i> Template data</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/exportModelKit?class_id={$model.id}';"><i class="fa fa-arrow-circle-down"></i> Download model kit</a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/getItemClassSets?class_id={$model.id}'"><i class="fa fa-folder-open"></i> View sets of {$model.plural_name|lower}</a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/addSet?class_id={$model.id}'"><i class="fa fa-plus-square-o"></i> Create a new set of {$model.plural_name|lower}</a></li>
   {if $can_edit_properties}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassProperties?class_id={$model.id}'"><i class="fa fa-sliders"></i> Edit model properties</a></li>

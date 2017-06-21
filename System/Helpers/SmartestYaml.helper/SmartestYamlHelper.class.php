@@ -39,7 +39,7 @@ class SmartestYamlHelper extends SmartestHelper{
         $spyc = new Spyc;
         $yaml = $spyc->dump($data_array, false, false);
         
-        if(is_file($file_name) && is_writable($file_name)){
+        if(is_writable(SmartestFileSystemHelper::dirName($file_name))){
             return file_put_contents($file_name, $yaml);
         }else{
             return $yaml;

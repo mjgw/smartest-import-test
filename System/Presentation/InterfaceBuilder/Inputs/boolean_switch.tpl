@@ -9,23 +9,29 @@
 <script type="text/javascript">
   $('{$_input_data.id}-link').observe('click', function(e){ldelim}
     e.stop();
+    var boolValue;
     if($('{$_input_data.id}-input').value == 'TRUE'){ldelim}
+      boolValue = false;
       $('{$_input_data.id}-input').value = 'FALSE';
       $('{$_input_data.id}-outer').removeClassName('on');
       $('{$_input_data.id}-outer').addClassName('off');
       {if $_input_data.change_js}{$_input_data.change_js}{/if}
-{if $_input_data.change_hook}{$_input_data.change_hook}false, '{$_input_data.id}');
+{if $_input_data.change_hook}{$_input_data.change_hook}boolValue, '{$_input_data.id}');
 {/if}
 
     {rdelim}else{ldelim}
+      boolValue = true;
       $('{$_input_data.id}-input').value = 'TRUE';
       $('{$_input_data.id}-outer').removeClassName('off');
       $('{$_input_data.id}-outer').addClassName('on');
       {if $_input_data.change_js}{$_input_data.change_js}{/if}
-{if $_input_data.change_hook}{$_input_data.change_hook}true, '{$_input_data.id}');
+{if $_input_data.change_hook}{$_input_data.change_hook}boolValue, '{$_input_data.id}');
 {/if}
 
     {rdelim};
+    
+    $('{$_input_data.id}-input').fire('switch:changed', {ldelim}inputId: '{$_input_data.id}-input', value: boolValue{rdelim});
+    
   {rdelim});
 </script>
 

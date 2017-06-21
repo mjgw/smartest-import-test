@@ -111,24 +111,30 @@ class Items extends SmartestSystemApplication{
     		$itemclassid = (int) $this->getRequestParameter('class_id');
 		
     		$model = new SmartestModel;
-    		$model->find($itemclassid);
+    		
+            if($model->find($itemclassid)){
+                
+                $this->setTitle("Model properties | ".$model->getName());
 		
-    		$this->setTitle("Model properties | ".$model->getName());
+        		$definition = $model->getProperties();
 		
-    		$definition = $model->getProperties();
+        		$this->send($model, 'model');
+        		$this->send($definition, 'definition');
+        		$create_remove_properties = $this->getUser()->hasToken('create_remove_properties');
+        		$this->send((bool) count($model->getMetaPages()), 'has_metapages');
 		
-    		$this->send($model, 'model');
-    		$this->send($definition, 'definition');
-    		$create_remove_properties = $this->getUser()->hasToken('create_remove_properties');
-    		$this->send((bool) count($model->getMetaPages()), 'has_metapages');
+        		// At some point these will be separated
+        		$this->send($create_remove_properties, 'can_add_properties');
+        		$this->send($create_remove_properties, 'can_delete_properties');
 		
-    		// At some point these will be separated
-    		$this->send($create_remove_properties, 'can_add_properties');
-    		$this->send($create_remove_properties, 'can_delete_properties');
-		
-    		// Retrieve recently edited
-            $recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), $itemclassid);
-            $this->send($recent, 'recent_items');
+        		// Retrieve recently edited
+                $recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), $itemclassid);
+                $this->send($recent, 'recent_items');
+                
+            }else{
+                $this->addUserMessageToNextRequest('A model with that ID could not be found', SmartestUserMessage::ERROR);
+                $this->formForward();
+            }
         
         }else{
             
@@ -1335,9 +1341,9 @@ class Items extends SmartestSystemApplication{
 	        if($model->getSiteId() == '0'){
 	            $this->send(true, 'allow_main_site_switch');
 	            if($multiple_sites){
-                    $this->send($this->getUser()->getAllowedSites($site_ids), 'sites');
+                    // $this->send($this->getUser()->getAllowedSites($site_ids), 'sites');
                 }else{
-                    $this->send($this->getUser()->getAllowedSites(), 'sites');
+                    // $this->send($this->getUser()->getAllowedSites(), 'sites');
                 }
             }else{
                 $this->send(false, 'allow_main_site_switch');
@@ -1631,6 +1637,8 @@ class Items extends SmartestSystemApplication{
 		    
 		    $recent = $this->getUser()->getRecentlyEditedItems($this->getSite()->getId(), $item->getItem()->getItemclassId());
 		    $this->send($recent, 'recent_items');
+            
+            $this->send($this->getApplicationPreference('autosave_items', false), 'autosave');
 		    
 		    if($this->getRequestParameter('page_id')){
 		        
@@ -1679,6 +1687,12 @@ class Items extends SmartestSystemApplication{
 		        $item->getItem()->setSearchField(SmartestStringHelper::sanitize($this->getRequestParameter('item_search_field')));
 		        $item->getItem()->setMetapageId($this->getRequestParameter('item_metapage_id'));
         		// $item->getItem()->setModified(time());
+                
+                if($item->getItem()->getPublic() == 'FALSE' && $this->getRequestParameter('item_publish_scheduled') == '1'){
+                    $item->getItem()->setPublic('SCHED');
+                }elseif($item->getItem()->getPublic() == 'SCHED' && $this->getRequestParameter('item_publish_scheduled') != '1'){
+                    $item->getItem()->setPublic('FALSE');
+                }
 		        
 		        if(strlen($this->getRequestParameter('item_slug'))){
 		            if($allow_edit_item_slug){
@@ -2807,6 +2821,79 @@ class Items extends SmartestSystemApplication{
         }
 		
 	}
+    
+    public function addItemClassFromKit(){
+        
+		if($this->getUser()->hasToken('create_models')){
+		
+		    // get possible parent pages for meta page
+		    $pagesTree = $this->getSite()->getNormalPagesList(true);
+		    $this->send($pagesTree, 'pages');
+		    $this->send(($this->getRequestParameter('createmetapage') && $this->getRequestParameter('createmetapage') == 'true') ? true : false, 'cmp');
+		    
+		    // get page templates
+		    $tlh = new SmartestTemplatesLibraryHelper;
+            $templates = $tlh->getMasterTemplates($this->getSite()->getId());
+            $this->send($templates, 'templates');
+            
+    		$du = new SmartestDataUtility;
+    		$models = $du->getModels(false, $this->getSite()->getId(), true);
+		    $this->send($models, 'models');
+            
+            if(count($models)){
+                $this->send(json_encode(reset($models)->getPropertyVarnames()), 'first_model_property_varnames_json');
+                $this->send(true, 'allow_sub_models');
+            }else{
+                $this->send(false, 'allow_sub_models');
+            }
+            
+            $site_lib_dir = SM_ROOT_DIR.'Sites/'.$this->getSite()->getDIrectoryName().'/Library/';
+            $site_om_dir = $site_lib_dir.'ObjectModel/';
+            
+            if(is_dir($site_om_dir)){
+                $this->send($site_om_dir, 'site_om_dir');
+                $this->send(is_writable($site_om_dir), 'site_om_dir_is_writable');
+            }else{
+                $this->send($site_lib_dir, 'site_om_dir');
+                $this->send(is_writable($site_lib_dir), 'site_om_dir_is_writable');
+            }
+            
+            $central_om_dir = SM_ROOT_DIR.'Library/ObjectModel/';
+            $this->send($central_om_dir, 'central_om_dir');
+            $this->send(is_writable($central_om_dir), 'central_om_dir_is_writable');
+            
+            $cache_om_dir = SM_ROOT_DIR.'System/Cache/ObjectModel/Models/';
+            $this->send($cache_om_dir, 'cache_om_dir');
+            $this->send(is_writable($cache_om_dir), 'cache_om_dir_is_writable');
+            
+            if(is_dir($site_om_dir)){
+                $permissions_issue = !(is_writable($site_om_dir) && is_writable($central_om_dir) && is_writable($cache_om_dir));
+            }else{
+                $permissions_issue = !(is_writable($site_lib_dir) && is_writable($central_om_dir) && is_writable($cache_om_dir));
+            }
+            
+            $this->send($permissions_issue, 'permissions_issue');
+		
+	    }else{
+	        
+	        $this->addUserMessageToNextRequest("You don't have permission to add models.");
+	        $this->redirect('/smartest/models');
+	        
+	    }
+        
+    }
+    
+    public function uploadItemClassKit(){
+        
+    }
+    
+    public function previewItemClassKit(){
+        
+    }
+    
+    public function executeUploadedKit(){
+        
+    }
   
 	public function insertItemClassProperty($get, $post){
 		
@@ -2963,6 +3050,33 @@ class Items extends SmartestSystemApplication{
         }
 
 	}
+    
+    public function exportModelKit(){
+        
+        $model = new SmartestModel;
+        
+        if($model->find($this->getRequestParameter('class_id'))){
+            
+            $result = $model->buildKitFile();
+            
+            header("Cache-Control: public, must-revalidate\r\n");
+            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT\r\n");
+            header('Last-Modified: '.gmdate( 'D, d M Y H:i:s' ). ' GMT'."\r\n");
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+            // header("Content-Type: application/force-download; charset=utf-8\r\n");
+            header("Content-Type: text/plain; charset=utf-8\r\n");
+            header("Content-Length: ".strlen($result)."\r\n");
+            header('Content-Disposition: attachment; filename='.str_replace(' ', '_', $model->getPluralName()).".modelKit \r\n");
+            echo $result;
+            exit;
+            
+        }else{
+            $this->addUserMessageToNextRequest('A model with that ID could not be found', SmartestUserMessage::ERROR);
+            $this->formForward();
+        }
+        
+    }
 	
 	public function addPropertyToClass($get){
 		

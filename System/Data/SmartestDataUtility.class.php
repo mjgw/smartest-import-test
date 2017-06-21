@@ -52,8 +52,8 @@ class SmartestDataUtility{
     		}
 		
     		$sql .= ' ORDER BY itemclass_name';
-    		
-    		$result = $this->database->queryToArray($sql, true);
+            
+            $result = $this->database->queryToArray($sql, true);
     		
     		if($simple){
     		    return $result;
@@ -405,7 +405,7 @@ class SmartestDataUtility{
 	
 	public function getTags(){
 	    
-	    $sql = "SELECT * FROM Tags ORDER BY tag_name";
+	    $sql = "SELECT * FROM Tags WHERE tag_type='SM_TAGTYPE_TAG' ORDER BY tag_name";
 	    $result = $this->database->queryToArray($sql);
 	    $tags = array();
         
@@ -830,8 +830,9 @@ class SmartestDataUtility{
 	
 	public static function getAssetClassTypesXmlData(){
 	    
-	    $file_path = SM_ROOT_DIR.'System/Core/Types/placeholdertypes.xml';
-	    
+        $file_path = SM_ROOT_DIR.'System/Core/Types/placeholdertypes.xml';
+	    // $yaml_data = SmartestYamlHelper::create(SmartestXmlHelper::loadFile($file_path));
+        
 	    if(SmartestCache::hasData('placeholdertypes_xml_file_hash', true)){
 	        
 	        $old_hash = SmartestCache::load('placeholdertypes_xml_file_hash', true);

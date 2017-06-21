@@ -24,6 +24,11 @@ function hideUploader(){
 
 <div id="work-area">
 
+  <ul class="tabset">
+    <li{if $method == "startSingleTemplateImport"} class="current"{/if}><a href="{$domain}templates/startSingleTemplateImport?{if $type_specified}type={$template_type.id}&amp;{/if}{if $add_to_group}add_to_group_id={$add_to_group.id}&amp;{/if}{if $blocklist_style}style_id={$blocklist_style.id}&amp;{/if}">Import template</a></li>
+    <li{if $method == "addTemplate"} class="current"{/if}><a href="{$domain}templates/addTemplate?{if $type_specified}type={$template_type.id}&amp;{/if}{if $add_to_group}add_to_group_id={$add_to_group.id}&amp;{/if}{if $blocklist_style}style_id={$blocklist_style.id}&amp;{/if}">Create template</a></li>
+  </ul>
+
 <h3>{$interface_title}</h3>
 
 {if $allow_save}
@@ -34,6 +39,8 @@ function hideUploader(){
   <div class="special-box">This template will be added to group <strong>{$add_to_group.label}</strong></div>
   <input type="hidden" name="add_to_group_id" id="add_to_group_id" value="{$add_to_group.id}" />
 {/if}
+
+  {if $blocklist_style}<input type="hidden" name="blocklist_style_id" value="{$blocklist_style.id}" />{/if}
   
   <input type="hidden" name="add_type" id="add_type" value="DIRECT" />
   
@@ -85,7 +92,8 @@ function hideUploader(){
   
   <div class="edit-form-row">
     <div class="buttons-bar">
-      <input type="submit" value="Save" />
+      <input type="button" value="Cancel" onclick="cancelForm();">
+      <input type="submit" value="Save new template" />
     </div>
   </div>
 

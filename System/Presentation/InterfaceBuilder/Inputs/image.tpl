@@ -38,7 +38,7 @@
     $('{$_input_data.id}').value = '';
     $('{$_input_data.id}-thumbnail-area').update('<div class="image-picker-caption">No file is selected</div>');
     $('{$_input_data.id}-edit-metadata').fade({ldelim}duration: 0.2{rdelim});
-    $('{$_input_data.id}').fire('image:chosen');
+    $('{$_input_data.id}').fire('image:chosen', {ldelim}inputId: '{$_input_data.id}'{rdelim});
     {rdelim});
     
     $('{$_input_data.id}-edit-metadata').observe{literal}('click', function(){{/literal}

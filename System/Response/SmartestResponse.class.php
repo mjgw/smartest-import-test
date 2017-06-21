@@ -382,7 +382,7 @@ class SmartestResponse{
             
             // if compliance mode is on, make starting the session and setting the cookie contingent on having permission to do so
             if(SmartestStringHelper::toRealBool($this->getGlobalPreference('enable_eu_cookie_compliance'))) {
-                if($_COOKIE['SMARTEST_COOKIE_CONSENT'] == '1'){
+                if(isset($_COOKIE['SMARTEST_COOKIE_CONSENT']) && $_COOKIE['SMARTEST_COOKIE_CONSENT'] == '1'){
                     // extend the life of the cookie
                     setcookie("SMARTEST_COOKIE_CONSENT", '1', time()+90*24*60*60);
                     // start the session
@@ -451,6 +451,7 @@ class SmartestResponse{
 		$module->setParameter('directory', $this->_controller->getCurrentRequest()->getMeta('_module_dir'));
 		$module->setParameter('class', $this->_controller->getCurrentRequest()->getMeta('_module_php_class'));
 		$module->setParameter('metas', $metas);
+        $module->setParameter('is_system', $this->isSystemClass());
 		$rp->setParameter('application', $module);
 		
 		SmartestPersistentObject::set('request_data', $rp);
@@ -500,9 +501,8 @@ class SmartestResponse{
 		}catch(SmartestException $e){
 			$this->errorFromException($e);
 		}
-	    
         
-	    // Start Smarty
+        // Start Smarty
 	    if($this->isSystemClass()){
 		    $templateLayerContext = 'InterfaceBuilder';
 		}else{
@@ -734,7 +734,7 @@ class SmartestResponse{
 	        echo $this->fetch();
         }
         
-	    exit;
+        exit;
 	    
 	}
 	

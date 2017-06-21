@@ -161,4 +161,21 @@ class SmartestTemplateGroup extends SmartestSet implements SmartestSetApi{
         return parent::save();
     }
     
+    public function getTemplateType(){
+        return $this->getFilterValue();
+    }
+    
+    public function offsetGet($offset){
+        
+        switch($offset){
+            
+            case 'template_type':
+            return $this->getTemplateType();
+            
+        }
+        
+        return parent::offsetGet($offset);
+        
+    }
+    
 }

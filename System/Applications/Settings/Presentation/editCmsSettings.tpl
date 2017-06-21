@@ -48,22 +48,22 @@ var setEUCookieMode = function(state){
 
     <div class="edit-form-row">
       <div class="form-section-label">Default text placeholder</div>
-      <select name="site_default_text_placeholder_id">
+      <select name="site_default_text_placeholder_id" id="site-default-text-placeholder-id">
         <option value="NONE">None</option>
 {foreach from=$text_placeholders item="placeholder"}
         <option value="{$placeholder.id}"{if $placeholder.id == $primary_text_placeholder_id} selected="selected"{/if}>{$placeholder.label}</option>
 {/foreach}
-      </select>
+      </select>{if count($text_placeholders) > 0 && $primary_text_placeholder_id} <input type="button" onclick="window.location='{$domain}websitemanager/editPlaceholder?placeholder_id='+$F('site-default-text-placeholder-id')" value="Edit" />{/if}
     </div>
     
     <div class="edit-form-row">
       <div class="form-section-label">Default container for page layout</div>
-      <select name="site_default_container_id">
+      <select name="site_default_container_id" id="site-default-container-id">
         <option value="NONE">None</option>
 {foreach from=$containers item="container"}
         <option value="{$container.id}"{if $container.id == $primary_container_id} selected="selected"{/if}>{$container.label}</option>
 {/foreach}
-      </select>
+      </select>{if count($containers) > 0 && $primary_container_id} <input type="button" onclick="window.location='{$domain}websitemanager/editContainer?container_id='+$F('site-default-container-id')" value="Edit" />{/if}
     </div>
 
     <div class="edit-form-row">
@@ -74,6 +74,17 @@ var setEUCookieMode = function(state){
         <option value="{$preset.id}"{if $preset.id == $default_page_preset_id} selected="selected"{/if}>{$preset.name}</option>
     {/foreach}    
       </select>
+    </div>
+    
+    <div class="edit-form-row">
+      <div class="form-section-label">Default blocklist style</div>
+      <select name="site_default_blocklist_style_id" id="site-default-blocklist-style-id">
+    {foreach from="$blocklist_styles" item="style"}
+        <option value="{$style.id}"{if $style.id == $default_blocklist_style.id} selected="selected"{/if}>{$style.label}</option>
+    {foreachelse}
+        <option value="NONE">None - create new style</option>
+    {/foreach}    
+      </select>{if $default_blocklist_style.id} <input type="button" onclick="window.location='{url_for}@blocklists:edit_blocklist_style{/url_for}?style_id='+$F('site-default-blocklist-style-id')" value="Edit" />{/if}
     </div>
     
     <div class="form-section-label-full">Frontend options</div>
