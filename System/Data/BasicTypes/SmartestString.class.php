@@ -1,6 +1,6 @@
 <?php
 
-class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue, SmartestSearchableValue{
 	
 	protected $_string = '';
 	
@@ -46,6 +46,10 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
     
     public function isPresent(){
         return (bool) strlen($this->_string);
+    }
+    
+    public function getSearchQueryMatchableValue(){
+        return $this->_string;
     }
     
     // The next two methods are for the SmartestStorableValue interface

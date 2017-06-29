@@ -1,12 +1,12 @@
 <?php
     
-class SmartestTagPresenceChecker implements ArrayAccess{
+class SmartestTagPresenceChecker extends SmartestObject{
     
     protected $_tags;
     protected $_tag_var_names;
     
     public function __construct($tags){
-        // $this->_tags = $tags;
+        
         $this->_tags = array();
         
         foreach($tags as $t){
@@ -19,7 +19,7 @@ class SmartestTagPresenceChecker implements ArrayAccess{
     }
     
     public function offsetGet($offset){
-        // echo $offset;
+        
         if(isset($this->_tags[$offset]) && $this->_tags[$offset] == true){
             return true;
         }elseif(isset($this->_tag_var_names[$offset]) && $this->_tag_var_names[$offset] == true){
@@ -28,9 +28,5 @@ class SmartestTagPresenceChecker implements ArrayAccess{
             return false;
         }
     }
-    
-    public function offsetSet($offset, $value){}
-    public function offsetUnset($offset){}
-    public function offsetExists($offset){}
         
 }

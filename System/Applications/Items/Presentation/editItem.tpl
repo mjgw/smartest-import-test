@@ -25,43 +25,36 @@
     });
     if(isChecked){
       listenForUserActions = true;
-      // startSaving();
     }else{
       listenForUserActions = false;
-      stopSaving();
     }
   });
   
   autosaveMode = $('item-autosave').checked;
   
-  var startSaving = function(){
+  /* var startSaving = function(){
     if($('item-autosave')){
-      /* saver = new PeriodicalExecuter(function(){
+      saver = new PeriodicalExecuter(function(){
         if(autosaveMode){
           saveItemData();
         }
-      }, 4.0); */
+      }, 4.0); 
     }
-  }
+  }*/
   
-  var stopSaving = function(){
-    // console.log(saver);
+  /* var stopSaving = function(){
     if(saver !== undefined && saver !== null){
       // saver.stop();
       // saver = null;
     }
-  }
+  } */
   
   var respondToUserAction = function(){
     if(autosaveMode){
-      console.log('autosave triggered...');
-      stopSaving();
       clearTimeout(restartSavingTimer);
       restartSavingTimer = setTimeout(function(){
         saveItemData();
-        console.log('autosaving...');
-        // startSaving();
-      }, 2500);
+      }, 2000);
     }
   }
   

@@ -4,8 +4,6 @@ class SmartestSystemHelper{
     
     public static function getOperatingSystem(){
         
-        
-        
         if(self::isOsx()){
             // sw_vers | grep 'ProductVersion:' | grep -o '[0-9]*\.[0-9]*\.[0-9]*'
             $linux = "Mac OS X ".`sw_vers | grep 'ProductVersion:' | grep -o '[0-9]*\.[0-9]*\.[0-9]*'`;
@@ -47,10 +45,12 @@ class SmartestSystemHelper{
                     return false;
                 }
             }else{
-                $java = shell_exec( 'command -v java >/dev/null' );
+                
+                $java = `/usr/bin/java -version 2>&1`;
+                
                 if(strpos($java, 'version')){ // no need to use strict !== operator as position will never be 0
-                    preg_match('/java version "?([\d\._])"?/mi', $java, $matches);
-                    $v = $matches[0];
+                    preg_match('/version "?(([\d\.]+)(_\d+)?)"?/mi', $java, $matches);
+                    $v = $matches[2];
                     SmartestCache::save('java_version', $v, null, true);
                     return $v;
                 }else{
@@ -61,8 +61,8 @@ class SmartestSystemHelper{
         
     }
     
-    public function elasticSearchIsPossible(){
-        if(version_compare(self::getJavaVersion(), '1.8.0') >= 0 && version_compare(PHP_VERSION, '5.6.0') >= 0){
+    public static function elasticSearchIsPossible(){
+        if(version_compare(self::getJavaVersion(), '1.8.0') >= 0 && version_compare(PHP_VERSION, '5.6.6') >= 0){
             return true;
         }else{
             return false;
@@ -324,6 +324,10 @@ class SmartestSystemHelper{
         return $value;
 	    
 	}
+    
+    public static function getInstallIdNoColons(){
+        return str_replace(':','',self::getInstallId());
+    }
 	
 	public static function getSiteLogosFileGroupId(){
 	    

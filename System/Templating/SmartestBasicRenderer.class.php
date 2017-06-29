@@ -325,6 +325,7 @@ class SmartestBasicRenderer extends SmartestEngine{
                 }
             }
             
+            // Add edit item button
             if(isset($render_data['_hide_edit_button']) && $render_data['_hide_edit_button']){
                 
             }else{
@@ -376,7 +377,7 @@ class SmartestBasicRenderer extends SmartestEngine{
         
         if(($this->_request_data->g('action') == "renderEditableDraftPage" || ($this->_request_data->g('action') == "pageFragment" && $this->getDraftMode())) && $show_preview_edit_link){
 		    
-		    if(!$editableonly || (isset($asset_type_info['editable']) && SmartestStringHelper::toRealBool($asset_type_info['editable']))){
+            if((!$editableonly || isset($asset_type_info['editable']) && SmartestStringHelper::toRealBool($asset_type_info['editable'])) && (!isset($asset_type_info['show_preview_edit_link']) || (isset($asset_type_info['show_preview_edit_link']) && SmartestStringHelper::toRealBool($asset_type_info['show_preview_edit_link'])))){
 		        $edit_link = '';
 		        $edit_url = $this->_request_data->g('domain')."assets/editAsset?asset_id=".$asset->getId()."&amp;from=pagePreview";
 		        
@@ -389,7 +390,7 @@ class SmartestBasicRenderer extends SmartestEngine{
 		        $edit_link .= "<a class=\"sm-edit-button\" title=\"Click to edit file: ".$asset->getUrl()." (".$asset->getType().")\" href=\"".$edit_url."\" style=\"text-decoration:none;font-size:11px";
                 if($this->_hide_edit_buttons) $edit_link .= ';display:none';
                 $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/edit-pencil-standard.png\" alt=\"edit\" style=\"width:16px;height:16px;display:inline;border:0px;\" /><!-- Swap this asset--></a>";
-		    }else{
+            }else{
 		        $edit_link = '<!--edit link-->';
 	        }
 	    

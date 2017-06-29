@@ -2,7 +2,7 @@
 
 // The class for individual "tweets"
 
-class SmartestTwitterStatus{
+class SmartestTwitterStatus extends SmartestObject{
     
     protected $_status_id, $_retweeting_status_id, $_retweeting_user, $_is_retweet, $_created_at, $_text, $_num_retweets, $_num_favourites, $_full_url, $_urls, $_user, $_service_name, $_service_link, $_quoted_status, $_mentioned_users, $_media;
     

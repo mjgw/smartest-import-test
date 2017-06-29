@@ -1,6 +1,6 @@
 <?php
 
-class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, SmartestGenericListedObject, SmartestDualModedObject, SmartestStorableValue{
+class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, SmartestGenericListedObject, SmartestDualModedObject, SmartestStorableValue, SmartestSearchableValue{
 
 	protected $_save_url = true;
 	protected $_fields_retrieval_attempted = false;
@@ -561,6 +561,35 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		foreach($this->getParsableTextFragments($item_id) as $tf){
 		    $tf->publish();
 		}
+        
+        // Update search index
+        if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+            
+            $site = $this->getSite();
+            $site_index_name = $site->getElasticSearchIndexName();
+        
+            if(SmartestElasticSearchHelper::itemIsIndexed(array('index'=>$site_index_name,'type' => 'smartest_page','id' => $this->getId()))){
+                $params = [
+                    'index' => $site_index_name,
+                    'type' => 'smartest_page',
+                    'id' => $this->getId(),
+                    'body' => array('doc'=>$this->getElasticSearchAssociativeArray())
+                ];
+                
+                $index_result = SmartestElasticSearchHelper::updateItem($params);
+            
+            }else{
+                $params = [
+                    'index' => $site_index_name,
+                    'type' => 'smartest_page',
+                    'id' => $this->getId(),
+                    'body' => $this->getElasticSearchAssociativeArray()
+                ];
+                
+                $index_result = SmartestElasticSearchHelper::addItemToIndex($params);
+            }
+        
+        }
 		
 	}
 	
@@ -626,6 +655,16 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    }else{
 	        SmartestLog::getInstance('system')->log('SmartestPage: Page \''.$this->_properties['title'].'\' published was set to \'FALSE\'.');
 	    }
+        
+        if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+            $site_index_name = $this->getSite()->getElasticSearchIndexName();
+            $params = array(
+                'index'=>$site_index_name,
+                'type' => 'smartest_page',
+                'id' => $this->getId()
+            );
+            SmartestElasticSearchHelper::deleteItem($params);
+        }
 	    
 	}
 	
@@ -826,6 +865,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		
 		foreach($_children as $child){
 			
+            $child->setDraftMode($this->getDraftMode());
 			$working_array[$index]["info"] = $child;
 			$working_array[$index]["treeLevel"] = $int_level;
 			$new_level = $int_level + 1; 
@@ -990,6 +1030,10 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             return $this->getLastPublished();
         }
 	}
+    
+    public function getMainText(){
+        
+    }
 	
 	public function getLinkContents(){
 	    if($this->getType() == 'ITEMCLASS'){
@@ -1193,8 +1237,8 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         if($include_special_pages || !$this->_child_pages_retrieved || !count($this->_child_pages)){
             
     	    $sql = "SELECT DISTINCT * FROM Pages WHERE page_parent='".$this->_properties['id']."' AND page_site_id='".$this->_properties['site_id']."' AND page_deleted != 'TRUE'";
-		
-    		if(!$this->getDraftMode()){
+		    
+            if(!$this->getDraftMode()){
     		    $sql .= " AND page_is_published = 'TRUE'";
     		}
         
@@ -1210,7 +1254,11 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
     		}
 		
     		$sql .= " ORDER BY page_order_index, page_id ASC";
-        
+            
+            if($this->getDraftMode()){
+                // echo $sql."<br />";
+            }
+            
             $result = $this->database->queryToArray($sql);
     	    $i = 0;
         
@@ -1743,7 +1791,8 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             }
 	        
 	        case 'date':
-            return $this->getDate();
+            case '_date':
+            return new SmartestDateTime($this->getDate());
 	        
 	        case "urls":
 	        return $this->getUrls();
@@ -1879,6 +1928,32 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    }
 	    
 	}
+    
+    public function getSearchQueryMatchableValue(){
+        return $this->_properties['title'];
+    }
+    
+    public function getElasticSearchAssociativeArray(){
+        
+        $p_array = array();
+        $p_array['name'] = $this->_properties['title'];
+        $p_array['description'] = $this->getDescription();
+        $p_array['meta_description'] = $this->getDescription();
+        $p_array['search_terms'] = $this->getSearchField();
+        
+        foreach($this->getPageTexts() as $placeholder_name=>$ta){
+            $p_array['placeholder__'.$placeholder_name] = $ta->getSearchQueryMatchableValue();
+        }
+        
+        // foreach($this->getProperties() as $property_value_holder){
+        //     if($property_value_holder->isSearchable() && $property_value_holder->getData()->getContent() instanceof SmartestSearchableValue){
+        //         $p_array[$property_value_holder->getVarName()] = $property_value_holder->getData()->getContent()->getSearchQueryMatchableValue();
+        //     }
+        // }
+        
+        return $p_array;
+        
+    }
 	
 	public function getWorkflowStatus(){
 	    
@@ -2292,6 +2367,25 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		return $data;
 		
 	}
+    
+    public function getPageTexts(){
+        
+        $ach = new SmartestAssetClassesHelper;
+        $placeholder_types = $ach->getTextPlaceholderTypes();
+        $assets = array();
+        
+        $sql = "SELECT * FROM Assets, AssetClasses, AssetIdentifiers WHERE AssetIdentifiers.assetidentifier_assetclass_id=AssetClasses.assetclass_id AND AssetIdentifiers.assetidentifier_item_id IS NULL AND AssetIdentifiers.assetidentifier_page_id='".$this->_properties['id']."' AND AssetIdentifiers.assetidentifier_live_asset_id=Assets.asset_id AND AssetClasses.assetclass_type IN ('".implode("','", $placeholder_types)."')";
+        $result = $this->database->queryToArray($sql);
+        
+        foreach($result as $r){
+            $a = new SmartestRenderableAsset;
+            $a->hydrate($r);
+            $assets[$r['assetclass_name']] = $a;
+        }
+        
+        return $assets;
+        
+    }
 	
 	public function loadAssetClassDefinitions(){
 	    
@@ -2940,6 +3034,8 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         
         $page_cache_name = "site".$this->_properties['site_id']."_page".$this->_properties['id'].$platform_filename_insert.$this->getCacheFileNameDatePart();
 	    
+        // TODO: insert custom variables here.
+        
 	    if($this->getType() == "ITEMCLASS" && $this->_principal_item){
 			$page_cache_name .= "__id".$this->_principal_item->getId();
 		}

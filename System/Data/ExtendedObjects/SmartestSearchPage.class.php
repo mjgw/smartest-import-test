@@ -17,11 +17,11 @@ class SmartestSearchPage extends SmartestPage{
     
     public function getResults(){
         // echo count($this->_results);
+        
         if($this->_query){
             if(!$this->_results_retrieved){
                 $this->_results = $this->getSite()->getSearchResults($this->_query);
                 $this->_results_retrieved = true;
-                
             }
             return $this->_results;
         }else{

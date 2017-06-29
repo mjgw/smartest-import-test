@@ -92,6 +92,10 @@ class SmartestAssetGalleryMembership extends SmartestManyToManyLookup{
         return $this->setContextDataField('caption', $caption);
     }
     
+    public function setAssetDraftMode($mode){
+        $this->getAsset()->setDraftMode($mode);
+    }
+    
     public function save(){
         
         if(!$this->getType()){

@@ -14,13 +14,6 @@ class SmartestSite extends SmartestBaseSite{
     
     public static $special_page_ids = array();
     
-	// protected function __objectConstruct(){
-	// 	
-	// 	// $this->_table_prefix = 'site_';
-	// 	// $this->_table_name = 'Sites';
-	// 	
-	// }
-	
 	public function getHomePage($draft_mode=false){
 	    
 	    if($this->_home_page === null){
@@ -41,16 +34,18 @@ class SmartestSite extends SmartestBaseSite{
 			$tree = SmartestCache::load('site_pages_tree_'.$this->getId(), true);
 			
 		}else{ */
-		
-			$home_page = $this->getHomePage();
+            
+            $home_page = $this->getHomePage();
 		    
 		    $home_page->setDraftMode($draft_mode);
 		    
 		    $tree = array();
 			$tree[0]["info"] = $home_page->__toArray();
             // $tree[0]["info"] = $home_page;
-			$tree[0]["treeLevel"] = 0;
+            $tree[0]["treeLevel"] = 0;
 			$tree[0]["children"] = $home_page->getPagesSubTree(1);
+            
+            // var_dump($home_page->getDraftMode());
 			
             // echo count($tree[0]["children"]);
             
@@ -96,9 +91,7 @@ class SmartestSite extends SmartestBaseSite{
 	
 	public function getSerializedPageTree($tree){
 		
-        // var_dump($tree);
-        
-		foreach($tree as $key => $page){
+        foreach($tree as $key => $page){
 			
 			$this->displayPages[$this->displayPagesIndex]['info'] = $page['info'];
 			$this->displayPages[$this->displayPagesIndex]['treeLevel'] = $page['treeLevel'];
@@ -115,8 +108,8 @@ class SmartestSite extends SmartestBaseSite{
 			}
 	
 		}
-		
-		return $this->displayPages;
+        
+        return $this->displayPages;
 		
 	}
 	
@@ -163,6 +156,26 @@ class SmartestSite extends SmartestBaseSite{
         
 	}
     
+    public function getQuickPagesList($draft_mode=false){
+        
+        $sql = "SELECT * FROM Pages WHERE Pages.page_type='NORMAL' AND Pages.page_deleted != 'TRUE' AND Pages.page_site_id='{$this->getId()}'";
+        
+        if(!$draft_mode){
+            $sql .= " AND Pages.page_is_published='TRUE' ORDER BY Pages.page_title";
+        }
+        
+        $result = $this->database->queryToArray($sql);
+        $pages = array();
+        
+        foreach($result as $r){
+            $p = new SmartestPage;
+            $p->hydrate($r);
+            $pages[] = $p;
+        }
+        
+        return $pages;
+    }
+    
     public function getDefaultBlockListStyle(){
         
         $id = $this->getDefaultBlockListStyleId();
@@ -192,19 +205,224 @@ class SmartestSite extends SmartestBaseSite{
         
     }
 	
-    public function getSearchResults($query){
+    public function getSearchResults($query, $search_type='ALL'){
+        if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+            return $this->getElasticSearchResults($query, $search_type);
+        }else{
+            return $this->getNativeSearchResults($query, $search_type);
+        }
+    }
+    
+    public function getElasticSearchResults($query, $search_type='ALL'){
         
-        return $this->getNativeSearchResults($query);
+        $results = array();
+        $fields = array();
+        $params = array();
+        $ids = array();
+        $page_ids = array();
+        $du = new SmartestDataUtility;
+        $search_start_time = microtime(true);
+        
+        $model_names = array_values($du->getModelPluralNamesLowercase($this->getId(), true));
+        $items_type = ($search_type == 'ALL' || !in_array($search_type, $model_names)) ? implode(',',$model_names) : $search_type;
+        
+        foreach($this->getModelsWithMetapage() as $model){
+            $fields = array_merge($fields, $model->getElasticSearchIndexTypedQueryPropertyNames());
+        }
+        
+        $params['index'] = $this->getElasticSearchIndexName();
+        $params['type'] = $items_type;
+        $params['body'] = array(
+            'min_score'=>0.1,
+            'query'=>array(
+                'multi_match'=>array(
+                    'query'=>$query,
+                    'type'=>'best_fields',
+                    'fields'=>$fields,
+                    'tie_breaker'=>0.3
+                )
+            )
+        );
+        
+        $raw_results = SmartestElasticSearchHelper::getItemsMatchingQuery($params);
+        // print_r($raw_results);
+        
+        if(isset($raw_results['hits']) && isset($raw_results['hits']['hits'])){
+            
+            foreach($raw_results['hits']['hits'] as $raw_item){
+                $ids[] = $raw_item['_id'];
+            }
+            
+            $h = new SmartestCmsItemsHelper;
+            
+            $items = $h->hydrateMixedListFromIdsArray($ids);
+            
+        }
+        
+        $page_fields = $this->getElasticSearchPageSearchFields();
+        $params['index'] = $this->getElasticSearchIndexName();
+        $params['type'] = 'smartest_page';
+        $params['body'] = array(
+            'min_score'=>0.1,
+            'query'=>array(
+                'multi_match'=>array(
+                    'query'=>$query,
+                    'type'=>'best_fields',
+                    'fields'=>$page_fields,
+                    'tie_breaker'=>0.3
+                )
+            )
+        );
+        
+        $raw_page_results = SmartestElasticSearchHelper::getItemsMatchingQuery($params);
+        // echo count($raw_page_results['hits']['hits']);
+        $page_ids = array();
+        $homepage_id = $this->getTopPageId();
+        
+        if(isset($raw_page_results['hits']) && isset($raw_page_results['hits']['hits'])){
+            
+            foreach($raw_page_results['hits']['hits'] as $raw_item){
+                if($raw_item['_id'] != $homepage_id){
+                    $page_ids[] = $raw_item['_id'];
+                }
+            }
+            
+            $sql = "SELECT * FROM Pages WHERE Pages.page_id IN (".implode(',',$page_ids).")";
+            $result = $this->database->queryToArray($sql);
+            $pages = array();
+            
+            foreach($result as $r){
+                $p = new SmartestPage;
+                $p->hydrate($r);
+                $pages[] = $p;
+            }
+            
+        }
+        
+        /// Start building array
+        $master_array = array();
+        
+        foreach($pages as $p){
+            
+            $key = $p->getDate()*1000;
+        
+            if(in_array($key, array_keys($master_array))){
+                while(in_array($key, array_keys($master_array))){
+                    $key++;
+                }
+            }
+        
+            $master_array[$key] = $p;
+        
+        }
+        
+        foreach($items as $i){
+            
+            $key = $i->getDate();
+            
+            if($key instanceof SmartestDateTime){
+                $key = $key->getUnixFormat();
+            }
+            
+            $key = $key*1000;
+        
+            if(in_array($key, array_keys($master_array))){
+                while(in_array($key, array_keys($master_array))){
+                    $key++;
+                }
+            }
+            
+            $master_array[$key] = $i;
+        
+        }
+
+        krsort($master_array);
+        
+        $search_end_time = microtime(true);
+        $this->_last_search_time_taken = ($search_end_time - $search_start_time)*1000;
+        
+        return $master_array;
         
     }
     
-    public function getElasticSearchResults($query){
+    public function getElasticSearchModelTypeNames(){
+        $index_names = array();
+        foreach($this->getModelsWithMetapage() as $m){
+            $index_names[] = $m->getElasticSearchIndexNameForSiteId($this->getId());
+        }
+        return $index_names;
+    }
+    
+    public function getElasticSearchTypeNames(){
+        $index_names = $this->getElasticSearchModelTypeNames();
+        $index_names[] = 'pages';
+        return $index_names;
+    }
+    
+    public function getElasticSearchIndexName(){
+        return SmartestSystemHelper::getInstallIdNoColons().'_site_'.$this->getId();
+    }
+    
+    public function getElasticSearchPageSearchFields(){
+        $fields = array('name^3','description','meta_description','search_terms^2');
+        $default_placeholder_id = $this->getPrimaryTextPlaceholderId();
+        foreach($this->getPlaceholders() as $p){
+            if($p->isForText()){
+                if($p->getId() == $default_placeholder_id){
+                    $fields[] = 'placeholder__'.$p->getName().'^2';
+                }else{
+                    $fields[] = 'placeholder__'.$p->getName();
+                }
+            }
+        }
+        return $fields;
+    }
+    
+    public function createElasticSearchIndexParams(){
         
+        $data = array();
         
+        $index_name = $this->getElasticSearchIndexName();
+        
+        $data['index'] = $index_name;
+        $data['body'] = array();
+        
+        $data['body']['settings'] = [
+            'number_of_shards' => 5,
+            'number_of_replicas' => 1
+        ];
+        
+        $data['body']['mappings'] = array();
+        
+        foreach($this->getModelsWithMetapage() as $m){
+            $data['body']['mappings'][$m->getVarName()] = $m->getElasticSearchIndexCreationData();
+        }
+        
+        return $data;
         
     }
     
-	public function getNativeSearchResults($query){
+    public function createElasticSearchIndex(){
+        
+        if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+            
+            $data = $this->createElasticSearchIndexParams();
+            $name = $this->getElasticSearchIndexName();
+            
+            try{
+            
+                $client = SmartestElasticSearchHelper::getClient();
+                // $data = $this->createElasticSearchIndexParamsForSiteId($site->getId());
+                $response = $client->indices()->create($data);
+                return $response;
+            
+            }catch(Elasticsearch\Common\Exceptions\NoNodesAvailableException $e){
+                // could not check for index or build one because ES isn't running
+            }
+        }
+    }
+    
+	public function getNativeSearchResults($query, $search_type='ALL'){
 	    
         $query = strip_tags($query);
 	    $search_query_words = preg_split('/[^\w]+/', $query);
@@ -270,7 +488,7 @@ class SmartestSite extends SmartestBaseSite{
             
             foreach($pages as $p){
 
-                $key = $p->getDate();
+                $key = $p->getDate()*1000;
 
                 if(in_array($key, array_keys($master_array))){
                     while(in_array($key, array_keys($master_array))){
@@ -284,7 +502,7 @@ class SmartestSite extends SmartestBaseSite{
 
             foreach($items as $i){
                 
-                $key = $i->getDate();
+                $key = $i->getDate()*1000;
                 
                 if($key instanceof SmartestDateTime){
                     $key = $key->getUnixFormat();
@@ -397,6 +615,11 @@ class SmartestSite extends SmartestBaseSite{
         return $du->getModels(false, $this->getId(), true, $top_level);
 	    
 	}
+    
+    public function getModelsWithMetapage(){
+        $du = new SmartestDataUtility;
+        return $du->getMetaPageModels($this->getId());
+    }
 	
 	public function getDataSets(){
 	    
@@ -449,10 +672,8 @@ class SmartestSite extends SmartestBaseSite{
 	}
 	
 	public function getPlaceholders(){
-	    
 	    $du = new SmartestDataUtility;
         return $du->getPlaceholders($this->getId());
-	    
 	}
 	
 	public function getFieldNames(){
@@ -598,7 +819,7 @@ class SmartestSite extends SmartestBaseSite{
 	        // we are viewing a static page
 	        return $page;
 
-	    }else if($page = $h->getItemClassPageByUrl($url, $this->getId())){
+	    }else if($page = $h->getItemClassPageByUrl($url, $this->getId(), 'return')){
             
             // we are viewing an item page
 	        return $page;
@@ -741,6 +962,8 @@ class SmartestSite extends SmartestBaseSite{
             
             case "_admin_normal_pages_list":
             // return $this->getHomePage()->setDraftMode(true)->getSerializedPageTree();
+            // print_r($this->getPagesList(true, true));
+            // echo count($this->getPagesList(true));
             return $this->getPagesList(true, true);
             
             case "favicon_id":
@@ -748,6 +971,9 @@ class SmartestSite extends SmartestBaseSite{
             
             case "favicon":
             return $this->getFavicon();
+            
+            case 'elasticsearch_index_name':
+            return $this->getElasticSearchIndexName();
             
         }
         

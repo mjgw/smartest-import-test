@@ -1,6 +1,6 @@
 <?php
 
-class SmartestDataObject implements ArrayAccess{
+class SmartestDataObject extends SmartestObject{
 	
 	protected $_properties = array();
 	protected $_modified_properties = array();

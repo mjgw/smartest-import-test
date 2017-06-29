@@ -162,6 +162,15 @@ class SmartestPlaceholder extends SmartestAssetClass{
         }
         
     }
+    
+    public function isForImages(){
+        return $this->onlyAcceptsImages();
+    }
+    
+    public function isForText(){
+        $h = new SmartestAssetClassesHelper;
+        return in_array($this->getType(), $h->getTextPlaceholderTypes());
+    }
 	
 	public function getAssetsByType(){
 	    

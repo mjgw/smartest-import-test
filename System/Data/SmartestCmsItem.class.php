@@ -8,7 +8,7 @@
 * Please store any additional information on this class at: http://wiki.smartestproject.org/SmartestCmsItem
 */
 
-class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, SmartestStorableValue, SmartestSubmittableValue, SmartestDualModedObject{
+class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObject, SmartestStorableValue, SmartestSubmittableValue, SmartestDualModedObject, SmartestSearchableValue{
 	
 	/** 
 	* Description
@@ -266,6 +266,11 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            return "Recursion disallowed";
 	        }else{
                 $v = $this->getPropertyValueByNumericKey($this->_varnames_lookup[$offset], $this->getDraftMode(), true);
+                
+                if($v instanceof SmartestAsset){
+                    $v->setDraftMode($this->getDraftMode());
+                }
+                
 	            if(is_null($v)){
                     // Null value returned. Should be logged.
 	                return new SmartestString('');
@@ -348,7 +353,12 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	            
 	            case '_auto_date':
                 case '_date':
-	            return new SmartestDateTime($this->getDate());
+                $d = $this->getDate();
+                if($d instanceof SmartestDateTime){
+                    return $d;
+                }else{
+                    return new SmartestDateTime($d);
+                }
                 
 	            case '_auto_date_raw':
                 case '_date_raw':
@@ -719,9 +729,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        
 	        if($this->_model_built){
 	            foreach($this->_properties as &$p){
-	                // print_r($record);
 	                // $p is an itempropertyvalueholder object
-	                $p->hydrateValueFromIpvArray($record[$p->getId()], $this); // Sergiy: &$this=>$this for PHP 5.4
+                    if(isset($record[$p->getId()])){
+	                    $p->hydrateValueFromIpvArray($record[$p->getId()], $this); // Sergiy: &$this=>$this for PHP 5.4
+                    }
 	            }
 	        }
 	    }
@@ -776,10 +787,15 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	public function getDate(){
         
         // get model's default date property ID. If there is a property set, retrieve the value of thatproperty for this item.
-        
-	    if($propertyid = $this->getModel()->getDefaultDatePropertyId() && $value = $this->getPropertyValueByNumericKey($propertyid, true)){
-	        
-            return $this->getPropertyValueByNumericKey($propertyid, true);
+        // echo ;
+	    
+        if(is_numeric($this->getModel()->getDefaultDatePropertyId()) && $value = $this->getPropertyValueByNumericKey($this->getModel()->getDefaultDatePropertyId(), true)){
+        // if($propertyid = $this->getModel()->getDefaultDatePropertyId() && $value = $this->getPropertyValueByNumericKey($this->getModel()->getDefaultDatePropertyId(), true)){
+	        $propertyid = $this->getModel()->getDefaultDatePropertyId();
+            // echo $propertyid.' ';
+            $value = $this->getPropertyValueByNumericKey($propertyid, true);
+            // print_r($value);
+            return $value;
             
 	    }elseif(isset($this->_varnames_lookup['date_published'])){
             
@@ -874,6 +890,10 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    return $this->getLinkObject()->getAbsoluteUrlObject();
 	    
 	}
+    
+    public function getSearchQueryMatchableValue(){
+        return $this->getEditorName();
+    }
 	
 	public function getModel(){
 	    
@@ -1296,116 +1316,122 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
             $draft = $this->getDraftMode();
         }
         
-	    if(array_key_exists($key, $this->_properties)){
+        if(is_string($key) || is_int($key)){
+            
+            if(array_key_exists($key, $this->_properties)){
 	        
-	        // echo "test";
-	        try{
+    	        // echo "test";
+    	        try{
 	            
-	            if(!$this->_properties[$key]->getData()->hasItem()){
-	                $this->_properties[$key]->getData()->setItem($this);
-	            }
+    	            if(!$this->_properties[$key]->getData()->hasItem()){
+    	                $this->_properties[$key]->getData()->setItem($this);
+    	            }
     	        
-    	        if($this->_properties[$key]->getDatatype() == 'SM_DATATYPE_TEMPLATE'){
-    	            // var_dump($this->getDraftMode());
-    	        }
+        	        if($this->_properties[$key]->getDatatype() == 'SM_DATATYPE_TEMPLATE'){
+        	            // var_dump($this->getDraftMode());
+        	        }
     	        
-    	        if($this->getDraftMode()){
-    	            $raw_value = $this->_properties[$key]->getData()->getDraftContent();
-    	            // $raw_value->setDraftMode(true);
-                }else{
-                    $raw_value = $this->_properties[$key]->getData()->getContent();
+        	        if($this->getDraftMode()){
+        	            $raw_value = $this->_properties[$key]->getData()->getDraftContent();
+        	            // $raw_value->setDraftMode(true);
+                    }else{
+                        $raw_value = $this->_properties[$key]->getData()->getContent();
+                    }
+                
+                    // echo get_class($raw_value);
+            
+                }catch(SmartestException $e){
+                    echo $e->getMessage();
                 }
-                
-                // echo get_class($raw_value);
             
-            }catch(SmartestException $e){
-                echo $e->getMessage();
-            }
+                $t = $this->_properties[$key]->getTypeInfo();
             
-            $t = $this->_properties[$key]->getTypeInfo();
-            
-            if($t['valuetype'] == 'auto'){
+                if($t['valuetype'] == 'auto'){
                 
-                if($t['id'] == 'SM_DATATYPE_AUTO_ITEM_FK'){
+                    if($t['id'] == 'SM_DATATYPE_AUTO_ITEM_FK'){
                 
-                    $class = $t['class'];
+                        $class = $t['class'];
                     
-                    $ids = array();
+                        $ids = array();
                 
-                    $field = $draft ? 'itempropertyvalue_draft_content' : 'itempropertyvalue_content';
+                        $field = $draft ? 'itempropertyvalue_draft_content' : 'itempropertyvalue_content';
                 
-                    $sql = "SELECT item_id FROM Items, ItemProperties, ItemPropertyValues WHERE item_deleted !=1 AND item_itemclass_id=itemproperty_itemclass_id AND itempropertyvalue_item_id=item_id AND itempropertyvalue_property_id = itemproperty_id AND ".$field."='".$this->getId()."' AND itemproperty_id='".$this->_properties[$key]->getForeignKeyFilter()."'";
-                    $result = $this->database->queryToArray($sql);
+                        $sql = "SELECT item_id FROM Items, ItemProperties, ItemPropertyValues WHERE item_deleted !=1 AND item_itemclass_id=itemproperty_itemclass_id AND itempropertyvalue_item_id=item_id AND itempropertyvalue_property_id = itemproperty_id AND ".$field."='".$this->getId()."' AND itemproperty_id='".$this->_properties[$key]->getForeignKeyFilter()."'";
+                        $result = $this->database->queryToArray($sql);
                     
-                    // The following code attempts to sort the items by their default sort order
+                        // The following code attempts to sort the items by their default sort order
                     
-                    $foreign_property_id = $this->_properties[$key]->getForeignKeyFilter();
-                    $foreign_property = new SmartestItemProperty;
+                        $foreign_property_id = $this->_properties[$key]->getForeignKeyFilter();
+                        $foreign_property = new SmartestItemProperty;
                     
-                    if($foreign_property->find($foreign_property_id)){
+                        if($foreign_property->find($foreign_property_id)){
                         
-                        $foreign_model_id = $foreign_property->getItemClassId();
+                            $foreign_model_id = $foreign_property->getItemClassId();
                         
-                        $model = new SmartestModel;
+                            $model = new SmartestModel;
                         
-                        if($draft){
-                            $rdm = -1; // -1 is the draft-agnostic (both draft and live) mode for SmartestSortableItemReferenceSet (1 returns only draft objects)
-                        }else{
-                            $rdm = 0;
-                        }
-                        
-                        if($model->find($foreign_model_id)){
-                            
-                            $s = new SmartestSortableItemReferenceSet($model, $draft);
-                            $s->setDraftMode($rdm);
-                            
-                            foreach($result as $r){
-                                $s->insertItemId($r['item_id']);
+                            if($draft){
+                                $rdm = -1; // -1 is the draft-agnostic (both draft and live) mode for SmartestSortableItemReferenceSet (1 returns only draft objects)
+                            }else{
+                                $rdm = 0;
                             }
+                        
+                            if($model->find($foreign_model_id)){
                             
-                            $s->sort();
-                            $ids = $s->getItemIds();
+                                $s = new SmartestSortableItemReferenceSet($model, $draft);
+                                $s->setDraftMode($rdm);
                             
+                                foreach($result as $r){
+                                    $s->insertItemId($r['item_id']);
+                                }
+                            
+                                $s->sort();
+                                $ids = $s->getItemIds();
+                            
+                            }else{
+                                foreach($result as $r){
+                                    $ids[] = $r['item_id'];
+                                }
+                            }
+                        
                         }else{
                             foreach($result as $r){
                                 $ids[] = $r['item_id'];
                             }
                         }
-                        
-                    }else{
-                        foreach($result as $r){
-                            $ids[] = $r['item_id'];
-                        }
-                    }
                     
-                    $obj = new $class;
-                    $obj->hydrateFromStoredIdsArray($ids, $draft);
-                    return $obj;
+                        $obj = new $class;
+                        $obj->hydrateFromStoredIdsArray($ids, $draft);
+                        return $obj;
+                
+                    }
                 
                 }
-                
-            }
             
-            // var_dump();
-            // echo "test";
-            // var_dump($raw_value);
-            if(is_object($raw_value)){
-                $r = $raw_value;
-                // echo get_class($raw_value);
-                // echo "Object";
-            }else if($value_ob = SmartestDataUtility::objectize($raw_value, $this->_properties[$key]->getDatatype(), $this->_properties[$key]->getForeignKeyFilter())){
-                $r = $value_obj;
-                // echo get_class($value_obj);
-                // echo "Not Object";
-            }else if(is_null($raw_value) && $c = SmartestDataUtility::getClassForDataType($this->_properties[$key]->getDatatype(), $this->_properties[$key]->getForeignKeyFilter())){
-                $r = new $c;
-            }
+                if(is_object($raw_value)){
+                    $r = $raw_value;
+                }else if($value_ob = SmartestDataUtility::objectize($raw_value, $this->_properties[$key]->getDatatype(), $this->_properties[$key]->getForeignKeyFilter())){
+                    $r = $value_obj;
+                }else if(is_null($raw_value) && $c = SmartestDataUtility::getClassForDataType($this->_properties[$key]->getDatatype(), $this->_properties[$key]->getForeignKeyFilter())){
+                    $r = new $c;
+                }
             
-            return $r;
+                if($r instanceof SmartestDualModedObject){
+                    $r->setDraftMode($this->getDraftMode());
+                }
             
-	    }else{
-	        return null;
-	    }
+                return $r;
+            
+    	    }else{
+    	        return null;
+    	    }
+        
+        }else{
+            // var_dump($key);
+            // $e = new SmartestException('');
+            // print_r(array_slice($e->getTrace(), 0, 5));
+        }
+        
 	}
 	
 	public function getPropertyRawValueByNumericKey($key){
@@ -1513,6 +1539,20 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	        return self::NOT_CHANGED;
 	    }
 	}
+    
+    public function getElasticSearchAssociativeArray(){
+        
+        $p_array = array();
+        $p_array['name'] = '';
+        foreach($this->getProperties() as $property_value_holder){
+            if($property_value_holder->isSearchable() && $property_value_holder->getData()->getContent() instanceof SmartestSearchableValue){
+                $p_array[$property_value_holder->getVarName()] = $property_value_holder->getData()->getContent()->getSearchQueryMatchableValue();
+            }
+        }
+        $p_array['name'] = $this->getEditorName();
+        return $p_array;
+        
+    }
 	
 	public function save(){
 		
@@ -1748,6 +1788,36 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	    
 	    $sql = "UPDATE TodoItems SET todoitem_is_complete='1' WHERE todoitem_type='SM_TODOITEMTYPE_PUBLISH_ITEM' AND todoitem_foreign_object_id='".$this->_item->getId()."'";
 	    $this->database->rawQuery($sql);
+        
+        if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+            
+            $site = $this->getSite();
+            $site_index_name = $site->getElasticSearchIndexName();
+            
+            if(SmartestElasticSearchHelper::itemIsIndexed(array('index'=>$site_index_name,'type' => $this->getModel()->getPluralName(),'id' => $this->getId()))){
+                $params = [
+                    'index' => $site_index_name,
+                    'type' => $this->getModel()->getVarName(),
+                    'id' => $this->getId(),
+                    'body' => array('doc'=>$this->getElasticSearchAssociativeArray())
+                ];
+                // print_r($params);
+                // echo "exists";
+                $index_result = SmartestElasticSearchHelper::updateItem($params);
+                
+            }else{
+                $params = [
+                    'index' => $site_index_name,
+                    'type' => $this->getModel()->getVarName(),
+                    'id' => $this->getId(),
+                    'body' => $this->getElasticSearchAssociativeArray()
+                ];
+                // echo "does not exist";
+                $index_result = SmartestElasticSearchHelper::addItemToIndex($params);
+            }
+            // print_r($index_result);
+            // exit;
+        }
 	    
 	    $this->_item->setChangesApproved(1);
 	    $this->_item->setLastPublished(time());
@@ -1760,8 +1830,20 @@ class SmartestCmsItem implements ArrayAccess, SmartestGenericListedObject, Smart
 	}
 	
 	public function unPublish(){
-	    $this->_item->setPublic('FALSE');
+	    
+        $this->_item->setPublic('FALSE');
 	    $this->_item->save();
+        
+        if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+            $site_index_name = $site->getElasticSearchIndexName();
+            $params = array(
+                'index'=>$site_index_name,
+                'type' => $this->getModel()->getVarName(),
+                'id' => $this->getId()
+            );
+            SmartestElasticSearchHelper::deleteItem($params);
+        }
+        
 	}
     
     public function unCache(){

@@ -676,13 +676,13 @@ class SmartestCmsItemSet extends SmartestSet implements SmartestSetApi, Smartest
 	            
     	            $result = $q->doSelect($mode);
 	                
-	                if($this->getSortField()){
-    	                $result->sort($this->getSortField(), $this->getSortDirection());
+                    if($this->getSortField()){
+                        $result->sort($this->getSortField(), $this->getSortDirection());
     	            }
 	            
     	            $this->_set_members_simple = $result->getSimpleItems($limit);
-	            
-    	            foreach($this->_set_members_simple as $item){
+                    
+                    foreach($this->_set_members_simple as $item){
 	                
     	                $this->_set_member_ids[] = $item->getId();
     	                $this->_set_member_webids[] = $item->getWebid();

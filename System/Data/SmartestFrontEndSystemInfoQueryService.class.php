@@ -1,6 +1,6 @@
 <?php
 
-class SmartestFrontEndSystemInfoQueryService implements ArrayAccess{
+class SmartestFrontEndSystemInfoQueryService extends SmartestObject{
     
     protected $_du = null;
     
@@ -58,13 +58,5 @@ class SmartestFrontEndSystemInfoQueryService implements ArrayAccess{
         }
         
     }
-    
-	public function offsetSet($offset, $value){
-	    // read only
-	}
-	
-	public function offsetUnset($offset){
-	    // read only
-	}
     
 }

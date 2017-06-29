@@ -8,6 +8,7 @@
         <class>SmartestString</class>
         <long>true</long>
         <sortable>true</sortable>
+        <searchable>true</searchable>
         <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/sl_text.tpl" />
         <parameters>
@@ -22,6 +23,7 @@
         <description>A single file that has been imported into the files repository.</description>
         <usage>itemproperty</usage>
         <long>false</long>
+        <searchable>true</searchable>
         
         <filter>
           <typesource type="smartest:assettypes" label="File Type" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.assettypes.tpl" />
@@ -50,6 +52,7 @@
         <description>A single item from a selected model.</description>
         <usage>itemproperty</usage>
         <long>false</long>
+        <searchable>true</searchable>
         
         <filter>
           <typesource type="smartest:models" table="ItemClasses" matchfield="id" label="Model" class="SmartestModel" sortfield="itemclass_plural_name" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.models.tpl" />
@@ -75,6 +78,7 @@
       <description>A web page from this website.</description>
       <usage>itemproperty,field</usage>
       <long>false</long>
+      <searchable>true</searchable>
       
       <filter>
         <entitysource type="db" table="Pages" sortfield="page_title" sitefield="page_site_id" class="SmartestPage" label="Page" />
@@ -98,6 +102,7 @@
       <description>A link to a page, item or file</description>
       <usage>itemproperty,field</usage>
       <long>false</long>
+      <searchable>true</searchable>
       
       <render template="System/Presentation/WebPageBuilder/property.internal_link.tpl" />
       <input template="System/Presentation/InterfaceBuilder/Inputs/internal_link.tpl" />
@@ -112,6 +117,7 @@
       <description>A Smartest user account</description>
       <usage>itemproperty</usage>
       <long>false</long>
+      <searchable>true</searchable>
       
       <filter>
         <entitysource type="db" table="Users" sortfield="user_lastname" class="SmartestUser" label="User" />
@@ -160,6 +166,7 @@
         <description>Longer piece of text (255 chars or more) in which no formatting is needed.</description>
         <usage>itemproperty</usage>
         <class>SmartestString</class>
+        <searchable>true</searchable>
         <long>true</long>
         <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/ml_text.tpl" />
@@ -182,6 +189,7 @@
         <usage>field,itemproperty</usage>
         <long>false</long>
         <sortable>true</sortable>
+        <searchable>true</searchable>
         
         <filter>
           <typesource type="db" table="DropDowns" matchfield="id" label="Dropdown Menu" class="SmartestDropdown" template="System/Applications/Items/Presentation/FKFilterSelectors/filtertype.dropdownmenus.tpl" />
@@ -221,6 +229,7 @@
         <description>An email address.</description>
         <usage>field,itemproperty,dropdown</usage>
         <class>SmartestEmailAddress</class>
+        <searchable>true</searchable>
         <long>false</long>
         <sortable>false</sortable>
         <render template="System/Presentation/WebPageBuilder/property.email.tpl" />
@@ -235,6 +244,7 @@
         <sortable>true</sortable>
         <quantity>true</quantity>
         <chronological>true</chronological>
+        <searchable>true</searchable>
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.timestamp.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/timestamp.tpl" />
@@ -249,6 +259,7 @@
         <sortable>true</sortable>
         <quantity>true</quantity>
         <chronological>true</chronological>
+        <searchable>true</searchable>
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.date.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/date.tpl" />
@@ -365,6 +376,7 @@
         <description>ISBN is a standardised number for identifying published books.</description>
         <usage>field,itemproperty</usage>
         <class>SmartestString</class>
+        <searchable>true</searchable>
         <long>false</long>
         <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/sl_text.tpl" />
@@ -384,6 +396,7 @@
         <description>A country of the world. Uses the ISO 3166-1 alpha-2 standard.</description>
         <usage>field,itemproperty</usage>
         <class>SmartestCountry</class>
+        <searchable>true</searchable>
         <render template="System/Presentation/WebPageBuilder/property.default.tpl" />
         <input template="System/Presentation/InterfaceBuilder/Inputs/license.tpl" />
     </type>

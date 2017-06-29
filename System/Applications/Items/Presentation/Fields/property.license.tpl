@@ -1,2 +1,1 @@
-{capture name="name" assign="name"}item[{$property.id}]{/capture}
-{license_select name=$name value=$value}
+{license_select name=$_input_data.name value=$value}

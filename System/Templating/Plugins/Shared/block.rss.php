@@ -37,6 +37,8 @@ function smarty_block_rss ($params, $content, &$smarty, &$repeat) {
         $res = $rss->getItems();
         $index = 0;
         
+        echo file_get_contents($params["file"]);
+        
         if(!count($res)){
             return '';
         }

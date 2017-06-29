@@ -1,6 +1,6 @@
 <?php
 
-class SmartestInstagramPost implements ArrayAccess{
+class SmartestInstagramPost extends SmartestObject{
     
     protected $_post_id, $_type, $_longitude, $_latitude, $_location_name, $_created_at, $_instagram_url, $_num_likes, $_file_url, $_image, $_caption, $_user;
     
@@ -89,10 +89,6 @@ class SmartestInstagramPost implements ArrayAccess{
         }
         
     }
-    
-    public function offsetExists($offset){}
-    public function offsetUnset($offset){}
-    public function offsetSet($offset, $value){}
         
     public function offsetGet($offset){
         

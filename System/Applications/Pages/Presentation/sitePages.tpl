@@ -124,7 +124,8 @@ function viewPage(){
     <li class="permanent-action"><a href="{$domain}website/renderEditableDraftPage?page_id={$home_page.webid}&amp;hide_newwin_link=true"><i class="fa fa-eye"></i> Enter site preview mode</a></li>
     <li class="permanent-action"><a href="{$domain}smartest/page/new" class="right-nav-link"><i class="fa fa-plus-circle"></i> Add page</a></li>
     <li class="permanent-action"><a href="{$domain}websitemanager/releaseCurrentUserHeldPages" class="right-nav-link"><i class="fa fa-unlock"></i> Release all pages</a></li>
-    <li class="permanent-action"><a href="{$domain}smartest/pagegroups" class="right-nav-link"><i class="fa fa-files-o"></i> Page groups</a></li>
+    <li class="permanent-action"><a href="javascript:MODALS.load('websitemanager/indexPages', 'Index pages')" class="right-nav-link"><i class="fa fa-files-o"></i> Index pages</a></li>
+    <li class="permanent-action"><a href="{$domain}smartest/pagegroups" class="right-nav-link"><i class="fa fa-folder-o"></i> Page groups</a></li>
     <li class="permanent-action"><a href="{$domain}websitemanager/clearPagesCache" class="right-nav-link"><i class="fa fa-refresh"></i> Force page cache refresh</a></li>
 </ul>
 

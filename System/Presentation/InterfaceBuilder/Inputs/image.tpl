@@ -14,7 +14,7 @@
   {if $_site.id}
   <a class="button" href="#select-image" id="{$_input_data.id}-button">Select image</a>
   <a class="button" href="#select-image" id="{$_input_data.id}-edit-metadata" style="{if $value && $value.id}{else}display:none{/if}">Edit image data</a>
-  <a class="button" href="#clear-image" id="{$_input_data.id}-button-clear">Clear</a>
+  <a class="button" href="#clear-image" id="{$_input_data.id}-button-clear" style="{if $value && $value.id}{else}display:none{/if}">Clear</a>
   {else}
   <div class="image-picker-caption">Images can only be selected when you are working with a site.</div>
   {/if}
@@ -38,6 +38,7 @@
     $('{$_input_data.id}').value = '';
     $('{$_input_data.id}-thumbnail-area').update('<div class="image-picker-caption">No file is selected</div>');
     $('{$_input_data.id}-edit-metadata').fade({ldelim}duration: 0.2{rdelim});
+    $('{$_input_data.id}-button-clear').fade({ldelim}duration: 0.2{rdelim});
     $('{$_input_data.id}').fire('image:chosen', {ldelim}inputId: '{$_input_data.id}'{rdelim});
     {rdelim});
     

@@ -260,9 +260,9 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
 	    $data['defined'] = 'PUBLISHED';
 	    $data['exists'] = 'true';
 	    $data['type'] = 'item';
-	    
+        
 	    $item['info'] = $data;
-	    
+	    $item['state'] = 'closed';
 	    $item['children'] = $this->getUsedAssetsForPageTree($draft);
 	    
 	    return $item;

@@ -346,6 +346,8 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     
     public function renderPlaceholder($placeholder_name, $params, $parent){
         
+        $html = '';
+        
         // does definition exist?
         if($this->getPage()->hasPlaceholderDefinition($placeholder_name, $params['instance'])){ // If the Placeholder is defined
             

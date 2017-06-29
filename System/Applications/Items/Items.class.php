@@ -116,10 +116,10 @@ class Items extends SmartestSystemApplication{
                 
                 $this->setTitle("Model properties | ".$model->getName());
 		
-        		$definition = $model->getProperties();
+        		$properties = $model->getProperties();
 		
         		$this->send($model, 'model');
-        		$this->send($definition, 'definition');
+        		$this->send($properties, 'model_properties');
         		$create_remove_properties = $this->getUser()->hasToken('create_remove_properties');
         		$this->send((bool) count($model->getMetaPages()), 'has_metapages');
 		
@@ -265,6 +265,11 @@ class Items extends SmartestSystemApplication{
   	        $allow_create_new = ($this->getUser()->hasToken('add_items') && $class_exists);
   	        
   	        $items_exist = (bool) count($all_items);
+            
+	        $metapages = $model->getMetaPages();
+	        $this->send($metapages, 'metapages');
+	        $this->send((bool) count($metapages), 'has_metapages');
+            $this->send(SmartestElasticSearchHelper::isRunning(), 'elasticsearch_running');
             
             $this->send($items_exist, 'items_exist');
   	        $this->setTitle($model->getPluralName());
@@ -1589,6 +1594,8 @@ class Items extends SmartestSystemApplication{
 	            SmartestLog::getInstance('site')->log('Suspicious activity: '.$this->getUser()->__toString().' tried to edit '.strtolower($item->getModel()->getName()).' \''.$item->getName().'\' via direct URL entry.');
     		    $this->redirect('/'.$this->getRequest()->getModule().'/getItemClassMembers?class_id='.$item->getItem()->getItemclassId());
 	        }
+            
+            // print_r($item->getElasticSearchAssociativeArray());
 	        
 	        $dud_properties = false;
 	        
@@ -2083,7 +2090,7 @@ class Items extends SmartestSystemApplication{
 	            
     	            // user has permission - show options
     	            $this->send($item, 'item');
-    	            $this->setTitle('Publish '.$item_data['_model']['name']);
+    	            $this->setTitle('Publish '.strtolower($item->getModel()->getName()));
 	            
     	        }else{
 	            
@@ -2244,10 +2251,12 @@ class Items extends SmartestSystemApplication{
     		    $property->setRequired($this->getRequestParameter('itemproperty_required') ? 'TRUE' : 'FALSE');
     		    $property->setHint($this->getRequestParameter('itemproperty_hint'));
     		    
-    		    if($this->getRequestParameter('itemproperty_default_value')){
+    		    if($this->requestParameterIsSet('itemproperty_default_value')){
     		        try{
     		            if($v = SmartestDataUtility::objectizeFromRawFormData($this->getRequestParameter('itemproperty_default_value'), $property->getDataType())){
     		                $property->setDefaultValue($v->getStorableFormat());
+    		            }else{
+    		                $property->setDefaultValue(NULL);
     		            }
     		        }catch(SmartestException $e){
     		            
@@ -3206,8 +3215,8 @@ class Items extends SmartestSystemApplication{
     		        $property->setWebid(SmartestStringHelper::random(16));
     		        $property->save();
     		    }
-		    
-    		    if($this->getRequestParameter('from') == 'item_edit' && is_numeric($this->getRequestParameter('item_id'))){
+                
+                if($this->getRequestParameter('from') == 'item_edit' && is_numeric($this->getRequestParameter('item_id'))){
     		    
         		    $ruri = '/datamanager/editItem?item_id='.$this->getRequestParameter('item_id');
     		    

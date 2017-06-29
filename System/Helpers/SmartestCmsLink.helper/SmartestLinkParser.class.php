@@ -31,7 +31,7 @@ class SmartestLinkParser{
                     $l->setParameter('scope', SM_LINK_SCOPE_EXTERNAL);
                     $l->setParameter('destination', $m[8]);
                     
-                    if(strlen($m[7])){
+                    if(isset($m[7]) && strlen($m[7])){
                         $l->setParameter('newwin', true);
                     }
                     
@@ -39,7 +39,7 @@ class SmartestLinkParser{
                         $l->setParameter('_is_twitter', true);
                     }
                     
-                    if($m[10]){
+                    if(isset($m[10])){
                         $l->setParameter('text', $m[10]);
                     }else{
                         $l->setParameter('text', $m[8]);

@@ -175,6 +175,33 @@ span.feedback-bad{
     color:#fe462e;
 }
 
+span.status-green{
+    background-color:#00c66b;
+    color:#fff;
+    display:inline-block;
+    padding:0px 4px 2px 4px;
+    border-radius:3px;
+    -webkit-border-radius:3px;
+}
+
+span.status-amber{
+    color:#333;
+    background-color:#feb72e;
+    display:inline-block;
+    padding:0px 4px 2px 4px;
+    border-radius:3px;
+    -webkit-border-radius:3px;
+}
+
+span.status-red{
+    color:#fff;
+    background-color:#fe462e;
+    display:inline-block;
+    padding:0px 4px 2px 4px;
+    border-radius:3px;
+    -webkit-border-radius:3px;
+}
+
 span.null-notice i.fa, span.feedback-ok i.fa, span.feedback-bad i.fa{
     font-size:1.15em;
 }
@@ -423,6 +450,9 @@ div.progress-bar-inner{
     border-radius:8px;
     -webkit-border-radius:8px;
     -moz-border-radius:8px;
+    transition:width 0.3s;
+    -webkit-transition: width 0.3s;
+    -moz-transition: width 0.3s;
 }
 
 /** Global style stuff **/

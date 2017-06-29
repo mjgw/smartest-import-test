@@ -12,6 +12,7 @@ require SM_ROOT_DIR.'System/Base/SmartestError.class.php';
 require SM_ROOT_DIR.'System/Base/SmartestErrorStack.class.php';
 require SM_ROOT_DIR.'System/Data/SmartestDatabase.class.php';
 require SM_ROOT_DIR.'System/Data/SmartestDataUtility.class.php';
+require SM_ROOT_DIR.'System/Data/SmartestObject.class.php';
 
 require 'PEAR.php';
 require 'XML/Unserializer.php';
@@ -90,8 +91,7 @@ class SmartestResponse{
         	'System/Data/SmartestSqllite.class.php',
             'System/Data/SmartestGenericListedObject.interface.php',
             'System/Data/SmartestCmsItem.class.php',
-        	'System/Data/SmartestFile.class.php',
-        	'System/Base/Exceptions/SmartestWebPageBuilderException.class.php',
+            'System/Base/Exceptions/SmartestWebPageBuilderException.class.php',
         	'System/Base/Exceptions/SmartestInterfaceBuilderException.class.php',
         	'System/Base/Exceptions/SmartestRedirectException.class.php',
         	'System/Base/Exceptions/SmartestAuthenticationException.class.php',
@@ -106,7 +106,7 @@ class SmartestResponse{
         
         SmartestDataUtility::loadBasicTypes();
         
-    	$td = new SmartestParameterHolder("Smartest System Response Times");
+        $td = new SmartestParameterHolder("Smartest System Response Times");
     	$td->setParameter('start_time', microtime(true));
         
         SmartestFileSystemHelper::include_group(
@@ -258,6 +258,8 @@ class SmartestResponse{
 	    SmartestPersistentObject::set('errors:stack', $this->_error_stack);
 	    
 	    $sh = new SmartestSystemHelper;
+        
+        SmartestElasticSearchHelper::include_files();
 	    
 	    try{
 	        $sh->checkRequiredExtensionsLoaded();
@@ -497,6 +499,14 @@ class SmartestResponse{
 		        SmartestQuery::init(true, $GLOBALS['_site']->getId());
 	        }else{
 	            SmartestQuery::init(true);
+	        }
+		}catch(SmartestException $e){
+			$this->errorFromException($e);
+		}
+        
+		try{
+		    if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+		        SmartestElasticSearchHelper::init($GLOBALS['_site']);
 	        }
 		}catch(SmartestException $e){
 			$this->errorFromException($e);

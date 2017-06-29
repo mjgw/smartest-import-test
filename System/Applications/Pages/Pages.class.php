@@ -2352,7 +2352,7 @@ class Pages extends SmartestSystemApplication{
             		$tlh = new SmartestTemplatesLibraryHelper;
             		$templates = $tlh->getMasterTemplates($this->getSite()->getId());
             		
-            		$this->setTitle("Page Elements");
+            		$this->setTitle("Page elements");
     		
     		        if($version == 'live'){
             		    $template_name = $page->getLiveTemplate();
@@ -5538,6 +5538,13 @@ class Pages extends SmartestSystemApplication{
     public function addPageDownload(){
         
         
+        
+    }
+    
+    public function indexPages(){
+        
+        $num_pages = count($this->getSite()->getQuickPagesList());
+        $this->send($num_pages, 'num_cms_pages');
         
     }
     

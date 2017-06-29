@@ -673,69 +673,64 @@ class Settings extends SmartestSystemApplication{
 	    
 	}
 	
-	/* function checkForUpdates(){
-		
-		// latest
-		$contents = file_get_contents("http://update.visudo.net/smartest");
-		$unserializer = new XML_Unserializer(); 
-		$status = $unserializer->unserialize($contents); 		
-		
-		if (PEAR::isError($status)) { 
-			 die($status->getMessage()); 
-		}
-		
-		$latest = $unserializer->getUnserializedData();
-
-		//current
-		$contents = file_get_contents("System/CoreInfo/package.xml");
-		$unserializer = new XML_Unserializer(); 
-		$status = $unserializer->unserialize($contents); 		
-		
-		if (PEAR::isError($status)) { 
-			 die($status->getMessage()); 
-		}
-		
-		$current = $unserializer->getUnserializedData();
-		
-		$release = false; 
-		
-		if($latest['release']['version'] > $current['release']['version']){
-			$release = $latest;
-		}else if($latest['release']['version'] < $current['release']['version']){
-			$release = "downgrade";
-		}
-		
-		return (array("release"=>$release,"settings"=>$this->manager->getSettings())); 
-	}
-
-	function updateGeneral($get, $post){
+    public function listElasticSearchIndices(){
+        
+        if(SmartestSystemHelper::elasticSearchIsPossible()){
+            if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+                if(SmartestElasticSearchHelper::isRunning()){
+                    
+                    $this->send('green', 'status');
+                    $this->send('Elasticsearch is activated and running.', 'status_message');
+                    $this->send(true, 'list_indices');
+                    
+                    $indices = SmartestElasticSearchHelper::getIndices($this->getSite()->getId());
+                    $this->send($indices, 'indices');
+                    $this->send($this->getSite()->getElasticSearchIndexName(), 'site_main_index_name');
+                    $this->send(SmartestElasticSearchHelper::indexExists($this->getSite()->getElasticSearchIndexName()), 'site_has_index');
+                    
+                }else{
+                    $this->send('amber', 'status');
+                    $this->send('Elasticsearch is activated but the Elasticsearch process cannot be connected to or no alive nodes can be found.', 'status_message');
+                    $this->send(false, 'list_indices');
+                }
+            }else{
+                $this->send('red', 'status');
+                $this->send('Elasticsearch is not activated.', 'status_message');
+                $this->send(false, 'list_indices');
+            }
+        }else{
+            $this->send('black', 'status');
+            $this->send('Elasticsearch cannot be used by this Smartest installation. PHP 5.6 and Java 1.8 are required.', 'status_message');
+            $this->send(false, 'list_indices');
+        }
+        
+    }
     
-		$post = array_filter($post, array($this->manager, "filterSubmit"));
-		return $this->manager->setSettings($post);
-    
-	}
-
-	/* function cartSettings(){
-		return $this->manager->getSettings();    
-	} */
-  
-    /* function showModels($get){
-		
-		$user_id = $get['user_id'];
-		$sql = "SELECT * FROM ItemClasses WHERE itemclass_userid = '$user_id'";
-		$models = $this->database->queryToArray($sql);
-		$username = $this->database->specificQuery("username", "user_id", $user_id, "Users");
-		return array("models" =>$models, "username"=>$username, "itemClassCount"=>count($models));
-		
-	}
-
-	function showPages($get){
-
-		$user_id = $get['user_id'];
-		$sql = "SELECT * FROM Pages WHERE page_createdby_userid = '$user_id'";
-		$pages = $this->database->queryToArray($sql);
-		$username = $this->database->specificQuery("username", "user_id", $user_id, "Users");
-		return array("pages" =>$pages, "username"=>$username, "pageCount"=>count($pages));
-	} */
+    public function deleteElasticSearchIndex(){
+        
+        if(SmartestSystemHelper::elasticSearchIsPossible()){
+            
+            $index_name = SmartestStringHelper::toVarName($this->getRequestParameter('index_name'));
+            
+            if($index_name == $this->getSite()->getElasticSearchIndexName()){
+                $this->addUserMessageToNextRequest("You cannot delete the site's main search index.", SmartestUserMessage::ACCESS_DENIED);
+            }else{
+                if(SmartestElasticSearchHelper::indexExists($index_name)){
+                    if(SmartestElasticSearchHelper::deleteIndex($index_name)){
+                        $this->addUserMessageToNextRequest("The index has been deleted.", SmartestUserMessage::SUCCESS);
+                    }else{
+                        $this->addUserMessageToNextRequest("The index could not be deleted.");
+                    }
+                }else{
+                    $this->addUserMessageToNextRequest("No index exists with that name.");
+                }
+            }
+            
+        }else{
+            $this->addUserMessageToNextRequest("Elasticsearch cannot be run in the current setup.");
+        }
+        
+        $this->redirect('/settings/listElasticSearchIndices');
+    }
 
 }

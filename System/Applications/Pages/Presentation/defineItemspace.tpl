@@ -11,7 +11,7 @@
     <input type="hidden" name="page_id" value="{$page.id}" />
     
     <div class="edit-form-row">
-      <div class="form-section-label">Chosen Item</div>
+      <div class="form-section-label">Chosen item</div>
       <select name="item_id">
         {foreach from=$options item="option"}
         <option value="{$option.id}"{if $option.id == $definition_id} selected="sselected"{/if}>{$option.label}</option>
@@ -21,7 +21,7 @@
     
     <div class="edit-form-row">
       <div class="buttons-bar">
-        <input type="submit" value="Save" />
+        <input type="submit" value="Save changes" />
         <input type="button" value="Cancel" onclick="cancelForm()" />
       </div>
     </div>

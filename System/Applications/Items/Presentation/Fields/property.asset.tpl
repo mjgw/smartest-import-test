@@ -2,7 +2,7 @@
 {capture name="input_id" assign="input_id"}item_property_{$property.id}{/capture}
 
 {if $property.is_image_property && $sm_user_agent.is_supported_browser}
-  {image_select id=$input_id name=$name value=$value for="ipv" property=$property item_id=$item.id}
+  {image_select id=$input_id name=$_input_data.name value=$value for="ipv" property=$property item_id=$item.id}
     
     {if $value.id}
     <ul class="item_property_actions">
@@ -55,7 +55,8 @@
 {else}
 
 <div id="itemproperty-asset-select-{$property.id}" style="display:{if !$value.id && ($property.foreign_key_filter == 'SM_ASSETTYPE_RICH_TEXT' || $property.foreign_key_filter == 'SM_ASSETCLASS_TEXT')}none{else}block{/if}">
-{asset_select id=$input_id name=$name value=$value options=$property._options required=$property.required}
+{asset_select id=$input_id name=$_input_data.name value=$value options=$property._options required=$property.required}
+
 {if !$value.id && ($property.foreign_key_filter == 'SM_ASSETTYPE_RICH_TEXT' || $property.foreign_key_filter == 'SM_ASSETCLASS_TEXT')} <a href="#cancel" class="button small" id="cancel-asset-text-select-{$property.id}">Cancel</a>{/if}
 </div>
 
@@ -71,6 +72,7 @@
     {/if}
     <a class="button" id="choose-asset-button-{$property.id}" href="#choose-text">Choose existing text</a>
   </div>
+  
   {if strlen($property.hint)}<div class="form-hint">{$property.hint}</div>{/if}
   <script type="text/javascript">
   {if !$item.id}$('new-asset-button-{$property.id}').observe('click', function(e){ldelim}

@@ -1,6 +1,6 @@
 <?php
 
-class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue, SmartestSearchableValue{
     
     protected $_value;
     protected $_all_day = false;
@@ -149,6 +149,10 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
         
         }
         
+    }
+    
+    public function getSearchQueryMatchableValue(){
+        return $this->_value;
     }
     
     /*

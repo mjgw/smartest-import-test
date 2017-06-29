@@ -83,7 +83,26 @@
   
   {else}
   
-  Require type choice
+  <div class="instruction">What kind of template are you importing?</div>
+  
+  <form action="{$domain}templates/startSingleTemplateImport" method="get">
+    {if $add_to_group}<input type="hidden" name="add_to_group_id" value="{$add_to_group.id}" />{/if}
+    {if $blocklist_style}<input type="hidden" name="blocklist_style_id" value="{$blocklist_style.id}" />{/if}
+    
+    <div class="edit-form-row">
+      <div class="form-section-label">Template type</div>
+      <select name="type">
+{foreach from=$types item="type"}
+        <option value="{$type.id}">{$type.label}</option>
+{/foreach}        
+      </select>
+    </div>
+    
+    <div class="buttons-bar">
+      <input type="submit" value="Continue" />
+    </div>
+    
+  </form>
   
   {/if}
   

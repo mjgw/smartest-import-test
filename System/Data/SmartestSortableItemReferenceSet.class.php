@@ -114,9 +114,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
     
         	    $i = 0;
                 
-                // print_r($this->_item_ids);
-                
-        	    foreach($this->_item_ids as $id){
+                foreach($this->_item_ids as $id){
         
         	        if($i > 0){
         	            $sql .= ',';
@@ -170,7 +168,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
     		    }
 	
     		    $this->_item_ids = $ids;
-    	        $this->_items_retrieval_attempted = false;
+                $this->_items_retrieval_attempted = false;
 	        
             }
 	    
@@ -236,15 +234,23 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
         }
         
         $result = $this->database->queryToArray($sql);
+        $raw_items = array();
         $items = array();
         
         foreach($result as $record){
             
 	        $obj = new SmartestItem;
             $obj->hydrate($record);
-            $items[$record['item_id']] = $obj;
+            $raw_items[$record['item_id']] = $obj;
                 
 	    }
+        
+        // There is probably a better way to maintain the order, but a quick way was needed
+        foreach($this->_item_ids as $id){
+            if(isset($raw_items[$id])){
+                $items[] = $raw_items[$id];
+            }
+        }
 	    
 	    return $items;
 	
@@ -355,8 +361,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
 	}
 	
 	public function count(){
-	    // echo "counting";
-        return count($this->_item_ids);
+	    return count($this->_item_ids);
     }
 
     public function offsetGet($offset){
@@ -428,7 +433,7 @@ class SmartestSortableItemReferenceSet implements ArrayAccess, IteratorAggregate
     
     } */
 
-    public function &getIterator(){
+    public function getIterator(){
         return new ArrayIterator($this->getItems());
     }
 

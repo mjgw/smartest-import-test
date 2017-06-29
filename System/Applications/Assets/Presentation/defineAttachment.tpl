@@ -173,7 +173,7 @@ document.observe('dom:loaded', function(){
     
     <div class="edit-form-row">
       <div class="form-section-label">Text file containing attachment</div>
-      <img src="{$asset.small_icon}" alt="" /> {$asset}<input type="hidden" name="textfragment_id" value="{$textfragment_id}" />
+      {$asset.label} <code>{$asset.url}</code> <input type="hidden" name="textfragment_id" value="{$textfragment_id}" />
     </div>
     
     <div class="edit-form-row">

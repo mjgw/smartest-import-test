@@ -13,19 +13,14 @@ class SmartestCmsItemsHelper{
     
     public function getModelFromId($id){
         
-        // echo "called ";
-        
         if(isset($this->_models[$id])){
-            // var_dump($id);
             return $this->_models[$id];
         }else{
-            // var_dump($id);
             $m = new SmartestModel;
             if($m->find($id)){
                 $this->_models[$id] = $m;
                 return $this->_models[$id];
             }else{
-                // echo "Could not find model width ID: ".$id;
                 return null;
             }
         }

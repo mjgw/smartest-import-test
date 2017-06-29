@@ -430,15 +430,13 @@ class SmartestQuery{
 		
 		if(!defined('SM_QUERY_INIT_COMPLETE') || $force_regenerate == true){
 		
-			$database =& SmartestPersistentObject::get('db:main');
+			// $database =& SmartestPersistentObject::get('db:main');
 			
 			$du = new SmartestDataUtility;
 			$models = $du->getModels(false, $site_id);
 			
 			foreach($models as $m){
-			    
 			    $m->init();
-			    
 			}
 			
 			define('SM_QUERY_INIT_COMPLETE', true);

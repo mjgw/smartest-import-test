@@ -213,7 +213,7 @@ class SmartestRequestUrlHelper{
 	    
 	}
 	
-	public function getItemClassPageByUrl($url, $site_id){
+	public function getItemClassPageByUrl($url, $site_id, $response_type='throw'){
 		
 		$url = mysql_real_escape_string(SmartestStringHelper::sanitize(urldecode($url)));
 		
@@ -262,7 +262,12 @@ class SmartestRequestUrlHelper{
     			        if($page->isAcceptableItem()){
     		                $page->assignPrincipalItem();
     		                // echo $page->getPrincipalItem()->getUrl();
-    		                throw new SmartestRedirectException($page->getPrincipalItem()->getUrl(), $page_record['pageurl_redirect_type']);
+                            if($response_type == 'return'){
+                                return $page;
+                            }else{
+                                throw new SmartestRedirectException($page->getPrincipalItem()->getUrl(), $page_record['pageurl_redirect_type']);
+                            }
+    		                
     		            }
 		            
 	                }
@@ -320,7 +325,11 @@ class SmartestRequestUrlHelper{
         					    
         					    if($page_record['pageurl_type'] == 'SM_PAGEURL_INTERNAL_FORWARD'){
         					        // var_dump($page->getPrincipalItem());
-        					        throw new SmartestRedirectException($page->getPrincipalItem()->getUrl(), $page_record['pageurl_redirect_type']);
+                                    if($response_type == 'return'){
+                                        return $page;
+                                    }else{
+        					            throw new SmartestRedirectException($page->getPrincipalItem()->getUrl(), $page_record['pageurl_redirect_type']);
+                                    }
         					    }else{
         					        // the item id was ok. get the item
         					        return $page;
@@ -358,8 +367,13 @@ class SmartestRequestUrlHelper{
             		$page = $this->database->queryToArray($sql);
 
             		if(count($page) > 0){
-            		    $this->_request_data = SmartestPersistentObject::get('request_data');
-            			throw new SmartestRedirectException($this->_request_data->g('domain').$new_url, SmartestRedirectException::SEE_OTHER);
+            		    
+                        if($response_type == 'return'){
+                            // return $page;
+                        }else{
+                            $this->_request_data = SmartestPersistentObject::get('request_data');
+            			    throw new SmartestRedirectException($this->_request_data->g('domain').$new_url, SmartestRedirectException::SEE_OTHER);
+                        }
             		}
 			        
 			    }

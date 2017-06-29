@@ -85,6 +85,11 @@ class SmartestExternalFeedItem extends SimplePie_Item implements SmartestGeneric
             case "description":
             return new SmartestString($this->get_description());
             break;
+            
+            case "author":
+            case "authors":
+            return new SmartestString($this->get_authors());
+            
         }
     }
     

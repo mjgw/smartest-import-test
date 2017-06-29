@@ -141,5 +141,9 @@ class SmartestAssetClassesHelper{
         return $placeholders;
         
     }
+    
+    public function getTextPlaceholderTypes(){
+        return array('SM_ASSETCLASS_RICH_TEXT','SM_ASSETCLASS_TEXT');
+    }
 
 }

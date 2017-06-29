@@ -14,11 +14,11 @@ class SmartestDatabaseTableHelper{
         
     }
     
-    public function getTables(){
+    public function getTables($skip_cache=false){
         
         $cache_name = strtolower($this->database->getConnectionName()).'_tables';
         
-        if(SmartestCache::hasData($cache_name, true) && count(SmartestCache::load($cache_name, true))){
+        if(!$skip_cache && (SmartestCache::hasData($cache_name, true) && count(SmartestCache::load($cache_name, true)))){
 			$tables = SmartestCache::load($cache_name, true);
 		}else{
 			$tables = $this->database->getTables();
@@ -45,6 +45,7 @@ class SmartestDatabaseTableHelper{
             
         }else{
 	        
+            $this->flushCache(true);
 	        throw new SmartestException('The table \''.$table.'\' does not exist.');
 	        
 	    }
@@ -68,6 +69,7 @@ class SmartestDatabaseTableHelper{
 		
 	    }else{
 	        
+            $this->flushCache(true);
 	        throw new SmartestException('Tried to get column names on a table, \''.$table.'\', that does not exist.');
 	        
 	    }

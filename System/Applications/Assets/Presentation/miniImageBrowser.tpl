@@ -67,7 +67,8 @@
       $(inputId).value = clickedThumbnail.readAttribute('data-assetid');
       // Update form display with new thumbnail
       var url = sm_domain+'ajax:assets/getReplacementThumbnailForMiniImageBrowser';
-      $(inputId+'-edit-metadata').show();
+      $(inputId+'-edit-metadata').appear({duration: 0.2});
+      $(inputId+'-button-clear').appear({duration: 0.2});
       new Ajax.Updater(inputId+'-thumbnail-area', url, {
         parameters: {
           asset_id: clickedThumbnail.readAttribute('data-assetid'),
@@ -153,7 +154,8 @@
         });
         
         $(inputId).fire('image:chosen', {inputId: inputId});
-        $(inputId+'-edit-metadata').show();
+        $(inputId+'-edit-metadata').appear({duration: 0.2});
+        $(inputId+'-button-clear').appear({duration: 0.2});
         MODALS.hideViewer();
 
       }

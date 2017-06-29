@@ -173,7 +173,7 @@ function openPage(pageAction){
 <ul class="actions-list" id="item-specific-actions" style="display:none">
   <li><b><span class="item_name_field">{$model.name}</span></b></li>
   {if $can_edit_items}<li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('openItem');"><i class="fa fa-pencil"></i> Open</a></li>{/if}
-  <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id='+itemList.lastItemId+'&amp;enable_ajax=1', '{$model.name} info');"><i class="fa fa-info-circle"></i> {$model.name} info</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id='+itemList.lastItemId+'&amp;enable_ajax=1', '{$model.name} info', true);"><i class="fa fa-info-circle"></i> {$model.name} info</a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('releaseItem');"><i class="fa fa-unlock"></i> Release</a></li>
   {if $has_metapages}<li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('preview');"><i class="fa fa-eye"></i> Preview</a></li>{/if}
   <li class="permanent-action" id="item-publish-option"><a href="{dud_link}" onclick="itemList.workWithItem('publishItem');"><i class="fa fa-globe"></i> <span id="item-publish-option-link">Publish</span></a></li>
@@ -192,6 +192,7 @@ function openPage(pageAction){
   <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/modelInfo?class_id={$model.id}', 'Model info');"><i class="fa fa-info"></i> Model info</a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="return MODALS.load('datamanager/showItemClassTemplateAccess?class_id={$model.id}', 'Template data')"><i class="fa fa-file-code-o"></i> Template data</a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/exportModelKit?class_id={$model.id}';"><i class="fa fa-arrow-circle-down"></i> Download model kit</a></li>
+  {if $has_metapages && $elasticsearch_running}<li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/indexModel?class_id={$model.id}', 'Index {$model.plural_name|lower}');"><i class="fa fa-cubes"></i> Index for search</a></li>{/if}
   <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/getItemClassSets?class_id={$model.id}'"><i class="fa fa-folder-open"></i> View sets of {$model.plural_name|lower}</a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}sets/addSet?class_id={$model.id}'"><i class="fa fa-plus-square-o"></i> Create a new set of {$model.plural_name|lower}</a></li>
   {if $can_edit_properties}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/getItemClassProperties?class_id={$model.id}'"><i class="fa fa-sliders"></i> Edit model properties</a></li>

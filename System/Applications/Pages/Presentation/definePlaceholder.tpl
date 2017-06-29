@@ -21,7 +21,7 @@ function toggleParamsHolder(){
 
 <div id="work-area">
   
-  <h3>Define placeholder: <span class="light">{$placeholder.name}</span></h3>
+  <h3>Choose a file for: <span class="light">{$placeholder.name}</span></h3>
   
   {if $require_choose_item}
   
@@ -47,17 +47,50 @@ function toggleParamsHolder(){
   <form id="file_chooser" method="get" action="{$domain}{$section}/definePlaceholder">
     
     <div class="edit-form-row">
-      <div class="form-section-label">Choose a file to define this placeholder with</div>
+      <div class="form-section-label">{if !$asset.id && ($placeholder.type == 'SM_ASSETCLASS_RICH_TEXT' || $placeholder.type == 'SM_ASSETCLASS_TEXT')}Placeholder text{else}Choose media for this placeholder{/if}</div>
       {if $only_accepts_images}
+      
       {image_select id="chosen-asset-id" name="chosen_asset_id" for="placeholder" placeholder_id=$placeholder.id value=$asset onchange="$('file_chooser').submit()"}
+      
       {else}
-      <select name="chosen_asset_id" onchange="$('file_chooser').submit()">
-        {if !$valid_definition}<option value="">None Selected</option>{/if}
-        {foreach from=$assets item="available_asset"}
-          <option value="{$available_asset.id}"{if $available_asset.id==$asset.id} selected="selected"{/if}>{if $available_asset.id==$live_asset_id}* {/if}{$available_asset.label}</option>
-        {/foreach}
-      </select>
-      {if !$valid_definition}<br /><a class="button small" style="margin-top:5px" href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}">{if $placeholder.type == 'SM_ASSETCLASS_RICH_TEXT'}Write new text{else}Upload a new file{/if}</a>{/if}
+      
+      <div id="placeholder-asset-select-{$placeholder.id}" style="display:{if !$asset.id && ($placeholder.type == 'SM_ASSETCLASS_RICH_TEXT' || $placeholder.type == 'SM_ASSETCLASS_TEXT')}none{else}block{/if}">
+
+        <select name="chosen_asset_id" onchange="$('file_chooser').submit()">
+          {if !$valid_definition}<option value="">None Selected</option>{/if}
+          {foreach from=$assets item="available_asset"}
+            <option value="{$available_asset.id}"{if $available_asset.id==$asset.id} selected="selected"{/if}>{if $available_asset.id==$live_asset_id}* {/if}{$available_asset.label}</option>
+          {/foreach}
+        </select>
+
+      {if !$asset.id && ($placeholder.type == 'SM_ASSETCLASS_RICH_TEXT' || $placeholder.type == 'SM_ASSETCLASS_TEXT')} <a href="#cancel" class="button small" id="cancel-asset-text-select-{$placeholder.id}">Cancel</a>{/if}
+      </div>
+      
+      {if !$asset.id && ($placeholder.type == 'SM_ASSETCLASS_RICH_TEXT' || $placeholder.type == 'SM_ASSETCLASS_TEXT')}
+      
+      <div class="edit-form-sub-row" style="margin-bottom:10px" id="asset-text-buttons-{$placeholder.id}">
+        <div style="margin-bottom:5px">No text is currently in use for placeholder <code>'{$placeholder.name}'</code> on this page.</div>
+        <a class="button" href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}" id="new-asset-button-{$placeholder.id}">Add new text</a>
+        <a class="button" id="choose-asset-button-{$placeholder.id}" href="#choose-text">Choose existing text</a>
+      </div>
+  
+      <script type="text/javascript">
+      $('choose-asset-button-{$placeholder.id}').observe('click', function(e){ldelim}
+        $('placeholder-asset-select-{$placeholder.id}').show();
+        $('asset-text-buttons-{$placeholder.id}').hide();
+        e.stop();
+      {rdelim});
+      $('cancel-asset-text-select-{$placeholder.id}').observe('click', function(e){ldelim}
+        $('placeholder-asset-select-{$placeholder.id}').hide();
+        $('asset-text-buttons-{$placeholder.id}').show();
+        e.stop();
+      {rdelim});
+      </script>
+  
+      {/if}
+      
+      {* if !$valid_definition}<br /><a class="button small" style="margin-top:5px" href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}">{if $placeholder.type == 'SM_ASSETCLASS_RICH_TEXT'}Write new text{else}Upload a new file{/if}</a>{/if *}
+      
       {/if}
       
     </div>
@@ -198,15 +231,10 @@ function toggleParamsHolder(){
 </div>
 
 <div id="actions-area">
-  
-  <ul class="actions-list" id="item-specific-actions" style="display:none">
-    <li><b>Selected Asset</b></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('updatePlaceholderDefinition');}{/literal}" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt=""> Use This Asset</a></li>
-  </ul>
 
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Options</b></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}'" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Define with a new file</a></li>
+    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}'" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Create a new file for this page</a></li>
     {* <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/pageAssets?page_id={$page.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Cancel</a></li> *}
 {if $item}
     <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;instance={$instance}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder for all {$item.model.plural_name|strtolower}</a></li>

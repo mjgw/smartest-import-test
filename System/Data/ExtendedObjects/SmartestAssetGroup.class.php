@@ -1,14 +1,24 @@
 <?php
 
-class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, SmartestStorableValue, SmartestSubmittableValue, SmartestDualModedObject{
+    
+    protected $_draft_mode;
     
     public function __objectConstruct(){
         $this->setMembershipTypeFromInternalAttributes();
     }
     
+    public function setDraftMode($draft){
+        $this->_draft_mode = $draft ? true : false;
+    }
+    
+    public function getDraftMode(){
+        return $this->_draft_mode;
+    }
+    
     public function delete(){
         
-        if($this->_properties['is_system']){
+        if(_b($this->_properties['is_system'])){
             
             return false;
             
@@ -143,7 +153,9 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
 	        $this->_members = array();
 	        
 	        foreach($memberships as $m){
-	            $this->_members[] = $m->getAsset();
+                $a = $m->getAsset();
+                $a->setDraftMode($this->getDraftMode());
+	            $this->_members[] = $a;
 	        }
         
         }
@@ -193,6 +205,10 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
 	    }
 	    
 	    $result = $q->retrieve($numeric_indices, null, $refresh);
+        
+        foreach($result as $k=>$m){
+            $result[$k]->setAssetDraftMode($this->getDraftMode());
+        }
         
         return $result;
         
@@ -544,6 +560,9 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
             case "num_members":
             case "member_count":
             return count($this->getMemberships());
+            
+            case "draft_mode":
+            return new SmartestBoolean($this->getDraftMode());
             
         }
         

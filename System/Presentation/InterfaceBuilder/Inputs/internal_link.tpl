@@ -13,7 +13,11 @@
   <div class="form-section-label-full">Choose a page</div>
   <select name="" id="{$_input_data.id}-page-select" class="id-select">
 {foreach from=$_site._admin_normal_pages_list item="page"}
-    {if $page.info.type == "NORMAL"}<option value="{$page.info.id}"{if !$_input_data.value.empty && $_input_data.value.namespace == 'page' && $_input_data.value.target_id == $page.info.id} selected="selected"{/if}>{$page.info.title}</option>{/if}
+    {if $page.info.type == "NORMAL"}<option value="{$page.info.id}"{if !$_input_data.value.empty && $_input_data.value.namespace == 'page' && $_input_data.value.target_id == $page.info.id} selected="selected"{/if}>
+      {* for $foo=1 to 3}
+          <li>{$foo}</li>
+      {/for *}
+      +{section name="dashes" loop=$page.treeLevel}-{/section} {$page.info.title}</option>{/if}
 {/foreach}
   </select>
 </div>
@@ -32,10 +36,15 @@
 </div>
 
 <div id="{$_input_data.id}-download-chooser" class="{$_input_data.id}-chooser edit-form-sub-row"{if $_input_data.value.empty || $_input_data.value.namespace != 'download'} style="display:none"{/if}>
-  <div class="form-section-label-full">Choose a file to be downloaded</div>
-  <i class="fa fa-file-image-o" style="font-size:1.5em;color:#aaa"></i> <input type="text" name="file_selector" value="{if !$_input_data.value.empty && $_input_data.value.namespace == 'download'}{$_input_data.value.target.label}{/if}" id="{$_input_data.id}-file-input" />
-  <input type="hidden" name="{$_input_data.id}-file-hidden-id-input" id="{$_input_data.id}-file-hidden-id-input" value="3" />
-  <div id="{$_input_data.id}-download_autocomplete_choices" class="autocomplete"></div>
+  <div class="item-chooser-value" id="{$_input_data.id}-file-chooser-value" style="display:{if !$_input_data.value.empty && $_input_data.value.namespace == 'download'}block{else}none{/if}">
+    <p><i class="fa fa-download" style="font-size:1.5em;color:#aaa"></i> <span id="{$_input_data.id}-file-chooser-value-label">{if !$_input_data.value.empty && $_input_data.value.namespace == 'download'}{$_input_data.value.target.label|summary:"80"}{else}<em>No file selected.</em>{/if}</span> <a href="#change-value" id="{$_input_data.id}-file-chooser-value-activate" class="button small">Change</a></p>
+  </div>
+  <div class="item-chooser-input" id="{$_input_data.id}-file-chooser-input" style="display:{if $_input_data.value.empty || $_input_data.value.namespace != 'download'}block{else}none{/if}">
+    <div class="form-section-label-full">Choose a file to be downloaded</div>
+    <i class="fa fa-file-image-o" style="font-size:1.5em;color:#aaa"></i> <input type="text" name="file_selector" value="{if !$_input_data.value.empty && $_input_data.value.namespace == 'download'}{$_input_data.value.target.label}{/if}" id="{$_input_data.id}-file-input" />
+    <input type="hidden" name="{$_input_data.id}-file-hidden-id-input" id="{$_input_data.id}-file-hidden-id-input" value="3" />
+    <div id="{$_input_data.id}-download_autocomplete_choices" class="autocomplete"></div>
+  </div>
 </div>
 
 <div id="{$_input_data.id}-tag-chooser" class="{$_input_data.id}-chooser edit-form-sub-row"{if $_input_data.value.empty || $_input_data.value.namespace != 'tag'} style="display:none"{/if}>
@@ -61,6 +70,8 @@
 {literal}
 
   var currentLinkType = $(propertyId).readAttribute('data-linktype');
+  var itemAutocompleteActive = false;
+  var assetAutocompleteActive = false;
 
   $$('#'+propertyId+'-type-options li a').each(function(el){
     el.observe('click', function(evt){
@@ -98,13 +109,19 @@
         }
         
         if(selectedlinkType == 'download'){
-          $(propertyId+'-file-input').focus();
-          $(propertyId).writeAttribute({'data-target-id':$(propertyId+'-file-hidden-id-input').value});
+          if(!$(propertyId+'-file-chooser-input').visible()){
+            $(propertyId+'-file-chooser-value').hide();
+            $(propertyId+'-file-chooser-input').show();
+            $(propertyId+'-file-input').activate();
+            $(propertyId).writeAttribute({'data-target-id':$(propertyId+'-file-hidden-id-input').value});
+          }
         }else if(selectedlinkType == 'item'){
-          $(propertyId+'-item-chooser-value').hide();
-          $(propertyId+'-item-chooser-input').show();
-          $(propertyId+'-item-input').activate();
-          $(propertyId).writeAttribute({'data-target-id':$(propertyId+'-item-hidden-id-input').value});
+          if(!$(propertyId+'-item-chooser-input').visible()){
+            $(propertyId+'-item-chooser-value').hide();
+            $(propertyId+'-item-chooser-input').show();
+            $(propertyId+'-item-input').activate();
+            $(propertyId).writeAttribute({'data-target-id':$(propertyId+'-item-hidden-id-input').value});
+          }
         }else{
           $(propertyId).writeAttribute({'data-target-id':$(propertyId+'-'+selectedlinkType+'-select').value});
         }
@@ -136,10 +153,12 @@
       delay: 50,
       width: 300,
       afterUpdateElement : function(text, li) {
+        // console.log(li);
         if(li.id == 'itemOption-nothing'){
           
         }else{
           var bits = li.id.split('-');
+          itemAutocompleteActive = false;
           $(propertyId+'-item-hidden-id-input').value = bits[1];
           $(propertyId).writeAttribute({'data-target-id':bits[1]});
           $(propertyId).fire('needs:update');
@@ -158,10 +177,19 @@
       width: 300,
       parameters: 'limit=other,embedded',
       afterUpdateElement : function(text, li) {
-        var bits = li.id.split('-');
-        $(propertyId+'-file-hidden-id-input').value = bits[1];
-        $(propertyId).writeAttribute({'data-target-id':bits[1]});
-        $(propertyId).fire('needs:update');
+        if(li.id == 'assetOption-nothing'){
+          
+        }else{
+          var bits = li.id.split('-');
+          assetAutocompleteActive = false;
+          $(propertyId+'-file-hidden-id-input').value = bits[1];
+          $(propertyId).writeAttribute({'data-target-id':bits[1]});
+          $(propertyId).fire('needs:update');
+          // $(propertyId+'-file-input').value = li.readAttribute('data-fullname');
+          $(propertyId+'-file-chooser-value').show();
+          $(propertyId+'-file-chooser-input').hide();
+          $(propertyId+'-file-chooser-value-label').update(li.readAttribute('data-fullname'));
+        }
       }
   });
   
@@ -172,24 +200,60 @@
     $(propertyId+'-item-input').activate();
   });
   
+  $(propertyId+'-file-chooser-value-activate').observe('click', function(aclick){
+    aclick.stop();
+    $(propertyId+'-file-chooser-value').hide();
+    $(propertyId+'-file-chooser-input').show();
+    $(propertyId+'-file-input').activate();
+  });
+  
   $(propertyId+'-item-input').observe('keydown', function(kevt){
     if(kevt.keyCode == 13){
       kevt.stop();
       $(propertyId+'-item-chooser-value').show();
       $(propertyId+'-item-chooser-input').hide();
+      itemAutocompleteActive = false;
+    }else{
+      itemAutocompleteActive = true;
+    }
+  });
+  
+  $(propertyId+'-file-input').observe('keydown', function(kevt){
+    if(kevt.keyCode == 13){
+      kevt.stop();
+      $(propertyId+'-file-chooser-value').show();
+      $(propertyId+'-file-chooser-input').hide();
+      assetAutocompleteActive = false;
+    }else{
+      assetAutocompleteActive = true;
     }
   });
   
   $(propertyId+'-item-input').observe('blur', function(kevt){
-      kevt.stop();
-      $(propertyId+'-item-chooser-value').show();
-      $(propertyId+'-item-chooser-input').hide();
+    setTimeout(function(){
+      if(!itemAutocompleteActive){
+        kevt.stop();
+        $(propertyId+'-item-chooser-value').show();
+        $(propertyId+'-item-chooser-input').hide();
+        itemAutocompleteActive = false;
+      }
+    }, 50);
+  });
+  
+  $(propertyId+'-file-input').observe('blur', function(kevt){
+    setTimeout(function(){
+      if(!assetAutocompleteActive){
+        kevt.stop();
+        $(propertyId+'-file-chooser-value').show();
+        $(propertyId+'-file-chooser-input').hide();
+        assetAutocompleteActive = false;
+      }
+    }, 50);
   });
   
   // Code to update the actual value of the <select>
   $(propertyId).observe('needs:update', function(){
     var newValue = $(propertyId).readAttribute('data-linktype')+':'+$(propertyId).readAttribute('data-target-id');
-    // console.log(newValue);
     $(propertyId).value = newValue;
   });
   

@@ -97,7 +97,7 @@ CREATE TABLE `Assets` (
 -- Table structure for table `Blocks`
 --
 
-CREATE TABLE IF NOT EXISTS `Blocks` (
+CREATE TABLE `Blocks` (
   `block_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `block_webid` varchar(64) NOT NULL,
   `block_title` varchar(255) NOT NULL,
@@ -112,7 +112,8 @@ CREATE TABLE IF NOT EXISTS `Blocks` (
   `block_blocklist_id` int(11) NOT NULL,
   `block_type` varchar(64) NOT NULL,
   `block_status` varchar(64) NOT NULL,
-  `block_order_index` smallint(5) unsigned NOT NULL
+  `block_order_index` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`block_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

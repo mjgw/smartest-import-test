@@ -1,9 +1,10 @@
 <?php
 
-class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModedObject{
+class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModedObject, SmartestSearchableValue{
     
     protected $_render_data;
     protected $_draft_mode = false;
+    protected $_usage; // can be item property, attachment, placeholder, etc.
     
     protected function __objectConstruct(){
 		
@@ -127,8 +128,8 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
         if($draft_mode === 'unset'){
 	        $draft_mode = $this->_draft_mode;
 	    }
-	    
-	    if($this->_type_info['storage']['type'] == 'external_translated'){
+        
+        if($this->_type_info['storage']['type'] == 'external_translated'){
 	        $this->_render_data->setParameter('remote_id', $this->extractId());
 	    }
 	    
@@ -226,6 +227,14 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
 	    return $this->_render_data;
 	}
     
+    public function getSearchQueryMatchableValue(){
+        if($this->usesTextFragment()){
+            return html_entity_decode(strip_tags($this->render()), ENT_COMPAT, 'UTF-8');
+        }else{
+            return $this->getUrl();
+        }
+    }
+    
     public function offsetGet($offset){
 	    
 	    switch($offset){
@@ -262,7 +271,9 @@ class SmartestRenderableAsset extends SmartestAsset implements SmartestDualModed
             }else{
                 return SmartestStringHelper::getFirstParagraph($this->getContent());
             }
-            // );
+            
+            case "draft_mode":
+            return new SmartestBoolean($this->getDraftMode());
         
         }
         

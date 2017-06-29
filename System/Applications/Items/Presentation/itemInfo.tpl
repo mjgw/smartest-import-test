@@ -5,7 +5,7 @@
   <div class="edit-form-row">
     <div class="form-section-label">{$item._model.name} {$item._model.item_name_field_name}</div>
     {if $user_can_modify_items}
-    <p class="editable" id="item-name">{$item.name|escape_double_quotes}</p>
+    <p class="editable" id="item-name" style="max-width:320px">{$item.name|escape_double_quotes}</p>
     <script type="text/javascript">
     // <!--
     new Ajax.InPlaceEditor('item-name', sm_domain+'ajax:datamanager/setItemNameFromInPlaceEditField', {ldelim}
@@ -27,7 +27,7 @@
   <div class="edit-form-row">
     <div class="form-section-label">{$item._model.name} short name (Used in links and URLS)</div>
     {if $user_can_modify_items}
-    <p class="editable" id="item-slug">{$item.slug|escape_double_quotes}</p>
+    <p class="editable" id="item-slug" style="max-width:320px">{$item.slug|escape_double_quotes}</p>
     <script type="text/javascript">
     // <!--
     new Ajax.InPlaceEditor('item-slug', sm_domain+'ajax:datamanager/setItemSlugFromInPlaceEditField', {ldelim}

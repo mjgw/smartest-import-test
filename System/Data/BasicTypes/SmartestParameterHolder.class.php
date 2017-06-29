@@ -153,11 +153,11 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
         return $this->getParameters();
     }
     
-    public function toArray(){
+    public function __toArray(){
         $a = array();
         foreach($this->_data as $k=>$v){
             if($v instanceof SmartestParameterHolder){
-                $a[$k] = $v->toArray();
+                $a[$k] = $v->__toArray();
             }else{
                 $a[$k] = $v;
             }
@@ -165,8 +165,12 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
         return $a;
     }
     
+    public function toArray(){
+        return $this->__toArray();
+    }
+    
     public function a(){
-        return $this->toArray();
+        return $this->__toArray();
     }
     
     public function hasParameter($n){
@@ -215,7 +219,7 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
         return $this->getSimpleObject();
     }
     
-    public function toJson(){
+    public function __toJson(){
         return json_encode($this->getSimpleObject());
     }
     

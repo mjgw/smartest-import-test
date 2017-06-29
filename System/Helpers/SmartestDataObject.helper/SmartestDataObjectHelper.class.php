@@ -89,7 +89,7 @@ class SmartestDataObjectHelper{
 	    
 	}
 	
-	public function buildDataObjectFile($table_info, $is_smartest=false){
+	public static function buildDataObjectFile($table_info, $is_smartest=false){
 	    
 	    $class_name = $is_smartest ? 'Smartest'.$table_info['class'] : $table_info['class'];
 	    $base_class_name = $is_smartest ? 'SmartestBase'.$table_info['class'] : 'Base'.$table_info['class'];
@@ -117,7 +117,7 @@ class SmartestDataObjectHelper{
 	    
 	}
 	
-	public function buildBaseDataObjectFile($table_info, $is_smartest=false){
+	public static function buildBaseDataObjectFile($table_info, $is_smartest=false){
 	    
 	    $class_name = $is_smartest ? 'SmartestBase'.$table_info['class'] : 'Base'.$table_info['class'];
 	    $directory = $is_smartest ? SM_ROOT_DIR.'System/Cache/ObjectModel/DataObjects/' : SM_ROOT_DIR.'Library/ObjectModel/DataObjects/Base/';
@@ -174,7 +174,7 @@ class SmartestDataObjectHelper{
 	    
 	}
 	
-	static function buildBasePropertiesArray($pns){
+	public static function buildBasePropertiesArray($pns){
 	    
 	    $pac = '    protected $_properties = array('."\n";
 		
@@ -204,7 +204,7 @@ class SmartestDataObjectHelper{
 	    
 	}
 	
-	static function buildBaseFunctions($pns){
+	public static function buildBaseFunctions($pns){
 	    
 	    $file_contents = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Data/ObjectModelTemplates/dataobject_datafunctions.txt');
 	    
@@ -224,7 +224,7 @@ class SmartestDataObjectHelper{
 	    
 	}
 	
-	static function getNoPrefixFieldsAsString($table_info){
+	public static function getNoPrefixFieldsAsString($table_info){
 	    
 	    $string = '';
 	    

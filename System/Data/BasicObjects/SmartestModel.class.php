@@ -33,8 +33,8 @@ class SmartestModel extends SmartestBaseModel{
     		    $result = $this->database->queryToArray($sql, true);
     		    SmartestCache::save('model_properties_'.$this->_properties['id'], $result, -1, true);
             // }
-		
-		    foreach($result as $db_property){
+            
+            foreach($result as $db_property){
     			$property = new SmartestItemProperty;
     			$property->hydrate($db_property);
     			$this->_model_properties[] = $property;
@@ -129,7 +129,7 @@ class SmartestModel extends SmartestBaseModel{
 	public function getProperties(){
 	    
 	    $this->buildPropertyMap();
-	    return $this->_model_properties;
+        return $this->_model_properties;
 	    
 	}
     
@@ -549,7 +549,7 @@ class SmartestModel extends SmartestBaseModel{
         return 'auto'.$this->getClassName();
     }
     
-    public function getSimpleItems($site_id='', $mode=0, $query='', $exclude=''){
+    public function getSimpleItems($site_id=null, $mode=0, $query='', $exclude=null){
         
         $mode = (int) $mode;
         
@@ -618,7 +618,7 @@ class SmartestModel extends SmartestBaseModel{
         return $items;
     }
     
-    public function getSimpleItemsAsArrays($site_id='', $mode=0, $query=''){
+    public function getSimpleItemsAsArrays($site_id=null, $mode=0, $query=null){
         
         $items = $this->getSimpleItems($site_id, $mode, $query);
         $arrays = array();
@@ -631,7 +631,7 @@ class SmartestModel extends SmartestBaseModel{
         
     }
     
-    public function getItemIdsWithQueryMode($site_id='', $mode=9, $query=''){
+    public function getItemIdsWithQueryMode($site_id=null, $mode=9, $query=null){
         
         $sql = "SELECT item_id FROM Items WHERE item_itemclass_id='".$this->_properties['id']."' AND item_deleted != 1";
         
@@ -681,7 +681,7 @@ class SmartestModel extends SmartestBaseModel{
         
     }
     
-    public function getItemIds($site_id='', $status=7, $query=''){
+    public function getItemIds($site_id=null, $status=7, $query=null){
         
         $sql = "SELECT item_id FROM Items WHERE item_itemclass_id='".$this->_properties['id']."' AND item_deleted != '1'";
         
@@ -747,11 +747,26 @@ class SmartestModel extends SmartestBaseModel{
         
     }
     
-    public function getItems($site_id='', $mode=7){
+    public function getItems($site_id=null, $mode=7){
         return $this->getAllItems($site_id, $mode);
     }
     
-    public function getAllItems($site_id='', $status=7, $query=''){
+    public function getAllItems($site_id=null, $status=7, $query=null){
+        
+        $set = $this->getAllItemsAsSortableReferenceSet($site_id, $status, $query);
+        
+        // Sort the items by their default sort property, or by name if this is not defined
+        if($default_property_id = $this->getDefaultSortPropertyId()){
+            $set->sort($this->getDefaultSortPropertyId(), $this->getDefaultSortPropertyDirection());
+        }else{
+            $set->sort(SmartestCmsItem::NAME);
+        }
+        
+        return $set;
+        
+    }
+    
+    public function getAllItemsAsSortableReferenceSet($site_id=null, $status=7, $query=''){
         
         // Retrieve all item IDs
         $ids = $this->getItemIds($site_id, $status, $query);
@@ -767,13 +782,6 @@ class SmartestModel extends SmartestBaseModel{
         $set = new SmartestSortableItemReferenceSet($this, $set_item_draft_mode);
         $set->setDraftMode(-1);
         $set->loadItemIds($ids);
-        
-        // Sort the items by their default sort property, or by name if this is not defined
-        if($default_property_id = $this->getDefaultSortPropertyId()){
-            $set->sort($this->$default_property_id, $this->getDefaultSortPropertyDirection());
-        }else{
-            $set->sort(SmartestCmsItem::NAME);
-        }
         
         return $set;
         
@@ -1472,12 +1480,144 @@ class SmartestModel extends SmartestBaseModel{
         	}
 	    }
         
+        if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+            
+            if(SmartestSession::get('current_open_project') instanceof SmartestSite){
+                $site = SmartestSession::get('current_open_project');
+                
+                if($this->hasMetaPageOnSiteId($site->getId())){
+                    
+                    try{
+                        $client = SmartestElasticSearchHelper::getClient(); // ClientBuilder::create()->build();
+                        if(!$this->hasElasticSearchIndexForSiteId($site->getId())){
+                            // $client = ClientBuilder::create()->build();
+                            // $data = $this->createElasticSearchIndexParamsForSiteId($site->getId());
+                            // $response = $client->indices()->create($data);
+                            // echo "created index for model ".$this->getName().' on site '.$site->getPublicTitle();
+                        }
+                    }catch(Elasticsearch\Common\Exceptions\NoNodesAvailableException $e){
+                        // could not check for index or build one because ES isn't running
+                    }
+                }
+            }
+        }
+        
         if($this->getType() == 'SM_ITEMCLASS_MODEL'){
             $sub_models = $this->getSubModels();
             foreach($sub_models as $sm){
                 $sm->init();
             }
         }
+        
+    }
+    
+    public function getElasticSearchIndexNameForSiteId($site_id){
+        // return 'site_'.$site_id.'_'.$this->getVarname();
+        return 'site_'.$site_id;
+    }
+    
+    public function hasElasticSearchIndexForSiteId($site_id){
+        if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
+            $index_name = $this->getElasticSearchIndexNameForSiteId($site_id);
+            return SmartestElasticSearchHelper::indexExists($index_name);
+        }else{
+            return null;
+        }
+    }
+    
+    public function createElasticSearchIndexParamsForSiteId($site_id){
+        
+        $data = array();
+        
+        $index_name = $this->getElasticSearchIndexNameForSiteId($site_id);
+        $type_name = $this->getVarname();
+        
+        $data['index'] = $index_name;
+        $data['body'] = array();
+        
+        $data['body']['settings'] = [
+            'number_of_shards' => 3,
+            'number_of_replicas' => 2
+        ];
+        
+        $data['body']['mappings'] = [
+            $type_name => [
+                '_source' => [
+                    'enabled' => true
+                ],
+                'properties' => []
+            ]
+        ];
+        
+        foreach($this->getProperties() as $property){
+            if($property->isSearchable()){
+                if($property->getDatatype() == ''){
+                    $data['body']['mappings'][$type_name]['properties'][$property->getVarName()] = array(
+                        'type' => 'date',
+                        'format' => 'epoch_second'
+                    );
+                }else{
+                    $data['body']['mappings'][$type_name]['properties'][$property->getVarName()] = array(
+                        'type' => 'string',
+                        'analyzer' => 'standard'
+                    );
+                }
+            }
+        }
+        
+        return $data;
+        
+    }
+    
+    public function getElasticSearchIndexCreationData(){
+        
+        $data = array('_source'=>array('enabled'=>true), 'properties'=>array());
+        $properties = array();
+        
+        foreach($this->getProperties() as $property){
+            if($property->isSearchable()){
+                if($property->getDatatype() == ''){
+                    $properties[$property->getVarName()] = array(
+                        'type' => 'date',
+                        'format' => 'epoch_second'
+                    );
+                }else{
+                    $properties[$property->getVarName()] = array(
+                        'type' => 'string',
+                        'analyzer' => 'standard'
+                    );
+                }
+            }
+        }
+        
+        $data['properties'] = $properties;
+        
+        return $data;
+        
+    }
+    
+    public function getElasticSearchIndexTypedQueryPropertyNames(){
+        
+        $property_names = array('name');
+        
+        foreach($this->getProperties() as $property){
+            if($property->isSearchable()){
+                
+                $type_info = $property->getTypeInfo();
+                
+                if(isset($type_info['quantity']) && SmartestStringHelper::toRealBool($type_info['quantity'])){
+                    continue;
+                }else{
+                    if($property->getDataType() == 'SM_DATATYPE_SL_TEXT'){
+                        $property_names[] = $property->getVarName().'^2';
+                    }else{
+                        $property_names[] = $property->getVarName();
+                    }
+                }
+            }
+        }
+        
+        return $property_names;
         
     }
     
@@ -1736,9 +1876,16 @@ class SmartestModel extends SmartestBaseModel{
                     'label'=>$p->getName(),
                     'type'=>$p->getDataType()
                 );
-            
-                if(strlen($p->getDefaultValue())){
-                    $data['modelkit']['properties'][$varname]['default_value'] = $p->getDefaultValue();
+                
+                if(!$p->isForeignKey()){
+                    $default_value = $p->getDefaultValue();
+                    if(strlen($default_value)){
+                        if(is_object($default_value) && $default_value instanceof SmartestStorableValue){
+                            $data['modelkit']['properties'][$varname]['default_value'] = $default_value->getStorableFormat();
+                        }else{
+                            $data['modelkit']['properties'][$varname]['default_value'] = $default_value;
+                        }
+                    }
                 }
             
                 if($p->getDataType() == 'SM_DATATYPE_ASSET' || $p->getDataType() == 'SM_DATATYPE_ASSET_GROUP' || $p->getDataType() == 'SM_DATATYPE_ASSET_SELECTION'){

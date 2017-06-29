@@ -806,7 +806,7 @@ class ItemsModals extends SmartestSystemApplication{
 	        $this->send(($this->getUser()->hasToken('modify_items') && $this->getRequestParameter('enable_ajax')), 'user_can_modify_items');
 	        $this->send(($this->getUser()->hasToken('edit_item_name') && $this->getRequestParameter('enable_ajax')), 'user_can_modify_item_slugs');
 		    
-		    $authors = $item->getItem()->getAuthors();
+		    $authors = array_values($item->getItem()->getAuthors());
 		    
 		    $num_authors = count($authors);
             $byline = '';
@@ -869,5 +869,18 @@ class ItemsModals extends SmartestSystemApplication{
 	    }
 	    
 	}
+    
+    public function indexModel(){
+        
+	    $model = new SmartestModel;
+	    
+	    if($model->find($this->getRequestParameter('class_id'))){
+	        
+	        $this->send($model, 'model');
+            $this->send(count($model->getItemIds($this->getSite()->getId(), SM_STATUS_LIVE)), 'num_public_items');
+	        
+	    }
+        
+    }
     
 }

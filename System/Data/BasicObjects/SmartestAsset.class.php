@@ -1,6 +1,6 @@
 <?php
 
-class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject, SmartestStorableValue, SmartestSubmittableValue, SmartestDualModedObject{
     
     protected $_allowed_types = array();
     protected $_draft_mode = false;
@@ -137,6 +137,9 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             }
             break;
             
+            case "encoded_url":
+            return str_replace('+','%20', urlencode($this->getUrl()));
+            
             case "bg_css":
             if($this->isImage()){
                 return 'background-image:url(\''.addslashes($this->getFullWebPath()).'\')';
@@ -203,7 +206,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             return $this->getTextLengthWithoutHTML();
             
             case "credit":
-            return $this->isImage() ? $data['default_parameters']['credit'] : null;
+            return $this->isImage() ? $this->getCredit() : null;
             
             case "groups":
             return $this->getGroups();
@@ -810,7 +813,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    $info = $this->getTypeInfo();
 	    
 	    if($this->isWebAccessible()){
-	        return $this->_request->getDomain().substr($info['storage']['location'], strlen('Public/')).$this->getUrl();
+	        return $this->_request->getDomain().substr($info['storage']['location'], strlen('Public/')).urlencode($this->getUrl());
 	    }else{
 	        return null;
 	    }
@@ -1554,12 +1557,22 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	}
 	
 	public function setIsDraft($draft){
-	    $this->_draft_mode = $draft ? true : false;
+        // non-standard method should call standard one
+	    $this->setDraftMode($draft);
 	}
+    
+    public function setDraftMode($draft){
+        $this->_draft_mode = $draft ? true : false;
+    }
 	
 	public function getIsDraft(){
-	    return $this->_draft_mode;
+        // non-standard method should call standard one
+	    return $this->getDraftMode();
 	}
+    
+    public function getDraftMode(){
+        return $this->_draft_mode;
+    }
 	
 	public function getPossibleOwners(){
 	    // var_dump($this->getSiteId());

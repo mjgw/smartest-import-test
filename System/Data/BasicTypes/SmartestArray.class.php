@@ -167,7 +167,7 @@ class SmartestArray implements ArrayAccess, IteratorAggregate, Countable, Smarte
         
     } */
     
-    public function &getIterator(){
+    public function getIterator(){
         return new ArrayIterator($this->_data);
     }
     

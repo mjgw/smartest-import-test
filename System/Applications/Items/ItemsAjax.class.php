@@ -660,5 +660,81 @@ class ItemsAjax extends SmartestSystemApplication{
         }
         
     }
+    
+    public function bulkIndexItemsByModel(){
+        
+        $model = new SmartestModel;
+        $model_id = $this->getRequestParameter('class_id');
+        $page_size = 16;
+        $current_page_num = $this->getRequestParameter('page_num', 1);
+        $data = array();
+        $data['page_size'] = $page_size;
+        $data['current_page_num'] = $current_page_num;
+        
+        if(!defined('SM_CMS_PAGE_SITE_ID')){
+            define('SM_CMS_PAGE_SITE_ID', $this->getSite()->getId());
+        }
+        
+        if($model->find($model_id)){
+            
+            $item_ids = $model->getItemIds($this->getSite()->getId(), SM_STATUS_LIVE);
+            
+            $num_items = count($item_ids);
+            $num_pages = ceil($num_items/$page_size);
+            $data['num_items'] = $num_items;
+            $data['num_pages'] = $num_pages;
+            
+            $this_operation_starting_index = ($current_page_num-1)*$page_size;
+            $this_operation_starting_id = $item_ids[$this_operation_starting_index];
+            $data['this_operation_starting_index'] = $this_operation_starting_index;
+            $data['this_operation_starting_id'] = $this_operation_starting_id;
+            
+            if($current_page_num < $data['num_pages']){
+                $data['next_page_num'] = $current_page_num+1;
+                $num_completed = $current_page_num*$page_size;
+            }else{
+                $num_completed = $num_items;
+            }
+            
+            $pc_completed = number_format($num_completed/$num_items*100, 2);
+            $data['percent_completed'] = $pc_completed;
+            $data['num_completed'] = $num_completed;
+            
+            $set = $model->getAllItemsAsSortableReferenceSet($this->getSite()->getId(), SM_STATUS_LIVE);
+            $items = $set->getPage($current_page_num, $page_size);
+            
+            try{
+            
+                $i = 0;
+                
+                foreach($items as $item){
+                    
+                    $item_data = $item->getElasticSearchAssociativeArray();
+                    
+                    $params['body'][]['index'] = array(
+                        '_index' => $this->getSite()->getElasticSearchIndexName(),
+                        '_id' => $item->getId(),
+                        '_type' =>$model->getVarName()
+                    );
+                          
+                    $params['body'][] = $item_data;
+                    
+                }
+                
+                $response = SmartestElasticSearchHelper::addBulkItemsToIndex($params);
+                
+                $data['response'] = $response;
+                
+                header("Content-Type: application/json");
+                echo json_encode($data);
+                exit;
+            
+            }catch(Elasticsearch\Common\Exceptions\ServerErrorResponseException $e){
+                // print_r($e->getTrace());
+            }
+            
+        }
+        
+    }
 
 }

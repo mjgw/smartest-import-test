@@ -21,7 +21,7 @@
 </object> *:?>
 
 <audio controls style="width:<?sm:if $render_data.width:?><?sm:$render_data.width:?>px<?sm:else:?>290px<?sm:/if:?>" height="16">
-  <source src="<?sm:$domain:?>Resources/Assets/<?sm:$asset_info.url:?>" type="audio/mpeg">
+  <source src="<?sm:$domain:?>Resources/Assets/<?sm:$asset_info.encoded_url:?>" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 

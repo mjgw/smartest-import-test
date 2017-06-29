@@ -116,17 +116,28 @@ class SmartestDataUtility{
     
     public function getMetaPageModels($site_id=null){
         
-        $sql = "SELECT * FROM ItemClasses WHERE (itemclass_type='SM_ITEMCLASS_MODEL' OR itemclass_type='SM_ITEMCLASS_MT1_SUB_MODEL') AND itemclass_is_hidden='0'";
+        $sql1 = "SELECT page_type, page_dataset_id, page_site_id FROM Pages WHERE page_type='ITEMCLASS'";
+        
+        if(is_numeric($site_id)){
+            $sql1 .= "AND page_site_id='".$site_id."'";
+        }
+        
+        $result1 = $this->database->queryToArray($sql1);
+        $ids = array();
+        
+        foreach($result1 as $r){
+            $ids[] = $r['page_dataset_id'];
+        }
+        
+        $sql = "SELECT * FROM ItemClasses WHERE (itemclass_type='SM_ITEMCLASS_MODEL' OR itemclass_type='SM_ITEMCLASS_MT1_SUB_MODEL') AND itemclass_is_hidden='0' AND itemclass_id IN ('".implode("','", $ids)."')";
         
 		if(is_numeric($site_id)){
 		    $sql .= " AND (itemclass_site_id='".$site_id."' OR itemclass_shared='1')";
 		}
 	
 		$sql .= ' ORDER BY itemclass_name';
-		
-        echo $sql;
         
-		$result = $this->database->queryToArray($sql, true);
+        $result = $this->database->queryToArray($sql, true);
         
 		$model_objects = array();
 		
@@ -739,8 +750,31 @@ class SmartestDataUtility{
         return $data;
         
 	} */
+    
+    public static function getRequestData(){
+        return SmartestPersistentObject::get('request_data');
+    }
+        
+    public static function getCurrentSite(){
+        
+        $data = self::getRequestData();
+        
+        if($data instanceof SmartestParameterHolder){
+            $appname = $data->g('module');
+            echo $appname;
+        }
+        
+        if(isset($GLOBALS['_site'])){
+            return $GLOBALS['_site'];
+        }elseif($appname != 'website' && is_object(SmartestSession::get('current_open_project')) && !$this->isWebsitePage()){
+            return SmartestSession::get('current_open_project');
+        }elseif($this->isWebsitePage() && $site = $rh->getSiteByDomain(SmartestStringHelper::toValidDomain($_SERVER['HTTP_HOST']))){
+            return $site;
+        }
+        
+    }
 	
-	static function getAssetTypes(){
+	public static function getAssetTypes(){
 	    
 	    if(self::$asset_types){
 	        
@@ -935,13 +969,13 @@ class SmartestDataUtility{
 	    $use_cache = (defined('SM_DEVELOPER_MODE') && constant('SM_DEVELOPER_MODE')) ? false : true;
 		$rebuild_cache = ($use_cache && (SmartestCache::load('smartest_type_objects_hash', true) != $system_helper_cache_hash || !is_file(SM_ROOT_DIR.'System/Cache/Includes/SmartestBasicTypeClasses.cache.php')));
 	    
-	    if($use_cache){
-	        if($rebuild_cache){
-	            $singlefile .= file_get_contents(SM_ROOT_DIR.'System/Data/BasicTypes/SmartestObject.class.php');
-            }
-	    }else{
-	        include SM_ROOT_DIR.'System/Data/BasicTypes/SmartestObject.class.php';
-	    }
+	    // if($use_cache){
+	    //     if($rebuild_cache){
+	    //         $singlefile .= file_get_contents(SM_ROOT_DIR.'System/Data/BasicTypes/SmartestObject.class.php');
+        //     }
+	    // }else{
+	    //     include SM_ROOT_DIR.'System/Data/BasicTypes/SmartestObject.class.php';
+	    // }
 	
 		foreach($object_types as $h){
 			

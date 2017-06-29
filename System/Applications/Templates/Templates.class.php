@@ -1118,16 +1118,14 @@ class Templates extends SmartestSystemApplication{
 		
 		    $allow_save = is_writable($path);
 		    $this->send($path, 'path');
-		    // $this->send(SmartestStringHelper::toVarName(), 'default_name');
 		    $default_name = SmartestStringHelper::toVarName('untitled '.$type['label']);
 		
 	    }else{
 	        
-	        $this->send($types, 'types');
 	        $title = "Add a new template";
 	        $default_name = 'untitled_template';
-	        
-	        $type = null;
+            $numeric_types = array_values($types);
+            $type = $numeric_types[0];
 	        
 	        $allow_save = false;
 	        
@@ -1139,6 +1137,8 @@ class Templates extends SmartestSystemApplication{
 	        }
 	        
 	    }
+        
+        $this->send($types, 'types');
         
         if($this->requestParameterIsSet('style_id')){
             $style_id = $this->getRequestParameter('style_id');
@@ -1161,8 +1161,8 @@ class Templates extends SmartestSystemApplication{
 	        }
 	        
 	    }
-	    
-	    $this->send($default_name, 'default_name');
+        
+        $this->send($default_name, 'default_name');
 	    $this->send($type, 'template_type');
 	    $this->send($type ? true : false, 'type_specified');
 		

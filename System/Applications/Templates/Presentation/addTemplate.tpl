@@ -5,8 +5,8 @@ function showUploader(){
 	/* document.getElementById('tplUploader').style.display = 'block';
 	document.getElementById('tplUploadShowButton').style.display = 'none';
 	document.getElementById('editTMPL').style.display = 'none'; */
-	$('editTMPL').blindUp({duration: 0.3});
-	$('tplUploader').blindDown({duration: 0.3, delay:0.4});
+	$('editTMPL').blindUp({duration: 0.3, scaleMode: 'contents'});
+	$('tplUploader').blindDown({duration: 0.3, delay:0.4, scaleMode: 'contents'});
 	document.getElementById('add_type').value = 'UPLOAD';
 }
 
@@ -14,8 +14,8 @@ function hideUploader(){
 	/* document.getElementById('tplUploader').style.display = 'none';
 	document.getElementById('tplUploadShowButton').style.display = 'block';
 	document.getElementById('editTMPL').style.display = 'block'; */
-	$('tplUploader').blindUp({duration: 0.3});
-	$('editTMPL').blindDown({duration: 0.3, delay:0.4});
+	$('tplUploader').blindUp({duration: 0.3, scaleMode: 'contents'});
+	$('editTMPL').blindDown({duration: 0.3, delay:0.4, scaleMode: 'contents'});
 	document.getElementById('add_type').value = 'DIRECT';
 }
 
@@ -44,18 +44,17 @@ function hideUploader(){
   
   <input type="hidden" name="add_type" id="add_type" value="DIRECT" />
   
-  {if $type_specified}
+  {* if $type_specified}
   <input type="hidden" name="template_type" value="{$template_type.id}" />
-  {else}
+  {else *}
   <div class="special-box">
-    Template type:
-    <select name="template_type">
-      {foreach from=$types item="new_template_type"}
+    Template type: <select name="template_type">
+{foreach from=$types item="new_template_type"}
       <option value="{$new_template_type.id}"{if !$new_template_type.storage.writable} disabled="disabled"{/if}>{$new_template_type.label}{if !$new_template_type.storage.writable} (directory not writable){/if}</option>
-      {/foreach}
+{/foreach}
     </select>
   </div>
-  {/if}
+  {* /if *}
   
   <div id="editTMPL">
   
@@ -71,17 +70,17 @@ function hideUploader(){
       </div>
     </div>
   
-    <div id="tplUploadShowButton">or, alternatively, <a href="javascript:showUploader();">upload a file</a>.</div>
+    <div id="tplUploadShowButton">or, alternatively, <a href="javascript:showUploader();" class="button small">upload a file</a>.</div>
   
   </div>
   
-  <div style="display:none;margin-top:8px;margin-bottom:8px" class="special-box" id="tplUploader">
+  <div style="display:none" class="special-box" id="tplUploader">
     
     <label for="template_upload">Upload file: </label>
     <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
     <input type="file" id="template_upload" name="template_upload" />
     <br />
-    <a href="javascript:hideUploader()">Never Mind</a>
+    <a href="javascript:hideUploader()" class="button small">Never Mind</a>
     
   </div>
   
@@ -99,17 +98,14 @@ function hideUploader(){
 
 </form>
 
-<script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
-<script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/mirrorframe.js" type="text/javascript"></script>
-
 <script type="text/javascript">
-{literal}  var editor = new CodeMirror.fromTextArea('tpl_textArea', {{/literal}
-  parserfile: 'parsexml.js',
-  stylesheet: "{$domain}Resources/System/Javascript/CodeMirror-0.65/css/xmlcolors.css",
-  continuousScanning: 500,
-  height: '300px',
-  path: "{$domain}Resources/System/Javascript/CodeMirror-0.65/js/"
-{literal}  }); {/literal}
+{literal}
+var myCodeMirror = CodeMirror.fromTextArea($('tpl_textArea'), {
+    lineNumbers: true,
+    mode: "htmlmixed",
+    lineWrapping: true
+  });
+{/literal}
 </script>
 
 {else}

@@ -186,6 +186,11 @@ class SmartestItemProperty extends SmartestBaseItemProperty implements SmartestT
             return false;
         }
     }
+    
+    public function isSearchable(){
+        $info = $this->getTypeInfo();
+        return (isset($info['searchable']) && !SmartestStringHelper::isFalse($info['searchable']));
+    }
 	
 	public function getDraftValues($site_id, $raw=false, $unique=true){
 	    

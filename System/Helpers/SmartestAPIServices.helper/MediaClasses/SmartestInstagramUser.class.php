@@ -1,6 +1,6 @@
 <?php
 
-class SmartestInstagramUser{
+class SmartestInstagramUser extends SmartestObject{
     
     protected $_username, $_account_id, $_bio, $_website_url, $_profile_picture_url, $_profile_picture_image;
     

@@ -79,9 +79,11 @@ class SmartestHelper{
     			if(is_dir(SM_ROOT_DIR.'System/Helpers/'.$file) && preg_match('/([A-Z]\w+)\.helper$/', $file, $matches) && is_file(SM_ROOT_DIR.'System/Helpers/'.$file.'/'.$matches[1].'Helper.class.php')){
     				$helper = array();
     				$helper['name'] = $matches[1];
+                    $helper['main_class'] = $matches[1].'Helper';
     				$helper['file'] = 'System/Helpers/'.$matches[0].'/'.$matches[1].'Helper.class.php';
     				$helper['dir'] = 'System/Helpers/'.$matches[0].'/';
-    				$system_helpers[] = $helper;
+                    $init_method = $matches[1].'Helper::init()';
+                    $system_helpers[] = $helper;
     				$system_helper_names[] = $helper['name'];
     				$system_helper_cache_string .= sha1_file($helper['file']);
     			}
@@ -112,6 +114,11 @@ class SmartestHelper{
 				}else{
 				    // Include the original file rather than the cache
 				    include SM_ROOT_DIR.$h['file'];
+                    
+                    // if(method_exists($h['main_class'],'init')){
+                    //     call_user_func_array($h['main_class'].'::init', array());
+                    // }
+                    
 				}
 			}else{
 				// File was there amoment ago but has now disappeared (???)
@@ -176,8 +183,18 @@ class SmartestHelper{
 		}
 		
 		if($use_cache){
+            
 			include SM_ROOT_DIR.'System/Cache/Includes/SmartestSystemHelpers.cache.php';
+            
+            
+            
 		}
+        
+        foreach($system_helpers as $h){
+            if(method_exists($h['main_class'],'init')){
+                call_user_func_array($h['main_class'].'::init', array());
+            }
+        }
 		
 		// NOW LOOK FOR ANY USER-CONTRIBUTED HELPERS (in Library/Helpers/)
 		if(is_dir(SM_ROOT_DIR.'Library/Helpers/')){

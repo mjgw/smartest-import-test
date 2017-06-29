@@ -405,5 +405,79 @@ class PagesAjax extends SmartestSystemApplication{
         $this->send(is_writable(SM_ROOT_DIR.'Presentation/Layouts/'), 'can_create_template');
         
     }
+    
+    public function bulkIndexPages(){
+        
+        $page_size = 18;
+        $current_page_num = $this->getRequestParameter('page_num', 1);
+        $data = array();
+        $data['page_size'] = $page_size;
+        $data['current_page_num'] = $current_page_num;
+        
+        if(!defined('SM_CMS_PAGE_SITE_ID')){
+            define('SM_CMS_PAGE_SITE_ID', $this->getSite()->getId());
+        }
+        
+        // if($model->find($model_id)){
+            
+            // $item_ids = $model->getItemIds($this->getSite()->getId(), SM_STATUS_LIVE);
+            $cms_pages = $this->getSite()->getQuickPagesList();
+            
+            $num_cms_pages = count($cms_pages);
+            $num_pages = ceil($num_cms_pages/$page_size);
+            $data['num_cms_pages'] = $num_cms_pages;
+            $data['num_pages'] = $num_pages;
+            
+            $this_operation_starting_index = ($current_page_num-1)*$page_size;
+            $this_operation_starting_id = $cms_pages[$this_operation_starting_index]->getId();
+            $data['this_operation_starting_index'] = $this_operation_starting_index;
+            $data['this_operation_starting_id'] = $this_operation_starting_id;
+            
+            if($current_page_num < $data['num_pages']){
+                $data['next_page_num'] = $current_page_num+1;
+                $num_completed = $current_page_num*$page_size;
+            }else{
+                $num_completed = $num_cms_pages;
+            }
+            
+            $pc_completed = number_format($num_completed/$num_cms_pages*100, 2);
+            $data['percent_completed'] = $pc_completed;
+            $data['num_completed'] = $num_completed;
+            
+            // $set = $model->getAllItemsAsSortableReferenceSet($this->getSite()->getId(), SM_STATUS_LIVE);
+            // $items = $set->getPage($current_page_num, $page_size);
+            
+            try{
+            
+                for($i=$this_operation_starting_index;$i<$num_completed;$i++){
+                    
+                    $page = $cms_pages[$i];
+                    $cms_page_data = $page->getElasticSearchAssociativeArray();
+                    
+                    $params['body'][]['index'] = array(
+                        '_index' => $this->getSite()->getElasticSearchIndexName(),
+                        '_id' => $page->getId(),
+                        '_type' => 'smartest_page'
+                    );
+                          
+                    $params['body'][] = $cms_page_data;
+                    
+                }
+                
+                $response = SmartestElasticSearchHelper::addBulkItemsToIndex($params);
+                
+                $data['response'] = $response;
+                
+                header("Content-Type: application/json");
+                echo json_encode($data);
+                exit;
+            
+            }catch(Elasticsearch\Common\Exceptions\ServerErrorResponseException $e){
+                // print_r($e->getTrace());
+            }
+            
+        // }
+        
+    }
 
 }

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `Blocks` (
+CREATE TABLE `Blocks` (
   `block_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `block_webid` varchar(64) NOT NULL,
   `block_title` varchar(255) NOT NULL,
@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS `Blocks` (
   `block_blocklist_id` int(11) NOT NULL,
   `block_type` varchar(64) NOT NULL,
   `block_status` varchar(64) NOT NULL,
-  `block_order_index` smallint(5) unsigned NOT NULL
+  `block_order_index` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`block_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 ALTER TABLE `Items` CHANGE `item_public` `item_public` VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'FALSE';
