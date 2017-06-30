@@ -67,7 +67,11 @@
           "paste link wordcount"
       ],
       paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,p",
-      toolbar: "undo redo | styleselect | bold italic | link unlink"
+      toolbar: "undo redo | styleselect | bold italic | link unlink",
+      relative_urls : false,
+      convert_urls: false,
+      document_base_url : sm_domain,
+      skin: "smartest"
   });
   
   {/literal}

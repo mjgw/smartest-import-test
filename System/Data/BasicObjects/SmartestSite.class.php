@@ -287,7 +287,7 @@ class SmartestSite extends SmartestBaseSite{
                 }
             }
             
-            $sql = "SELECT * FROM Pages WHERE Pages.page_id IN (".implode(',',$page_ids).")";
+            $sql = "SELECT * FROM Pages WHERE Pages.page_id IN ('".implode("','",$page_ids)."')";
             $result = $this->database->queryToArray($sql);
             $pages = array();
             

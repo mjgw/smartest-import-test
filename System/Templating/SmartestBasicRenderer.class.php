@@ -378,6 +378,7 @@ class SmartestBasicRenderer extends SmartestEngine{
         if(($this->_request_data->g('action') == "renderEditableDraftPage" || ($this->_request_data->g('action') == "pageFragment" && $this->getDraftMode())) && $show_preview_edit_link){
 		    
             if((!$editableonly || isset($asset_type_info['editable']) && SmartestStringHelper::toRealBool($asset_type_info['editable'])) && (!isset($asset_type_info['show_preview_edit_link']) || (isset($asset_type_info['show_preview_edit_link']) && SmartestStringHelper::toRealBool($asset_type_info['show_preview_edit_link'])))){
+
 		        $edit_link = '';
 		        $edit_url = $this->_request_data->g('domain')."assets/editAsset?asset_id=".$asset->getId()."&amp;from=pagePreview";
 		        

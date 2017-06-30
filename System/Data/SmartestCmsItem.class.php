@@ -239,17 +239,13 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
         if($offset == '_type_label'){
             return $this->_item->getModel()->getName();
         }
-	    
-	    if($offset == 'has_tag'){
+        
+        if($offset == 'has_tag'){
 	        return new SmartestTagPresenceChecker($this->getTags());
 	    }
         
         if($offset == '_is_linkable'){
             return $this->isLinkable();
-        }
-        
-        if($offset == '_type_varname'){
-            return $this->getModelVarname();
         }
         
         if(isset($this->_parent_item_slug) && $offset == $this->_parent_item_slug && $this->getModel()->getType() == 'SM_ITEMCLASS_MT1_SUB_MODEL'){
@@ -395,6 +391,10 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
                 
                 case '_site':
                 return $this->getSite();
+                
+                case "_type_varname":
+                case "_type":
+                return SmartestStringHelper::toVarName($this->_item->getModel()->getName());
                 
                 case 'empty':
                 return !is_numeric($this->_item->getId());
@@ -1065,14 +1065,14 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
 		return $result;
 	}
 	
-	public function __toSimpleObject($simple=false){
+	public function __toSimpleObject($basic_info_only=false){
 	    
 	    $obj = new stdClass;
 	    $obj->name = $this->getName();
 	    $obj->id = $this->getId();
 	    $obj->slug = $this->getSlug();
 	    
-	    if(!$simple){
+	    if(!$basic_info_only){
 	        foreach($this->getProperties() as $p){
 	            $vn = $p->getVarname();
 	            $obj->$vn = $p->getData()->getContent()->stdObjectOrScalar();
@@ -1083,9 +1083,9 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
 	    
 	}
 	
-	public function __toJson($simple=false){
+	public function __toJson($basic_info_only=false){
 	    
-	    return json_encode($this->__toSimpleObject($simple));
+	    return json_encode($this->__toSimpleObject($basic_info_only));
 	    
 	}
 	
@@ -1407,7 +1407,7 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
                     }
                 
                 }
-            
+
                 if(is_object($raw_value)){
                     $r = $raw_value;
                 }else if($value_ob = SmartestDataUtility::objectize($raw_value, $this->_properties[$key]->getDatatype(), $this->_properties[$key]->getForeignKeyFilter())){
@@ -1415,7 +1415,7 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
                 }else if(is_null($raw_value) && $c = SmartestDataUtility::getClassForDataType($this->_properties[$key]->getDatatype(), $this->_properties[$key]->getForeignKeyFilter())){
                     $r = new $c;
                 }
-            
+
                 if($r instanceof SmartestDualModedObject){
                     $r->setDraftMode($this->getDraftMode());
                 }

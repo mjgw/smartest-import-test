@@ -2331,6 +2331,8 @@ class Items extends SmartestSystemApplication{
         $this->send(date("m"), 'default_month');
         $this->send(date("d"), 'default_day');
         
+        $model = new SmartestModel;
+        
         if($this->getUser()->hasToken('add_items')){
             
             if($this->getRequestParameter('class_id')){
@@ -2358,6 +2360,10 @@ class Items extends SmartestSystemApplication{
                     
                 }
                 
+            }elseif($this->getRequestParameter('use_plural_name') && $this->getRequestParameter('plural_name') && $model->findBy('varname', $this->getRequestParameter('plural_name'), $this->getSite()->getId())){
+                
+                // Model found. Else clause below avoided. job done.
+                
             }else{
                 
                 // echo "did not find model";
@@ -2373,11 +2379,8 @@ class Items extends SmartestSystemApplication{
             
             $this->send(false, 'require_choose_model');
             
-            $model = new SmartestModel;
-            // echo $this->getRequestParameter('use_plural_name');
-            
-            if($this->getRequestParameter('use_plural_name')){
-                $found_model = $model->findBy('varname', $this->getRequestParameter('plural_name'));
+            if($model->getId()){
+                $found_model = true;
             }else{
                 $found_model = $model->find($model_id);
             }

@@ -1033,10 +1033,10 @@ class SmartestCmsLink extends SmartestHelper{
 						
             if($this->getType() == SM_LINK_TYPE_EXTERNAL){
                 
-				if($this->_render_data->hasParameter('hide_protocol') && SmartestStringHelper::toRealBool($this->_render_data->getParameter('hide_protocol'))){
-                    return $fa_prefix.SmartestStringHelper::toUrlStringWithoutProtocol($this->_destination_properties->getParameter('destination'));
-                }else{
+				if($this->_render_data->hasParameter('hide_protocol') && !SmartestStringHelper::toRealBool($this->_render_data->getParameter('hide_protocol'))){
                     return $fa_prefix.$this->_destination_properties->getParameter('destination');
+                }else{
+                    return $fa_prefix.SmartestStringHelper::toUrlStringWithoutProtocol($this->_destination_properties->getParameter('destination'));
                 }
                 
             }else{

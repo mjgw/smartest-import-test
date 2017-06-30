@@ -2,9 +2,11 @@
 {capture name="input_id" assign="input_id"}item_property_{$property.id}{/capture}
 
 {if $property.is_image_property && $sm_user_agent.is_supported_browser}
+
   {image_select id=$input_id name=$_input_data.name value=$value for="ipv" property=$property item_id=$item.id}
     
     {if $value.id}
+
     <ul class="item_property_actions">
       
       {if is_array($value.type_info)}

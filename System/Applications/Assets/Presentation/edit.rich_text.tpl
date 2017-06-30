@@ -79,28 +79,6 @@ tinymce.init({
     document_base_url : sm_domain,
     skin: "smartest"
 });
-
-/* tinyMCE.init({
-	mode : "exact",
-	elements : "tpl_textArea",
-	theme : "advanced",
-	plugins : "paste",
-	theme_advanced_buttons3_add : "paste,pasteword,selectall",
-	theme_advanced_disable : "image,styleprops",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_resizing : true,
-	theme_advanced_toolbar_align : "center",
-	convert_fonts_to_spans : true,
-	paste_use_dialog : true,
-  paste_remove_spans : true,
-  paste_remove_styles: true,
-  paste_strip_class_attributes: true,
-  relative_urls : false,
-  remove_script_host : true,
-{/literal}  document_base_url : "{$domain}" {literal}
-  
-});
-  */
   
   var AutoSaver = new PeriodicalExecuter(function(pe){
     // autosave routine

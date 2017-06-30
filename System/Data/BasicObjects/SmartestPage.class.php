@@ -1914,6 +1914,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             return "Page";
             
             case "_type_varname":
+            case "_type":
             return "page";
             
 	        
