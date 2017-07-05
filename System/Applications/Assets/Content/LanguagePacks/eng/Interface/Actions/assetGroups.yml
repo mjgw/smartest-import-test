@@ -1,5 +1,6 @@
 strings:
   explanation: "File groups are a basic way to keep your files organised when you have a lot of them."
+  create_button: Add a new group
   sidebar_options:
     selected_group_heading: Selected group
     selected_group_info: Group info

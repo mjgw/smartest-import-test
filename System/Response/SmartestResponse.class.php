@@ -69,8 +69,10 @@ class SmartestResponse{
 	    
 	    if(is_file(SM_ROOT_DIR."System/Core/Info/system.yml")){
 	        define('SYSTEM_INFO_FILE', SM_ROOT_DIR."System/Core/Info/system.yml");
+            SmartestInfo::$system_info_file = SM_ROOT_DIR."System/Core/Info/system.yml";
 	    }else if(is_file(SM_ROOT_DIR."System/Core/Info/.system.yml")){
 	        define('SYSTEM_INFO_FILE', SM_ROOT_DIR."System/Core/Info/.system.yml");
+            SmartestInfo::$system_info_file = SM_ROOT_DIR."System/Core/Info/.system.yml";
 	    }
 	    
 	    try{
@@ -504,6 +506,10 @@ class SmartestResponse{
 			$this->errorFromException($e);
 		}
         
+        define('SM_PROTOCOL', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https://' : 'http://');
+        define('SM_SITE_HOST', $GLOBALS['_site']->getDomain());
+        define('SM_QUINCE_DOMAIN', $this->_controller->getCurrentRequest()->getDomain());
+        
 		try{
 		    if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
 		        SmartestElasticSearchHelper::init($GLOBALS['_site']);
@@ -672,9 +678,13 @@ class SmartestResponse{
 		$sc = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
 		define('SM_SYSTEM_SYS_TEMPLATES_DIR', $sc['system']['places']['templates_dir']);
 		
-		$this->_ui_template = (strlen($this->_controller->getCurrentRequest()->getAction())) ? $this->_controller->getCurrentRequest()->getMeta('_module_dir').'Presentation/'.$subfolder.$this->_controller->getCurrentRequest()->getAction().".tpl" : null;
-			
-		if(is_file($this->_ui_template)){
+        if($this->_controller->getCurrentRequest()->hasMeta('presentation')){
+            $this->_ui_template = (strlen($this->_controller->getCurrentRequest()->getMeta('presentation'))) ? $this->_controller->getCurrentRequest()->getMeta('_module_dir').'Presentation/'.$this->_controller->getCurrentRequest()->getMeta('presentation') : null;
+        }else{
+            $this->_ui_template = (strlen($this->_controller->getCurrentRequest()->getAction())) ? $this->_controller->getCurrentRequest()->getMeta('_module_dir').'Presentation/'.$subfolder.$this->_controller->getCurrentRequest()->getAction().".tpl" : null;
+        }
+        
+        if(is_file($this->_ui_template)){
 			
 		}else{
 		    

@@ -1869,38 +1869,42 @@ class SmartestModel extends SmartestBaseModel{
             $data['modelkit']['properties'] = array();
         
             foreach($properties as $p){
-            
-                $varname = $p->getVarName();
-            
-                $data['modelkit']['properties'][$varname] = array(
-                    'label'=>$p->getName(),
-                    'type'=>$p->getDataType()
-                );
                 
-                if(!$p->isForeignKey()){
-                    $default_value = $p->getDefaultValue();
-                    if(strlen($default_value)){
-                        if(is_object($default_value) && $default_value instanceof SmartestStorableValue){
-                            $data['modelkit']['properties'][$varname]['default_value'] = $default_value->getStorableFormat();
-                        }else{
-                            $data['modelkit']['properties'][$varname]['default_value'] = $default_value;
+                if($p->getDataType() != 'SM_DATATYPE_AUTO_ITEM_FK'){
+                    
+                    $varname = $p->getVarName();
+            
+                    $data['modelkit']['properties'][$varname] = array(
+                        'label'=>$p->getName(),
+                        'type'=>$p->getDataType()
+                    );
+                
+                    if(!$p->isForeignKey()){
+                        $default_value = $p->getDefaultValue();
+                        if(strlen($default_value)){
+                            if(is_object($default_value) && $default_value instanceof SmartestStorableValue){
+                                $data['modelkit']['properties'][$varname]['default_value'] = $default_value->getStorableFormat();
+                            }else{
+                                $data['modelkit']['properties'][$varname]['default_value'] = $default_value;
+                            }
                         }
                     }
-                }
             
-                if($p->getDataType() == 'SM_DATATYPE_ASSET' || $p->getDataType() == 'SM_DATATYPE_ASSET_GROUP' || $p->getDataType() == 'SM_DATATYPE_ASSET_SELECTION'){
-                    $data['modelkit']['properties'][$varname]['filetype'] = $p->getForeignKeyFilter();
-                }
+                    if($p->getDataType() == 'SM_DATATYPE_ASSET' || $p->getDataType() == 'SM_DATATYPE_ASSET_GROUP' || $p->getDataType() == 'SM_DATATYPE_ASSET_SELECTION'){
+                        $data['modelkit']['properties'][$varname]['filetype'] = $p->getForeignKeyFilter();
+                    }
             
-                if($p->getDataType() == 'SM_DATATYPE_DROPDOWN_MENU'){
-                    $d = new SmartestDropdown;
-                    if($d->find($p->getForeignKeyFilter())){
-                        $data['modelkit']['properties'][$varname]['dropdown_identifier'] = $d->getIdentifier();
-                        $data['modelkit']['properties'][$varname]['values'] = array();
-                        foreach($d->getOptions() as $option){
-                            $data['modelkit']['properties'][$varname]['values'][$option->getValue()] = $option->getLabel();
+                    if($p->getDataType() == 'SM_DATATYPE_DROPDOWN_MENU'){
+                        $d = new SmartestDropdown;
+                        if($d->find($p->getForeignKeyFilter())){
+                            $data['modelkit']['properties'][$varname]['dropdown_identifier'] = $d->getIdentifier();
+                            $data['modelkit']['properties'][$varname]['values'] = array();
+                            foreach($d->getOptions() as $option){
+                                $data['modelkit']['properties'][$varname]['values'][$option->getValue()] = $option->getLabel();
+                            }
                         }
                     }
+                    
                 }
             
             }

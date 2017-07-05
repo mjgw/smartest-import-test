@@ -1,0 +1,272 @@
+# Basic Object Types List (2017)
+---
+types:
+  assetclasses:
+    name: AssetClasses
+    prefix: assetclass_
+    class: AssetClass
+  assetidentifiers:
+    name: AssetIdentifiers
+    prefix: assetidentifier_
+    class: AssetIdentifier
+  assets:
+    name: Assets
+    prefix: asset_
+    class: Asset
+    content: true
+    private:
+      - asset_site_id
+      - asset_user_id
+      - asset_shared
+      - asset_deleted
+      - asset_fragment_id
+      - asset_variant_name
+      - asset_variant_label
+      - asset_model_id
+      - asset_thumbnail_id
+      - asset_parameter_defaults
+      - asset_info
+      - asset_is_held
+      - asset_held_by
+      - asset_is_approved
+      - asset_is_subbed
+      - asset_is_archived
+      - asset_submitted_from_public
+      - asset_public_status_trusted
+      - asset_is_system
+      - asset_is_hidden
+      - asset_search_field
+  blocks:
+    name: Blocks
+    prefix: block_
+    class: Block
+  comments:
+    name: Comments
+    prefix: comment_
+    class: Comment
+  dropdowns:
+    name: DropDowns
+    prefix: dropdown_
+    class: Dropdown
+  dropdownvalues:
+    name: DropDownValues
+    prefix: dropdownvalue_
+    class: DropdownOption
+    content: true
+    private:
+      - dropdownvalue_id
+      - dropdownvalue_dropdown_id
+      - dropdownvalue_order
+  itemclasses:
+    name: ItemClasses
+    prefix: itemclass_
+    class: Model
+  itemproperties:
+    name: ItemProperties
+    prefix: itemproperty_
+    class: ItemProperty
+  itempropertyvalues:
+    name: ItemPropertyValues
+    prefix: itempropertyvalue_
+    class: ItemPropertyValue
+  items:
+    name: Items
+    prefix: item_
+    class: Item
+    content: true
+    private:
+      - item_site_id
+      - item_shared
+      - item_alt_title_tag
+      - item_use_alt_title_tag
+      - item_public
+      - item_parent_id
+      - item_metapage_id
+      - item_search_field
+      - item_is_held
+      - item_held_by
+      - item_deleted
+      - item_createdby_userid
+      - item_createdat_ip
+      - item_is_archived
+      - item_submitted_from_public
+      - item_public_status_trusted
+      - item_order_index
+      - item_num_hits
+      - item_num_ratings
+      - item_average_rating
+  lists:
+    name: Lists
+    prefix: list_
+    class: CmsItemList
+  manytomanylookups:
+    name: ManyToManyLookups
+    prefix: mtmlookup_
+    class: ManyToManyLookup
+    private: all
+  pagelayoutpresetdefinitions:
+    name: PageLayoutPresetDefinitions
+    prefix: plpd_
+    class: PagePresetDefinition
+  pagelayoutpresets:
+    name: PageLayoutPresets
+    prefix: plp_
+    class: PagePreset
+  pageproperties:
+    name: PageProperties
+    prefix: pageproperty_
+    class: PageField
+  pagepropertyvalues:
+    name: PagePropertyValues
+    prefix: pagepropertyvalue_
+    class: PageFieldDefinition
+  pages:
+    name: Pages
+    prefix: page_
+    content: true
+    class: Page
+    private:
+      - page_site_id
+      - page_dataset_id
+      - page_icon_image
+      - page_icon_image_id
+      - page_parent
+      - page_order_index
+      - page_search_field
+      - page_is_held
+      - page_held_by
+      - page_live_template
+      - page_draft_template
+      - page_force_static_title
+      - page_deleted
+      - page_cache_as_html
+      - page_cache_interval
+      - page_changes_approved
+      - page_is_published
+      - page_createdby_userid
+      - page_info
+  pageurls:
+    name: PageUrls
+    prefix: pageurl_
+    class: PageUrl
+  roles:
+    name: Roles
+    prefix: role_
+    class: Role
+  rolestokenslookup:
+    name: RolesTokensLookup
+    prefix: rtlookup_
+    class: RoleTokenLookup
+  setrules:
+    name: SetRules
+    prefix: setrule_
+    class: DynamicDataSetCondition
+  sets:
+    name: Sets
+    prefix: set_
+    class: Set
+    content: true
+    private:
+      - set_cover_asset_id
+      - set_itemclass_id
+      - set_parent_node_id
+      - set_site_id
+      - set_shared
+      - set_is_system
+      - set_is_hidden
+      - set_data_source_site_id
+      - set_type
+      - set_sort_field
+      - set_sort_direction
+      - set_feed_sort_field
+      - set_feed_sort_direction
+      - set_feed_nonce
+      - set_lookup_source
+      - set_varname
+      - set_filter_type
+      - set_filter_value
+      - set_info
+  setsitemslookup:
+    name: SetsItemsLookup
+    prefix: setlookup_
+    class: SetItemLookup
+  settings:
+    name: Settings
+    prefix: setting_
+    class: PreferenceValue
+    noprefix:
+      - site_id
+  sites:
+    name: Sites
+    prefix: site_
+    class: Site
+    content: true
+    private:
+      - site_unique_id
+      - site_url_prefix
+      - site_internal_label
+      - site_title_format
+      - site_directory_name
+      - site_top_page_id
+      - site_tag_page_id
+      - site_search_page_id
+      - site_error_page_id
+      - site_logo_image_asset_id
+      - site_primary_container_id
+      - site_primary_text_placeholder_id
+      - site_default_blocklist_style_id
+  tags:
+    name: Tags
+    prefix: tag_
+    class: Tag
+    content: true
+    private:
+      - tag_type
+      - tag_model_id
+      - tag_site_id
+      - tag_icon_image_asset_id
+      - tag_description_text_asset_id
+      - tag_featured
+  tagsobjectslookup:
+    name: TagsObjectsLookup
+    prefix: taglookup_
+    class: TagLookup
+  textfragments:
+    name: TextFragments
+    prefix: textfragment_
+    class: TextFragment
+  todoitems:
+    name: TodoItems
+    prefix: todoitem_
+    class: TodoItem
+  users:
+    name: Users
+    prefix: user_
+    class: User
+    content: true
+    noprefix: 
+      - username
+      - password
+    private:
+      - username
+      - password
+      - user_password_salt
+      - user_password_last_changed
+      - user_password_change_required
+      - user_activation_key
+      - user_bio_asset_id
+      - user_register_date
+      - user_last_visit
+      - user_activated
+      - user_is_smartest_account
+      - user_info
+      - user_oauth_consumer_token
+      - user_oauth_consumer_secret
+      - user_oauth_access_token
+      - user_oauth_access_token_secret
+      - user_oauth_service_id
+      - user_answers_to_user_id
+  userstokenslookup:
+    name: UsersTokensLookup
+    prefix: utlookup_
+    class: UserTokenLookup

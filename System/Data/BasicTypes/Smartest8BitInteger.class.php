@@ -1,6 +1,6 @@
 <?php
 
-class Smartest8BitInteger implements SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue, ArrayAccess{
+class Smartest8BitInteger extends SmartestObject implements SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue, SmartestJsonCompatibleObject{
     
     protected $_value;
     
@@ -39,6 +39,10 @@ class Smartest8BitInteger implements SmartestBasicType, SmartestStorableValue, S
     
     public function getValue(){
         return $this->_value;
+    }
+    
+    public function stdObjectOrScalar(){
+        return (int) $this->_value;
     }
     
     // The next two methods are for the SmartestStorableValue interface

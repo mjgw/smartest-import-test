@@ -500,6 +500,18 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
         
     }
     
+    public function __toSimpleObject(){
+        $obj = parent::__toSimpleObject();
+        $obj->object_type = $this->getIsGallery() ? 'gallery' : 'file_group';
+        if($this->getIsGallery()){
+            $obj->files = array();
+            foreach($this->getMemberships() as $m){
+                $obj->files[] = $m;
+            }
+        }
+        return $obj;
+    }
+    
     public function offsetGet($offset){
         
         if(is_numeric($offset)){

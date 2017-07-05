@@ -7,8 +7,6 @@ class Items extends SmartestSystemApplication{
 
 	protected function __smartestApplicationInit(){
 	    $this->database = SmartestPersistentObject::get('db:main'); /* usage of the $this->database variable should be phased out in main classes */
-		// $this->SchemasManager = new SchemasManager();
-		// $this->AssetsManager = new AssetsManager();
 	}
 	
 	public function startPage($get){	
@@ -3327,7 +3325,7 @@ class Items extends SmartestSystemApplication{
 	    
 	    if($property->find($this->getRequestParameter('itemproperty_id'))){
 	        
-	        $sd = SmartestYamlHelper::fastLoad(SM_ROOT_DIR."System/Core/Info/system.yml");
+	        $sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
 	        
 	        if(in_array($property->getDatatype(), $sd['system']['regularizable_types'])){
 	        

@@ -1,6 +1,6 @@
 <?php
 
-class SmartestAssetsCollection extends SmartestArray implements SmartestSubmittableValue, SmartestManyToManyItemPropertyValue{
+class SmartestAssetsCollection extends SmartestArray implements SmartestSubmittableValue, SmartestManyToManyItemPropertyValue, SmartestJsonCompatibleObject{
     
     public function getIds(){
         $ids = array();
@@ -24,6 +24,14 @@ class SmartestAssetsCollection extends SmartestArray implements SmartestSubmitta
             }
         } */
         return $this->hydrateFromStoredIdsArray($v);
+    }
+    
+    public function stdObjectOrScalar(){
+        $result = array();
+        foreach($this->_data as $asset){
+            $result[] = $asset->__toSimpleObjectForParentObjectJson();
+        }
+        return $result;
     }
     
     public function hydrateFromStoredIdsArray($ids, $draft_mode=false){

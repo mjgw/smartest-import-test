@@ -105,6 +105,10 @@
     -webkit-border-radius: 7px;
     background-color:#ddd;
 }
+
+.modal-outer.big .modal .modal-scrollbar-track{
+    height:415px;  
+}
  
 .modal-scrollbar-handle {  
     width:14px;  
@@ -466,6 +470,10 @@ ul.file-thumbnails li.add a i{
     font-style:normal;
     font-family:"source-sans";
     -webkit-transition: all 0.2s;
+}
+
+ul.file-thumbnails li.add a:hover i{
+    background-color:#68849E;
 }
 
 /*** Retina display stuff ***/

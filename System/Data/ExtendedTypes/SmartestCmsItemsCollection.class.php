@@ -1,6 +1,6 @@
 <?php
 
-class SmartestCmsItemsCollection extends SmartestArray implements SmartestSubmittableValue, SmartestManyToManyItemPropertyValue{
+class SmartestCmsItemsCollection extends SmartestArray implements SmartestSubmittableValue, SmartestManyToManyItemPropertyValue, SmartestJsonCompatibleObject{
 
     public function addItem(SmartestCmsItem $item, $offset=''){
         $this->add($item, $offset);
@@ -38,6 +38,14 @@ class SmartestCmsItemsCollection extends SmartestArray implements SmartestSubmit
         $h = new SmartestCmsItemsHelper;
         $this->_data = $h->hydrateMixedListFromIdsArray($ids_array);
     } */
+        
+    public function stdObjectOrScalar(){
+        $result = array();
+        foreach($this->_data as $item){
+            $result[] = $item->__toSimpleObjectForParentObjectJson();
+        }
+        return $result;
+    }
     
     public function hydrateFromFormData($v){
         if(parent::hydrateFromFormData($v)){
@@ -58,7 +66,6 @@ class SmartestCmsItemsCollection extends SmartestArray implements SmartestSubmit
         if(parent::hydrateFromFormData($ids)){
             
             $h = new SmartestCmsItemsHelper;
-            // var_dump($ids);
             $data = $h->hydrateMixedListFromIdsArrayPreservingOrder($ids, $draft_mode);
             
             if(is_array($data)){

@@ -1,6 +1,6 @@
 <?php
 
-class SmartestCountry implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestCountry implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue, SmartestJsonCompatibleObject{
     
     protected $_countrycode;
     protected $_name;
@@ -13,8 +13,20 @@ class SmartestCountry implements SmartestBasicType, ArrayAccess, SmartestStorabl
         return $this->_name ? $this->_name : 'Unknown';
     }
     
+    public function __toSimpleObject(){
+        $obj = new stdClass;
+        $obj->name = $this->_name;
+        $obj->code = $this->_countrycode;
+        $obj->object_type = 'country';
+        return $obj;
+    }
+    
     public function getValue(){
         return $this->_countrycode;
+    }
+    
+    public function stdObjectOrScalar(){
+        return $this->__toSimpleObject();
     }
     
     public function setValue($value){

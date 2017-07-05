@@ -1,0 +1,9 @@
+strings:
+  explanation: "Agrupar archivos es la forma más sencilla de mantener los archivos organizados cuando hay muchos."
+  create_button: Criar una galería nueva
+  sidebar_options:
+    selected_group_heading: Galería seleccionada
+    selected_group_info: Información sobre esta galería
+    selected_group_edit_contents: Editar contenido de esta galería
+    selected_group_contents: Mirar contenido de esta galería
+    selected_group_delete: Apagar galería

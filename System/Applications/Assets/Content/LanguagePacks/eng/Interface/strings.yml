@@ -33,7 +33,8 @@ strings:
     none: None
   tabs:
     file_types: Files by type
-    file_groups: Organise
+    file_groups: File groups
+    file_galleries: Galleries
     edit_file: Edit file
     edit_file_parameters: Parameters
     edit_file_source: Edit file source

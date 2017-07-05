@@ -1,6 +1,6 @@
 <?php
 
-class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue, SmartestSearchableValue{
+class SmartestString extends SmartestObject implements SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue, SmartestSearchableValue, SmartestJsonCompatibleObject{
 	
 	protected $_string = '';
 	
@@ -179,9 +179,5 @@ class SmartestString implements SmartestBasicType, ArrayAccess, SmartestStorable
             return $this->_string;
         }
     }
-    
-    public function offsetSet($offset, $value){}
-    
-    public function offsetUnset($offset){}
  
 }

@@ -377,7 +377,7 @@ class SmartestDataUtility{
                     
 	            }else{
 	                
-	                $database = SmartestDatabase::getInstance('SMARTEST');
+                    $database = SmartestDatabase::getInstance('SMARTEST');
 	                $sql = "SELECT * FROM ".$dt['filter']['typesource']['table'];
 	                
 	                // add WHERE conditions here later
@@ -541,8 +541,6 @@ class SmartestDataUtility{
 	    }else if(is_string($model && class_exists($model))){
 	        $methods = get_class_methods($model);
 	    } */
-	    
-	    // var_dump($check_against_model);
 	    
 	    /*if(in_array(SmartestStringHelper::toCamelCase($string), $class_names) || in_array(SmartestStringHelper::toConstantName($string), $constant_names)){
 	        return false;
@@ -857,7 +855,6 @@ class SmartestDataUtility{
             }
 	    }
 	    
-	    // print_r($types);
 	    return $types;
 	    
 	} */
@@ -1042,15 +1039,9 @@ class SmartestDataUtility{
 	    
 	    $types = self::getDataTypes();
         
-        // var_dump($as_type);
-        
-        // print_r($types[$as_type]);
-	    
-	    /* if(isset(self::$_type_to_class_converter[$as_type])){
+        /* if(isset(self::$_type_to_class_converter[$as_type])){
             
-            echo "CACHED";
-            
-	        return self::$_type_to_class_converter[$as_type];
+            return self::$_type_to_class_converter[$as_type];
             
         }else{ */
             
@@ -1127,7 +1118,6 @@ class SmartestDataUtility{
 	    if($object = self::getBlankObjectForDataType($as_type)){
 	        
 	        if($object instanceof SmartestStorableValue){
-	            // print_r ($value);
 	            if($object->hydrateFromStorableFormat($value)){
 	                return $object;
 	            }else{

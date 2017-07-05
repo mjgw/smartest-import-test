@@ -355,12 +355,6 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
             $sql = "SELECT Users.* FROM TagsObjectsLookup, Users WHERE taglookup_tag_id='".$this->getId()."' AND taglookup_object_id=user_id AND taglookup_type='SM_USER_TAG_LINK'";
             
-            /* if(is_numeric($site_id)){
-                $sql .= " AND (asset_site_id='".$site_id."' OR asset_shared=1)";
-            } */
-                
-            // echo $sql;
-            
             $result = $this->database->queryToArray($sql);
             
             $users = array();
@@ -441,8 +435,6 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
         // make sure items have been retrieved
         $this->getSimpleItems(false, true, false);
-        
-        // print_r($this->_item_ids);
         
         if(in_array($item_id, $this->_item_ids)){
             return true;
@@ -625,6 +617,13 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
         
     }
     
+    public function __toSimpleObject(){
+        $obj = parent::__toSimpleObject();
+        $obj->uri = SM_PROTOCOL.SM_SITE_HOST.SmartestPersistentObject::get('controller')->getUrlFor('@website:tag_page?tag_name='.$this->getName());
+        $obj->object_type = 'tag';
+        return $obj;
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){
@@ -635,10 +634,10 @@ class SmartestTag extends SmartestBaseTag implements SmartestStorableValue, Smar
             return $this->getObjectsOnSite($this->getCurrentSiteId(), $this->_draft_mode);
             
             case "url":
-            return $this->_request->getDomain().'tags/'.$this->getName().'.html';
+            return SM_PROTOCOL.SM_SITE_HOST.SmartestPersistentObject::get('controller')->getUrlFor('@website:tag_page?tag_name='.$this->getName());
             
             case "feed_url":
-            return $this->_request->getDomain().'tags/'.$this->getName().'/feed';
+            return SM_PROTOCOL.SM_SITE_HOST.SmartestPersistentObject::get('controller')->getUrlFor('@website:tag_feed?tag_name='.$this->getName());
             
             case "attached":
             return $this->_is_attached;

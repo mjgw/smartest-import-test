@@ -10,31 +10,40 @@ class SmartestDataObjectHelper{
         // $this->database = new SmartestMysql($this->_dbconfig['host'], $this->_dbconfig['username'], $this->_dbconfig['database'], $this->_dbconfig['password']);
     }
     
+    static function getSchemaYamlData($file_path){
+        $raw_data = SmartestYamlHelper::fastLoad($file_path);
+        $data = $raw_data['types'];
+        return $data;
+    }
+    
     static function getSchemaXmlData($file_path){
 	    
 	    $cache_name_hash = sha1_file($file_path).'_xml_file_hash';
 	    $cache_name_data = sha1_file($file_path).'_xml_file_data';
+        
+	    $yml_cache_name_hash = sha1_file($file_path).'_yml_file_hash';
+	    $yml_cache_name_data = sha1_file($file_path).'_yml_file_data';
 	    
-	    if(SmartestCache::hasData($cache_name_hash, true)){
+	    if(SmartestCache::hasData($yml_cache_name_hash, true)){
 	        
-	        $old_hash = SmartestCache::load($cache_name_hash, true);
+	        $old_hash = SmartestCache::load($yml_cache_name_hash, true);
 	        $new_hash = md5_file($file_path);
 	        
 	        if($old_hash != $new_hash){
-	            SmartestCache::save($cache_name_hash, $new_hash, -1, true);
-	            $raw_data = SmartestXmlHelper::loadFile($file_path);
-	            $data = $raw_data['table'];
-	            SmartestCache::save($cache_name_data, $data, -1, true);
+	            SmartestCache::save($yml_cache_name_hash, $new_hash, -1, true);
+	            $raw_data = SmartestYamlHelper::load($file_path);
+	            $data = $raw_data['types'];
+	            SmartestCache::save($yml_cache_name_data, $data, -1, true);
             }else{
-                $data = SmartestCache::load($cache_name_data, true);
+                $data = SmartestCache::load($yml_cache_name_data, true);
             }
             
         }else{
             $new_hash = md5_file($file_path);
-            SmartestCache::save($cache_name_hash, $new_hash, -1, true);
-            $raw_data = SmartestXmlHelper::loadFile($file_path);
-            $data = $raw_data['table'];
-            SmartestCache::save($cache_name_data, $data, -1, true);
+            SmartestCache::save($yml_cache_name_hash, $new_hash, -1, true);
+            $raw_data = SmartestYamlHelper::load($file_path);
+            $data = $raw_data['types'];
+            SmartestCache::save($yml_cache_name_data, $data, -1, true);
         }
         
         return $data;
@@ -44,10 +53,14 @@ class SmartestDataObjectHelper{
 	static function getBasicObjectSchemaXmlData(){
 	    return self::getSchemaXmlData(SM_ROOT_DIR.'System/Core/Types/basicobjecttypes.xml');
 	}
+    
+	static function getBasicObjectSchemaYamlData(){
+	    return self::getSchemaYamlData(SM_ROOT_DIR.'System/Core/Types/basicobjecttypes.yml');
+	}
 	
 	static function getBasicObjectSchemaInfo(){
 	    
-	    $data = self::getBasicObjectSchemaXmlData();
+	    $data = self::getBasicObjectSchemaYamlData();
 	    
 	    $raw_types = $data;
 	    $types = array();
@@ -78,11 +91,20 @@ class SmartestDataObjectHelper{
 	
 	public function buildBasicObjects(){
 	    
-	    $tables = self::getBasicObjectSchemaInfo();
-	    
+        $tables = self::getBasicObjectSchemaInfo();
+        
+        $last_revision_objects_built = SmartestCache::load('last_revision_objects_built', true);
+        
+        if(!is_numeric($last_revision_objects_built) || $last_revision_objects_built < SmartestInfo::$revision){
+            $force = true;
+            SmartestCache::save('last_revision_objects_built', SmartestInfo::$revision, -1, true);
+        }else{
+            $force = false;
+        }
+        
 	    foreach($tables as $t){
 	        
-	        $this->buildBaseDataObjectFile($t, true);
+	        $this->buildBaseDataObjectFile($t, true, $force);
 	        $this->buildDataObjectFile($t, true);
 	        
 	    }
@@ -117,13 +139,13 @@ class SmartestDataObjectHelper{
 	    
 	}
 	
-	public static function buildBaseDataObjectFile($table_info, $is_smartest=false){
+	public static function buildBaseDataObjectFile($table_info, $is_smartest=false, $force=false){
 	    
 	    $class_name = $is_smartest ? 'SmartestBase'.$table_info['class'] : 'Base'.$table_info['class'];
 	    $directory = $is_smartest ? SM_ROOT_DIR.'System/Cache/ObjectModel/DataObjects/' : SM_ROOT_DIR.'Library/ObjectModel/DataObjects/Base/';
 	    $file_name = $directory.$class_name.'.class.php';
-	    
-	    if(!is_dir($directory)){
+        
+        if(!is_dir($directory)){
 	        if(@mkdir($directory)){
 	            
 	        }else{
@@ -131,7 +153,7 @@ class SmartestDataObjectHelper{
 	        }
 	    }
 	    
-	    if(!file_exists($file_name)){
+	    if($force || !file_exists($file_name)){
 	        
 	        $dbTableHelper = new SmartestDatabaseTableHelper('SMARTEST');
 	        $columns = $dbTableHelper->getColumnNames($table_info['name']);
@@ -160,8 +182,18 @@ class SmartestDataObjectHelper{
 			$file_contents = str_replace('__IS_SMARTEST__', $is_smartest ? 'true' : 'false', $file_contents);
 			$file_contents = str_replace('__TABLE_PREFIX__', $table_info['prefix'], $file_contents);
 			$file_contents = str_replace('__TABLE_NAME__', $table_info['name'], $file_contents);
-			$file_contents = str_replace('__NO_PREFIX_FIELDS__', count($table_info['noprefix']) ? self::getNoPrefixFieldsAsString($table_info) : null, $file_contents);
+			$file_contents = str_replace('__NO_PREFIX_FIELDS__', (isset($table_info['noprefix']) && count($table_info['noprefix'])) ? self::getNoPrefixFieldsAsString($table_info) : '', $file_contents);
 			$file_contents = str_replace('__ORIGINAL_FIELDS__', "'".implode("', '", $columns)."'", $file_contents);
+            if(isset($table_info['private'])){
+                if($table_info['private'] == 'all'){
+                    $private_fields = '\'_all\' => 1';
+                }else{
+                    $private_fields = count($table_info['private']) ? self::getPrivateFieldsAsString($table_info) : '';
+                }
+            }else{
+                $private_fields = '';
+            }
+            $file_contents = str_replace('__PRIVATE_FIELDS__', $private_fields, $file_contents);
 			
 			$pac = self::buildBasePropertiesArray($pns);
 			$file_contents = str_replace('__PROPERTIES_ARRAY__', $pac, $file_contents);
@@ -228,17 +260,39 @@ class SmartestDataObjectHelper{
 	    
 	    $string = '';
 	    
-	    $i = count($table_info['noprefix']);
-	    
-	    foreach($table_info['noprefix'] as $npf){
-	        $string .= "'".$npf."' => 1";
+        if(isset($table_info['noprefix'])){
+	        $i = count($table_info['noprefix']);
 	        
-	        if($i>1){
-		        $string .= ", ";
-		    }
-		    
-		    $i--;
-	    }
+	        foreach($table_info['noprefix'] as $npf){
+	            $string .= "'".$npf."' => 1";
+	            
+	            if($i>1){
+		            $string .= ", ";
+		        }
+		        
+		        $i--;
+	        }
+        }
+	    
+	    return $string;
+	}
+    
+	public static function getPrivateFieldsAsString($table_info){
+	    
+	    $string = '';
+	    
+        if(isset($table_info['private'])){
+            $i = count($table_info['private']);
+            foreach($table_info['private'] as $npf){
+    	        $string .= "'".$npf."' => 1";
+        
+    	        if($i>1){
+    		        $string .= ", ";
+    		    }
+	    
+    		    $i--;
+    	    }
+        }
 	    
 	    return $string;
 	}
@@ -257,7 +311,7 @@ class SmartestDataObjectHelper{
 	public function loadBasicObjects(){
 		
 		$available_objects = SmartestCache::load('smartest_available_objects', true);
-		
+        
 		$singlefile = '';
 		
 		$this->buildBasicObjects();
@@ -282,30 +336,6 @@ class SmartestDataObjectHelper{
 		}
 		
 		$basic_object_cache_hash = sha1($object_type_cache_string);
-		
-		/* if($res = opendir(SM_ROOT_DIR.'System'.DIRECTORY_SEPARATOR.'Data'.DIRECTORY_SEPARATOR.'BasicObjects'.DIRECTORY_SEPARATOR)){
-		
-			while (false !== ($file = readdir($res))) {
-    		
-    			if(preg_match('/^Smartest([A-Z]\w+)\.class\.php$/', $file, $matches)){
-    				if($matches[1] != 'DataObject'){
-    					$object_type = array();
-    					$object_type['name'] = $matches[1];
-    					$object_type['file'] = SM_ROOT_DIR.'System'.DIRECTORY_SEPARATOR.'Data'.DIRECTORY_SEPARATOR.'BasicObjects'.DIRECTORY_SEPARATOR.$matches[0];
-    					$object_type_cache_string .= sha1_file($object_type['file']);
-    					$object_types[] = $object_type;
-    				}
-    			}
-    		
-			}
-		
-			closedir($res);
-			
-			$basic_object_cache_hash = sha1($object_type_cache_string);
-			
-			// SmartestCache::save('smartest_available_objects', $object_types, -1, true);
-	
-		} */
 		
 		$use_cache = (defined('SM_DEVELOPER_MODE') && constant('SM_DEVELOPER_MODE')) ? false : true;
 		$rebuild_cache = ($use_cache && (SmartestCache::load('smartest_basic_objects_hash', true) != $basic_object_cache_hash) || !is_file(SM_ROOT_DIR.'System'.DIRECTORY_SEPARATOR.'Cache'.DIRECTORY_SEPARATOR.'Includes'.DIRECTORY_SEPARATOR.'SmartestBasicObjects.cache.php'));

@@ -98,8 +98,10 @@ class SmartestSystemHelper{
         
         if(is_file(SM_ROOT_DIR.'System/Core/Info/system.yml')){
             $sys = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Core/Info/system.yml');
+            SmartestInfo::$system_info_file = SM_ROOT_DIR.'System/Core/Info/system.yml';
         }else if(is_file(SM_ROOT_DIR.'System/Core/Info/.system.yml')){
             $sys = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Core/Info/.system.yml');
+            SmartestInfo::$system_info_file = SM_ROOT_DIR.'System/Core/Info/.system.yml';
         }
         
         $info = new SmartestParameterHolder("Smartest Version Information");
@@ -141,7 +143,7 @@ class SmartestSystemHelper{
     
     public static function getPhpVersion(){
         $v = phpversion();
-        preg_match('/^([456]\.\d+(\.\d+)?)/', $v, $matches);
+        preg_match('/^([4567]\.\d+(\.\d+)?)/', $v, $matches);
         return $matches[1];
     }
     

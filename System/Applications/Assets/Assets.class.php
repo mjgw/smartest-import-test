@@ -16,6 +16,10 @@ class Assets extends SmartestSystemApplication{
 	public function startPage(){
 	    if($this->getApplicationPreference('startpage_view') == 'groups'){
 	        $this->forward('assets', 'assetGroups');
+    	}elseif($this->getApplicationPreference('startpage_view') == 'galleries'){
+            $this->getRequest()->setMeta('presentation', 'assetGroups.tpl');
+            // print_r($this->getRequest());
+    	    $this->forward('assets', 'assetGalleries');
 	    }else{
 	        $this->forward('assets', 'getAssetTypes');
 	    }
@@ -758,7 +762,7 @@ class Assets extends SmartestSystemApplication{
 
             }
             
-        }else if($this->getRequestParameter('for') == 'group' || (is_object($group) && $group->getId())){ // If the point of this is to add a new file to a gallery
+        }else if($this->getRequestParameter('for') == 'group' || (isset($group) && is_object($group) && $group->getId())){ // If the point of this is to add a new file to a gallery
             // echo $group->getLabel();
             // print_r($_POST);
         }
@@ -1190,7 +1194,7 @@ class Assets extends SmartestSystemApplication{
 	    $this->setTitle("File groups");
 	    
 	    $alh = new SmartestAssetsLibraryHelper;
-	    $groups = $alh->getAssetGroups($this->getSite()->getId());
+        $groups = $alh->getAssetGroups($this->getSite()->getId(), true);
 	    $locations = $alh->getUnWritableStorageLocations();
 	    
 	    $this->setFormReturnUri();
@@ -1198,11 +1202,33 @@ class Assets extends SmartestSystemApplication{
 	    
 	    $this->send($groups, 'groups');
 	    $this->send($locations, 'locations');
+        $this->send(false, 'gallery_mode');
 	    
 	    $recent = $this->getUser()->getRecentlyEditedAssets($this->getSite()->getId());
         $this->send($recent, 'recent_assets');
 	    
 	}
+    
+    public function assetGalleries(){
+        
+        $this->setApplicationPreference('startpage_view', 'galleries');
+        $this->setTitle("Galleries");
+        
+	    $alh = new SmartestAssetsLibraryHelper;
+	    $groups = $alh->getAssetGalleries($this->getSite()->getId());
+	    $locations = $alh->getUnWritableStorageLocations();
+        
+	    $this->setFormReturnUri();
+	    $this->setFormReturnDescription('file galleries');
+	    
+	    $this->send($groups, 'groups');
+	    $this->send($locations, 'locations');
+        $this->send(true, 'gallery_mode');
+	    
+	    $recent = $this->getUser()->getRecentlyEditedAssets($this->getSite()->getId());
+        $this->send($recent, 'recent_assets');
+        
+    }
 	
 	public function assetGroupsByType(){
 	    
@@ -1943,7 +1969,7 @@ class Assets extends SmartestSystemApplication{
         			            $this->send(false, 'show_publish');
         			        }
     			        }else{
-    			            $file = SM_ROOT_DIR.$asset_type['storage'].$asset->getUrl();
+    			            $file = SM_ROOT_DIR.$asset_type['storage']['location'].$asset->getUrl();
                             $this->send(false, 'show_publish');
     			            $content = htmlspecialchars(SmartestFileSystemHelper::load($asset->getFullPathOnDisk()), ENT_COMPAT, 'UTF-8');
     			        }

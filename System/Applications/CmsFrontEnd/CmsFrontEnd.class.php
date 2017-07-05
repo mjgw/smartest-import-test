@@ -451,6 +451,34 @@ class CmsFrontEnd extends SmartestSystemApplication{
                             exit;
                         }
                         break;
+                        
+                        case "json":
+                        if($set->getSyndicateAsJson()){
+                            $members = $set->getMembers();
+                            $data = new stdClass;
+                            $data->title = $this->_site->getName()." | ".$set->getLabel();
+                            $data->description = $set->getFeedDescription()->__toString();
+                            $data->site = $this->_site->__toSimpleObject();
+                            if(is_object($set->getRssChannelImage()) && $set->getRssChannelImageId()){
+                                $data->feed_image = $set->getRssChannelImage()->__toSimpleObjectForParentObjectJson();
+                            }
+                            $data->items = array();
+                            foreach($members as $item){
+                                $data->items[] = $item->__toSimpleObject();
+                            }
+                            header('Content-type: application/json');
+                            if($this->requestParameterIsSet('pretty') && $this->getRequestParameter('pretty')){
+                                echo json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+                            }else{
+                                echo json_encode($data, JSON_UNESCAPED_SLASHES);
+                            }
+                            exit;
+                        }else{
+                            header('Content-type: application/json');
+                            echo '{}';
+                            exit;
+                        }
+                        break;
                     
                     }
                     

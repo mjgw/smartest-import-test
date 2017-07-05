@@ -1,0 +1,9 @@
+strings:
+  explanation: "Galleries are sortable selections of captionable files that are used for display purposes"
+  create_button: Criar uma nova galeria
+  sidebar_options:
+    selected_group_heading: Galeria selecionada
+    selected_group_info: Informaçao sobre esta galeria
+    selected_group_edit_contents: Editar conteúdo
+    selected_group_contents: Olhar conteúdo
+    selected_group_delete: Apagar galeria

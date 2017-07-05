@@ -770,6 +770,7 @@ class Sets extends SmartestSystemApplication{
             $this->send($set->getSyndicateAsRSS(), 'set_syndicate_as_rss');
             $this->send($set->getSyndicateAsAtom(), 'set_syndicate_as_atom');
             $this->send($set->getSyndicateAsItunes(), 'set_syndicate_as_itunes');
+            $this->send($set->getSyndicateAsJson(), 'set_syndicate_as_json');
             
             $this->send($set->getRssChannelImage(), 'set_rss_feed_image');
             $this->send($set->getFeedAuthor(), 'set_feed_author');
@@ -791,6 +792,7 @@ class Sets extends SmartestSystemApplication{
             $set->setSyndicateAsRSS(SmartestStringHelper::toRealBool($this->getRequestParameter('set_syndicate_as_rss')));
             $set->setSyndicateAsAtom(SmartestStringHelper::toRealBool($this->getRequestParameter('set_syndicate_as_atom')));
             $set->setSyndicateAsItunes(SmartestStringHelper::toRealBool($this->getRequestParameter('set_syndicate_as_itunes')));
+            $set->setSyndicateAsJson(SmartestStringHelper::toRealBool($this->getRequestParameter('set_syndicate_as_json')));
             
             $set->setRssChannelImageId($this->getRequestParameter('rss_channel_image_id'));
             $set->setFeedAuthor($this->getRequestParameter('set_feed_author'));

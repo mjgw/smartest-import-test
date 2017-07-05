@@ -565,7 +565,7 @@ class Pages extends SmartestSystemApplication{
 		
 		if(!$this->requestParameterIsSet('placeholder_type')){
 		
-    		if(strpos($placeholder_name, 'img') !== false || strpos($placeholder_name, 'image') !== false || strpos($placeholder_name, 'banner') !== false){
+    		if(strpos($placeholder_name, 'img') !== false || strpos($placeholder_name, 'image') !== false || strpos($placeholder_name, 'banner') !== false || strpos($placeholder_name, 'graphic') !== false){
     		    $suggested_type = 'SM_ASSETCLASS_STATIC_IMAGE';
     		    $this->send(true, 'type_suggestion_automatic');
     		}else if(strpos($placeholder_name, 'css') !== false || strpos($placeholder_name, 'stylesheet') !== false){
@@ -592,8 +592,13 @@ class Pages extends SmartestSystemApplication{
     	
     	if($selected_type){
 		    $groups = $h->getAssetGroupsForPlaceholderType($selected_type, $this->getSite()->getId());
+            $final_type = $selected_type;
 	    }else if($suggested_type){
 	        $groups = $h->getAssetGroupsForPlaceholderType($suggested_type, $this->getSite()->getId());
+            $final_type = $suggested_type;
+	    }else{
+	        $groups = array();
+            $final_type = null;
 	    }
 		
 		$this->send($suggested_type, 'suggested_type');
@@ -602,6 +607,7 @@ class Pages extends SmartestSystemApplication{
 		$this->send($selected_type, 'selected_type');
 		$this->send($placeholder_name, 'name');
 		$this->send($asset_class_types, 'types');
+        $this->send($final_type, 'final_type');
 		
 	}
 	
@@ -3352,6 +3358,7 @@ class Pages extends SmartestSystemApplication{
     		if($page->hydrateBy('webid', $page_webid)){
 	        
     	        $page->setDraftMode(true);
+                $item_uses_default = false;
 	        
     	        if(isset($require_item) && $require_item){
                 
@@ -3375,7 +3382,7 @@ class Pages extends SmartestSystemApplication{
                     $this->send($placeholder->onlyAcceptsImages(), 'only_accepts_images');
 	            
     	            $types_array = SmartestDataUtility::getAssetTypes();
-                
+                    $params = array();
                     $page_definition = new SmartestPlaceholderDefinition;
                 
                     if($page_definition->load($placeholder_name, $page, true, $this->getRequestParameter('item_id'), $instance_name)){

@@ -14,8 +14,7 @@ class SmartestTwitterAccountName extends SmartestString{
     
     public function getUrl($secure=true){
         
-        $p = $secure ? 'https' : 'http';
-        return new SmartestExternalUrl($p.'://twitter.com/'.$this->_string);
+        return new SmartestExternalUrl('https://twitter.com/'.$this->_string);
         
     }
     

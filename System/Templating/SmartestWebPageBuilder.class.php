@@ -581,7 +581,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 }else{
                     $edit_link = "<a class=\"sm-edit-button\" title=\"Placeholder ".$placeholder_name." does not exist. Click to create.\" href=\"".$this->_request_data->g('domain')."websitemanager/addPlaceholder?placeholder_name=".$placeholder_name."\" style=\"text-decoration:none;font-size:11px";
                     if($this->_hide_edit_buttons) $edit_link .= ';display:none';
-                    $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/Icons/error.png\" alt=\"edit\" style=\"display:inline;border:0px;\" /></a>";
+                    $edit_link .= "\" target=\"_top\"><img src=\"".$this->_request_data->g('domain')."Resources/System/Images/placeholder-warning.png\" alt=\"edit\" style=\"width:16px;display:inline;border:0px;\" /></a>";
                 }
             
             }

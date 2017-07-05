@@ -64,6 +64,11 @@ module:
       action: getDataSetFeed
       params:
         format: itunes
+    set_public_json_feed:
+      url: /feeds/json/:nonce/:set_name.json
+      action: getDataSetFeed
+      params:
+        format: json
     author:
       url: /author/:username
       action: getAuthorProfile

@@ -14,8 +14,14 @@ class SmartestInstallationStatusHelper{
         }else{
         // if(SmartestCache::load('installation_status', true) !== SM_INSTALLSTATUS_COMPLETE || $purge || (!is_file(SM_ROOT_DIR.'Public/.htaccess') || !is_file(SM_ROOT_DIR.'Configuration/controller.xml') || !is_file(SM_ROOT_DIR.'Configuration/database.ini'))){
             
+    	    if(is_file(SM_ROOT_DIR."System/Core/Info/system.yml")){
+    	        $SYSTEM_INFO_FILE = SM_ROOT_DIR."System/Core/Info/system.yml";
+    	    }else if(is_file(SM_ROOT_DIR."System/Core/Info/.system.yml")){
+    	        $SYSTEM_INFO_FILE = SM_ROOT_DIR."System/Core/Info/.system.yml";
+    	    }
+            
             // session_start();
-            $system_data = SmartestYamlHelper::toParameterHolder(SM_ROOT_DIR.'System/Core/Info/system.yml', false);
+            $system_data = SmartestYamlHelper::toParameterHolder($SYSTEM_INFO_FILE, false);
             $writable_files = array_merge($system_data->g('system')->g('writable_locations')->g('always')->toArray(), $system_data->g('system')->g('writable_locations')->g('installation')->toArray());
             
             $errors = array();
@@ -30,7 +36,7 @@ class SmartestInstallationStatusHelper{
     		    throw new SmartestNotInstalledException(SM_INSTALLSTATUS_NO_FILE_PERMS);
     		}
     		
-    		// Now, if a form has been submit, there might be an installer action that needs to be carried out before we check the installation status again
+    		// Now, if a form has been submitted, there might be an installer action that needs to be carried out before we check the installation status again
     		if(isset($_POST['execute']) && $_POST['execute'] == '1' && isset($_POST['action'])){
     		    
     		    if(!class_exists('SmartestInstaller')){
@@ -41,7 +47,7 @@ class SmartestInstallationStatusHelper{
                 
                 SmartestLog::getInstance('installer')->log('The installer submitted action \''.$action.'\'.', SM_LOG_DEBUG);
 
-                // Yes, yes, I know, switch/case is ugly, but the whole point of this is not to rely on any of the actual Smartest code - just small and simple.
+                // Yes, yes, switch/case is ugly, but the whole point of this is not to rely on any of the actual Smartest code - just small and simple.
                 switch($action){
 
                     case 'createConfigs':

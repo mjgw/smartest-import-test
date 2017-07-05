@@ -1,0 +1,27 @@
+# Bundled with Smartest for quick setup
+---
+modelkit: 
+  label: Lightweight articles
+  description: "A basic article model that provides date published, thumbnail image, synopsis and of course text"
+  name: Article
+  plural: Articles
+  name_field_label: Headline
+  long_id_format: _STD
+  default_thumbnail_property: thumbnail_image
+  default_sort_property: date_published
+  default_sort_dir: DESC
+  properties: 
+    date_published: 
+      label: Date published
+      type: SM_DATATYPE_DATE
+    synopsis: 
+      label: Synopsis
+      type: SM_DATATYPE_ML_TEXT
+    thumbnail_image: 
+      label: Thumbnail image
+      type: SM_DATATYPE_ASSET
+      filetype: SM_ASSETCLASS_STATIC_IMAGE
+    main_text: 
+      label: Main text
+      type: SM_DATATYPE_ASSET
+      filetype: SM_ASSETCLASS_TEXT

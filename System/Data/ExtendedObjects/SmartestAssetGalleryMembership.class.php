@@ -105,6 +105,19 @@ class SmartestAssetGalleryMembership extends SmartestManyToManyLookup{
         return parent::save();
     }
     
+    public function __toSimpleObject(){
+        $obj = new stdClass;
+        $obj->id = (int) $this->getId();
+        $obj->object_type = 'gallery_conn';
+        $obj->caption = $this->getCaption();
+        $obj->file = $this->getAsset()->__toSimpleObjectForParentObjectJson();
+        return $obj;
+    }
+    
+    public function stdObjectOrScalar(){
+        return $this->__toSimpleObject();
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){

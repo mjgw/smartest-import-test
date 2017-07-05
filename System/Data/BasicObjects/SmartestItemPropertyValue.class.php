@@ -183,7 +183,7 @@ class SmartestItemPropertyValue extends SmartestBaseItemPropertyValue{
                     $r->setTargetEntityByIndex($this->getProperty()->getManyToManyRelationshipMappedObjectEntityIndex());
                     
                     if(!$draft){
-                        $r->addConstraint('Items.item_public', 'TRUE');
+                        // $r->addConstraint('Items.item_public', 'TRUE');
                     }
                     
                     // print_r($r->getIds($mode));

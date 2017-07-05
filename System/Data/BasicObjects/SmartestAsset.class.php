@@ -73,13 +73,62 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
         $obj->type_info = $this->getTypeInfo();
         $obj->is_binary_image = $this->isBinaryImage();
         $obj->is_web_accessible = $this->isWebAccessible();
+        $obj->mime_type = $this->getMimeType();
         if($this->isWebAccessible()){
-            $obj->absolute_uri = $this->getAbsoluteUri();
+            $obj->uri = $this->getAbsoluteUri();
         }
         if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL' && is_object($this->getOembedService())){
             $obj->oembed_service = $this->getOembedService()->getArray();
         }
         return $obj;
+    }
+    
+    public function __toSimpleObjectForParentObjectJson(){
+        
+        // $obj = parent::__toSimpleObject();
+        // $obj->type_info = $this->getTypeInfo();
+        // $obj->is_binary_image = $this->isBinaryImage();
+        // $obj->is_web_accessible = $this->isWebAccessible();
+        // if($this->isWebAccessible()){
+        //     $obj->absolute_uri = $this->getAbsoluteUri();
+        // }
+        // if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL' && is_object($this->getOembedService())){
+        //     $obj->oembed_service = $this->getOembedService()->getArray();
+        // }
+        // return $obj;
+        
+        $obj = new stdClass;
+        $obj->id = (int) $this->getId();
+        $obj->webid = $this->getWebId();
+        $obj->label = $this->getLabel();
+        $obj->type = $this->getType();
+        $obj->mime_type = $this->getMimeType();
+        $obj->size = $this->getSize(true);
+        $obj->object_type = 'file';
+        
+        if($this->isWebAccessible()){
+            $obj->uri = $this->getAbsoluteUri(true);
+        }elseif($this->isExternal()){
+            $obj->uri = $this->getUrl();
+        }
+        
+        $obj->download_uri = $this->getAbsoluteDownloadUri();
+        
+        if($this->usesTextFragment()){
+            $obj->word_count = $this->getWordCount();
+        }
+        if($this->usesTextFragment() && $this instanceof SmartestRenderableAsset){
+            $obj->content = $this->render();
+        }elseif($this->isEditable()){
+            if($this->usesTextFragment()){
+                $obj->content = strip_tags($this->getContent(true));
+            }else{
+                $obj->content = $this->getContent(true);
+            }
+        }
+        
+        return $obj;
+        
     }
 	
 	public function offsetGet($offset){
@@ -138,7 +187,7 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
             break;
             
             case "encoded_url":
-            return str_replace('+','%20', urlencode($this->getUrl()));
+            return $this->getEncodedFileName();
             
             case "bg_css":
             if($this->isImage()){
@@ -630,6 +679,10 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	        return null;
 	    }
 	}
+    
+    public function hasContent(){
+        return $this->usesTextFragment() || ($this->isEditable() && is_file($this->getFullPathOnDisk()));
+    }
 	
     // Will return exactly what is stored
 	public function getContent($raw=false){
@@ -670,9 +723,13 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     	    $string = null;
     	}
     	
-    	$s = new SmartestString($string);
+        if($raw){
+            return $string;
+        }else{
+            $s = new SmartestString($string);
+    	    return $s;
+        }
     	
-    	return $s;
     	
 	}
     
@@ -807,13 +864,17 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    $info = $this->getTypeInfo();
 	    return $this->usesLocalFile() && substr($info['storage']['location'], 0, strlen('Public/')) == 'Public/';
 	}
+    
+    public function getEncodedFileName(){
+        return rawurlencode($this->getUrl());
+    }
 	
 	public function getFullWebPath(){
 	    
 	    $info = $this->getTypeInfo();
 	    
 	    if($this->isWebAccessible()){
-	        return $this->_request->getDomain().substr($info['storage']['location'], strlen('Public/')).urlencode($this->getUrl());
+	        return $this->_request->getDomain().substr($info['storage']['location'], strlen('Public/')).$this->getEncodedFileName();
 	    }else{
 	        return null;
 	    }
@@ -825,17 +886,24 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
 	    return ($info['storage']['type'] == 'external_translated');
 	}
 	
-	public function getAbsoluteUri(){
-	  
-	    if($this->isExternal()){
-	        return new SmartestExternalUrl($this->getUrl());
+	public function getAbsoluteUri($raw=false){
+        
+        if($this->isExternal()){
+	        $url = $this->getUrl();
 	    }else{
 	        if($this->isWebAccessible()){
-	            return new SmartestExternalUrl('http://'.$this->getSite()->getDomain().$this->getFullWebPath());
+                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https://' : 'http://';
+	            $url = $protocol.$this->getSite()->getDomain().$this->getFullWebPath();
 	        }else{
 	            return null;
 	        }
 	    }
+        
+        if($raw){
+            return $url;
+        }else{
+            return new SmartestExternalUrl($url);
+        }
 	    
 	}
 	
@@ -1166,9 +1234,9 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     	        $this->_absolute_uri_object = new SmartestExternalUrl($this->getUrl());
     	    }else{
                 if($this->getSiteId() == 0){
-                    $this->_absolute_uri_object = new SmartestExternalUrl($protocol.$this->getCurrentSite()->getDomain().$this->getDownloadUrl());
+                    $this->_absolute_uri_object = new SmartestExternalUrl(SM_PROTOCOL.SM_SITE_HOST.$this->getDownloadUrl());
                 }else{
-                    $this->_absolute_uri_object = new SmartestExternalUrl($protocol.$this->getSite()->getDomain().$this->getDownloadUrl());
+                    $this->_absolute_uri_object = new SmartestExternalUrl(SM_PROTOCOL.SM_SITE_HOST.$this->getDownloadUrl());
                 }
             }
         }

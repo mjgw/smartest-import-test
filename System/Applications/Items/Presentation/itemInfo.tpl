@@ -119,7 +119,12 @@
       {$item.absolute_uri.qr_code_image.width_100}
     </div> *}
   {/if}
-  
+  <div class="edit-form-row">
+     <div class="form-section-label">Public JSON</div>
+     <div class="edit-form-sub-row">
+       <pre>{$item._json_pretty|xmlentities}</pre>
+     </div>
+   </div>
   </div>
 
 <div id="actions-area">

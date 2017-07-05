@@ -1,6 +1,6 @@
 <?php
 
-class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue, SmartestSearchableValue{
+class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue, SmartestSearchableValue, SmartestJsonCompatibleObject{
     
     protected $_value;
     protected $_all_day = false;
@@ -173,7 +173,7 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
     public function __toString(){
         
         if($this->_is_never){
-            return 'Never';
+            return (string) $this->_value;
         }
         
         if($this->_all_day){
@@ -189,6 +189,10 @@ class SmartestDateTime implements SmartestBasicType, ArrayAccess, SmartestStorab
                 return date($this->_time_format.' \o\n '.$this->_day_format, $this->_value);
             }
         }
+    }
+    
+    public function stdObjectOrScalar(){
+        return date('c', $this->_value);
     }
     
     // The next two methods are for the SmartestStorableValue interface

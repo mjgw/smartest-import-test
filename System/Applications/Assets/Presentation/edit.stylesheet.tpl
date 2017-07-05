@@ -63,16 +63,4 @@
   
   </script>
   
-  <!--<script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
-
-  <script type="text/javascript">
-  {literal}  var editor = new CodeMirror.fromTextArea('tpl_textArea', {{/literal}
-    parserfile: "parsecss.js",
-    stylesheet: "{$domain}Resources/System/Javascript/CodeMirror-0.65/css/csscolors.css",
-    continuousScanning: 500,
-    height: '300px',
-    path: "{$domain}Resources/System/Javascript/CodeMirror-0.65/js/"
-  {literal}  }); {/literal}
-  </script>-->
-  
 {if $allow_save}</form>{/if}

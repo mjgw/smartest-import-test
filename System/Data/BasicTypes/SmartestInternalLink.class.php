@@ -1,6 +1,6 @@
 <?php
 
-class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue, SmartestJsonCompatibleObject, JsonSerializable{
     
     /* protected $_page_id;
     protected $_item_id;
@@ -66,13 +66,27 @@ class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, Smart
     
     public function __toString(){
         return $this->render();
-        // return $this->getStorableFormat();
+    }
+    
+    public function stdObjectOrScalar(){
+        $dest = $this->getDestinationObject();
+        if($dest instanceof SmartestJsonCompatibleObject){
+            if($this->getType() == SM_LINK_TYPE_DOWNLOAD || $this->getType() == SM_LINK_TYPE_INTERNAL_ITEM || $this->getType() == SM_LINK_TYPE_METAPAGE){
+                return $dest->__toSimpleObjectForParentObjectJson();
+            }else{
+                return $dest->stdObjectOrScalar();
+            }
+        }else{
+            return null;
+        }
+    }
+    
+    public function jsonSerialize() {
+        return $this->stdObjectOrScalar();
     }
     
     public function isPresent(){
-        
         return is_object($this->getDestinationObject());
-        
     }
     
     public function getDestinationObject(){

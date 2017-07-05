@@ -436,7 +436,7 @@ class SmartestAssetsLibraryHelper{
     
     public function getUnWritableStorageLocations(){
         
-        $data = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Core/Info/system.yml');
+        $data = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
         $locations = $data['system']['writable_locations']['files_repo'];
         $problem_locations = array();
         
@@ -918,13 +918,37 @@ class SmartestAssetsLibraryHelper{
 	    
 	}
 	
-	public function getAssetGroups($site_id='', $groups_only=false){
+	public function getAssetGroups($site_id=null, $groups_only=false){
 	    
 	    if($groups_only){
 	        $sql = "SELECT * FROM Sets WHERE set_type='SM_SET_ASSETGROUP' AND set_is_hidden = '0'";
         }else{
             $sql = "SELECT * FROM Sets WHERE (set_type='SM_SET_ASSETGROUP' OR set_type='SM_SET_ASSETGALLERY') AND set_is_hidden = '0'";
         }   
+	    
+	    if(is_numeric($site_id)){
+	        $sql .= " AND (set_site_id='".$site_id."' OR set_shared=1)";
+	    }
+	    
+	    $sql .= " ORDER BY set_name";
+	    
+	    $result = $this->database->queryToArray($sql);
+	    
+	    $groups = array();
+	    
+	    foreach($result as $r){
+	        $g = new SmartestAssetGroup;
+	        $g->hydrate($r);
+	        $groups[] = $g;
+	    }
+	    
+	    return $groups;
+	    
+	}
+    
+	public function getAssetGalleries($site_id=null){
+	    
+	    $sql = "SELECT * FROM Sets WHERE set_type='SM_SET_ASSETGALLERY' AND set_is_hidden = '0'";   
 	    
 	    if(is_numeric($site_id)){
 	        $sql .= " AND (set_site_id='".$site_id."' OR set_shared=1)";

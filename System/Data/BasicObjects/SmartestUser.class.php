@@ -174,38 +174,23 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
 	}
 	
 	public function __toString(){
-	    
 	    return $this->getFullName();
-	    
 	}
     
-    public function __toJsonSafeSimpleObject(){
-        
-	    $obj = $this->__toSimpleObject();
-        unset($obj->password);
-        unset($obj->password_salt);
-        unset($obj->password_last_changed);
-        unset($obj->password_change_required);
-        unset($obj->activation_key);
-        unset($obj->register_date);
-        unset($obj->last_visit);
-        unset($obj->is_smartest_account);
-        unset($obj->type);
-        unset($obj->oauth_service_id);
-        unset($obj->answers_to_user_id);
-        unset($obj->oauth_consumer_token);
-        unset($obj->oauth_consumer_secret);
-        unset($obj->oauth_access_token);
-        unset($obj->oauth_access_token_secret);
+    public function __toSimpleObject(){
+        $obj = parent::__toSimpleObject();
+        $obj->object_type = 'user';
+        if($this->getType() != 'SM_USERTYPE_SYSTEM_USER'){
+            $obj->profile_pic = (is_object($this->getProfilePic())) ? $this->getProfilePic()->__toSimpleObjectForParentObjectJson() : null;
+            $obj->bio = ($this->getBioTextAsset() instanceof SmartestRenderableAsset) ? $this->getBioTextAsset()->__toSimpleObjectForParentObjectJson() : null;
+        }
+        $obj->invert_name_order = SmartestStringHelper::toRealBool($obj->invert_name_order);
         return $obj;
-        
     }
     
-	public function __toJson(){
-	    
-	    return json_encode($this->__toJsonSafeSimpleObject());
-	    
-	}
+    public function stdObjectOrScalar(){
+        return $this->__toSimpleObject();
+    }
 	
 	public function getFullName(){
 	    
@@ -570,11 +555,11 @@ class SmartestUser extends SmartestBaseUser implements SmartestBasicType, Smarte
         }
         
         $id = $this->getField('bio_asset_id');
-        $asset = new SmartestAsset;
+        $asset = new SmartestRenderableAsset;
         
         if(!is_numeric($id) || !$asset->find($id)){
             
-            $this->_bio_text_asset = new SmartestAsset;
+            $this->_bio_text_asset = new SmartestRenderableAsset;
             
             $this->_bio_text_asset->setWebid(SmartestStringHelper::random(32));
             $this->_bio_text_asset->setLabel('User profile bio for '.$this->getFullName());

@@ -1,6 +1,6 @@
 <?php
 
-class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countable, SmartestBasicType{
+class SmartestParameterHolder extends SmartestObject implements IteratorAggregate, Countable, SmartestBasicType, SmartestJsonCompatibleObject{
     
     protected $_data = array();
     protected $_name;
@@ -61,13 +61,17 @@ class SmartestParameterHolder implements ArrayAccess, IteratorAggregate, Countab
     public function __toSimpleObject(){
         $obj = new stdClass;
         foreach($this->_data as $k=>$v){
-            if(method_exists($v, '__toJsonCompatible')){
-                $obj->$k = $v->__toJsonCompatible();
+            if($v instanceof SmartestJsonCompatibleObject){
+                $obj->$k = $v->stdObjectOrScalar();
             }else{
                 $obj->$k = $v;
             }
         }
         return $obj;
+    }
+    
+    public function stdObjectOrScalar(){
+        return $this->__toSimpleObject();
     }
     
     public function debug(){

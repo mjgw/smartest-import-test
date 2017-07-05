@@ -74,9 +74,14 @@ class CmsFrontEndAjax extends SmartestSystemApplication{
     		        }
     		        
     		    }else{
-                    $json = $page->__toJson();
-    		        header('Content-type: application/json');
-                    header("Content-Length: ".strlen($json));
+                    $data = $page->__toSimpleObject();
+                    header('Content-type: application/json');
+                    if(version_compare(PHP_VERSION, '5.4.0') >= 0 && $this->requestParameterIsSet('pretty') && $this->getRequestParameter('pretty')){
+                        $json = json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+                    }else{
+                        $json = json_encode($data, JSON_UNESCAPED_SLASHES);
+                    }
+    		        header("Content-Length: ".strlen($json));
 	                echo $json;
 	                exit;
     		    }

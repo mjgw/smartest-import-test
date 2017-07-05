@@ -30,6 +30,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	protected $displayPages = array();
 	protected $_site;
 	protected $_parent_site = null;
+    protected $_thumbnail_image_asset = null;
     
     protected $_page_info;
 	
@@ -1715,6 +1716,23 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	public function __toSimpleObject(){
 	    
 	    $obj = parent::__toSimpleObject();
+        if(is_object($this->getThumbnailImage()) && $this->getThumbnailImage()->getId()){
+            $obj->thumbnail_image = $this->getThumbnailImage()->__toSimpleObjectForParentObjectJson();
+        }else{
+            $obj->thumbnail_image = null;
+        }
+        $obj->formatted_title = $this->getFormattedTitle();
+        $obj->uri = $this->getFullUrl();
+        $obj->created = date('c', $obj->created);
+        $obj->modified = $obj->modified ? date('c', $obj->modified) : null;
+        $obj->last_published = $obj->last_published ? date('c', $obj->last_published) : null;
+        $obj->last_built = $obj->last_built ? date('c', $obj->last_built) : null;
+	    $obj->is_section = (bool) $this->getIsSection();
+	    $obj->is_published = SmartestStringHelper::toRealBool($this->getIsPublished());
+	    $obj->deleted = SmartestStringHelper::toRealBool($this->getDeleted());
+        $obj->tags = $this->getTagNames();
+        $obj->is_home = $this->isHomePage();
+        $obj->object_type = 'page';
 	    return $obj;
 	    
 	}
@@ -1723,38 +1741,23 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    
 	    $obj = $this->__toSimpleObject();
 	    
-	    // The data need moulding slightly
-	    unset($obj->is_held);
-	    unset($obj->held_by);
-	    unset($obj->url);
-	    unset($obj->dataset_id);
-	    unset($obj->cache_interval);
-	    unset($obj->cache_as_html);
-	    unset($obj->changes_approved);
-	    unset($obj->draft_template);
+	    // $obj->created = (int) $this->getCreated();
+	    // $obj->modified = (int) $this->getModified();
+	    // $obj->last_published = (int) $this->getLastPublished();
+	    // $obj->fields = $this->getPageFieldDefinitions()->__toSimpleObject();
 	    
-	    $obj->is_section = (bool) $this->getIsSection();
-	    $obj->is_published = SmartestStringHelper::toRealBool($this->getIsPublished());
-	    $obj->deleted = SmartestStringHelper::toRealBool($this->getDeleted());
-	    $obj->created = (int) $this->getCreated();
-	    $obj->modified = (int) $this->getModified();
-	    $obj->last_published = (int) $this->getLastPublished();
-	    $obj->tags = $this->getTagNames();
-	    $obj->fields = $this->getPageFieldDefinitions()->__toSimpleObject();
-	    
-	    $obj->formatted_title = $this->getFormattedTitle();
 	    if($this->isHomePage()){
-	        $obj->is_home = true;
-	        unset($obj->parent);
+	        // $obj->is_home = true;
+	        // unset($obj->parent);
 	    }else{
-	        $obj->is_home = false;
-	        $obj->parent_webid = $this->getParentPage()->getWebid();
-	        $obj->parent_id = $this->getParentPage()->getId();
-	        $obj->parent_title = $this->getParentPage()->getTitle();
-	        $obj->parent_formatted_title = $this->getParentPage()->getFormattedTitle();
+	        // $obj->is_home = false;
+	        // $obj->parent_webid = $this->getParentPage()->getWebid();
+	        // $obj->parent_id = $this->getParentPage()->getId();
+	        // $obj->parent_title = $this->getParentPage()->getTitle();
+	        // $obj->parent_formatted_title = $this->getParentPage()->getFormattedTitle();
 	    }
 	    
-	    return json_encode($obj);
+	    return json_encode($obj, JSON_UNESCAPED_SLASHES);
 	    
 	}
 	

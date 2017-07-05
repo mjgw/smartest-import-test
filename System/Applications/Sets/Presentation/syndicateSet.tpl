@@ -12,23 +12,23 @@
     
     <div class="edit-form-row">
       <div class="form-section-label">Syndicate as Atom</div>
-      {boolean name="set_syndicate_as_atom" id="set-syndicate-as-atom" changehook="test" value=$set_syndicate_as_atom}
+      {boolean name="set_syndicate_as_atom" id="set-syndicate-as-atom" value=$set_syndicate_as_atom}
       <div class="form-hint">When syndicated, the Atom feed for this set will be available at: <strong>http://{$_site.domain}{$domain}feeds/atom/{$set.feed_nonce}/{$set.name}.xml</strong></div>
     </div>
     
     <div class="edit-form-row">
       <div class="form-section-label">Syndicate as podcast to iTunes</div>
-      {boolean name="set_syndicate_as_itunes" id="set-syndicate-as-itunes" changehook="test" value=$set_syndicate_as_itunes}
+      {boolean name="set_syndicate_as_itunes" id="set-syndicate-as-itunes" value=$set_syndicate_as_itunes}
       <div class="form-hint">When syndicated, the iTunes RSS feed for this set will be available at: <strong>itpc://{$_site.domain}{$domain}feeds/itunes/{$set.feed_nonce}/{$set.name}.xml</strong></div>
     </div>
     
-    <div class="form-section-label-full">Feed settings</div>
-    
     <div class="edit-form-row">
-      <div class="form-section-label">Decription</div>
-      <div class="breaker"></div>
-      <textarea name="set_feed_description_text" id="description_textarea">{$set_feed_description_contents}</textarea>
+      <div class="form-section-label">Syndicate as JSON</div>
+      {boolean name="set_syndicate_as_json" id="set-syndicate-as-json" value=$set_syndicate_as_json}
+      <div class="form-hint">When syndicated, the JSON feed for this set will be available at: <strong>http://{$_site.domain}{$domain}feeds/json/{$set.feed_nonce}/{$set.name}.json</strong></div>
     </div>
+    
+    <div class="form-section-label-full">Feed settings</div>
     
     <div class="edit-form-row">
       <div class="form-section-label">Feed image</div>
@@ -38,6 +38,12 @@
     <div class="edit-form-row">
       <div class="form-section-label">Feed author</div>
       <input type="text" name="set_feed_author" value="{$set_feed_author}" />
+    </div>
+    
+    <div class="edit-form-row">
+      <div class="form-section-label">Decription</div>
+      <div class="breaker"></div>
+      <textarea name="set_feed_description_text" id="description_textarea">{$set_feed_description_contents}</textarea>
     </div>
     
     <div class="v-spacer"></div>

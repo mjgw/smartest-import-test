@@ -21,6 +21,9 @@ module:
     galleries:
       action: assetGalleries
       url: /smartest/files/galleries
+      presentation: assetGroups.tpl
+      meta:
+        presentation: assetGroups.tpl
     new_file:
       action: addAsset
       url: /smartest/file/new

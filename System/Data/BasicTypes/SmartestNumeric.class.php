@@ -2,7 +2,7 @@
 
 // A class that combines Integer and Double/Float type values. There is no need to separate these in Smartest's case.
 
-class SmartestNumeric implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestNumeric extends SmartestObject implements SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue, SmartestJsonCompatibleObject{
 
     protected $_value;
 	
@@ -42,6 +42,18 @@ class SmartestNumeric implements SmartestBasicType, ArrayAccess, SmartestStorabl
     
     public function isPresent(){
         return is_numeric($this->_value);
+    }
+    
+    public function stdObjectOrScalar(){
+        if(strpos($this->_value, '.') !== false){
+            return (float) $this->_value;
+        }else{
+            return (int) $this->_value;
+        }
+    }
+    
+    public function jsonSerialize() {
+        return $this->stdObjectOrScalar();
     }
     
     // The next two methods are for the SmartestStorableValue interface
@@ -89,8 +101,5 @@ class SmartestNumeric implements SmartestBasicType, ArrayAccess, SmartestStorabl
         
         return null;
     }
-    
-    public function offsetSet($offset, $value){}
-    public function offsetUnset($offset){}
 
 }

@@ -61,7 +61,7 @@ $('new-placeholder-form').observe('submit', function(e){
   
   {if $name}
       <div class="edit-form-row">
-        <div class="form-section-label">Markup </div>
+        <div class="form-section-label">Template tag </div>
         <code>&lt;?sm:placeholder name="{$name}":?&gt;</code><input type="hidden" name="placeholder_name" value="{$name}" />
       </div>
   {else}
@@ -97,7 +97,7 @@ $('new-placeholder-form').observe('submit', function(e){
   <div class="edit-form-row">
     <div class="buttons-bar">
       <input type="button" value="Cancel" onclick="cancelForm();" />
-      <input type="submit" value="Save" />
+      <input type="submit" value="Save new placeholder" />
     </div>
   </div>
 </form>

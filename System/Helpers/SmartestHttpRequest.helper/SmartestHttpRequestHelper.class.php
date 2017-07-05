@@ -109,7 +109,17 @@ class SmartestHttpRequestHelper extends SmartestHelper{
     		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
     		if($type == 'POST'){
+                
     			curl_setopt($ch, CURLOPT_POST, 1);
+                
+                if(is_array($variables)){
+                    curl_setopt($ch, CURLOPT_POST, count($variables));
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, implode('&', $variables));
+                }elseif(strlen($variables)){
+                    curl_setopt($ch, CURLOPT_POST, count(explode('&', $variables)));
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $variables);
+                }
+                
     		}
 		
     		$page = curl_exec($ch);

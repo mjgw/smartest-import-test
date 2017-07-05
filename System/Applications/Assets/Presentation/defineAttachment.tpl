@@ -40,7 +40,6 @@ function respondToAssetImageStatus(){
 var getNonImageAssetInfo = function(asset_id){
     new Ajax.Request(sm_domain+'ajax:assets/getAssetInfoJsonForAttachmentForm?attached_file_id='+asset_id, {
         onSuccess: function(transport) {
-            console.log(transport.responseJSON);
             selectedAssetInfo = transport.responseJSON;
             $('embed-default-width').update(selectedAssetInfo.width);
             if(selectedAssetInfo.width){

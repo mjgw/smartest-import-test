@@ -27,7 +27,7 @@ class SmartestErrorStack{
 		    
 		    header("HTTP/1.1 500 Internal Server Error");
 		    
-		    $sd = SmartestYamlHelper::fastLoad(SM_ROOT_DIR."System/Core/Info/system.yml");
+		    $sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
 		    $smartest_version = $sd['system']['info']['version'];
 		    $smartest_revision = $sd['system']['info']['revision'];
 		    

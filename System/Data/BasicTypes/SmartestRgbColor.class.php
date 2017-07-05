@@ -1,6 +1,6 @@
 <?php
 
-class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue, SmartestJsonCompatibleObject{
     
     protected $_red;
     protected $_green;
@@ -85,6 +85,21 @@ class SmartestRgbColor implements ArrayAccess, SmartestBasicType, SmartestStorab
     
     public function isPresent(){
         return $this->_red->isPresent() && $this->_green->isPresent() && $this->_blue->isPresent();
+    }
+    
+    public function stdObjectOrScalar(){
+        $obj = new stdClass;
+        $obj->red = $this->_red;
+        $obj->green = $this->_green;
+        $obj->blue = $this->_blue;
+        $obj->hex = '#'.$this->toHex();
+        $obj->brightness = $this->getBrightness();
+        $obj->object_type = 'rgb';
+        return $obj;
+    }
+    
+    public function jsonSerialize() {
+        return $this->stdObjectOrScalar();
     }
     
     // The next two methods are for the SmartestStorableValue interface

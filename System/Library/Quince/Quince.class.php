@@ -168,8 +168,6 @@ class QuinceAction{
         // make sure the method is callable
         if($this->_use_checking){
             
-            // var_dump($this->_action_object);
-            
             if(!is_callable(array($this->_action_object, $this->_action))){
                 
                 if($this->_action == $this->_module_info['default_action']){
@@ -385,13 +383,19 @@ class QuinceRequest{
     }
     
     final public function setMetas($m){
-        $this->_metas = $m;
+        if(is_array($m)){
+            $this->_metas = array_merge($m, $this->_metas);
+        }
     }
     
     final public function getMeta($m){
         if(isset($this->_metas[$m])){
             return $this->_metas[$m];
         }
+    }
+    
+    final public function hasMeta($m){
+        return isset($this->_metas[$m]);
     }
     
     final public function getModuleDirectory(){
@@ -492,21 +496,15 @@ class QuinceBase{
                 $destination = '';
             }
             
-            // print_r($matches);
-            
 		}else if(preg_match('/^@(\w+)(\?(.*))?$/', $to, $matches)){
 		    
-		    // print_r($matches);
-		    
-            $r = new QuinceRouter;
+		    $r = new QuinceRouter;
             $r->setRequest($this->_request);
             if($r->routeExists($this->_request->getModule().':'.$matches[1])){
                 $destination = $r->fetchRouteUrl('@'.$this->_request->getModule().':'.$matches[1].$matches[2]);
             }else{
                 $destination = '';
             }
-            
-            // print_r($matches);
             
 		}else{
 		    $destination = $to;
@@ -780,18 +778,19 @@ class QuinceRouter{
     }
     
     public function toUrlParameterString($array){
-	    if(!is_array($array)){
+        
+        $string = '';
+        
+        if(!is_array($array)){
 	        return '';
 	    }else{
 	        
 	        $i = 0;
 	        
 	        foreach($array as $key=>$value){
-	            
 	            if($i > 0) $string .= '&';
 	            $string .= $key.'='.urlencode($value);
                 $i++;
-                
 	        }
 	        
 	        return $string;
@@ -856,8 +855,7 @@ class QuinceRedirectException extends QuinceException{
 	public function redirect($sc=303, $exit=true){
 	    
 	    header("HTTP/1.1 ".$sc." ".$this->_status_codes[$sc]);
-	    // var_dump($this->getRedirectUrl());
-        header("Location: ".$this->getRedirectUrl());
+	    header("Location: ".$this->getRedirectUrl());
         
         if($exit){
             // exit;
@@ -921,7 +919,6 @@ class Quince{
         
         // load quince configuration
         $config = QuinceUtilities::fetchConfig($this->_home_dir.$config_file);
-        // var_dump(is_file($this->_home_dir.$config_file));
         $this->_exception_handling = $config['exception_handling'];
         $this->_module_dirs = $config['modules']['storage'];
         $this->_module_conf = $config['modules']['config'];
@@ -1108,18 +1105,18 @@ class Quince{
 	
 	public function getUrlFor($route_name){
 	    
-	    if(preg_match('/^@(\w+):(\w+)(\?(.*))?$/', $route_name, $matches)){
+	    if(preg_match('/^@(\w+):(\w+)(\?(.*))?$/', $route_name, $matches)){ // Another module from the one doing the requesting
             
             $r = new QuinceRouter;
             $r->setRequest($this->_current_request);
             
             if($r->routeExists($matches[1].':'.$matches[2])){
-                return $r->fetchRouteUrl($to, $matches);
+                return $r->fetchRouteUrl('@'.$matches[1].':'.$matches[2].$matches[3], $matches);
             }else{
                 throw new QuinceException("Supplied route '".$matches[1].':'.$matches[2]."' does not exist.");
             }
             
-		}else if(preg_match('/^@(\w+)(\?(.*))?$/', $route_name, $matches)){
+		}else if(preg_match('/^@(\w+)(\?(.*))?$/', $route_name, $matches)){ // The same module as doing the requesting
 		    
             $r = new QuinceRouter;
             $r->setRequest($this->_current_request);
@@ -1260,6 +1257,12 @@ class Quince{
                                     if(isset($r['params'])){
                                         $fra['params'] = $r['params'];
                                     }
+                                    if(isset($r['meta'])){
+                                        $fra['meta'] = $r['meta'];
+                                    }
+                                    // if(isset($r['presentation'])){
+                                    //     $fra['presentation'] = $r['presentation'];
+                                    // }
                                     $fake_route_aliases[] = $fra;
                                 }
                             }
@@ -1271,9 +1274,7 @@ class Quince{
                 }
             }
             
-			// print_r($aliases);
-			
-            // write one long list of the aliases to cache
+			// write one long list of the aliases to cache
             QuinceUtilities::cacheSet('all_aliases', $aliases);
             self::$raw_aliases = $aliases;
             
@@ -1312,9 +1313,7 @@ class Quince{
             $this->module_shortnames = QuinceUtilities::cacheGet('module_shortnames');
         }
 		
-		// print_r(self::$modules);
-	    
-	    if(!in_array($this->_default_module_name, $this->module_shortnames)){
+		if(!in_array($this->_default_module_name, $this->module_shortnames)){
             $this->handleException(new QuinceException("The specified default module, '{$this->_default_module_name}', does not exist."));
         }
 	    
@@ -1376,8 +1375,8 @@ class Quince{
         }catch(QuinceException $e){
             $this->handleException($e);
         }
-	    
-	    // Scan the modules
+        
+        // Scan the modules
 	    try{
 	        $this->scanModules();
         }catch(QuinceException $e){
@@ -1430,8 +1429,19 @@ class Quince{
 	                }
 	                self::$alias_shortcuts[$rs]['params'] = $alias['params'];
 	            }
-	            
-	            break;
+                
+                if(isset($alias['meta'])){
+	                foreach($alias['meta'] as $n => $v){
+	                    $this->_current_request->setMeta($n, $v);
+	                }
+	                self::$alias_shortcuts[$rs]['meta'] = $alias['meta'];
+	            }
+                
+                if(isset($alias['presentation'])){
+                    $this->_current_request->setMeta('_presentation', $alias['presentation']);
+                }
+                
+                break;
 	        }
 	        
 	        // Aliases that do:
@@ -1466,8 +1476,8 @@ class Quince{
     	            $this->_current_request->setRequestParameter($n, $argvalues[$i]);
     	            self::$alias_shortcuts[$rs]['url_vars'][$n] = $argvalues[$i];
     	        }
-    	        
-    	        break;
+                
+                break;
     	        
 	        }
 	    }

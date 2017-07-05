@@ -330,7 +330,7 @@ class SmartestBaseApplication extends QuinceBase{
 	
 	final public function isWebsitePage(){
 	    
-	    $sd = SmartestYamlHelper::fastLoad(SM_ROOT_DIR."System/Core/Info/system.yml");
+	    $sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
 	    $websiteMethodNames = $sd['system']['content_interaction_methods'];
 	    $method = $this->getRequest()->getModule().'/'.$this->getRequest()->getAction();
 	    return in_array($method, $websiteMethodNames);
@@ -339,7 +339,7 @@ class SmartestBaseApplication extends QuinceBase{
 	
 	final public function isPublicMethod(){
 	    
-	    $sd = SmartestYamlHelper::fastLoad(SM_ROOT_DIR."System/Core/Info/system.yml");
+	    $sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
 		$publicMethodNames = $sd['system']['public_methods'];
 		$method = $this->getRequest()->getModule().'/'.$this->getRequest()->getAction();
 		return in_array($method, $publicMethodNames);

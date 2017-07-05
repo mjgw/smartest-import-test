@@ -1,6 +1,6 @@
 <?php
 
-class SmartestLicense implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestLicense extends SmartestObject implements SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue, SmartestJsonCompatibleObject{
     
     protected $_shortname;
     protected $_allowsoftwareonlylicenses;
@@ -60,6 +60,14 @@ class SmartestLicense implements SmartestBasicType, ArrayAccess, SmartestStorabl
         return $this->setValue($data);
     }
     
+    public function stdObjectOrScalar(){
+        $obj = new stdClass;
+        $obj->label = $this->_data->getParameter('label');
+        $obj->id = $this->_shortname;
+        $obj->object_type = 'license';
+        return $obj;
+    }
+    
     public function renderInput($params){
         
     }
@@ -93,8 +101,5 @@ class SmartestLicense implements SmartestBasicType, ArrayAccess, SmartestStorabl
         }
         
     }
-    
-    public function offsetSet($offset, $value){}
-    public function offsetUnset($offset){}
     
 }

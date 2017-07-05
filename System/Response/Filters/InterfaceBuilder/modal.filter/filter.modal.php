@@ -27,18 +27,16 @@ function smartest_filter_modal($html, $filter){
         
         // if($element = simplexml_load_string(html_entity_decode('<div>'.$html.'</div>', ENT_COMPAT, 'UTF-8'))){
         if($element = simplexml_load_string('<div>'.$html.'</div>')){
-            // echo "Valid HTML";
+            // Valid HTML
             $work_area_element = $element->xpath("/div/div[1]");
             $work_area_element[0]['id'] = 'modal-work-area';
             return $work_area_element[0]->asXML();
         }else{
-            // echo "invalid HTML";
+            // invalid HTML
             $html = str_replace('id="work-area"', 'id="modal-work-area"', $html);
             $html = str_replace('id="actions-area"', 'id="modal-actions-area"', $html);
             return $html;
         }
-        
-        // return $html;
         
     }else{
         return $html;

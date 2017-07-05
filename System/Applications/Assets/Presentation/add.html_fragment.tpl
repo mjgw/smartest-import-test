@@ -20,15 +20,3 @@ var myCodeMirror = CodeMirror.fromTextArea($('tpl_textArea'), {
   });
 {/literal}
 </script>
-
-<!--  <script src="{$domain}Resources/System/Javascript/CodeMirror-0.65/js/codemirror.js" type="text/javascript"></script>
-
-  <script type="text/javascript">
-  {literal}  var editor = new CodeMirror.fromTextArea('tpl_textArea', {{/literal}
-    parserfile: 'parsexml.js',
-    stylesheet: "{$domain}Resources/System/Javascript/CodeMirror-0.65/css/xmlcolors.css",
-    continuousScanning: 500,
-    height: '310px',
-    path: "{$domain}Resources/System/Javascript/CodeMirror-0.65/js/"
-  {literal}  }); {/literal}
-  </script>-->

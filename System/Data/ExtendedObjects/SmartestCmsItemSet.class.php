@@ -38,6 +38,25 @@ class SmartestCmsItemSet extends SmartestSet implements SmartestSetApi, Smartest
     public function &getIterator(){
         return new ArrayIterator($this->getMembers());
     }
+    
+    public function __toSimpleObject(){
+        $obj = $this->__toSimpleObjectForParentObjectJson();
+        $obj->members = array();
+        foreach($this->getMembers() as $m){
+            $obj->members[] = $m->__toSimpleObjectForParentObjectJson();
+        }
+        return $obj;
+    }
+    
+    public function __toSimpleObjectForParentObjectJson(){
+        $obj = parent::__toSimpleObject();
+        $obj->object_type = 'item_set';
+        return $obj;
+    }
+    
+    public function stdObjectOrScalar(){
+        return $this->__toSimpleObject();
+    }
 	
 	public function addItems($item_ids){
 	    
@@ -964,6 +983,16 @@ class SmartestCmsItemSet extends SmartestSet implements SmartestSetApi, Smartest
     public function getSyndicateAsITunes(){
         $current_site_id = $this->getCurrentSiteId();
         return (bool) $this->getSettingValue('syndicate_as_itunes_site_'.$current_site_id);
+    }
+    
+    public function setSyndicateAsJson($flag){
+        $current_site_id = $this->getCurrentSiteId();
+        $this->setSettingValue('syndicate_as_json_site_'.$current_site_id, (int) (bool) $flag);
+    }
+    
+    public function getSyndicateAsJson(){
+        $current_site_id = $this->getCurrentSiteId();
+        return (bool) $this->getSettingValue('syndicate_as_json_site_'.$current_site_id);
     }
     
     public function setRssChannelImageId($id){

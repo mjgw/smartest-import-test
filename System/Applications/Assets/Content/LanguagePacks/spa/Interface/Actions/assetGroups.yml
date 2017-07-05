@@ -1,5 +1,6 @@
 strings:
   explanation: "Agrupar archivos es la forma más sencilla de mantener los archivos organizados cuando hay muchos."
+  create_button: Criar un grupo nuevo
   sidebar_options:
     selected_group_heading: Grupo seleccionado
     selected_group_info: Información sobre este grupo

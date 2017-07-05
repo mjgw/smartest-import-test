@@ -296,7 +296,7 @@ class SmartestTemplatesLibraryHelper{
     
     public function getUnWritableStorageLocations(){
         
-        $data = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'System/Core/Info/system.yml');
+        $data = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
         $locations = $data['system']['writable_locations']['templates_repo'];
         $problem_locations = array();
         

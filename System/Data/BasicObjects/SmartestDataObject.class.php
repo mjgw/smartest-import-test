@@ -1,6 +1,6 @@
 <?php
 
-class SmartestDataObject extends SmartestObject{
+class SmartestDataObject extends SmartestObject implements SmartestJsonCompatibleObject{
 	
 	protected $_properties = array();
 	protected $_modified_properties = array();
@@ -207,14 +207,6 @@ class SmartestDataObject extends SmartestObject{
 	    
 	}
 	
-	public function offsetSet($offset, $value){
-	    // read only
-	}
-	
-	public function offsetUnset($offset){
-	    // read only
-	}
-	
 	public function getId(){
 	    return $this->_properties['id'];
 	}
@@ -262,6 +254,15 @@ class SmartestDataObject extends SmartestObject{
 	public function getUnprefixedFields(){
 	    return array_keys($this->_no_prefix);
 	}
+    
+	public function getPrivateFields(){
+        if(isset($this->_private_fields)){
+            return array_keys($this->_private_fields);
+        }else{
+            $this->refreshClass();
+            return array();
+        }
+	}
 	
 	public function __toArray(){
 		$data = $this->_properties;
@@ -278,8 +279,13 @@ class SmartestDataObject extends SmartestObject{
 	    $obj = new stdClass;
 	    
 	    foreach($this->_properties as $property => $value){
-	        $obj->$property = $value;
+            $key = isset($this->_no_prefix[$property]) ? $property : $this->_table_prefix.$property;
+            if(!isset($this->_private_fields[$key]) && !isset($this->_private_fields['_all'])){
+                $obj->$property = $value;
+            }
 	    }
+        
+        $obj->id = (int) $obj->id;
 	    
 	    return $obj;
 	    

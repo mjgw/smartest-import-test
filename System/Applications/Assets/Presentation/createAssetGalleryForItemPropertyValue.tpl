@@ -44,7 +44,7 @@
     </div>
   </form>
   
-  <script type="text/javascript"><
+  <script type="text/javascript">// <![CDATA[
   var reorderButtonId = 'reorder-gallery-property-{$property.id}';
   var itemId = '{$item.id}';
   var propertyId = '{$property.id}';
@@ -60,7 +60,6 @@
       method:'post',
       parameters: $('create-gallery-form').serialize(true),
       onSuccess: function(response){
-        // console.log(response.responseJSON);
         var opt = new Element('option', { value: response.responseJSON.id, selected: 'selected' }).update(response.responseJSON.label);;
         $('item_property_'+propertyId).appendChild(opt);
         $(reorderButtonId).show();
@@ -71,6 +70,7 @@
     });
   });
   {/literal}
+    // ]]>
   </script>
   
 </div>

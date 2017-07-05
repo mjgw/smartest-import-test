@@ -1,6 +1,6 @@
 <?php
 
-class SmartestBoolean implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestBoolean implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue, SmartestJsonCompatibleObject{
     
     protected $_value;
     

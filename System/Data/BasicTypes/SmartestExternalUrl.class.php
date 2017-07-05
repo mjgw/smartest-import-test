@@ -1,6 +1,6 @@
 <?php
 
-class SmartestExternalUrl implements SmartestBasicType, ArrayAccess, SmartestStorableValue, SmartestSubmittableValue{
+class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, SmartestStorableValue, SmartestSubmittableValue, SmartestJsonCompatibleObject{
     
     protected $_value;
     protected $_curl_handle;
@@ -21,6 +21,10 @@ class SmartestExternalUrl implements SmartestBasicType, ArrayAccess, SmartestSto
     
     public function __toString(){
         return ''.$this->_value;
+    }
+    
+    public function stdObjectOrScalar(){
+        return $this->_value;
     }
     
     public function isPresent(){

@@ -15,19 +15,6 @@ class SmartestExternalFeed extends SmartestExternalUrl implements SmartestBasicT
             return (bool) $this->_feed_error;
             case "error_message":
             return $this->_feed_error;
-/*             case "_host":
-            return $this->getValue();
-            case '_request':
-            return $this->getValue();
-            case '_protocol':
-            return $this->getValue();
-            case "encoded":
-            case "urlencoded":
-            return urlencode($this->getValue());
-            case 'empty':
-            return !strlen($this->getValue());
-            case 'string':
-            return $this->__toString(); */
         }
         
         return parent::offsetGet($offset);

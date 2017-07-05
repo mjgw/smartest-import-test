@@ -24,7 +24,7 @@
 
   <ul class="{if count($groups) > 10}options-list{else}options-grid{/if}" id="{if count($groups) > 10}options_list{else}options_grid{/if}">
     <li class="add">
-      <a href="{$domain}{$section}/newAssetGroup" class="add"><i>+</i>{$_l10n_strings.sidebar_options.create_file_group}</a>
+      <a href="{$domain}{$section}/newAssetGroup{if $gallery_mode}?is_gallery=true{/if}" class="add"><i>+</i>{$_l10n_action_strings.create_button}</a>
     </li>
   {foreach from=$groups key="key" item="group"}
     <li style="list-style:none;" ondblclick="window.location='{$domain}{$section}/browseAssetGroup?group_id={$group.id}'">

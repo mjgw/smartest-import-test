@@ -8,10 +8,6 @@ class SmartestImageAsset extends SmartestAsset{
         return $this->_image->getThumbnail($max_width, $max_height, $round_corners=false);
     }
     
-    /* public function __toString(){
-        return $this->getImage()->__toString();
-    } */
-    
     public function renderAsMarkup(){
 
         switch($this->getType()){
@@ -20,7 +16,6 @@ class SmartestImageAsset extends SmartestAsset{
             case "SM_ASSETTYPE_JPEG_IMAGE":
             case "SM_ASSETTYPE_GIF_IMAGE":
             case "SM_ASSETTYPE_PNG_IMAGE":
-            // $markup = htmlentities(stripslashes($this->getTextFragment()->getContent()));
             
             if($this->getImage()){
                 $markup = '<img src="'.$this->_request_data->g('domain').'Resources/Images/'.$this->getImage()->getFileName().'" alt="" />';

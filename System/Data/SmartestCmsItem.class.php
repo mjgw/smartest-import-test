@@ -8,7 +8,7 @@
 * Please store any additional information on this class at: http://wiki.smartestproject.org/SmartestCmsItem
 */
 
-class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObject, SmartestStorableValue, SmartestSubmittableValue, SmartestDualModedObject, SmartestSearchableValue{
+class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObject, SmartestStorableValue, SmartestSubmittableValue, SmartestDualModedObject, SmartestSearchableValue, SmartestJsonCompatibleObject{
 	
 	/** 
 	* Description
@@ -384,6 +384,12 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
                 }else{
                     break;
                 }
+                
+                case '_json':
+                return $this->__toJson();
+                
+                case '_json_pretty':
+                return $this->__toJsonPretty();
                 
                 case '_auto_thumbnail':
                 case '_thumbnail':
@@ -886,9 +892,7 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
 	}
 	
 	public function getAbsoluteUri(){
-	    
 	    return $this->getLinkObject()->getAbsoluteUrlObject();
-	    
 	}
     
     public function getSearchQueryMatchableValue(){
@@ -1069,23 +1073,75 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
 	    
 	    $obj = new stdClass;
 	    $obj->name = $this->getName();
-	    $obj->id = $this->getId();
+	    $obj->id = (int) $this->getId();
+        $obj->webid = $this->getWebId();
 	    $obj->slug = $this->getSlug();
+        $obj->public = $this->isPublished();
+        $obj->object_type = 'item';
+        $obj->model = $this->_item->getModel()->getName();
+        
+        if($this->getMetapageId()){
+            $obj->uri = $this->getAbsoluteUri()->__toString();
+        }
 	    
 	    if(!$basic_info_only){
 	        foreach($this->getProperties() as $p){
-	            $vn = $p->getVarname();
-	            $obj->$vn = $p->getData()->getContent()->stdObjectOrScalar();
+                $vn = $p->getVarname();
+                $val = $p->getData()->getContent();
+                if($p->getDatatype() == 'SM_DATATYPE_ASSET' || $p->getDatatype() == 'SM_DATATYPE_CMS_ITEM'){
+                    if($val->getId()){
+                        $obj->$vn = $p->getData()->getContent()->__toSimpleObjectForParentObjectJson();
+                    }else{
+                        $obj->$vn = null;
+                    }
+                }else{
+                    if($val instanceof SmartestJsonCompatibleObject){
+                        $obj->$vn = $p->getData()->getContent()->stdObjectOrScalar();
+                    }else{
+                        $obj->$vn = null;
+                    }
+                }
 	        }
 	    }
 	    
 	    return $obj;
 	    
 	}
+    
+    public function __toSimpleObjectForParentObjectJson(){
+        
+	    $obj = new stdClass;
+	    $obj->name = $this->getName();
+	    $obj->id = (int) $this->getId();
+        $obj->webid = $this->getWebId();
+	    $obj->slug = $this->getSlug();
+        $obj->public = $this->isPublished();
+        $obj->object_type = 'item';
+        $obj->model = $this->_item->getModel()->getName();
+        
+        if($this->getMetapageId()){
+            $obj->uri = $this->getAbsoluteUri()->__toString();
+        }
+        
+        return $obj;
+        
+    }
+    
+    public function stdObjectOrScalar(){
+        return $this->__toSimpleObjectForParentObjectJson();
+    }
 	
 	public function __toJson($basic_info_only=false){
-	    
 	    return json_encode($this->__toSimpleObject($basic_info_only));
+	}
+    
+	public function __toJsonPretty($basic_info_only=false){
+	    
+        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+	        return json_encode($this->__toSimpleObject($basic_info_only), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+        }else{
+            return json_encode($this->__toSimpleObject($basic_info_only), JSON_UNESCAPED_SLASHES);
+        }
 	    
 	}
 	
