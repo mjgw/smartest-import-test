@@ -44,8 +44,10 @@
     </div>
   </form>
   
-  <script type="text/javascript">
+  <script type="text/javascript"><
   var reorderButtonId = 'reorder-gallery-property-{$property.id}';
+  var itemId = '{$item.id}';
+  var propertyId = '{$property.id}';
   {literal}
   $('cancel-new-gallery-button').observe('click', function(e){
     e.stop();
@@ -60,8 +62,9 @@
       onSuccess: function(response){
         // console.log(response.responseJSON);
         var opt = new Element('option', { value: response.responseJSON.id, selected: 'selected' }).update(response.responseJSON.label);;
-        $('item_property_165').appendChild(opt);
+        $('item_property_'+propertyId).appendChild(opt);
         $(reorderButtonId).show();
+        $(reorderButtonId).href = sm_domain+'assets/arrangeAssetGallery?from=item_edit&group_id='+response.responseJSON.id+'&from=editItem&item_id='+itemId
         $('gallery-creation-loader').hide();
         MODALS.hideViewer();
       }
