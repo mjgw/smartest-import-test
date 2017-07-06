@@ -1,14 +1,15 @@
 system:
   info:
     version: "0.5"
-    revision: 849
-    minimum_php_version: 5.3
+    revision: 850
+    minimum_php_version: 5.4
     minimum_database_version: 21
     default_timezone: Europe/London
     lastversion_last_revision: 473
     self_hosted: true
   reserved_classes:
     - Assets
+    - BlockLists
     - CmsFrontEnd
     - Dropdowns
     - Desktop
@@ -18,9 +19,7 @@ system:
     - Pages
     - Sets
     - Templates
-#    - Feed
     - Settings
-#    - XmlData
   public_methods:
     - loginscreen/loginScreen
     - loginscreen/doAuth

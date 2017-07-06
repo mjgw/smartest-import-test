@@ -40,7 +40,7 @@ class SmartestSite extends SmartestBaseSite{
 		    $home_page->setDraftMode($draft_mode);
 		    
 		    $tree = array();
-			$tree[0]["info"] = $home_page->__toArray();
+			$tree[0]["info"] = $home_page;
             // $tree[0]["info"] = $home_page;
             $tree[0]["treeLevel"] = 0;
 			$tree[0]["children"] = $home_page->getPagesSubTree(1);

@@ -553,6 +553,7 @@
   {if !$ishomepage}
   <div class="edit-form-row">
     <div class="form-section-label">Parent Page</div>
+    {$page.parent}
     <select name="page_parent">
       {foreach from=$parent_pages item="p_page"}
         {if $p_page.id != $page.id}
@@ -571,7 +572,7 @@
     <div class="form-section-label">Parent meta-page item source</div>
     {if $parent_mpp_control_type == 'dropdown'}
     <select name="page_parent_data_source">
-      {if $show_self_option}<option value="_SELF"{if $parent_data_source_property_id == '_SELF'} selected="selected"{/if}>The same {$model.name} as on this page</option>{/if}
+      {if $show_self_option}<option value="_SELF"{if $parent_data_source_property_id == '_SELF'} selected="selected"{/if}>This {$model.name}  ({$item.name})</option>{/if}
       {foreach from=$parent_meta_page_property_options item="parent_meta_page_property"}
       <option value="{$parent_meta_page_property.id}"{if $parent_data_source_property_id == $parent_meta_page_property.id} selected="selected"{/if}>Property: {$parent_meta_page_property.name} ({$parent_meta_page_property.selected_item_name})</option>
       {/foreach}

@@ -1827,7 +1827,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        
 	        case "parent":
 			return $this->getParentPage();
-	        
+            
 	        case "parent_level_pages":
 			return $this->getGrandParentPage()->getPageChildrenForWeb();
 	        
@@ -2004,7 +2004,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		
 		$sub_pages_list = $this->getSerializedPageTree(1, false, false, '', true);
 		
-		$all_page_ids = array();
+        $all_page_ids = array();
 		$sub_page_ids = array();
 		
 		// MAKE A SIMPLE ARRAY OF ALL THE CHILD PAGE IDS
@@ -2339,10 +2339,6 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		$home_page->hydrate($home_page_id);
 		$home_page->setDraftMode($this->getDraftMode());
 		
-		/* if(!$this->isHomePage()){
-		    $this->getGrandParentPage();
-		} */
-		
 		$data = new SmartestParameterHolder('Page Navigation Structure');
 		
 		if($this->isHomePage()){
@@ -2355,10 +2351,10 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 		    $data->setParameter('parent', $this->getParentPage());
     		$data->setParameter('section', $this->getSectionPage());
     		$data->setParameter('_breadcrumb_trail', $this->getPageBreadCrumbs());
-		    $data->setParameter('sibling_level_pages', $this->getParentPage($this->getDraftMode())->getPageChildrenForWeb());
+		    $data->setParameter('sibling_level_pages', $this->getParentPage()->getPageChildrenForWeb());
 		    
-		    if($this->getParentPage()->isHomePage()){
-		        $data->setParameter('parent_level_pages', array($this->getParentPage($this->getDraftMode())));
+		    if($this->getParentPage()){
+		        $data->setParameter('parent_level_pages', array($this->getParentPage()));
 		    }else{
 		        $data->setParameter('parent_level_pages', $this->getGrandParentPage($this->getDraftMode())->getPageChildrenForWeb());
 	        }

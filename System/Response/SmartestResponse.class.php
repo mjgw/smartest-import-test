@@ -187,7 +187,7 @@ class SmartestResponse{
         );
         
         // General system information
-    	$sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
+    	$sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
     	// Constants need to be phased out as they are slow!!
 		// define('SM_INFO_REVISION_NUMBER', $sd['system']['info']['revision']);
 		SmartestInfo::$revision = $sd['system']['info']['revision'];
@@ -227,7 +227,7 @@ class SmartestResponse{
     
     public function init(){
 	    
-	    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
+	    $sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
 		
         if(version_compare(PHP_VERSION, $sd['system']['info']['minimum_php_version']) === -1){
             $this->error("This version of PHP is too old to run Smartest. You need to have version ".$sd['system']['info']['minimum_php_version'].' or later.');
@@ -496,6 +496,12 @@ class SmartestResponse{
             $e->redirect();
         }
         
+        if($GLOBALS['_site'] instanceof SmartestSite){
+            define('SM_PROTOCOL', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https://' : 'http://');
+            define('SM_SITE_HOST', $GLOBALS['_site']->getDomain());
+            define('SM_QUINCE_DOMAIN', $this->_controller->getCurrentRequest()->getDomain());
+        }
+        
 		try{
 		    if(isset($GLOBALS['_site']) && is_object($GLOBALS['_site'])){
 		        SmartestQuery::init(true, $GLOBALS['_site']->getId());
@@ -505,10 +511,6 @@ class SmartestResponse{
 		}catch(SmartestException $e){
 			$this->errorFromException($e);
 		}
-        
-        define('SM_PROTOCOL', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https://' : 'http://');
-        define('SM_SITE_HOST', $GLOBALS['_site']->getDomain());
-        define('SM_QUINCE_DOMAIN', $this->_controller->getCurrentRequest()->getDomain());
         
 		try{
 		    if(SmartestElasticSearchHelper::elasticSearchIsOperational()){
@@ -624,7 +626,7 @@ class SmartestResponse{
 	
 	public function isPublicMethod(){
 	    
-	    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
+	    $sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
 		$publicMethodNames = $sd['system']['public_methods'];
 		$method = $this->_controller->getCurrentRequest()->getModule().'/'.$this->_controller->getCurrentRequest()->getAction();
 		return in_array($method, $publicMethodNames);
@@ -635,7 +637,7 @@ class SmartestResponse{
 	    
         // This function is called even when the controller has not been set up yet, so needs to be able to respond when it doesn't yet know
         if(isset($this->_controller) && is_object($this->_controller)){
-    	    $sd = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
+    	    $sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
     		$websiteMethodNames = $sd['system']['content_interaction_methods'];
     		$method = $this->_controller->getCurrentRequest()->getModule().'/'.$this->_controller->getCurrentRequest()->getAction();
     		return in_array($method, $websiteMethodNames);
@@ -675,7 +677,7 @@ class SmartestResponse{
 		}
 		
 		define('SM_CONTROLLER_MODULE_PRES_DIR', $this->_controller->getCurrentRequest()->getMeta('_module_dir').'Presentation/');
-		$sc = SmartestYamlHelper::fastLoad(SYSTEM_INFO_FILE);
+		$sc = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
 		define('SM_SYSTEM_SYS_TEMPLATES_DIR', $sc['system']['places']['templates_dir']);
 		
         if($this->_controller->getCurrentRequest()->hasMeta('presentation')){

@@ -43,7 +43,8 @@ class SmartestEngine extends Smarty{
         $this->assign('system_data_info', new SmartestFrontEndSystemInfoQueryService);
 		
 		$this->_tpl_vars['random'] = new SmartestRandomNumberGenerator;
-		
+		$this->assign('now', new SmartestDateTime(time()));
+        
 		// Sergiy: Deny access to PHP world from frontend tpls
         // (foolproof and the case of marginally trusted template editor).
         // Marcus: moved this to SmartestEngine so that all templates are affected

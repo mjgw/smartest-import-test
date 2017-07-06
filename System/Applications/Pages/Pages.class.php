@@ -311,6 +311,8 @@ class Pages extends SmartestSystemApplication{
             		$ishomepage = ($this->getSite()->getTopPageId() == $page->getId());
             			
 		            $parent_pages = $page->getOkParentPages();
+                    // echo "Parent pages set here";
+                    // var_dump($parent_pages[0]);
     		        
             		if($page->getIsHeld() == '1' && $page->getHeldBy() == $this->getUser()->getId()){
             		    $allow_release = true;
@@ -362,7 +364,7 @@ class Pages extends SmartestSystemApplication{
                                     
                                 }
                             
-                                if(count($parent_indicator_properties) > 1){
+                                if(count($parent_indicator_properties) > 0){
                                     // there is a choice as to which property should be used to indicate which is the 'parent' item
                                     // convert to arrays and send to form
                                     
@@ -375,9 +377,11 @@ class Pages extends SmartestSystemApplication{
                                         if($p instanceof SmartestItemPropertyValueHolder){
                                             
                                             $foreign_item = new SmartestItem;
-
-                                            if($foreign_item->hydrate($p->getData()->getDraftContent())){
-                                                $property_array['selected_item_name'] = $foreign_item->getName();
+                                            
+                                            if($parent_indicator_properties[0]->getData()->getDraftContent() instanceof SmartestCmsItem){
+                                                $property_array['selected_item_name'] = $parent_indicator_properties[0]->getData()->getDraftContent()->getName();
+                                            // if($foreign_item->hydrate($p->getData()->getDraftContent())){
+                                            //     $property_array['selected_item_name'] = $foreign_item->getName();
                                             }else{
                                                 $property_array['selected_item_name'] = "Not Selected";
                                             }
@@ -394,7 +398,7 @@ class Pages extends SmartestSystemApplication{
                                     $this->send('dropdown', 'parent_mpp_control_type');
                                     $this->send($arrays, 'parent_meta_page_property_options');
                                     
-                                }else if(count($parent_indicator_properties) > 0){
+                                    /* }else if(count($parent_indicator_properties) > 0){
                                     
                                     // the parent meta-page must be defined by a single foreign-key property of the model of this meta-page.
                                     // Display it, but there is no choice.
@@ -410,17 +414,21 @@ class Pages extends SmartestSystemApplication{
                                         
                                         $foreign_item = new SmartestItem;
                                         
-                                        if($foreign_item->hydrate($parent_indicator_properties[0]->getData()->getDraftContent())){
-                                            $property_array['selected_item_name'] = $foreign_item->getName();
+                                        // print_r($parent_indicator_properties[0]->getData()->getDraftContent());
+                                        
+                                        if($parent_indicator_properties[0]->getData()->getDraftContent() instanceof SmartestCmsItem){
+                                            $property_array['selected_item_name'] = $parent_indicator_properties[0]->getData()->getDraftContent()->getName();
+                                        // if($foreign_item->hydrate()){
+                                            // $property_array['selected_item_name'] = $foreign_item->getName();
                                         }else{
                                             $property_array['selected_item_name'] = "Not Selected";
-                                        }
+                                        } 
                                         
                                     }else{
                                         $property_array['selected_item_name'] = "Unknown";
                                     }
                                     
-                                    $this->send($property_array, 'parent_meta_page_property');
+                                    $this->send($property_array, 'parent_meta_page_property'); */
                                     
                                 }else{
                                     
