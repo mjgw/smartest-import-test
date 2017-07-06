@@ -822,7 +822,7 @@ class SmartestStringHelper extends SmartestHelper{
     }
     
 	public static function toHtmlEntities($string){
-    	return htmlentities($string, ENT_QUOTES, 'UTF-8') ;
+    	return htmlentities($string, ENT_COMPAT|ENT_HTML5, 'UTF-8') ;
     }
     
     public static function toHtmlEntitiesSmart($string){
@@ -834,7 +834,18 @@ class SmartestStringHelper extends SmartestHelper{
     }
     
     public static function removeHtmlEntities($string){
-        return html_entity_decode($string, ENT_COMPAT, 'UTF-8');
+        return html_entity_decode($string, ENT_COMPAT|ENT_HTML5, 'UTF-8');
+    }
+    
+    public static function removeHtmlEntitiesExceptXmlEssentials($string){
+        $string = str_replace('&lt;', '__SMARTEST_LT', $string);
+        $string = str_replace('&gt;', '__SMARTEST_GT', $string);
+        $string = str_replace('&amp;', '__SMARTEST_AMP', $string);
+        $string = html_entity_decode($string, ENT_COMPAT|ENT_HTML5, 'UTF-8');
+        $string = str_replace('__SMARTEST_LT', '&lt;', $string);
+        $string = str_replace('__SMARTEST_GT', '&gt;', $string);
+        $string = str_replace('__SMARTEST_AMP', '&amp;', $string);
+        return $string;
     }
     
     public static function toXmlEntities($string){

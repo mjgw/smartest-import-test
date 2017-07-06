@@ -2131,23 +2131,25 @@ class Assets extends SmartestSystemApplication{
             
             if($asset->getUserId() == $this->getUser()->getId() || $this->getUser()->hasToken('modify_assets')){
             
-                $filter = !$this->requestParameterIsSet('filter_markup') || (bool) $this->getRequestParameter('filter_markup');
+                $filter = $asset->isEditable() && (!$this->requestParameterIsSet('filter_markup') || (bool) $this->getRequestParameter('filter_markup'));
                 
 		        $param_values = serialize($this->getRequestParameter('params'));
     		    $asset->setParameterDefaults($param_values);
                 
-                
-    		    $content = mb_convert_encoding($this->getRequestParameter('asset_content'), 'UTF-8');
-                // echo $this->getRequestParameter('asset_content');
-                // echo mb_convert_encoding($_POST['asset_content'], 'UTF-8');
-                
-    		    $content = SmartestStringHelper::unProtectSmartestTags($content);
-    		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
-    		    
-                if($filter){
-        		    $update_success = $asset->setContentFromEditor($content);
+                if($asset->isEditable()){
+                    $content = mb_convert_encoding($this->getRequestParameter('asset_content'), 'UTF-8');
                 }else{
-                    $asset->setContent($content);
+                    $content = null;
+                }
+                
+                if($filter){
+                    $content = SmartestStringHelper::unProtectSmartestTags($content);
+        		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
+                    $update_success = $asset->setContentFromEditor($content);
+                }else{
+                    if($asset->isEditable()){
+                        $asset->setContent($content);
+                    }
                     $update_success = true;
                 }
                 

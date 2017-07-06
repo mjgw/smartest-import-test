@@ -1316,6 +1316,7 @@ class Templates extends SmartestSystemApplication{
 	        
 	        if($template->find($template_id)){
 	            $type = $template->getTypeInfo();
+                $this->send(strpos($template->getContent(), '<!--{{SMARTEST_LAYOUT_BUILDER}}-->') !== false, 'layout_builder_cta');
 	            $this->send($template, 'template');
 	            $this->send($template->getContentForEditor(), "template_content");
 	            $show_form = true;
@@ -1677,6 +1678,10 @@ class Templates extends SmartestSystemApplication{
   		$this->formForward(); */
   		
 	}
+    
+    public function buildLayout(){
+        
+    }
 	
 	public function updateTemplateInfo(){
 	    

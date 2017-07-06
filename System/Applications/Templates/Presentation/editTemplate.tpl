@@ -17,6 +17,12 @@
   <input type="hidden" name="filename" value="{$template.url}" />
   {/if}
   
+  {if $layout_builder_cta}
+  <div class="special-box">
+    This template has components in it to allow you to build a layout. <a href="{$domain}templates/buildLayout?template={$template.id}" class="button">Build layout now</a>
+  </div>
+  {/if}
+  
   <div class="special-box"><strong>Template</strong>: <code>{$template.storage_location}</code><strong><code>{$template.url}</code></strong></div>
   {if !$file_is_writable}
     <div class="warning">This file is not currently writable by the web server, so it cannot be edited directly in Smartest.</div>

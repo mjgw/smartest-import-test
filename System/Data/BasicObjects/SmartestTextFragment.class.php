@@ -442,7 +442,7 @@ class SmartestTextFragment extends SmartestBaseTextFragment{
             $content = str_replace('<p>&nbsp;</p>', '', $content);
             $content = str_replace('&nbsp;', ' ', $content);
             
-            if($element = simplexml_load_string(str_replace('&', '&amp;', html_entity_decode('<div>'.$content.'</div>', ENT_QUOTES, 'UTF-8')))){
+            if($element = simplexml_load_string(SmartestStringHelper::removeHtmlEntitiesExceptXmlEssentials('<div>'.$content.'</div>'))){
             
                 $content = preg_replace( "/\r|\n/", "", $content);
                 $divs = (array) $element->xpath('/div/figure');
