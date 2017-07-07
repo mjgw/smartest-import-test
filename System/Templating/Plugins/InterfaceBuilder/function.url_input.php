@@ -19,6 +19,10 @@ function smarty_function_url_input($params, &$smartest_engine){
             $url->setParameter('value', array());
         }
         
+        if(isset($params['property']) && $params['property'] instanceof SmartestItemProperty){
+            $url->setParameter('property', $params['property']);
+        }
+        
         $smartest_engine->assign('_input_data', $url);
         $smartest_engine->run(SM_ROOT_DIR.'System/Presentation/InterfaceBuilder/Inputs/url.tpl', array());
         

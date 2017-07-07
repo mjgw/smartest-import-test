@@ -697,59 +697,26 @@ class AssetsAjax extends SmartestSystemApplication{
     
     public function validateExternalResourceUrl(){
         
-        $alh = new SmartestAssetsLibraryHelper;
-        $urls = $alh->getValidExternalUrlPatternsWithServices();
         $url = $this->getRequestParameter('url');
         $urlobj = new SmartestExternalUrl($url);
-        $result = array();
-        
-        if(SmartestStringHelper::isValidExternalUri($url)){
-            
-            foreach($urls as $service){
-                if(preg_match('/^'.$service['url_pattern'].'/', $url, $matches)){
-                    $result['data'] = $service;
-                    $result['valid'] = true;
-                    $result['url'] = $url;
-                    header('Content-Type: application/json; charset=UTF8');
-                    echo json_encode($result);
-                    exit;
-                }
-            }
-        
-            $du = new SmartestDataUtility;
-            $sites = $du->getSites();
-            $hostname = $urlobj->getHostName();
-        
-            foreach($sites as $s){
-                if($s->getDomain() == $hostname){
-                    $result['data'] = array(
-                        'label'=>'Content from your Smartest website \''.$s->getInternalLabel().'\'',
-                        'type'=>'OEMBED_SMARTEST_SITE',
-                        'service_id'=>'OEMBED_SMARTEST_SITE:'.$s->getId(),
-                        'url_pattern'=>'^https?:\/\/'.$s->getDomain().'\/*',
-                        'type_code' => 'SM_ASSETTYPE_OEMBED_URL'
-                    );
-                    $result['valid'] = true;
-                    $result['url'] = $url;
-                    header('Content-Type: application/json; charset=UTF8');
-                    echo json_encode($result);
-                    exit;
-                }
-            }
-        
-            $result['valid'] = false;
-            $result['url'] = $url;
-            $result['message'] = 'Service not supported';
-        }else{
-            $result['valid'] = false;
-            $result['url'] = $url;
-            $result['message'] = 'URL is not valid';
-        }
-        
+        $result = $urlobj->getExternalMediaInfo();
         header('Content-Type: application/json; charset=UTF8');
-        echo json_encode($result);
+        echo json_encode($result->stdObjectOrScalar());
         exit;
         
+    }
+    
+    public function oEmbedPreview(){
+        $h = new SmartestAPIServicesHelper;
+        $url = $this->getRequestParameter('url');
+        $urlobj = new SmartestExternalUrl($url);
+        $data = $urlobj->getExternalMediaInfo();
+        if($data->g('valid')){
+            echo '<p>[Preview of '.$data->g('data')->g('label').']</p>';
+        }else{
+            echo '<p>[Not a supported media URL]</p>';
+        }
+        exit;
     }
     
     public function postBackTextEditorContentsFromModal(){

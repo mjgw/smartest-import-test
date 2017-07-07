@@ -185,8 +185,14 @@ class SmartestParameterHolder extends SmartestObject implements IteratorAggregat
         return isset($this->_data[$n]);
     }
     
-    public function setParameter($n, $v){
-        $this->_data[$n] = $v;
+    public function setParameter($n, $v, $to_ph=false){
+        if(is_array($v)){
+            $ph = new SmartestParameterHolder($n);
+            $ph->loadArray($v);
+            $this->_data[$n] = $ph;
+        }else{
+            $this->_data[$n] = $v;
+        }
         return true;
     }
     

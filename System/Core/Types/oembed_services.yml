@@ -125,3 +125,12 @@ oembed:
     response_type: json
     fa_iconname: tumblr
     provider_name: Tumblr
+  SM_OEMBED_FB_VIDEO:
+    id: SM_OEMBED_FB_VIDEO
+    label: Facebook Video
+    provides_html: true
+    url: 'https://www.facebook.com/plugins/video/oembed.json?url=$URL'
+    url_pattern: 'www\.facebook\.com\/([^\/]+)\/videos\/\d+\/?'
+    response_type: json
+    fa_iconname: facebook-official
+    provider_name: Facebook

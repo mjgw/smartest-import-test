@@ -4,11 +4,20 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
     
     protected $_value;
     protected $_curl_handle;
+    protected $_api_helper;
+    protected $_media_info;
     
     public function __construct($v=''){
         if(strlen($v)){
             $this->_value = $v;
         }
+    }
+    
+    protected function getApiHelper(){
+        if(!is_object($this->_api_helper)){
+            $this->_api_helper = new SmartestAPIServicesHelper;
+        }
+        return $this->_api_helper;
     }
     
     public function setValue($v){
@@ -39,6 +48,78 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
     public function getRequestString(){
         preg_match('/^https?:\/\/([\w\.-]+)(\/(.*))?/', $this->_value, $matches);
         return $matches[2];
+    }
+    
+    public function isOEmbedCompatible(){
+        var_dump($this->getApiHelper()->urlIsValidService($this->_value));
+        return $this->getApiHelper()->urlIsValidService($this->_value);
+    }
+    
+    public function getOEmbedService(){
+        if($this->isOEmbedCompatible()){
+            return $this->getApiHelper()->getServiceFromUrl($this->_value);
+        }
+    }
+    
+    public function getOEmbedMarkup(){
+        if($this->isOEmbedCompatible()){
+            return $this->getApiHelper()->getOEmbedMarkupFromUrl($this->_value);
+        }else{
+            return 'No service available';
+        }
+    }
+    
+    public function getExternalMediaInfo(){
+        
+        if(!$this->_media_info instanceof SmartestParameterHolder){
+            
+            $alh = new SmartestAssetsLibraryHelper;
+            $urls = $alh->getValidExternalUrlPatternsWithServices();
+            $this->_media_info = new SmartestParameterHolder('URL Media Info for '.$this->_value);
+        
+            foreach($urls as $service){
+                if(preg_match('/^'.$service['url_pattern'].'/', $this->_value, $matches)){
+                    $this->_media_info->setParameter('data', $service, true);
+                    $this->_media_info->setParameter('valid', true);
+                    $this->_media_info->setParameter('url', $this->_value);
+                    return $this->_media_info;
+                }
+            }
+    
+            $du = new SmartestDataUtility;
+            $sites = $du->getSites();
+            $hostname = $this->getHostName();
+    
+            foreach($sites as $s){
+                if($s->getDomain() == $hostname){
+                    if($s->getOEmbedEnabled()){
+                        $this->_media_info->setParameter('data', array(
+                            'label'=>'Content from your Smartest website \''.$s->getInternalLabel().'\'',
+                            'type'=>'OEMBED_SMARTEST_SITE',
+                            'service_id'=>'OEMBED_SMARTEST_SITE:'.$s->getId(),
+                            'url_pattern'=>'^https?:\/\/'.str_replace('.', '\.', $s->getDomain()).'\/*',
+                            'type_code' => 'SM_ASSETTYPE_OEMBED_URL'
+                        ), true);
+                        $this->_media_info->setParameter('valid', true);
+                        $this->_media_info->setParameter('url', $this->_value);
+                        return $this->_media_info;
+                    }else{
+                        $this->_media_info->setParameter('valid', false);
+                        $this->_media_info->setParameter('url', $this->_value);
+                        $this->_media_info->setParameter('message', 'The site \''.$s->getInternalLabel().'\' currently does not have OEmbed enabled.');
+                        return $this->_media_info;
+                    }
+                }
+            }
+    
+            $this->_media_info->setParameter('valid', false);
+            $this->_media_info->setParameter('url', $this->_value);
+            $this->_media_info->setParameter('message', 'URL is not a supported media provider.');
+            
+        }
+        
+        return $this->_media_info;
+        
     }
     
     // The next two methods are for the SmartestStorableValue interface
@@ -95,6 +176,12 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
             return $this->__toString();
             case 'is_valid':
             return SmartestStringHelper::isValidExternalUri($this->_value);
+            case 'is_supported_oembed_service':
+            return $this->isOEmbedCompatible();
+            case 'oembed_service':
+            return $this->getOEmbedService();
+            case 'external_media_info':
+            return $this->getExternalMediaInfo();
         }
     }
     

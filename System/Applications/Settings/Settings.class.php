@@ -271,16 +271,14 @@ class Settings extends SmartestSystemApplication{
                 $returnTo = $protocol.'://'.$host.$domain.'smartest/cmssettings';
                 $this->send(urlencode($returnTo), 'cookie_set_return');
                 
-                // if(SmartestStringHelper::toRealBool($site_responsive_mode)){
-                    $distinguish_mobiles = $this->getGlobalPreference('site_responsive_distinguish_mobile');
-                    $this->send(SmartestStringHelper::toRealBool($distinguish_mobiles), 'responsive_distinguish_mobiles');
-                    
-                    $distinguish_tablets = $this->getGlobalPreference('site_responsive_distinguish_tablet');
-                    $this->send(SmartestStringHelper::toRealBool($distinguish_tablets), 'responsive_distinguish_tablets');
-                    
-                    $distinguish_old_pcs = $this->getGlobalPreference('site_responsive_distinguish_oldpcs');
-                    $this->send(SmartestStringHelper::toRealBool($distinguish_old_pcs), 'responsive_distinguish_old_pcs');
-                // }
+                $distinguish_mobiles = $this->getGlobalPreference('site_responsive_distinguish_mobile');
+                $this->send(SmartestStringHelper::toRealBool($distinguish_mobiles), 'responsive_distinguish_mobiles');
+                
+                $distinguish_tablets = $this->getGlobalPreference('site_responsive_distinguish_tablet');
+                $this->send(SmartestStringHelper::toRealBool($distinguish_tablets), 'responsive_distinguish_tablets');
+                
+                $distinguish_old_pcs = $this->getGlobalPreference('site_responsive_distinguish_oldpcs');
+                $this->send(SmartestStringHelper::toRealBool($distinguish_old_pcs), 'responsive_distinguish_old_pcs');
                 
                 $this->setTitle("Edit CMS settings");
                 
