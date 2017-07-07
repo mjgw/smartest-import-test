@@ -51,7 +51,6 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
     }
     
     public function isOEmbedCompatible(){
-        var_dump($this->getApiHelper()->urlIsValidService($this->_value));
         return $this->getApiHelper()->urlIsValidService($this->_value);
     }
     
@@ -76,8 +75,9 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
             $alh = new SmartestAssetsLibraryHelper;
             $urls = $alh->getValidExternalUrlPatternsWithServices();
             $this->_media_info = new SmartestParameterHolder('URL Media Info for '.$this->_value);
-        
+            
             foreach($urls as $service){
+                
                 if(preg_match('/^'.$service['url_pattern'].'/', $this->_value, $matches)){
                     $this->_media_info->setParameter('data', $service, true);
                     $this->_media_info->setParameter('valid', true);
@@ -120,6 +120,19 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
         
         return $this->_media_info;
         
+    }
+    
+    public function getExternalMediaMarkup(){
+        if($this->getExternalMediaInfo()->g('valid')){
+            if($this->isOEmbedCompatible()){
+                return $this->getApiHelper()->getOEmbedMarkupFromUrl($this->_value);
+            }elseif($this->getExternalMediaInfo()->g('data')->g('type') == 'type'){
+                // TODO: render URL as though it were externally translated asset
+                return 'External translated asset markup';
+            }
+        }else{
+            return '<!--No embed code available: '.$this->getExternalMediaInfo()->g('message').'-->';
+        }
     }
     
     // The next two methods are for the SmartestStorableValue interface
@@ -182,6 +195,8 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
             return $this->getOEmbedService();
             case 'external_media_info':
             return $this->getExternalMediaInfo();
+            case 'external_media_embed_code':
+            return $this->getExternalMediaMarkup();
         }
     }
     

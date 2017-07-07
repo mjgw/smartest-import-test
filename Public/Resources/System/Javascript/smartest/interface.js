@@ -450,12 +450,12 @@ Smartest.UI.OptionSet = Class.create({
     	    });
     	}
     	
-        console.log({
-            linkId: domID,
-            formValue: id,
-            instance: params.instance,
-            lastInstance: this.lastItemInstanceName
-        });
+        // console.log({
+        //     linkId: domID,
+        //     formValue: id,
+        //     instance: params.instance,
+        //     lastInstance: this.lastItemInstanceName
+        // });
         
     	this.lastItemCategoryName = this.currentCategoryName;
         this.lastItemInstanceName = this.currentInstanceName;

@@ -71,24 +71,24 @@ oembed:
     response_type: json
     fa_iconname: file-photo-o
     provider_name: Imgur
-  SM_OEMBED_SPOTIFY:
-    id: SM_OEMBED_SPOTIFY
-    label: Spotify track
-    provides_html: true
-    url: 'https://embed.spotify.com/oembed/?format=json&url=$URL'
-    url_pattern: 'open\.spotify\.com\/track\/([^\/]+)\/?'
-    response_type: json
-    fa_iconname: spotify
-    provider_name: Spotify
-  SM_OEMBED_SPOTIFY_USER:
-    id: SM_OEMBED_SPOTIFY_USER
-    label: Spotify user
-    provides_html: true
-    url: 'https://embed.spotify.com/oembed/?format=json&url=$URL'
-    url_pattern: 'open\.spotify\.com\/user\/([^\/]+)\/?'
-    response_type: json
-    fa_iconname: spotify
-    provider_name: Spotify
+#  SM_OEMBED_SPOTIFY:
+#    id: SM_OEMBED_SPOTIFY
+#    label: Spotify track
+#    provides_html: true
+#    url: 'https://embed.spotify.com/oembed/?format=json&url=$URL'
+#    url_pattern: 'open\.spotify\.com\/track\/([^\/]+)\/?'
+#    response_type: json
+#    fa_iconname: spotify
+#    provider_name: Spotify
+#  SM_OEMBED_SPOTIFY_USER:
+#    id: SM_OEMBED_SPOTIFY_USER
+#    label: Spotify user
+#    provides_html: true
+#    url: 'https://embed.spotify.com/oembed/?format=json&url=$URL'
+#    url_pattern: 'open\.spotify\.com\/user\/([^\/]+)\/?'
+#    response_type: json
+#    fa_iconname: spotify
+#    provider_name: Spotify
   SM_OEMBED_CODEPEN:
     id: SM_OEMBED_CODEPEN
     label: Codepen project
@@ -134,3 +134,12 @@ oembed:
     response_type: json
     fa_iconname: facebook-official
     provider_name: Facebook
+  SM_OEMBED_TWEET:
+    id: SM_OEMBED_TWEET
+    label: Tweet
+    provides_html: true
+    url: 'https://publish.twitter.com/oembed?url=$URL'
+    url_pattern: 'twitter\.com\/[\w_]+\/status\/\d+'
+    response_type: json
+    fa_iconname: twitter
+    provider_name: Twitter

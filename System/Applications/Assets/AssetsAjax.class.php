@@ -712,7 +712,7 @@ class AssetsAjax extends SmartestSystemApplication{
         $urlobj = new SmartestExternalUrl($url);
         $data = $urlobj->getExternalMediaInfo();
         if($data->g('valid')){
-            echo '<p>[Preview of '.$data->g('data')->g('label').']</p>';
+            echo '<div class="smartest-oembed-preview" id="smartest-oembed-preview-'.SmartestStringHelper::random(8).'">'.$urlobj->getExternalMediaMarkup()."</div>";
         }else{
             echo '<p>[Not a supported media URL]</p>';
         }

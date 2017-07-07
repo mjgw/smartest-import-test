@@ -129,22 +129,23 @@ class SmartestAPIServicesHelper{
             
             $url_hash = md5($url);
             $cache_filename = SM_ROOT_DIR.'System/Cache/TextFragments/OEmbed/oembed_'.$url_hash.'.html';
-            $last_ok_mtime = time() - 86400;
+            // $last_ok_mtime = time() - 86400;
+            $last_ok_mtime = time() - 1;
             
             if(is_file($cache_filename) && filemtime($cache_filename) >= $last_ok_mtime){
                 // Retrieve from cache
                 return file_get_contents($cache_filename);
             }else{
-                
+                    
                 $request_url = $s->getRequestUrlWithContentUrl($url);
                 $content = SmartestHttpRequestHelper::getContent($request_url, false);
-                
+            
                 if($s->getResponseType() == 'json'){
                     $data = json_decode($content);
                 }elseif($s->getResponseType() == 'xml'){
-                    
-                }
                 
+                }
+            
                 if($s->getProvidesHtml()){
                     if(isset($data->html)){
                         // Write to cache
@@ -152,11 +153,11 @@ class SmartestAPIServicesHelper{
                         return $data->html;
                     }else{
                         // HTML not provided in this case
-                        return "<p>oEmbed error: HTML expected but not provided by ".$s->getParameter('provider_name')."</p>";
+                        return "<p class=\"sm-oembed-warning\">oEmbed error: HTML expected but not provided by ".$s->getParameter('provider_name')."</p>";
                     }
                 }else{
                     // service does not provide HTML, so deal with this case
-                    return "<p>Service does not provide HTML</p>";
+                    return "<p class=\"sm-oembed-warning\">Service does not provide HTML</p>";
                 }
             }
             
