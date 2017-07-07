@@ -47,6 +47,8 @@ $(inputId).observe('blur', function(evt){
             $(inputId+'-check-url-loader').hide();
             $(inputId+'-preview-box').hide();
             // check if it is a valid url
+            
+            // if so, does it return a valid response code?
           }
           
         }
