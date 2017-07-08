@@ -961,9 +961,6 @@ class SmartestSite extends SmartestBaseSite{
             return $this->getPagesList();
             
             case "_admin_normal_pages_list":
-            // return $this->getHomePage()->setDraftMode(true)->getSerializedPageTree();
-            // print_r($this->getPagesList(true, true));
-            // echo count($this->getPagesList(true));
             return $this->getPagesList(true, true);
             
             case "favicon_id":

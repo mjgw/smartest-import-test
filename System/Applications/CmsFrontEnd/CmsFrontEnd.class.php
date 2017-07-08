@@ -801,12 +801,12 @@ class CmsFrontEnd extends SmartestSystemApplication{
                     $page = new SmartestPage;
                     if($page->smartFind($this->getRequestParameter('page_id'))){
                         if($page->getTYpe() == 'NORMAL'){
-                            // Page
+                            $width = 
                             $wph = new SmartestWebPagePreparationHelper;
                 	        header('X-Powered-By: Smartest v'.SmartestInfo::$version.' ('.SmartestInfo::$revision.')');
                 	        $cth = 'Content-Type: '.$this->getRequest()->getContentType().'; charset='.$this->getRequest()->getCharSet();
                 	        header($cth);
-                            echo $wph->getStaticPageOEmbedIframeContent($page);
+                            echo $wph->getStaticPageOEmbedIframeContent($page, $this->getRequestParameter('width'), $this->getRequestParameter('height'));
                         }
                     }else{
                         // Page not found

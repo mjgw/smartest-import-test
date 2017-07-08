@@ -1856,6 +1856,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             return $this->getIconImage();
             
             case "thumbnail_image":
+            case "_thumbnail":
             return $this->getThumbnailImage();
 	        
 	        case "small_icon":
@@ -1919,6 +1920,9 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
             case "_type_varname":
             case "_type":
             return "page";
+            
+            case "site":
+            return $this->getParentSite();
             
 	        
 	    }

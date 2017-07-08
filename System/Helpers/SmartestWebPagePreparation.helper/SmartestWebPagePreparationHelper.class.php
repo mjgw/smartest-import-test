@@ -155,7 +155,7 @@ class SmartestWebPagePreparationHelper{
         
     }
     
-    public function getStaticPageOEmbedIframeContent(SmartestPage $page){
+    public function getStaticPageOEmbedIframeContent(SmartestPage $page, $width=420, $height=140){
         
         $site = $page->getSite();
         $request_data = SmartestPersistentObject::get('request_data');
@@ -168,14 +168,14 @@ class SmartestWebPagePreparationHelper{
             $oembed_template = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/oembed_page.tpl';
         }
         
-	    $sm = new SmartyManager('BasicRenderer');
+        $sm = new SmartyManager('BasicRenderer');
         $r = $sm->initialize('oembed_page');
         echo $r->_smarty_include(array('smarty_include_tpl_file'=>$oembed_template, 'smarty_include_vars'=>array(
             'page' => $page,
             'site' => $site,
             'request' => $request_data,
-            'width'=> $width-20,
-            'height'=> $height-20
+            'width'=> $width-4,
+            'height'=> $height-4
         )));
     }
     
@@ -209,7 +209,6 @@ class SmartestWebPagePreparationHelper{
             'height'=> $height-4
         )));
         
-        // echo "<p>".$site->getName()."</p>";
     }
     
 }
