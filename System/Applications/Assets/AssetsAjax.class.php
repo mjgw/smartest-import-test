@@ -706,16 +706,12 @@ class AssetsAjax extends SmartestSystemApplication{
         
     }
     
-    public function oEmbedPreview(){
+    public function urlPreview(){
         $h = new SmartestAPIServicesHelper;
         $url = $this->getRequestParameter('url');
         $urlobj = new SmartestExternalUrl($url);
-        $data = $urlobj->getExternalMediaInfo();
-        if($data->g('valid')){
-            echo '<div class="smartest-oembed-preview" id="smartest-oembed-preview-'.SmartestStringHelper::random(8).'">'.$urlobj->getExternalMediaMarkup()."</div>";
-        }else{
-            echo '<p>[Not a supported media URL]</p>';
-        }
+        // $this->send($urlobj->getHtmlMetaData(), 'metadata');
+        echo $urlobj->getPreviewMarkup();
         exit;
     }
     

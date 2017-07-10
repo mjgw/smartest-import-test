@@ -1138,6 +1138,41 @@ ul.apps li a.icon.gold{
     -moz-border-radius:5px;
 }
 
+div.smartest-url-preview{
+    background-size:cover;
+    overflow:hidden;
+    border:1px solid #999;
+    border-radius:4px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    background-repeat:no-repeat;
+    background-color:#666;
+    background-position:0 50%;
+}
+
+div.smartest-url-preview h4{
+    background-color:rgba(255,255,255,0.85);
+    font-family:Georgia,serif!important;
+}
+
+div.smartest-url-preview h4 a{
+    color:#333;
+    font-size:1.35em;
+    display:block;
+    box-sizing:border-box;
+    padding:3px 10px 7px 10px;
+}
+
+div.smartest-url-preview h4 a:hover{
+    text-decoration:none;
+}
+
+span.smartest-url-preview-label{
+    color:rgba(255,255,255,0.75);
+    font-size:0.9em;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.72);
+}
+
 div.image-picker-caption, span.ui-info-inactive{
     color:#999;
     font-size:0.9em;

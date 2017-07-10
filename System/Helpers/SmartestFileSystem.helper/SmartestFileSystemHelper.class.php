@@ -373,7 +373,7 @@ class SmartestFileSystemHelper extends SmartestHelper{
 	    return end($parts);
 	}
 	
-	public static function saveRemoteBinaryFile($file_uri, $local_path){
+	public static function saveRemoteBinaryFile($file_uri, $local_path, $referer=null){
 	    
 	    if(!function_exists('curl_init')){
             throw new SmartestException('Tried to create an image from a remote URL, but failed because cURL is not installed.');
@@ -386,6 +386,9 @@ class SmartestFileSystemHelper extends SmartestHelper{
         curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
         curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/600.1.17 (KHTML, like Gecko) Version/7.1 Safari/537.85.10');
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        if($referer){
+            curl_setopt($ch, CURLOPT_REFERER, $referer);
+        }
     
         $rawdata = curl_exec($ch);
     

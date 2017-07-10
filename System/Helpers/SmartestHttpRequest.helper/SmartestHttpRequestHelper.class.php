@@ -4,6 +4,8 @@ SmartestHelper::register('HttpRequest');
 
 class SmartestHttpRequestHelper extends SmartestHelper{
 	
+    public static $_retrieved_pages;
+    
 	public static function getContent($address, $correctResources=true, $type='GET', $variables=''){
 		
 		if(self::curlInstalled()){
@@ -11,8 +13,15 @@ class SmartestHttpRequestHelper extends SmartestHelper{
     		if(substr($address, 0, 7) != 'http://' && substr($address, 0, 8) != 'https://'){
     			$address = 'http://'.$address;
     		}
-		
-    		$page = self::rawCurlRequest($address, $type, $variables);
+		    
+            $key = substr(md5($address), 0, 16);
+            
+            if(isset(self::$_retrieved_pages[$key])){
+                $page = self::$_retrieved_pages[$key];
+            }else{
+                $page = self::rawCurlRequest($address, $type, $variables);
+                self::$_retrieved_pages[$key] = $page;
+            }
 		
     		/* $ch = curl_init();
     		curl_setopt($ch, CURLOPT_URL, $address);
@@ -135,7 +144,7 @@ class SmartestHttpRequestHelper extends SmartestHelper{
 	
 	public static function getHostName($address){
 		
-		preg_match('/^https?:\/\/([\w\.]{7,})\//', $address, $matches);
+		preg_match('/^https?:\/\/([\w\.-]{7,})\//', $address, $matches);
 		return $matches[1];
 	}
 	
@@ -202,9 +211,9 @@ class SmartestHttpRequestHelper extends SmartestHelper{
 			$html = $page;
 		}
 		
-		preg_match('/<title>(.+)<\/title>/', $html, $matches);
-		
-		return $matches[1];
+        preg_match('/<title>\n?\s?(.+)\n?\s?<\/title>/m', $html, $matches);
+        
+        return $matches[1];
 		
 	}
 	
@@ -216,21 +225,37 @@ class SmartestHttpRequestHelper extends SmartestHelper{
 			$html = $page;
 		}
 		
-		// echo $page;
-		
-		// echo $html;
-		
-		preg_match_all('/<meta (name|http-equiv|property)=[\'"]?([^"\']+)[\'"]? content=[\'"]?([^"\']*)[\'"]?/m', $html, $matches);
+        preg_match_all('/<meta (name|http-equiv|property)=[\'"]?([^"\']+)[\'"]? content=[\'"]?([^"\']*)[\'"]?/m', $html, $matches);
 		
 		$metas = array();
-		
-		foreach($matches[0] as $key=>$meta){
-			$metas[$key]['name'] = $matches[2][$key];
-			$metas[$key]['value'] = $matches[3][$key];
-			$metas[$key]['type'] = $matches[1][$key];
+        
+        foreach($matches[0] as $key=>$meta){
+            
+            $try_key = SmartestStringHelper::toVarName($matches[2][$key]);
+            $limit = 0;
+            
+            while(isset($metas[$try_key]) && $limit < 10){
+                
+                if(preg_match('/.+_(\d+)$/', $try_key, $matches_k)){
+                    $num = $matches_k[1];
+                    $next_num = (int) $matches_k[1]+1;
+                    $rep = '_'.$num;
+                    $try_key = str_replace($rep, '_'.$next_num, $try_key);
+                    $limit++;
+                }else{
+                    $try_key = $try_key.'_2';
+                }
+            }
+            
+            $new_key = $try_key;
+            
+			$metas[$new_key]['name'] = $matches[2][$key];
+			$metas[$new_key]['value'] = $matches[3][$key];
+			$metas[$new_key]['type'] = $matches[1][$key];
+            
 		}
-		
-		return $metas;
+        
+        return $metas;
 		
 	}
 	
@@ -266,7 +291,7 @@ class SmartestHttpRequestHelper extends SmartestHelper{
 	        $local_filename = end(explode('/', $image_url));
 	        
 	        try{
-                SmartestFileSystemHelper::saveRemoteBinaryFile($url->getValue(), $local_filename);
+                SmartestFileSystemHelper::saveRemoteBinaryFile($url->getValue(), $local_filename, $url);
             }catch(SmartestException $e){
                 SmartestLog::getInstance('system')->log('Remote Open Graph image file could not be saved: '.$e->getMessage());
                 return false;

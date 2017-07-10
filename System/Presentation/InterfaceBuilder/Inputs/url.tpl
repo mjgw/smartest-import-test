@@ -6,7 +6,7 @@
 <div class="edit-form-sub-row">
   <span id="{$_input_data.id}-url-ok" style="{if $_input_data.value.external_media_info.valid}{else}display:none{/if}" class="feedback-ok" title="Smartest recognises this URL and can display its content"><i class="fa fa-check-circle"> </i> <span id="{$_input_data.id}-url-service-label">{if $_input_data.value.external_media_info.valid}{$_input_data.value.external_media_info.data.label}{/if}</span></span>
   <span id="{$_input_data.id}-url-invalid" style="display:none" class="feedback-bad"><i class="fa fa-times"> </i> <span id="{$_input_data.id}-url-error-label"> </span></span>
-  {* <div id="{$_input_data.id}-preview-box" style="margin-top:10px;max-width:400px;{if $_input_data.value.external_media_info.valid}{else}display:none{/if}">{$_input_data.value.external_media_embed_code} </div> *}
+  <div id="{$_input_data.id}-preview-box" style="margin-top:10px;max-width:400px;{if $_input_data.value.is_valid}{else}display:none{/if}">{$_input_data.value.preview_markup} </div>
 </div>
 
 <script type="text/javascript">
@@ -53,18 +53,18 @@ $(inputId).observe('blur', function(evt){
         },
         onSuccess: function(response) {
           
+          $(inputId+'-preview-box').show();
+          new Ajax.Updater(inputId+'-preview-box', sm_domain+'ajax:assets/urlPreview', {
+            parameters: { url: $F(inputId) },
+            onSuccess: function(response) {
+              $(inputId+'-check-url-loader').hide();
+            }
+          });
+          
           if(response.responseJSON.valid){
             $(inputId+'-url-service-label').update(response.responseJSON.data.label);
             $(inputId+'-url-ok').show();
             $(inputId+'-check-url-loader').hide();
-            // $(inputId+'-preview-box').show();
-            // new Ajax.Updater(inputId+'-preview-box', sm_domain+'ajax:assets/oEmbedPreview', {
-            //   parameters: { url: $F(inputId) },
-            //   evalScripts: true,
-            //   onSuccess: function(response) {
-            //     $(inputId+'-check-url-loader').hide();
-            //   }
-            // });
           }else{
             $(inputId+'-check-url-loader').hide();
             // $(inputId+'-preview-box').hide();

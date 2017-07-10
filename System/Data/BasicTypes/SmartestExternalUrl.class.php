@@ -6,6 +6,7 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
     protected $_curl_handle;
     protected $_api_helper;
     protected $_media_info;
+    protected $_html_metadata;
     
     public function __construct($v=''){
         if(strlen($v)){
@@ -122,17 +123,83 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
         
     }
     
+    public function getHtmlMetaData(){
+        
+        if(!$this->_html_metadata){
+            
+            $this->_html_metadata = new SmartestParameterHolder('Html Metadata for '.$this->_value);
+            
+            if(SmartestHttpRequestHelper::curlInstalled()){
+                
+                $metas = SmartestHttpRequestHelper::getMetas($this->_value);
+                $this->_html_metadata->setParameter('title', null);
+                
+                foreach($metas as $name => $value){
+                    $this->_html_metadata->setParameter('meta_'.str_replace(':', '_', $name), $value);
+                }
+                
+                if($this->_html_metadata->hasParameter('meta_og_title')){
+                    $title = $this->_html_metadata->getParameter('meta_og_title')->g('value');
+                }elseif(strlen($title)){
+                    $title = SmartestHttpRequestHelper::getTitle($this->_value);
+                }
+                
+                $this->_html_metadata->setParameter('title', $title);
+                
+                $og_metas = SmartestHttpRequestHelper::getOpenGraphMetas($this->_value);
+    
+                if(count($og_metas) && isset($og_metas['og:image'])){
+                    
+                    $full_url = html_entity_decode($og_metas['og:image']);
+                    $parts = explode('?', $og_metas['og:image']);
+                    $part1 = $parts[0];
+                    $og_url = new SmartestExternalUrl($part1);
+                    $parts = explode('/', $og_url->getValue());
+                    $filename = 'url_og_'.substr(md5($this->_value), 0, 16).'.'.SmartestStringHelper::getDotSuffix($og_url->getValue());
+                    // var_dump($og_url->getValue());
+                    
+                    // $saved_thumbnail_file = SmartestFileSystemHelper::saveRemoteBinaryFile($full_url, SM_ROOT_DIR.'Public/Resources/System/Cache/Images/'.$filename);
+                    // var_dump($saved_thumbnail_file);
+                    
+                    if(file_exists(SM_ROOT_DIR.'Public/Resources/System/Cache/Images/'.$filename)){
+                        $img = new SmartestImage(SM_ROOT_DIR.'Public/Resources/System/Cache/Images/'.$filename);
+                        // $img = $img->getConstrainedVersionWithin(800,800);
+                        $this->_html_metadata->setParameter('og_image_file', $img);
+                        // print_r($img);
+                    }else{
+                        if($saved_thumbnail_file = SmartestFileSystemHelper::saveRemoteBinaryFile($full_url, SM_ROOT_DIR.'Public/Resources/System/Cache/Images/'.$filename)){
+                            $img = new SmartestImage($saved_thumbnail_file);
+                            // $img = $img->getConstrainedVersionWithin(800,800);
+                            $this->_html_metadata->setParameter('og_image_file', $img);
+                        }
+                    }
+                }
+            
+            }
+        }
+        
+        return $this->_html_metadata;
+        
+    }
+    
     public function getExternalMediaMarkup(){
         if($this->getExternalMediaInfo()->g('valid')){
             if($this->isOEmbedCompatible()){
                 return $this->getApiHelper()->getOEmbedMarkupFromUrl($this->_value);
             }elseif($this->getExternalMediaInfo()->g('data')->g('type') == 'type'){
                 // TODO: render URL as though it were externally translated asset
-                return 'External translated asset markup';
+                return '[External translated asset markup]';
             }
         }else{
             return '<!--No embed code available: '.$this->getExternalMediaInfo()->g('message').'-->';
         }
+    }
+    
+    public function getPreviewMarkup(){
+	    $sm = new SmartyManager('InterfaceBuilder');
+        $r = $sm->initialize(md5($this->_value));
+        $content = $r->renderUrlPreview($this, $this->getHtmlMetaData());
+        echo $content;
     }
     
     // The next two methods are for the SmartestStorableValue interface
@@ -197,6 +264,8 @@ class SmartestExternalUrl extends SmartestObject implements SmartestBasicType, S
             return $this->getExternalMediaInfo();
             case 'external_media_embed_code':
             return $this->getExternalMediaMarkup();
+            case 'preview_markup':
+            return $this->getPreviewMarkup();
         }
     }
     

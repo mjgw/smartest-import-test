@@ -870,6 +870,26 @@ ul.apps.small li a.label{
     height:auto;
 }
 
+div.smartest-url-preview{
+    width:450px;
+    height:250px;
+    position:relative;
+}
+
+div.smartest-url-preview h4{
+    width:100%;
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    margin-bottom:0!important;
+}
+
+span.smartest-url-preview-label{
+    position:absolute;
+    top:10px;
+    left:10px;
+}
+
 /** Other list styles **/
 
 ul.basic-list{

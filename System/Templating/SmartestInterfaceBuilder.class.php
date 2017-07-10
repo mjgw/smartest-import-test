@@ -26,4 +26,18 @@ class SmartestInterfaceBuilder extends SmartestEngine{
 	    $this->run(SM_ROOT_DIR.$info['input']['template'], array('_input_data'=>$p));
 	}
     
+    public function renderUrlPreview(SmartestExternalUrl $url, SmartestParameterHolder $data){
+        $render_template = SM_ROOT_DIR.'System/Presentation/InterfaceBuilder/oembed_preview.tpl';
+        ob_start();
+        $id = substr(md5($url->getValue()),0,8).'-'.SmartestStringHelper::random(4);
+        $this->run($render_template, array(
+            'url_data'=>$data,
+            'url'=>$url,
+            'id'=> $id
+        ));
+        $content = ob_get_contents();
+        ob_end_clean();
+        return $content;
+    }
+    
 }
