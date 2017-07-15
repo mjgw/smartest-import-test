@@ -1,4 +1,4 @@
-<input type="text" name="{$_input_data.name}" value="{$_input_data.value}" data-lastvalue="{$_input_data.value}" id="{$_input_data.id}" /><img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="{$_input_data.id}-check-url-loader" style="margin-left:5px;display:none" />
+<input type="text" name="{$_input_data.name}" value="{$_input_data.value}" data-lastvalue="{$_input_data.value}" id="{$_input_data.id}" class="sm-url-input" /><img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="{$_input_data.id}-check-url-loader" style="margin-left:5px;display:none" />
 
 <div class="form-hint">Don't forget the http:// or https://</div>
 <div class="breaker"> </div>

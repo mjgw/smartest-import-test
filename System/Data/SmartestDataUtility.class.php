@@ -1262,6 +1262,22 @@ class SmartestDataUtility{
         
     }
     
+    public function getDropdowns($site_id=null){
+        
+	    $results = $this->database->queryToArray("SELECT * FROM DropDowns"); 
+	    
+	    $dropdowns = array();
+	    
+	    foreach($results as $r){
+	        $d = new SmartestDropdown;
+	        $d->hydrate($r);
+	        $dropdowns[] = $d;
+	    }
+        
+        return $dropdowns;
+        
+    }
+    
     public function getAssetItemProperties($site_id=null){
         
         if(is_numeric($site_id)){

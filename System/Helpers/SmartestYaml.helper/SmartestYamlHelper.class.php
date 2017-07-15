@@ -12,10 +12,15 @@ class SmartestYamlHelper extends SmartestHelper{
         if(is_file($file_name)){
             $spyc = new Spyc;
             $array = $spyc->loadFile($file_name);
-            return $array;
+            if(is_array($array)){
+                return $array;
+            }else{
+                return false;
+            }
         }else{
             // error
             SmartestLog::getInstance('system')->log("SmartestYamlHelper tried to load non-existent file: ".$file_name, SM_LOG_WARNING);
+            return false;
         }
     }
     

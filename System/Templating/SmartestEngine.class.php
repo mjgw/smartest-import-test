@@ -51,7 +51,7 @@ class SmartestEngine extends Smarty{
 		$this->security = true;
 		$this->security_settings['PHP_HANDLING'] = false;
 		$this->security_settings['PHP_TAGS'] = false;
-		$this->security_settings['MODIFIER_FUNCS'] = array('strtolower', 'strtoupper', 'trim', 'addslashes', 'stripslashes');
+		$this->security_settings['MODIFIER_FUNCS'] = array('strtolower', 'strtoupper', 'trim', 'addslashes', 'stripslashes', '_item_name_escape');
 		$this->security_settings['IF_FUNCS'] = array('strlen', 'empty', 'count', 'in_array', 'array', 'is_numeric', 'is_array', 'isset', '_b');
 		$this->security_settings['INCLUDE_ANY'] = true;
 		

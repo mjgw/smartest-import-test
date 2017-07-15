@@ -3,18 +3,11 @@
 class Dropdowns extends SmartestSystemApplication{
   
     public function startPage($get){
+        
 	    $this->setFormReturnUri();
 	    
-	    $database = SmartestDatabase::getInstance('SMARTEST');
-	    $results = $database->queryToArray("SELECT * FROM DropDowns"); 
-	    
-	    $dropdowns = array();
-	    
-	    foreach($results as $r){
-	        $d = new SmartestDropdown;
-	        $d->hydrate($r);
-	        $dropdowns[] = $d;
-	    }
+	    $du = new SmartestDataUtility;
+        $dropdowns = $du->getDropdowns($this->getSite()->getId());
 	    
 	    $this->send($dropdowns, 'dropdowns');
 	    $this->send(count($dropdowns), 'count');

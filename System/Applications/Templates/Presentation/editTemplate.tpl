@@ -38,7 +38,7 @@
   
   {if $model}
   <div class="special-box">
-    This template is paired with the <strong>{$model.plural_name|strtolower}</strong> model <a href="#" onclick="return MODALS.load('datamanager/modelInfo?class_id={$model.id}', 'Model info')"><i class="fa fa-info-circle"></i></a> <a href="#" onclick="return MODALS.load('datamanager/showItemClassTemplateAccess?class_id={$model.id}', '{$model.plural_name} template data')"><i class="fa fa-file-code-o"></i></a>. {help id="templates:data_in_templates"}What does this mean?{/help}
+    This template is paired with the <strong>{$model.plural_name|strtolower}</strong> model <a href="#" onclick="return MODALS.load('datamanager/modelInfo?class_id={$model.id}', 'Model info')" class="clickable-icon"><i class="fa fa-info-circle"></i></a> <a href="#" onclick="return MODALS.load('datamanager/showItemClassTemplateAccess?class_id={$model.id}', '{$model.plural_name} template data')" class="clickable-icon"><i class="fa fa-file-code-o"></i></a>. {help id="templates:data_in_templates"}What does this mean?{/help}
   </div>
   {else}
   

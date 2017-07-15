@@ -1151,3 +1151,7 @@ function _b($v){
 function _bo($v){
     return new SmartestBoolean(SmartestStringHelper::toRealBool($v));
 }
+
+function _item_name_escape($string){
+    return htmlentities($string, ENT_COMPAT|ENT_HTML5|ENT_QUOTES, 'UTF-8') ;
+}

@@ -155,9 +155,6 @@ class SmartestAssetCreationHelper{
                             $img = new SmartestImage($saved_thumbnail_file);
                             $type = $img->getAssetTypeFromSuffix();
                     
-                            // var_dump($saved_thumbnail_file);
-                            // var_dump($type);
-                    
                             $this->_thumbnail_asset = new SmartestAsset;
                             $this->_thumbnail_asset->setLabel("Thumbnail for ".$asset_label);
                             $this->_thumbnail_asset->setWebid(SmartestStringHelper::random(32));

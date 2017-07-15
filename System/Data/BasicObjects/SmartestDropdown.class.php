@@ -27,9 +27,29 @@ class SmartestDropdown extends SmartestBaseDropdown{
         
     }
     
+    public function getOptionsForIdentifier($refresh=false){
+        
+        // if(!count($this->_options) || $refresh){
+        
+            $sql = "SELECT * FROM DropDownValues WHERE dropdownvalue_dropdown_id='".$this->getId()."' ORDER BY dropdownvalue_value ASC";
+            $result = $this->database->queryToArray($sql, true);
+        
+            $options = array();
+        
+            foreach($result as $opt){
+                $option = new SmartestDropdownOption;
+                $option->hydrate($opt);
+                $options[] = $option;
+            }
+        
+        return $options;
+        
+    }
+    
     public function getIdentifier(){
         $val = '';
-        foreach($this->getOptions() as $opt){
+        // Will return the same identifier from the same values, regardless of how they are ordered by the user
+        foreach($this->getOptionsForIdentifier() as $opt){
             $val .= $opt->getValue();
         }
         $hex = md5($val);
@@ -149,6 +169,9 @@ class SmartestDropdown extends SmartestBaseDropdown{
             
             case "render_options":
             return $this->getOptionsForRender();
+            
+            case "identifier":
+            return $this->getIdentifier();
             
         }
         

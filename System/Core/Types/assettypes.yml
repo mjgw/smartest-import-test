@@ -362,32 +362,32 @@ type:
     suffix:
       - {mime: text/css, _content: css}
 
-#  SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET:
-#    id: SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET
-#    category: browser_instructions
-#    label: Sass Dynamic CSS Stylesheet
-#    description: Dynamic CSS Stylesheet in the Sass (Syntactically Awesome Stylesheets) metalanguage. SCSS syntax only.
-#    class: SmartestTextAsset
-#    editable: true
-#    parsable: true
-#    convert_to_smarty: false
-#    show_preview_edit_link: false
-#    icon: style.png
-#    input_options:
-#      - SM_ASSETINPUTTYPE_DIRECT_INPUT
-#    input_panel: add.stylesheet.tpl
-#    render:
-#      template: System/Presentation/WebPageBuilder/display.sass.tpl
-#      preview_template: System/Presentation/WebPageBuilder/preview.sass.tpl
-#    param:
-#      - {name: use_style_tag, label: "Use &lt;style&gt; tag and @import", type: SM_DATATYPE_BOOLEAN, required: false}
-#      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false}
-#    storage:
-#      type: database
-#      live_cache: Public/Resources/System/Cache/Sass/
-#    suffix:
-#      - {mime: text/css, _content: scss}
-#      - {mime: text/css, _content: sass}
+  SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET:
+    id: SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET
+    category: browser_instructions
+    label: Sass Dynamic CSS Stylesheet
+    description: Dynamic CSS Stylesheet in the Sass (Syntactically Awesome Stylesheets) metalanguage. SCSS syntax only.
+    class: SmartestTextAsset
+    editable: true
+    parsable: true
+    convert_to_smarty: false
+    show_preview_edit_link: false
+    fa_iconname: file-text-o
+    input_options:
+      - SM_ASSETINPUTTYPE_DIRECT_INPUT
+    input_panel: add.stylesheet.tpl
+    render:
+      template: System/Presentation/WebPageBuilder/display.sass.tpl
+      preview_template: System/Presentation/WebPageBuilder/preview.sass.tpl
+    param:
+#      - {name: use_style_tag, label: "Use &lt;style&gt; tag and @import", type: SM_DATATYPE_BOOLEAN, required: false, default: false}
+      - {name: media, label: "Specify a medium for this stylesheet?", type: SM_DATATYPE_SL_TEXT, required: false, default: screen, options: {all: all, aural: aural, braille: braille, embossed: embossed, handheld: handheld, print: print, projection: projection, screen: screen, tty: tty, tv: tv}}
+    storage:
+      type: database
+      live_cache: Public/Resources/System/Cache/Sass/
+    suffix:
+      - {mime: text/css, _content: scss}
+      - {mime: text/css, _content: sass}
 
   SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT:
     id: SM_ASSETTYPE_WEB_OPEN_FONT_FORMAT

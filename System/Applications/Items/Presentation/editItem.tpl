@@ -97,13 +97,11 @@
 {if $item.has_metapage && count($metapages)}
 
 <div class="special-box">
-  
   {if $item.public == 'TRUE'}
   The primary web address for this {$item._model.name|strtolower} is <a href="{$item.absolute_url}" target="_blank">{$item.absolute_url}</a>
   {else}
   The primary web address for this {$item._model.name|strtolower} will be <strong>{$item.absolute_url}</strong>
   {/if} <a href="{$domain}websitemanager/editPage?page_id={$item._meta_page.webid}&amp;item_id={$item.id}#urls" class="button small">Edit URL structure</a>
-  
 </div>
 
 {/if}
@@ -151,7 +149,8 @@
 {foreach from=$item._editable_properties key="pid" item="property"}
 <div class="edit-form-row">
   <div class="form-section-label">{if $property.required == 'TRUE'}<strong>{/if}{$property.name}{* ({$property.varname}) *}{if $property.required == 'TRUE'}</strong> *{/if}{if $can_edit_properties}<a style="float:left" title="Edit this property" href="{$domain}datamanager/editItemClassProperty?from=item_edit&amp;item_id={$item.id}&amp;itemproperty_id={$property.id}" class="clickable-icon"><i class="fa fa-cog"></i></a>{/if}</div>
-  {item_field property=$property value=$item[$pid]} {* <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}" class="button small">Test</a> *}
+  {item_field property=$property value=$item[$pid]}
+  {* <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}" class="button small">Test</a> *}
 </div>
 {/foreach}
 

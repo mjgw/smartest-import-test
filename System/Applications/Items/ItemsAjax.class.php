@@ -730,7 +730,7 @@ class ItemsAjax extends SmartestSystemApplication{
                 exit;
             
             }catch(Elasticsearch\Common\Exceptions\ServerErrorResponseException $e){
-                // print_r($e->getTrace());
+                $data['response'] = array('error'=>"The data was not correctly formatted.");
             }
             
         }

@@ -1484,8 +1484,8 @@ class SmartestAssetsLibraryHelper{
     public function getValidExternalUrlPatternsWithServices(){
         
         $url_services = array();
-        // $oembedhelper = new SmartestAPIServicesHelper();
-        // $oembed_urls = $oembedhelper->getOEmbedUrlPatterns();
+        
+        // First loop through OEmbed services
         $oembed_services = SmartestAPIServicesHelper::getOEmbedServices();
         
         foreach($oembed_services as $oes){
@@ -1498,6 +1498,7 @@ class SmartestAssetsLibraryHelper{
             );
         }
         
+        // Next, loop through external translated asset types
         $external_assettypes = $this->getTypesByStorageType('external_translated');
         
         foreach($external_assettypes as $at){
@@ -1512,7 +1513,6 @@ class SmartestAssetsLibraryHelper{
             }
         }
         
-        // print_r($url_services);
         return $url_services;
         
     }

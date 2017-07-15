@@ -1,5 +1,7 @@
 <?php
 
+require SM_ROOT_DIR.'System/Library/scssphp/scss.inc.php';
+
 class SmartestBasicRenderer extends SmartestEngine{
     
     protected $_asset; // used when rendering an Asset
@@ -218,41 +220,63 @@ class SmartestBasicRenderer extends SmartestEngine{
                     
                     }elseif($this->_asset->getCategory() == 'browser_instructions'){
                         
-                        if($this->getDraftMode()){
+                        if($this->_asset->getType() == 'SM_ASSETTYPE_SCSS_DYNAMIC_STYLESHEET'){
                             
-                            // Render a <link> or <script> tag that points to a method on the CMSFrontEnd app that will parse the dynamic CSS or JS
-                            $address = 'website/renderDynamicBrowserInstruction?file_id='.$this->_asset->getWebId().'&amp;nonce='.substr($this->_asset->getContentHash(), 0, 8);
-                            
-                            ob_start();
-                            $this->assign('sass_web_path', $address);
-                            $this->run($render_template, array('asset_info'=>$this->_asset, 'render_data'=>$render_data, 'image'=>$image));
-                            $content = ob_get_contents();
-                	        ob_end_clean();
-                            
-                            return $content;
-                            
-                        }else{
-                            
-                            if(isset($asset_type_info['storage']['live_cache'])){
+                            if($this->getDraftMode()){
                                 
-                                // Parse the dynamic CSS or JS now, save to a file,
+                                $hash = md5($this->_asset->getContent(true));
+                                $filename = substr($hash, 0, 16).'.css';
+                                $type_info = $this->_asset->getTypeInfo();
                                 
-                            
-                                // then render a <link> or <script> tag that points to the saved file
-                                $address = $this->_asset->getLiveCacheWebPath();
+                                // Render a <link> or <script> tag that points to a method on the CMSFrontEnd app that will parse the dynamic CSS or JS
+                                // The 'nonce' part will prevent caching by making the URL different if the content is different
+                                $address = 'website/renderDynamicStylesheet?file_id='.$this->_asset->getWebId().'&amp;nonce='.substr($this->_asset->getContentHash(), 0, 8);
                             
                                 ob_start();
                                 $this->assign('sass_web_path', $address);
+                                // This line is needed in order to show the preview
+                                $this->assign('sass_live_web_path', str_replace('Public/','',$type_info['storage']['live_cache']).$filename);
                                 $this->run($render_template, array('asset_info'=>$this->_asset, 'render_data'=>$render_data, 'image'=>$image));
                                 $content = ob_get_contents();
                     	        ob_end_clean();
                             
                                 return $content;
-                                
+                            
                             }else{
+                            
+                                if(isset($asset_type_info['storage']['live_cache'])){
+                                    
+                                    $raw_scss = $this->_asset->getContent(true);
+                                    $hash = md5($raw_scss);
+                                    $filename = substr($hash, 0, 16).'.css';
+                                    $type_info = $this->_asset->getTypeInfo();
+                                    
+                                    if(!is_file(SM_ROOT_DIR.$type_info['storage']['live_cache'].$filename)){
+                                        // Parse the dynamic CSS or JS now, save to a file,
+                                        $scss = new scssc();
+                                        $compiled_css = $scss->compile($raw_scss);
+                                        SmartestFileSystemHelper::save(SM_ROOT_DIR.$type_info['storage']['live_cache'].$filename, $compiled_css);
+                                    }
+                            
+                                    // then render a <link> or <script> tag that points to the saved file
+                                    // $address = $this->_asset->getLiveCacheWebPath();
+                                    $address = str_replace('Public/','',$type_info['storage']['live_cache']).$filename;
+                                    // $address = 'Resources/System/Cache/Sass/'.$filename;
+                            
+                                    ob_start();
+                                    $this->assign('sass_web_path', $address);
+                                    $this->run($render_template, array('asset_info'=>$this->_asset, 'render_data'=>$render_data, 'image'=>$image));
+                                    $content = ob_get_contents();
+                        	        ob_end_clean();
+                            
+                                    return $content;
                                 
-                                // There is nowhere for parsed files to be cached
+                                }else{
                                 
+                                    // There is nowhere for parsed files to be cached
+                                
+                                }
+                            
                             }
                             
                         }

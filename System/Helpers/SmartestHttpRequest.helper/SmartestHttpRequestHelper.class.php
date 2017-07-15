@@ -236,6 +236,7 @@ class SmartestHttpRequestHelper extends SmartestHelper{
             
             while(isset($metas[$try_key]) && $limit < 10){
                 
+                // Yes - preg_match() in a while loop is not a great idea. But this is a very rare case, and will never run more than 10x
                 if(preg_match('/.+_(\d+)$/', $try_key, $matches_k)){
                     $num = $matches_k[1];
                     $next_num = (int) $matches_k[1]+1;

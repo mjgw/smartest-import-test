@@ -559,14 +559,20 @@ class CmsFrontEnd extends SmartestSystemApplication{
 	    
 	}
     
-    public function renderDynamicBrowserInstruction(){
+    public function renderDynamicStylesheet(){
         
         $asset = new SmartestRenderableAsset;
         
         if($asset->findBy('webid', $this->getRequestParameter('file_id'))){
-            header('Content-type: '.$asset->getMimeType());
-            // echo $asset->getMimeType();
+            header('Content-type: text/css');
+            $raw_scss = $asset->getContent(true);
+            $scss = new scssc();
+            echo $scss->compile($raw_scss);
+        }else{
+            $this->renderNotFoundPage(SM_ERROR_FILE_NOT_FOUND);
         }
+        
+        exit;
         
     }
 	

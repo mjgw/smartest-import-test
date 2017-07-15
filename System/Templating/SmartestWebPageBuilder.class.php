@@ -116,7 +116,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     
     public function renderPage($page, $draft_mode=false){
 	    
-	    $this->page = $page;
+        $this->page = $page;
 	    $this->setDraftMode($draft_mode);
 	    
 	    $GLOBALS['CURRENT_PAGE'] = $page;
