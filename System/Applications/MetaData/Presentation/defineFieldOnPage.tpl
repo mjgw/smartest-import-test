@@ -12,22 +12,30 @@
     
     <div class="edit-form-row">
       <div class="form-section-label">Field value:</div>
+      
       {if $field_type == 'SM_DATATYPE_DROPDOWN_MENU'}
       <select name="field_content">
         {foreach from=$options item="option"}
         <option value="{$option.value}"{if $option.value == $value.value} selected="selected"{/if}>{$option.label}</option>
         {/foreach}
       </select>
+      
       {elseif $field_type == 'SM_DATATYPE_BOOLEAN'}
       {boolean name="field_content" id="field-value" value=$value}
+      
       {elseif $field_type == 'SM_DATATYPE_INTERNAL_LINK'}
       {internal_link_select name="field_content" id="field-value" value=$value}
+      
       {elseif $field_type == 'SM_DATATYPE_ASSET_GALLERY'}
       <select name="field_content">
         {foreach from=$options item="option"}
         <option value="{$option.id}"{if $option.id == $value} selected="selected"{/if}>{$option.label}</option>
         {/foreach}
       </select>
+      
+      {elseif $field_type == 'SM_DATATYPE_RGB_COLOR'}
+      {color_input name="field_content" value=$value id="field-value"}
+      
       {else}
       <input type="text" name="field_content" value="{$value}" />
       {/if}

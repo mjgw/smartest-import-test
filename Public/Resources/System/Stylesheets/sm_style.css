@@ -686,6 +686,11 @@ div.special-box a.button{
     color:#fff;
 }
 
+div.special-box i.fa{
+    color:#777;
+    font-size:1.25em;
+}
+
 div.special-box .heading{
     color:#333;
     font-weight:bold;

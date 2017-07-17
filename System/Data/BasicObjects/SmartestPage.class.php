@@ -383,31 +383,15 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         $ais = array();
         
         $i = 0;
-	    foreach($result as $r){
         
+	    foreach($result as $r){
 	        $ai = new SmartestAssetIdentifier;
 	        $ai->hydrateFromGiantArray($r);
-	        $ais[$r['assetclass_id']] = $ai;
+	        $ais[] = $ai;
             $i++;
-        
 	    }
         
-        /* if($item_id !== false){
-	        
-	        $sql = "SELECT * FROM AssetIdentifiers, AssetClasses WHERE assetidentifier_page_id='".$this->_properties['id']."' AND assetidentifier_assetclass_id=assetclass_id AND assetidentifier_item_id='".$item_id."'";
-            $result = $this->database->queryToArray($sql);
-    	    
-    	    foreach($result as $r){
-
-    	        $ai = new SmartestAssetIdentifier;
-    	        $ai->hydrateFromGiantArray($r);
-    	        $ais[$r['assetclass_id']] = $ai;
-
-    	    }
-    	    
-	    } */
-	    
-	    return $ais;
+        return $ais;
 	    
 	}
 	
@@ -597,11 +581,12 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	public function publishAssetClasses($item_id=false, $item_only=false){
 	    
 	    $asset_identifiers = $this->getAssetIdentifiers($item_id, $item_only);
-		
+		$num_published = 0;
         foreach($asset_identifiers as $key=>$ai){
             $ai->publish(true);
+            $num_published++;
 		}
-	    
+        return $num_published;
 	}
 	
 	public function publishItemSpaces($publish_unpublished_items, $item_id=false, $item_only=false){

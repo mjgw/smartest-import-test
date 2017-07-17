@@ -1,6 +1,6 @@
 <div id="work-area">
 
-<h3>Publish {if $item}Meta-{/if}Page</h3>
+<h3>Publish {if $item}meta-{/if}page</h3>
 
 {if $show_site_disabled_warning}
 
@@ -15,27 +15,49 @@
 
 {if $allow_publish}
 
-{if $count < 1}
+<div class="instruction">Definitely publish this page?</div>
 
-<div class="instruction">Are you sure you want to publish this page?</div>
+{if $count > 0}
 
-{elseif $count == 1}
+<div id="page-underfined-elements">
+  
+  <div class="special-box"><i class="fa fa-info-circle"></i> This page includes one or more elements that are not defined. <a href="#toggle-indefined-elements" class="button small" id="toggle-page-underfined-elements">Show</a></div>
+  
+  <div style="display:none" id="page-underfined-elements-holder">
+  
+{if $count == 1}
 
-<div class="warning">The {$undefined_asset_classes[0].info.type} <strong>{$undefined_asset_classes[0].info.assetclass_name}</strong> is not defined.</div>
+<p>The {$undefined_asset_classes[0].info.type} <strong>{$undefined_asset_classes[0].info.assetclass_name}</strong> is not defined.</p>
 	
 {elseif $count > 1}
 
-<div class="warning">The following elements are not defined in the in the most recent version of this page. Publishing this page will cause To be empty:</div>
+<p>The following elements are not defined in the in the most recent version of this page. Publishing this page may result in an incomplete-looking page:</p>
 
 <ul class="basic-list">
 
 	{foreach from=$undefined_asset_classes item="undefinedAssetClass"}
-	<li>{$undefinedAssetClass.info.type} <b>{$undefinedAssetClass.info.assetclass_name}</b></li>
+	<li>{$undefinedAssetClass.info.type} <b>{$undefinedAssetClass.info.assetclass_name}</b>{if $undefinedAssetClass.info.instance != 'default'} (instance: {$undefinedAssetClass.info.instance}){/if}</li>
 	{/foreach}
 
 </ul>
 
 {/if}{* number of undefined elements *}
+
+  </div>
+  
+  <script type="text/javascript">
+  {literal}
+  $('toggle-page-underfined-elements').observe('click', function(e){
+    e.stop();
+    $('page-underfined-elements-holder').blindDown({duration:0.3});
+    $('toggle-page-underfined-elements').fade({duration:0.3});
+  });
+  {/literal}
+  </script>
+
+</div>
+
+{/if}{* has any undefined elements *}
 
 {if $item}
 
@@ -87,7 +109,7 @@
 
 <div class="buttons-bar">
   <input type="button" onclick="cancelForm();" value="Cancel" />
-  {if $allow_publish}<input type="submit" value="Publish" />{/if}
+  {if $allow_publish}<input type="submit" value="Publish page" />{/if}
 </div>
 	
 </div>

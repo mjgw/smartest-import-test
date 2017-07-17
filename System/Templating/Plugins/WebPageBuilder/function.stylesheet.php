@@ -12,12 +12,11 @@ function smarty_function_stylesheet($params, &$smartest_engine){
             
             $a = new SmartestRenderableAsset;
             
-            // var_dump(SmartestPersistentObject::get('request_data')->g('domain'));
-            
             if($a->findBy('url', $file)){
+                $a->setDraftMode($smartest_engine->getDraftMode());
                 return $a->render();
             }else{
-                return '<link rel="stylesheet" href="'.SmartestPersistentObject::get('request_data')->g('domain').'Resources/Stylesheets/'.$file.'" />';
+                return '<link rel="stylesheet" href="'.SmartestPersistentObject::get('request_data')->g('domain').'Resources/Stylesheets/'.$file.'" />'."\n";
             }
             
         }

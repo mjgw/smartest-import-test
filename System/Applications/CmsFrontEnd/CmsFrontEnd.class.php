@@ -564,10 +564,45 @@ class CmsFrontEnd extends SmartestSystemApplication{
         $asset = new SmartestRenderableAsset;
         
         if($asset->findBy('webid', $this->getRequestParameter('file_id'))){
-            header('Content-type: text/css');
+    		if($this->requestParameterIsSet('draft') && SmartestStringHelper::toRealBool($this->getRequestParameter('draft')) && $this->_auth->getUserIsLoggedIn()){
+    		    $draft_mode = true;
+    		}else{
+    		    $draft_mode = false;
+    		}
+            
+            if($this->requestParameterIsSet('site_id')){
+                $site = new SmartestSite;
+                if(!$site->find($this->getRequestParameter('site_id'))){
+                    $site = $this->_site;
+                }
+            }else{
+                $site = $this->_site;
+            }
+            
             $raw_scss = $asset->getContent(true);
+            $header = '$sm_domain: \''.$this->getRequest()->getDomain()."';\n";
+            $header .= '$sm_url_base: \''.$this->getRequest()->getDomain()."';\n";
+            
+            // Loop through the site's global fields and add them as SCSS variables
+            foreach($site->getGlobalFields($draft_mode) as $field_name => $global_field_value){
+                if($global_field_value instanceof SmartestRgbColor){
+                    $header .= '$field_'.$field_name.': #'.(string) $global_field_value.";\n";
+                }else{
+                    $header .= '$field_'.$field_name.': "'.(string) $global_field_value."\";\n";
+                }
+            }
+            
+            $raw_scss = $header.$raw_scss;
             $scss = new scssc();
-            echo $scss->compile($raw_scss);
+            
+            try{
+                header('Content-type: text/css');
+                $css = $scss->compile($raw_scss);
+            }catch(Exception $e){
+                header('Content-type: text/css');
+                $css = "/** SCSS Error: ".$e->getMessage()." **/";
+            }
+            
         }else{
             $this->renderNotFoundPage(SM_ERROR_FILE_NOT_FOUND);
         }

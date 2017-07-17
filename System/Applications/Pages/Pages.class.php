@@ -4079,6 +4079,32 @@ class Pages extends SmartestSystemApplication{
 	        }
         }
 	}
+    
+    public function editBlocklist(){
+        
+		$helper = new SmartestPageManagementHelper;
+		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
+		
+		if(isset($type_index[$page_webid])){
+		    if(($type_index[$page_webid] == 'ITEMCLASS' || $type_index[$page_webid] == 'SM_PAGETYPE_ITEMCLASS' || $type_index[$page_webid] == 'SM_PAGETYPE_DATASET') && $this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
+		        $page = new SmartestItemPage;
+		    }else{
+		        $page = new SmartestPage;
+		    }
+		}else{
+		    $page = new SmartestPage;
+		}
+        
+        $page_webid = $this->getRequestParameter('page_id');
+        
+        if($page->smartFind($page_webid)){
+            
+            $blocklist_name = SmartestStringHelper::toVarName($this->getRequestParameter('assetclass_id'));
+            $this->redirect('/blocklists/editBlockList?page_id='.$page->getId().'&blocklist_name='.$blocklist_name);
+            
+        }
+        
+    }
 	
 	public function editTemplate($get){
 	    
@@ -4230,7 +4256,7 @@ class Pages extends SmartestSystemApplication{
 		        $version = "draft";
 		        $undefinedAssetsClasses = $this->manager->getUndefinedElements($page_webid, 'draft', $item_id);
 		        
-		        $count = count($undefinedAssetsClasses);
+                $count = count($undefinedAssetsClasses);
 		        $this->send(true, 'allow_publish');
 		        $this->send($undefinedAssetsClasses, "undefined_asset_classes");
 		        $this->send($page->getWebId(), "page_id");
@@ -5560,33 +5586,6 @@ class Pages extends SmartestSystemApplication{
         
         $num_pages = count($this->getSite()->getQuickPagesList());
         $this->send($num_pages, 'num_cms_pages');
-        
-    }
-    
-    //////// Blocklists stuff ///////
-    
-    public function editBlocklist(){
-        
-		$helper = new SmartestPageManagementHelper;
-		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
-		
-		if(isset($type_index[$page_webid])){
-		    if(($type_index[$page_webid] == 'ITEMCLASS' || $type_index[$page_webid] == 'SM_PAGETYPE_ITEMCLASS' || $type_index[$page_webid] == 'SM_PAGETYPE_DATASET') && $this->getRequestParameter('item_id') && is_numeric($this->getRequestParameter('item_id'))){
-		        $page = new SmartestItemPage;
-		    }else{
-		        $page = new SmartestPage;
-		    }
-		}else{
-		    $page = new SmartestPage;
-		}
-        
-        $page_webid = $this->getRequestParameter('page_id');
-        
-        if($page->smartFind($page_webid)){
-            
-            
-            
-        }
         
     }
 

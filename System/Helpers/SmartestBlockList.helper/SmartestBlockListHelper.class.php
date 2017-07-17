@@ -33,4 +33,8 @@ class SmartestBlockListHelper{
         
     }
     
+    public function getOrCreateBlocklistForPage($page_id, $style_name='default'){
+        
+    }
+    
 }

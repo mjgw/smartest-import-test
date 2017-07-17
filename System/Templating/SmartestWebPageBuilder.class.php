@@ -371,7 +371,6 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                         
                         return $asset->getUrl();
                         
-                        
                         case "full":
                         case "path":
                         

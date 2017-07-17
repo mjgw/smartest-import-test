@@ -868,6 +868,27 @@ class SmartestSite extends SmartestBaseSite{
         
     }
     
+    public function getGlobalFields($draft_mode=false){
+        
+	    $sql = "SELECT * FROM PagePropertyValues, PageProperties WHERE PagePropertyValues.pagepropertyvalue_pageproperty_id=PageProperties.pageproperty_id AND PageProperties.pageproperty_is_sitewide='1' AND PagePropertyValues.pagepropertyvalue_site_id='".$this->getId()."'";
+	    $result = $this->database->queryToArray($sql);
+        $definitions = array();
+        
+        foreach($result as $pfda){
+                
+            if($draft_mode){
+                $value = SmartestDataUtility::objectize($pfda['pagepropertyvalue_draft_value'], $pfda['pageproperty_type']);
+            }else{
+                $value = SmartestDataUtility::objectize($pfda['pagepropertyvalue_live_value'], $pfda['pageproperty_type']);
+            }
+            
+            $definitions[$pfda['pageproperty_name']] = $value;
+	    }
+        
+        return $definitions;
+        
+    }
+    
     public function getOrganizationName(){
         $ph = new SmartestPreferencesHelper;
         $on = $ph->getGlobalPreference('site_organisation_name', null, $this->getId());

@@ -278,5 +278,27 @@ class SmartestEngine extends Smarty{
 	public function getInitializedVariableNames(){
 	    return array_keys($this->_tpl_vars);
 	}
+    
+    public function isWebsitePage(){
+	    $sd = SmartestYamlHelper::fastLoad(SmartestInfo::$system_info_file);
+		$websiteMethodNames = $sd['system']['content_interaction_methods'];
+		$method = $this->_request_data->g('module').'/'.$this->_request_data->g('action');
+		return in_array($method, $websiteMethodNames);
+    }
+    
+    protected function getSite(){
+        
+        $rh = new SmartestRequestUrlHelper;
+        
+        if(isset($GLOBALS['_site'])){
+            return $GLOBALS['_site'];
+        }elseif($this->isWebsitePage() && $site = $rh->getSiteByDomain(SmartestStringHelper::toValidDomain($_SERVER['HTTP_HOST']))){
+            return $site;
+        }elseif(is_object(SmartestSession::get('current_open_project')) && !$this->isWebsitePage()){
+            return SmartestSession::get('current_open_project');
+        }else{
+            return null;
+        }
+    }
 
 }
