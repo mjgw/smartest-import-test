@@ -603,6 +603,8 @@ class CmsFrontEnd extends SmartestSystemApplication{
                 $css = "/** SCSS Error: ".$e->getMessage()." **/";
             }
             
+            echo $css;
+            
         }else{
             $this->renderNotFoundPage(SM_ERROR_FILE_NOT_FOUND);
         }
