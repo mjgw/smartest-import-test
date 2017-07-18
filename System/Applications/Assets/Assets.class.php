@@ -18,8 +18,7 @@ class Assets extends SmartestSystemApplication{
 	        $this->forward('assets', 'assetGroups');
     	}elseif($this->getApplicationPreference('startpage_view') == 'galleries'){
             $this->getRequest()->setMeta('presentation', 'assetGroups.tpl');
-            // print_r($this->getRequest());
-    	    $this->forward('assets', 'assetGalleries');
+            $this->forward('assets', 'assetGalleries');
 	    }else{
 	        $this->forward('assets', 'getAssetTypes');
 	    }
@@ -653,6 +652,8 @@ class Assets extends SmartestSystemApplication{
             
                     if($placeholder->find($this->getRequestParameter('placeholder_id'))){
                         
+                        $instance_name = $this->getRequestParameter('instance', 'default');
+                        
                         if(!$this->getRequestParameter('asset_type')){
                             $types = $placeholder->getPossibleFileTypes();
                             if(count($types) == 1){
@@ -666,6 +667,7 @@ class Assets extends SmartestSystemApplication{
                         $this->send($placeholder, 'placeholder');
                         $this->send($page, 'page');
                         $this->send('placeholder', 'for');
+                        $this->send($instance_name, 'instance');
                         
                         if($this->getRequestParameter('item_id')){
                             if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
@@ -781,6 +783,8 @@ class Assets extends SmartestSystemApplication{
             
                 if($placeholder->find($this->getRequestParameter('placeholder_id'))){
                     
+                    $instance_name = $this->getRequestParameter('instance', 'default');
+                    
                     if(!$this->getRequestParameter('asset_type')){
                         
                         $types = $placeholder->getPossibleFileTypes();
@@ -793,6 +797,10 @@ class Assets extends SmartestSystemApplication{
                         }
                         
                         if($this->getRequestParameter('item_id')) $url .= '&item_id='.$this->getRequestParameter('item_id');
+                        
+                        if($instance_name != 'default'){
+                            $url .= '&instance='.$instance_name;
+                        }
                         
                         $this->redirect($url);
                         
@@ -1023,8 +1031,9 @@ class Assets extends SmartestSystemApplication{
                                         $definition = new SmartestPlaceholderDefinition;
                                         
                                         $item_id = is_numeric($this->getRequestParameter('item_id')) ? $this->getRequestParameter('item_id') : null;
+                                        $instance_name = $this->getRequestParameter('instance', 'default');
                                     
-                                        if($definition->loadForUpdate($placeholder->getName(), $page, $item_id)){
+                                        if($definition->loadForUpdate($placeholder->getName(), $page, $item_id, $instance_name)){
 
                     	                    // update placeholder
                     	                    $definition->setDraftAssetId($asset->getId());
@@ -1035,7 +1044,7 @@ class Assets extends SmartestSystemApplication{
                     	                    // wasn't already defined
                     	                    $definition->setDraftAssetId($asset->getId());
                     	                    $definition->setAssetclassId($placeholder->getId());
-                    	                    $definition->setInstanceName('default');
+                    	                    $definition->setInstanceName($instance_name);
                     	                    $definition->setPageId($page->getId());
                 	                    
                     	                    if($item_id){
@@ -1069,6 +1078,10 @@ class Assets extends SmartestSystemApplication{
                                         $url .= '&item_id='.$this->getRequestParameter('item_id');
                                     }else if($this->getRequestParameter('continue_item_id') && is_numeric($this->getRequestParameter('continue_item_id'))){
                                         $url .= '&item_id='.$this->getRequestParameter('continue_item_id');
+                                    }
+                                    
+                                    if($instance_name != 'default'){
+                                        $url .= '&instance='.$instance_name;
                                     }
                                     
                                     $this->redirect($url);

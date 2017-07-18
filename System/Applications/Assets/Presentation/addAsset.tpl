@@ -200,7 +200,7 @@ function validateUploadSuffix(){
       {/if}
       
       {if $for=='placeholder'}
-        <div class="instruction">The {$new_asset_type_info.label|strtolower} file you are creating will be used to define placeholder <strong>'{$placeholder.label}'</strong> on {if $item}meta-page <strong>'{$page.title}'</strong><span id="item-specificity"> for {$item._model.name|lower} <strong>'{$item.name}'</strong></span>.{else}page <strong>'{$page.title}'</strong>.{/if}</div>
+        <div class="instruction">The {$new_asset_type_info.label|strtolower} file you are creating will be used to define{if $instance && $instance != 'default'} instance '{$instance}' of {/if} placeholder <strong>'{$placeholder.label}'</strong> on {if $item}meta-page <strong>'{$page.title}'</strong><span id="item-specificity"> for {$item._model.name|lower} <strong>'{$item.name}'</strong></span>.{else}page <strong>'{$page.title}'</strong>.{/if}</div>
       {elseif $for=='ipv'}
         {if $item}
           <div class="instruction">The {$new_asset_type_info.label|strtolower} file you are creating will be used to define property <strong>'{$property.name}'</strong> of {$property._model.name|strtolower} <strong>'{$item.name}'</strong>.</div>
