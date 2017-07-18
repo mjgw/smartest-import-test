@@ -596,13 +596,12 @@ class CmsFrontEnd extends SmartestSystemApplication{
             $scss = new scssc();
             
             try{
-                header('Content-type: text/css');
                 $css = $scss->compile($raw_scss);
             }catch(Exception $e){
-                header('Content-type: text/css');
                 $css = "/** SCSS Error: ".$e->getMessage()." **/";
             }
             
+            header('Content-type: text/css');
             echo $css;
             
         }else{
