@@ -715,20 +715,24 @@ class SmartestTemplateAsset extends SmartestAsset{
 	    $stylesheets = array();
 	    
 	    foreach($matches1[3] as $m){
+            $a = new SmartestAsset;
 	        if(is_file(SM_ROOT_DIR.'Public/Resources/Stylesheets/'.$m)){
-	            $a = new SmartestAsset;
 	            if($a->findBy('url', $m)){
 	                $stylesheets[] = $a;
 	            }
+	        }elseif(SmartestStringHelper::getDotSuffix($m) == 'scss' && $a->findBy('url', $m)){
+	            $stylesheets[] = $a;
 	        }
 	    }
 	    
 	    foreach($matches2[1] as $m){
+            $a = new SmartestAsset;
 	        if(is_file(SM_ROOT_DIR.'Public/Resources/Stylesheets/'.$m)){
-	            $a = new SmartestAsset;
 	            if($a->findBy('url', $m)){
 	                $stylesheets[] = $a;
 	            }
+	        }elseif(SmartestStringHelper::getDotSuffix($m) == 'scss' && $a->findBy('url', $m)){
+	            $stylesheets[] = $a;
 	        }
 	    }
 	    
