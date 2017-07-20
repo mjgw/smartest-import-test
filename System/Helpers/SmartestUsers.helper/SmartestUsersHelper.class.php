@@ -527,6 +527,102 @@ class SmartestUsersHelper extends SmartestHelper{
         
     }
     
+    //////////////////// MEDIA OWNERSHIP AND ASSOCIATION ///////////////////
+    
+    public function getPagesCreatedByUserId($user_id, $site_id=null){
+        $sql = "SELECT * FROM Pages WHERE page_createdby_userid='".$user_id."' AND page_deleted='FALSE'";
+        if(is_numeric($user_id)){
+            $sql .= ' AND page_site_id="'.$site_id.'"';
+        }
+        $result = $this->database->queryToArray($sql);
+        $pages = array();
+        foreach($result as $r){
+            $p = new SmartestPage;
+            $p->hydrate($r);
+            $pages[] = $p;
+        }
+        return $pages;
+    }
+    
+    public function getPagesHeldByUserId($user_id, $site_id=null){
+        $sql = "SELECT * FROM Pages WHERE page_is_held='1' AND page_held_by='".$user_id."' AND page_deleted='FALSE'";
+        if(is_numeric($user_id)){
+            $sql .= ' AND page_site_id="'.$site_id.'"';
+        }
+        $result = $this->database->queryToArray($sql);
+        $pages = array();
+        foreach($result as $r){
+            $p = new SmartestPage;
+            $p->hydrate($r);
+            $pages[] = $p;
+        }
+        return $pages;
+    }
+    
+    public function getItemsHeldByUserId($user_id, $site_id=null){
+        $sql = "SELECT * FROM Items WHERE item_is_held='1' AND 	item_held_by='".$user_id."' AND item_deleted='0'";
+        if(is_numeric($user_id)){
+            $sql .= ' AND item_site_id="'.$site_id.'"';
+        }
+        $sql .= "ORDER BY Items.item_name ASC";
+        $result = $this->database->queryToArray($sql);
+        $ids = array();
+        foreach($result as $r){
+            $ids[] = $r['item_id'];
+        }
+        $h = new SmartestCmsItemsHelper;
+        return $h->hydrateMixedListFromIdsArrayPreservingOrder($ids);
+    }
+    
+    public function getItemsCreatedByUserId($user_id, $site_id=null){
+        $sql = "SELECT * FROM Items WHERE item_createdby_userid='".$user_id."' AND item_deleted='0'";
+        if(is_numeric($user_id)){
+            $sql .= ' AND item_site_id="'.$site_id.'"';
+        }
+        $sql .= "ORDER BY Items.item_name ASC";
+        $result = $this->database->queryToArray($sql);
+        $ids = array();
+        foreach($result as $r){
+            $ids[] = $r['item_id'];
+        }
+        $h = new SmartestCmsItemsHelper;
+        return $h->hydrateMixedListFromIdsArrayPreservingOrder($ids);
+    }
+    
+    public function getAssetsCreatedByUserId($user_id, $site_id=null){
+        $tlh = new SmartestTemplatesLibraryHelper;
+        $sql = "SELECT * FROM Assets WHERE asset_user_id='".$user_id."' AND asset_deleted='0' AND asset_is_archived=0 AND asset_is_hidden=0 AND asset_is_system=0";
+        if(is_numeric($user_id)){
+            $sql .= ' AND asset_site_id="'.$site_id.'"';
+        }
+        $sql .= " AND Assets.asset_type NOT IN ('".implode("','", $tlh->getTypeCodes())."') ORDER BY Assets.asset_stringid ASC";
+        $result = $this->database->queryToArray($sql);
+        $assets = array();
+        foreach($result as $r){
+            $a = new SmartestAsset;
+            $a->hydrate($r);
+            $assets[] = $a;
+        }
+        return $assets;
+    }
+    
+    public function getTemplatesCreatedByUserId($user_id, $site_id=null){
+        $tlh = new SmartestTemplatesLibraryHelper;
+        $sql = "SELECT * FROM Assets WHERE asset_user_id='".$user_id."' AND asset_deleted='0' AND asset_is_archived=0 AND asset_is_hidden=0 AND asset_is_system=0";
+        if(is_numeric($user_id)){
+            $sql .= ' AND asset_site_id="'.$site_id.'"';
+        }
+        $sql .= " AND Assets.asset_type IN ('".implode("','", $tlh->getTypeCodes())."') ORDER BY Assets.asset_stringid ASC";
+        $result = $this->database->queryToArray($sql);
+        $assets = array();
+        foreach($result as $r){
+            $a = new SmartestAsset;
+            $a->hydrate($r);
+            $assets[] = $a;
+        }
+        return $assets;
+    }
+    
     //////////////////////// NEW USER PROFILE STUFF/////////////////////////
     
     public function getProfileServices(){

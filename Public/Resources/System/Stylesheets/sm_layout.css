@@ -1086,3 +1086,25 @@ a.attachment-position-selector{
     background-position:5px 5px;
     background-repeat:no-repeat;
 }
+
+div.layout-column{
+    float:left;
+    margin-right:15px;
+    box-sizing:border-box;
+}
+
+div.layout-column.last, div.layout-column:last-child{
+    margin-right:0px;
+}
+
+div.layout-column.width-4{
+    width:calc(25% - 16px);
+}
+
+div.layout-column.width-3{
+    width:calc(33% - 16px);
+}
+
+div.layout-column.width-2{
+    width:calc(50% - 16px);
+}

@@ -44,12 +44,10 @@ var itemList = new Smartest.UI.OptionSet('pageViewForm', 'item_id_input', 'item'
   </div>
 </form>
 
-
-
 {if empty($items)}
 
 {if $set.type == 'STATIC'}
-  <div class="warning">There are currently no items in this set. <a href="{$domain}{$section}/editSet?set_id={$set.id}">Click here</a> to add some.</div>
+  <div class="warning">There are currently no {$set.model.plural_name|lower} in this set. <a href="{$domain}{$section}/editSet?set_id={$set.id}" class="button">Edit set contents</a></div>
 {else}
   <div class="warning">Please note: This saved query is currently empty because there are no items that match its conditions in the current mode. {help id="datamanager:query_modes"}What's a mode{/help}</div>
 {/if}

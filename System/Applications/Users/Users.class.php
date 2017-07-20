@@ -1098,8 +1098,30 @@ class Users extends SmartestSystemApplication{
 		$user = new SmartestUser;
 		
 		if($user->find($this->getRequestParameter('user_id'))){
-		    $this->setTitle('Content associated to user: '.$user->getFullName());
-		    $this->send($user, 'user');
+		    
+            $this->setTitle('Content associated to user: '.$user->getFullName());
+            $this->send($user, 'user');
+            
+            $uh = new SmartestUsersHelper;
+            $held_pages = $uh->getPagesHeldByUserId($user->getId(), $this->getSite()->getId());
+            $this->send($held_pages, 'held_pages');
+            $this->send(count($held_pages), 'num_held_pages');
+            $owned_pages = $uh->getPagesCreatedByUserId($user->getId(), $this->getSite()->getId());
+            $this->send($owned_pages, 'owned_pages');
+            $this->send(count($owned_pages), 'num_owned_pages');
+            $held_items = $uh->getItemsHeldByUserId($user->getId(), $this->getSite()->getId());
+            $this->send($held_items, 'held_items');
+            $this->send(count($held_items), 'num_held_items');
+            $owned_items = $uh->getItemsCreatedByUserId($user->getId(), $this->getSite()->getId());
+            $this->send($owned_items, 'owned_items');
+            $this->send(count($owned_items), 'num_owned_items');
+            $owned_files = $uh->getAssetsCreatedByUserId($user->getId(), $this->getSite()->getId());
+            $this->send($owned_files, 'owned_files');
+            $this->send(count($owned_files), 'num_owned_files');
+            $owned_templates = $uh->getTemplatesCreatedByUserId($user->getId(), $this->getSite()->getId());
+            $this->send($owned_templates, 'owned_templates');
+            $this->send(count($owned_templates), 'num_owned_templates');
+            
         }else{
             $this->addUserMessageToNextRequest("The User ID was not recognised.", SmartestUserMessage::ERROR);
             $this->formForward();

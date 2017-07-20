@@ -936,6 +936,15 @@ class SmartestSite extends SmartestBaseSite{
         return $val;
     }
     
+    public function __toSimpleObject(){
+        
+        $obj = parent::__toSimpleObject();
+        $obj->is_enabled = SmartestStringHelper::toRealBool($obj->is_enabled);
+        $obj->organization = $this->getOrganizationName();
+        return $obj;
+        
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){

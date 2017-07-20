@@ -954,7 +954,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 try{
                     $data = $list->getItems($this->getDraftMode(), $limit);
                 }catch(SmartestException $e){
-                    $this->raiseError($e->getMessage());
+                    $content .= $this->raiseError($e->getMessage());
                 }
                 
                 if($list->getType() == 'SM_LIST_TAG'){
@@ -971,10 +971,10 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                         if($tag->find($tag_id)){
                         
                         }else{
-                            echo $this->raiseError("A tag with ID ".$tag_id.' could not be found.');
+                            $content .= $this->raiseError("A tag with ID ".$tag_id.' could not be found.');
                         }
                     }else{
-                        echo $this->raiseError('No tag ID could be found.');
+                        $content .= $this->raiseError('No tag ID could be found.');
                     }
                     
                 }elseif($list->getType() == 'SM_LIST_SIMPLE'){
@@ -1038,9 +1038,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     	            $child->caching = false;
                     
                     if($this->getDraftMode()){
-                        $content = "<!--Smartest: Begin list template ".$list->getRepeatingTemplateInSmartest($this->getDraftMode())." -->\n";
-                    }else{
-                        $content = '';
+                        $content .= "<!--Smartest: Begin list template ".$list->getRepeatingTemplateInSmartest($this->getDraftMode())." -->\n";
                     }
                     
                     $content .= $child->fetch($list->getRepeatingTemplate($this->getDraftMode()));

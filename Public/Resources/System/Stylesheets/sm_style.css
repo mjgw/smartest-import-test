@@ -301,6 +301,11 @@ ul.basic-files-list li img{
     margin:0 5px 0 0;
 }
 
+ul.basic-files-list li i.fa, ul.basic-files-list li i.flaticon{
+    color:#68849E;
+    font-size:1.2em;
+}
+
 ul.basic-files-list li span.file-label{
     
 }

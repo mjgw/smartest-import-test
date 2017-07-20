@@ -1622,7 +1622,7 @@ class Templates extends SmartestSystemApplication{
 	        }
 	        $this->redirect("/templates/editTemplate?asset_type=".$type_code."&template=".$url_id);
 	    }else{
-	        $this->addUserMessageToNextRequest("The template was successfully saved.", SmartestUserMessage::SUCCESS);
+	        // $this->addUserMessageToNextRequest("The template was successfully saved.", SmartestUserMessage::SUCCESS);
 	        $this->formForward();
 	    }
 		
