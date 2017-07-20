@@ -141,7 +141,7 @@
   <h4>Files created ({$num_owned_files} total)</h4>
   <ul class="basic-files-list" id="owned-files-list" data-allshowing="false">
 {foreach from=$owned_files item="file" key="num"}
-    <li{if $num > 9} style="display:none" class="all"{/if}><i class="fa fa-{$file.fa_icon}"></i> {$file.label}{if $user.id == $_user.id}  <a href="{$domain}assets/editAsset?asset_id={$asset.id}" class="button small">Edit</a>{/if}</li>
+    <li{if $num > 9} style="display:none" class="all"{/if}><i class="fa fa-{$file.fa_icon}"></i> {$file.label}{if $user.id == $_user.id}  <a href="{$domain}assets/editAsset?asset_id={$file.id}" class="button small">Edit</a>{/if}</li>
 {/foreach}
   </ul>
   {if $num_owned_files > 10}
