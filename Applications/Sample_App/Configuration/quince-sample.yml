@@ -19,5 +19,5 @@
 #    ajax:
 #      class: Sample_App_Ajax
 #      meta:
-#        template: _alt.tpl
+#        template: _ajax.tpl
 #        presentation_subfolder: Ajax/

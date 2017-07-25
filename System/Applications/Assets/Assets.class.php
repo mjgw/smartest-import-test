@@ -23,6 +23,89 @@ class Assets extends SmartestSystemApplication{
 	        $this->forward('assets', 'getAssetTypes');
 	    }
 	}
+    
+    protected function _handleWorkflowParameters(){
+        
+        $finishTaskUrl = '/';
+        
+        switch($this->getRequestParameter('from')){
+            
+            case 'definePlaceholder':
+            $finishTaskUrl .= 'websitemanager/definePlaceholder';
+            if($this->requestParameterIsSet('placeholder_id')){
+                $placeholder = new SmartestPlaceholder;
+                if($placeholder->find($this->getRequestParameter('placeholder_id'))){
+                    $this->send($placeholder, 'workflow_placeholder');
+                    $finishTaskUrl .= '?assetclass_id='.$placeholder->getName();
+                    $page = new SmartestPage;
+                    if($page->smartFind($this->getRequestParameter('page_id'))){
+                        $finishTaskUrl .= '&amp;page_id='.$page->getWebId();
+                        $this->send($page, 'workflow_page');
+                        if($this->requestParameterIsSet('item_id')){
+                            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                                $this->send($item, 'workflow_item');
+                            }
+                        }
+                    }elseif($page->smartFind($this->getRequestParameter('page_webid'))){
+                        $this->send($page, 'workflow_page');
+                        $finishTaskUrl .= '&amp;page_id='.$page->getWebId();
+                        if($this->requestParameterIsSet('item_id')){
+                            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                                $this->send($item, 'workflow_item');
+                            }
+                        }
+                    }
+                    $this->send('SM_WORKFLOW_DEFINE_PLACEHOLDER', 'workflow_type');
+                    $this->send($this->getRequestParameter('from'), 'from');
+                    $this->setTemporaryFormReturnUri(str_replace('&amp;', '&', $finishTaskUrl));
+                }
+            }
+            
+            break;
+            
+            case 'editItem':
+            $finishTaskUrl .= 'datamanager/editItem';
+            if($this->requestParameterIsSet('item_id')){
+                if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                    $this->send($item, 'workflow_item');
+                    $finishTaskUrl .= '?item_id='.$item->getId();
+                    $page = new SmartestPage;
+                    if($page->smartFind($this->getRequestParameter('page_webid'))){
+                        $finishTaskUrl .= '&amp;page_id='.$page->getWebId();
+                        $this->send($page, 'workflow_page');
+                    }
+                    $this->send('SM_WORKFLOW_ITEM_EDIT', 'workflow_type');
+                    $this->send($this->getRequestParameter('from'), 'from');
+                    $this->setTemporaryFormReturnUri(str_replace('&amp;', '&', $finishTaskUrl));
+                }
+            }
+            break;
+            
+            case 'pagePreview':
+            $finishTaskUrl .= 'websitemanager/preview';
+            $page = new SmartestPage;
+            if($page->smartFind($this->getRequestParameter('page_id'))){
+                $finishTaskUrl .= '?page_id='.$page->getWebId();
+                $this->send($page, 'workflow_page');
+                if($this->requestParameterIsSet('item_id')){
+                    if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                         $this->send($item, 'workflow_item');
+                         $finishTaskUrl .= '&amp;item_id='.$item->getId();
+                    }
+                }
+                $this->send('SM_WORKFLOW_PAGE_PREVIEW', 'workflow_type');
+                $this->send($this->getRequestParameter('from'), 'from');
+                $this->setTemporaryFormReturnUri(str_replace('&amp;', '&', $finishTaskUrl));
+            }
+            break;
+            
+        }
+        
+        $this->send($this->getRequest()->getDomain().substr($finishTaskUrl, 1), 'frontend_finish_url');
+        $this->send($finishTaskUrl, 'backend_finish_url');
+        $this->send($this->getRequestParameter('from'), 'from');
+        
+    }
 	
 	public function getAssetTypes(){
 	    
@@ -362,10 +445,6 @@ class Assets extends SmartestSystemApplication{
 		    }
 	    }
         
-        if($this->getRequestParameter('from')){
-            $this->send($this->getRequestParameter('from'), 'from');
-        }
-        
         $this->send($this->getSite()->getLanguageCode(), 'site_language');
 	    
 	    if($this->getRequestParameter('asset_type')){
@@ -504,9 +583,8 @@ class Assets extends SmartestSystemApplication{
                 
                 $types = $group->getTypes();
                 $this->send($group, 'group');
-                // $this->send('group', 'for');
                 
-	            if(count($types) == 1){
+                if(count($types) == 1){
 	                
                     $this->send($types[0]['id'], 'type_code');
 	                $this->send($types[0], 'new_asset_type_info');
@@ -737,6 +815,7 @@ class Assets extends SmartestSystemApplication{
                             $this->send(true, 'lock_group_dropdown');
                         }else{
                             // Log: property specifies group that does not exist
+                            // Remove specification of non-existent group?
                         }
                     }
                     
@@ -764,9 +843,9 @@ class Assets extends SmartestSystemApplication{
 
             }
             
-        }else if($this->getRequestParameter('for') == 'group' || (isset($group) && is_object($group) && $group->getId())){ // If the point of this is to add a new file to a gallery
-            // echo $group->getLabel();
-            // print_r($_POST);
+        }elseif($this->getRequestParameter('for') == 'group' || (isset($group) && is_object($group) && $group->getId())){
+            // If the point of this is to add a file to a group, stay on track of what was happening before that
+            $this->_handleWorkflowParameters();
         }
 		
 	}
@@ -1481,9 +1560,6 @@ class Assets extends SmartestSystemApplication{
 	    $mode = $this->getRequestParameter("mode", 1);
 	    $this->send($this->getApplicationPreference('asset_list_style', 'grid'), 'list_view');
 	    
-	    $this->setFormReturnUri();
-	    $this->setFormReturnDescription('file group');
-	    
 	    $group = new SmartestAssetGroup;
 	    
 	    if($group->find($group_id)){
@@ -1498,6 +1574,13 @@ class Assets extends SmartestSystemApplication{
 	        $this->send($group, 'group');
 	        $this->send($mode, 'mode');
 	        $this->send(count($group->getMembers($mode, $this->getSite()->getId(), false)), 'num_assets');
+            
+            if($this->requestParameterIsSet('from')){
+                $this->_handleWorkflowParameters();
+            }else{
+        	    $this->setFormReturnUri();
+        	    $this->setFormReturnDescription('file group');
+            }
 	        
 	    }
 	    
@@ -1541,6 +1624,10 @@ class Assets extends SmartestSystemApplication{
 	        }else{
 	            $this->send(true, 'allow_shared_toggle');
 	        }
+            
+            if($this->requestParameterIsSet('from')){
+                $this->_handleWorkflowParameters();
+            }
 	        
 	        // $group->allowNonShared();
 	        
@@ -1592,8 +1679,29 @@ class Assets extends SmartestSystemApplication{
             
             $group->save();
             
+            $url = '/assets/editAssetGroup?group_id='.$group_id;
+            
+            if($this->getRequestParameter('from')){
+                $url .= '&from='.$this->getRequestParameter('from');
+            }
+            
+            if($this->getRequestParameter('item_id')){
+                $url .= '&item_id='.$this->getRequestParameter('item_id');
+            }
+            
+            if($this->getRequestParameter('page_id')){
+                $p = new SmartestPage;
+                if($p->smartFind($this->getRequestParameter('page_id'))){
+                    $url .= '&page_webid='.$p->getWebId();
+                }
+            }
+            
+            if($this->getRequestParameter('placeholder_id')){
+                $url .= '&placeholder_id='.$this->getRequestParameter('placeholder_id');
+            }
+            
             $this->addUserMessageToNextRequest("The file group was updated", SmartestUserMessage::SUCCESS);
-            $this->redirect('/assets/editAssetGroup?group_id='.$group_id);
+            $this->redirect($url);
 	        
 	    }else{
 	        
@@ -1609,7 +1717,7 @@ class Assets extends SmartestSystemApplication{
 	    $group_id = $this->getRequestParameter('group_id');
 	    
 	    if($this->requestParameterIsSet('from')){
-            $this->send($this->getRequestParameter('from'), 'from');
+            $this->_handleWorkflowParameters();
         }else{
             $this->setFormReturnUri();
         }
@@ -1698,6 +1806,21 @@ class Assets extends SmartestSystemApplication{
             
             if($this->getRequestParameter('from')){
                 $url .= '&from='.$this->getRequestParameter('from');
+            }
+            
+            if($this->getRequestParameter('item_id')){
+                $url .= '&item_id='.$this->getRequestParameter('item_id');
+            }
+            
+            if($this->getRequestParameter('page_id')){
+                $p = new SmartestPage;
+                if($p->smartFind($this->getRequestParameter('page_id'))){
+                    $url .= '&page_webid='.$p->getWebId();
+                }
+            }
+            
+            if($this->getRequestParameter('placeholder_id')){
+                $url .= '&placeholder_id='.$this->getRequestParameter('placeholder_id');
             }
             
             $this->redirect($url);
@@ -1805,9 +1928,11 @@ class Assets extends SmartestSystemApplication{
 	    
 	    $group_id = $this->getRequestParameter('group_id');
 	    
-	    if($this->getRequestParameter('from') != 'editItem'){
-	        $this->setFormReturnUri();
-	        $this->setFormReturnDescription('gallery');
+	    if($this->requestParameterIsSet('from')){
+            $this->_handleWorkflowParameters();
+        }else{
+            $this->setFormReturnUri();
+            $this->setFormReturnDescription('gallery');
         }
         
         $group = new SmartestAssetGroup;
@@ -3094,8 +3219,6 @@ class Assets extends SmartestSystemApplication{
             if($asset->find($this->getRequestParameter('asset_id'))){
                 
                 if($asset->getType() == 'SM_ASSETTYPE_RICH_TEXT'){
-                    
-                    // SmartestStringHelper::convertAttachmentsToVisualEditorFormat($asset->getContent());
                     
                     $this->send($asset->getContentForEditor(), 'editor_contents');
                     $this->send(SmartestStringHelper::randomFromFormat('RRRR'), 'random_nonce');

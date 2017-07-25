@@ -5,7 +5,7 @@ var input_mode = '{$starting_mode}';
 var show_params_holder = false;
 var itemNameFieldDefaultValue = '{$start_name}';
 var preventDefaultValue = {if $suggested_name}false{else}true{/if};
-
+var finishTaskUrl = {if $frontend_finish_url}'{$frontend_finish_url}'{else}null{/if};
 
 {literal}
 
@@ -43,6 +43,14 @@ document.observe('dom:loaded', function(){
     });
     
 });
+
+var finishTask = function(){
+  if(finishTaskUrl){
+    window.location = finishTaskUrl;
+  }else{
+    cancelForm();
+  }
+}
 
 /* function insertAssetClass(){
 	var assetClassName = prompt("Enter the asset class name");
@@ -125,7 +133,6 @@ function validateUploadSuffix(){
 {/if}        
       </div>
     
-    {if $from}<input type="hidden" name="from" value="{$from}" class="purpose_inputs" />{/if}
     
     {if $for}
       {if $for=='placeholder'}
@@ -138,13 +145,29 @@ function validateUploadSuffix(){
         <input type="hidden" name="for" value="ipv" class="purpose_inputs" />
         <input type="hidden" name="property_id" value="{$property.id}" class="purpose_inputs" />
         {if $item}<input type="hidden" name="item_id" value="{$item.id}" class="purpose_inputs" />{/if}
-      {elseif $for=='filegroup'}
-        <input type="hidden" name="for" value="filegroup" class="purpose_inputs" />
+      {elseif $for=='group' && $group && $group.id}
+        <input type="hidden" name="for" value="group" class="purpose_inputs" />
         <input type="hidden" name="group_id" value="{$group.id}" class="purpose_inputs" />
+        {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
+          <input type="hidden" name="from" value="{$from}" class="purpose_inputs" />
+          <input type="hidden" name="item_id" value="{$workflow_item.id}" class="purpose_inputs" />
+          {if $workflow_page}<input type="hidden" name="page_id" value="{$workflow_page.id}" class="purpose_inputs" />{/if}
+        {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+          <input type="hidden" name="from" value="{$from}" class="purpose_inputs" />
+          <input type="hidden" name="page_id" value="{$workflow_page.id}" class="purpose_inputs" />
+          {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" class="purpose_inputs" />{/if}
+        {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
+          <input type="hidden" name="from" value="{$from}" class="purpose_inputs" />
+          <input type="hidden" name="page_id" value="{$workflow_page.id}" class="purpose_inputs" />
+          <input type="hidden" name="placeholder_id" value="{$workflow_placeholder.id}" class="purpose_inputs" />
+          {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" class="purpose_inputs" />{/if}
+        {/if}
       {/if}
     {/if}
     
-    {if $group}<input type="hidden" name="group_id" value="{$group.id}" />{/if}
+    {* if $group}
+    <input type="hidden" name="group_id" value="{$group.id}" />
+    {/if *}
     
     <div class="buttons-bar"><input type="submit" value="Continue" /></div>
     
@@ -170,6 +193,20 @@ function validateUploadSuffix(){
       {elseif $for=='group'}
         <input type="hidden" name="for" value="group" class="purpose_inputs" />
         <input type="hidden" name="group_id" value="{$group.id}" class="purpose_inputs" />
+        {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
+          <input type="hidden" name="from" value="{$from}" class="purpose_inputs" />
+          <input type="hidden" name="item_id" value="{$workflow_item.id}" class="purpose_inputs" />
+          {if $workflow_page}<input type="hidden" name="page_id" value="{$workflow_page.id}" class="purpose_inputs" />{/if}
+        {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+          <input type="hidden" name="from" value="{$from}" class="purpose_inputs" />
+          <input type="hidden" name="page_id" value="{$workflow_page.id}" class="purpose_inputs" />
+          {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" class="purpose_inputs" />{/if}
+        {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
+          <input type="hidden" name="from" value="{$from}" class="purpose_inputs" />
+          <input type="hidden" name="page_id" value="{$workflow_page.id}" class="purpose_inputs" />
+          <input type="hidden" name="placeholder_id" value="{$workflow_placeholder.id}" class="purpose_inputs" />
+          {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" class="purpose_inputs" />{/if}
+        {/if}
       {/if}
       
       <input type="hidden" name="input_method" value="{$input_method}">
@@ -178,7 +215,7 @@ function validateUploadSuffix(){
 {if count($input_methods) > 1}
     <ul class="tabset">
 {foreach from=$input_methods key="input_method_code" item="input_method_tab"}
-      <li{if $input_method_code == $input_method} class="current"{/if}><a href="{$domain}smartest/file/new?asset_type={$type_code}&amp;input_method={$input_method_code}{if $for}&amp;for={$for}{/if}{if $for == "placeholder"}&amp;placeholder_id={$placeholder.id}&amp;page_id={$page.id}{/if}{if $for == "ipv"}&amp;property_id={$property.id}{/if}{if $item.id}&amp;item_id={$item.id}{/if}{if $for == 'group' && $group && $group.id}&amp;group_id={$group.id}{/if}{if $from}&amp;from={$from}{/if}">{$input_method_tab.label}</a></li>
+      <li{if $input_method_code == $input_method} class="current"{/if}><a href="{$domain}smartest/file/new?asset_type={$type_code}&amp;input_method={$input_method_code}{if $for}&amp;for={$for}{/if}{if $for == "placeholder"}&amp;placeholder_id={$placeholder.id}&amp;page_id={$page.id}{/if}{if $for == "ipv"}&amp;property_id={$property.id}{/if}{if $item.id}&amp;item_id={$item.id}{/if}{if $for == 'group' && $group && $group.id}&amp;group_id={$group.id}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}{if $workflow_placeholder}&amp;placeholder_id={$workflow_placeholder.id}{/if}{/if}{if $from}&amp;from={$from}{/if}">{$input_method_tab.label}</a></li>
 {/foreach}
     </ul>
 {/if}

@@ -4,13 +4,13 @@ class SmartestPlaceholder extends SmartestAssetClass{
     
     protected $_asset_type;
     
-	protected function __objectConstruct(){
-		
-		$this->addPropertyAlias('TypeId', 'assettype_id');
-		$this->_table_prefix = 'assetclass_';
-		$this->_table_name = 'AssetClasses';
-		
-	}
+	// protected function __objectConstruct(){
+	// 	
+	// 	// $this->addPropertyAlias('TypeId', 'assettype_id');
+	// 	// $this->_table_prefix = 'assetclass_';
+	// 	// $this->_table_name = 'AssetClasses';
+	// 	
+	// }
 	
 	public function getAssetType(){
 	    
@@ -30,15 +30,7 @@ class SmartestPlaceholder extends SmartestAssetClass{
 	        $site_id = $this->getSite()->getId();
 	    }
 	    
-	    // print_r($type['accept']);
-	    
-	    /*if($this->getType() == 'SM_ASSETTYPE_IMAGE'){
-            $types = array('SM_ASSETTYPE_IMAGE', 'SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE');
-        }else{
-            $types = array($this->getType());
-        } */
-        
-        $assets = array();
+	    $assets = array();
         
         if($this->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_NONE'){
             
@@ -99,6 +91,19 @@ class SmartestPlaceholder extends SmartestAssetClass{
 	    return $groups;
 	    
 	}
+    
+    public function getGroup(){
+        if($this->usesGroup()){
+            $group = new SmartestAssetGroup;
+            if($group->find($this->getFilterValue())){
+                return $group;
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
+    }
 	
 	public function getPossibleFileTypes(){
 	    
@@ -135,6 +140,10 @@ class SmartestPlaceholder extends SmartestAssetClass{
         $type_codes = $type['accept'];
 	    
 	}
+    
+    public function usesGroup(){
+        return $this->getFilterType() == 'SM_ASSETCLASS_FILTERTYPE_ASSETGROUP';
+    }
     
     public function onlyAcceptsImages(){
         
@@ -173,10 +182,6 @@ class SmartestPlaceholder extends SmartestAssetClass{
     }
 	
 	public function getAssetsByType(){
-	    
-	    /* if(!is_numeric($site_id)){
-	        $site_id = $this->getSite()->getId();
-	    } */
 	    
 	    $args = func_get_args();
 	    
@@ -284,8 +289,6 @@ class SmartestPlaceholder extends SmartestAssetClass{
 	    $result = $this->database->queryToArray($sql);
 	    $definitions = array();
 	    
-	    // echo $sql;
-	    
 	    foreach($result as $r){
 	        $d = new SmartestPlaceholderDefinition;
 	        $d->hydrateFromGiantArray($r);
@@ -299,10 +302,24 @@ class SmartestPlaceholder extends SmartestAssetClass{
     public function offsetGet($offset){
         
         switch($offset){
+            
             case 'label':
+            
             if(!strlen(trim($this->_properties['label']))){
                 return $this->getName();
             }
+            
+            case 'uses_group':
+            return $this->usesGroup();
+            
+            case 'group':
+            return $this->getGroup();
+            
+            case 'is_image_placeholder':
+            case 'is_for_images':
+            case 'images_only':
+            return $this->onlyAcceptsImages();
+            
         }
         
         return parent::offsetGet($offset);

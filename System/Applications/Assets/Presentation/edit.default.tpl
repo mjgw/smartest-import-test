@@ -20,7 +20,7 @@
       {/foreach}
       </select>
       {else}
-      <input type="text" name="params[{$parameter_name}]" value="{$parameter.value}" style="width:250px" />
+      <input type="text" name="params[{$parameter_name}]" value="{$parameter.value}" />
       {/if}
       {/if}
     </div>

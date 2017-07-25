@@ -3385,11 +3385,11 @@ class Pages extends SmartestSystemApplication{
 	        
     	        if($placeholder->hydrateBy('name', $placeholder_name)){
 	            
-    	            $this->setTitle('Define Placeholder | '.$placeholder_name);
+    	            $this->setTitle('Define placeholder | '.$placeholder_name);
                     
                     $this->send($placeholder->onlyAcceptsImages(), 'only_accepts_images');
-	            
-    	            $types_array = SmartestDataUtility::getAssetTypes();
+                    
+                    $types_array = SmartestDataUtility::getAssetTypes();
                     $params = array();
                     $page_definition = new SmartestPlaceholderDefinition;
                 
@@ -4938,6 +4938,8 @@ class Pages extends SmartestSystemApplication{
                 $this->send($definition_id, 'definition_id');
                 $this->send($options, 'options');
                 $this->send($item_space, 'itemspace');
+                $this->send($item_space->getDataSet(), 'set');
+                $this->send($item_space->getModel(), 'model');
                 $this->send($page, 'page');
                 
             }else{

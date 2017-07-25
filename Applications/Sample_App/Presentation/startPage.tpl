@@ -1,1 +1,1 @@
-Hello World!
+<h1><?sm:$message:?></h1>

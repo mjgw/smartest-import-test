@@ -4,7 +4,7 @@ var show_params_holder = false;
 
 {literal}
 
-function toggleParamsHolder(){
+var toggleParamsHolder = function(){
   if(show_params_holder){
     new Effect.BlindUp('params-holder', {duration: 0.6});
     show_params_holder = false;
@@ -154,6 +154,13 @@ function toggleParamsHolder(){
       </div>
       {/if}
       
+      {if $placeholder.uses_group}
+      <div class="edit-form-row">
+        <div class="form-section-label">Choosing from file group:</div>
+        {$placeholder.group.label} <a href="{$domain}assets/editAssetGroupContents?group_id={$placeholder.group.id}&amp;from=definePlaceholder&amp;placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $item}&amp;item_id={$item.id}{/if}" class="button small">Edit group contents</a>
+      </div>
+      {/if}
+      
 {if !empty($params)}
 
 <div class="v-spacer"></div>
@@ -234,13 +241,13 @@ function toggleParamsHolder(){
 
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Options</b></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}'" class="right-nav-link"><img src="{$domain}Resources/Icons/page_add.png" border="0" alt=""> Create a new file for this page</a></li>
-    {* <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/pageAssets?page_id={$page.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Cancel</a></li> *}
+    <li class="permanent-action"><a href="{$domain}assets/startNewFileCreationForPlaceholderDefinition?placeholder_id={$placeholder.id}&amp;page_id={$page.id}{if $show_item_options}&amp;item_id={$item.id}{/if}&amp;instance={$instance}" class="right-nav-link"><i class="fa fa-plus-circle"></i> Create a new file for this page</a></li>
+    <li class="permanent-action"><a href="{$domain}{$section}/editPlaceholder?placeholder_id={$placeholder.id}" class="right-nav-link"><i class="fa fa-pencil"></i> Edit placeholder</a></li>
 {if $item}
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;instance={$instance}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder for all {$item.model.plural_name|strtolower}</a></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholderOnItemPage?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;item_id={$item.id}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear or this {$item.model.name|strtolower} only</a></li>
+    <li class="permanent-action"><a href="{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;instance={$instance}" class="right-nav-link"><i class="fa fa-times"></i> Clear this placeholder for all {$item.model.plural_name|strtolower}</a></li>
+    <li class="permanent-action"><a href="{$domain}websitemanager/undefinePlaceholderOnItemPage?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;item_id={$item.id}"  class="right-nav-link"><i class="fa fa-times-circle"></i> Clear for this {$item.model.name|strtolower} only</a></li>
 {else}
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;instance={$instance}';" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder</a></li>
+    <li class="permanent-action"><a href="{$domain}websitemanager/undefinePlaceholder?page_id={$page.id}&amp;assetclass_id={$placeholder.name}&amp;instance={$instance}" class="right-nav-link"><i class="fa fa-times"></i> Clear this placeholder</a></li>
 {/if}
   </ul>
   

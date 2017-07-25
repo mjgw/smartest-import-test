@@ -181,7 +181,7 @@ function openPage(pageAction){
   <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('addTodoItem');"><i class="fa fa-share-square-o"></i> Add new to-do</a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('toggleItemArchived');"><i class="fa fa-archive"></i> <span class="archive_action_name" id="archive-action-name">Archive/Un-archive<span></a></li>
   <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('duplicateItem');"><i class="fa fa-clipboard"></i> Duplicate</a></li>
-  <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('deleteItem', {ldelim}confirm: 'Are you sure you want to delete this {$model.name|lower} ?'{rdelim});"><i class="fa fa-times-circle"></i> Delete</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="itemList.workWithItem('deleteItem', {ldelim}confirm: 'Are you sure you want to delete this {$model.name|lower} ?'{rdelim});"><i class="fa fa-trash"></i> Delete</a></li>
 </ul>
 {/if}
 

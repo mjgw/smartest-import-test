@@ -330,8 +330,8 @@ div.modal-error{
 }
 
 div#modal-work-area div.CodeMirror{
-    height:200px!important;
-    width:95%!important;
+    /* height:200px!important; 
+    width:95%!important; */
     border:1px solid #999;
 }
 

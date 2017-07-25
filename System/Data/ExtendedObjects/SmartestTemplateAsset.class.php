@@ -202,8 +202,6 @@ class SmartestTemplateAsset extends SmartestAsset{
 	    
 	    $file = $this->getFullPathOnDisk();
 	    
-	    // echo $file;
-	    
 	    if(is_file($file)){
 		    $contents = SmartestFileSystemHelper::load($file, true);
 		    return $contents;
@@ -212,7 +210,9 @@ class SmartestTemplateAsset extends SmartestAsset{
 	}
 	
 	public function getContentForEditor(){
-	    return htmlentities($this->getContent(), ENT_COMPAT, 'UTF-8');
+        $content = $this->getContent();
+        $content = htmlspecialchars($content, ENT_COMPAT, 'UTF-8');
+        return $content;
 	}
 	
 	public function setContent($content){

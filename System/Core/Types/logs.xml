@@ -26,7 +26,7 @@
   <log id="SM_LOG_SITE_ACTIONS">
     <name>site</name>
     <description>Per-site User Actions Log</description>
-    <file>Logs/%DAY%_%SITEID%_actions.log</file>
+    <file>Logs/%MONTH%_%SITEID%_actions.log</file>
     <format>%TIMESTAMP%: (%LEVEL%) %MESSAGE%</format>
   </log>
   

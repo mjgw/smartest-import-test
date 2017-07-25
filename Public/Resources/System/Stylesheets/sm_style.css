@@ -206,6 +206,21 @@ span.null-notice i.fa, span.feedback-ok i.fa, span.feedback-bad i.fa{
     font-size:1.15em;
 }
 
+span.selection-summary{
+    color:#999;
+}
+
+span.selection-summary span.selection-summary-file-name, span.selection-summary span.selection-summary-item-name{
+    font-weight:bold;
+    color:#333;
+}
+
+span.selection-summary span.selection-summary-file-name i.fa, span.selection-summary span.selection-summary-item-name i.fa{
+    font-size:1.2em;
+    color:#676767;
+    margin-right:3px;
+}
+
 div.special-box a.sm-help-link{
     background-color:#fff;
     text-decoration:none;
@@ -1024,6 +1039,12 @@ ul.sortable-content li{
     cursor:grab;
     cursor:-webkit-grab;
     cursor:-moz-grab;
+}
+
+ul.sortable-content li p a i.fa, ul.sortable-content li p a i.flaticon{
+    color:#68849E;
+    font-size:1.3em;
+    margin-left:3px;
 }
 
 ul.auto-fk-ipv-items{

@@ -30,6 +30,7 @@ function smarty_function_asset_group($params, $smartest_engine){
             
         }else{
             // Group wasn't found
+            return $smartest_engine->raiseError("File group '".$params['name']."' was not found");
         }
         
     }

@@ -14,7 +14,7 @@ class Sample_App extends SmartestUserApplication{
 	const FOO = 'BAR';
 
 	// SmartestApplication already has a constructor, so if you want your class to have a constructor,
-	// put it here called __moduleConstruct() and SmartestApplication will call it.
+	// put it here called __smartestApplicationInit() and SmartestApplication will call it.
 	public function __smartestApplicationInit(){
 		
 	}
@@ -25,20 +25,24 @@ class Sample_App extends SmartestUserApplication{
 	// By convention, the default action for a module is called startPage,
 	// but you can make this whatever you like in %module_dir%/Configuration/quince.yml
 	public function startPage(){
-	    
+	    $this->send("Hello world!", 'message');
 	}
 	
-	// will be accessible in the url via mysite.com/yourapp/foo
+	// will be callable via the url yoursite.com/appshortname/foo
+    // send data to the presentation layer with $this->send($data, 'name');
+    // a corresponding template foo.tpl in ./Presentation/ folder will display any data sent
 	public function foo(){          	
 		
 	}
 	
-	// will be accessible in the url via mysite.com/yourapp/bar
+	// will be callable via the url yoursite.com/appshortname/bar
+    // send data to the presentation layer with $this->send($data, 'name');
+    // a corresponding template foo.tpl in ./Presentation/ folder will display any data sent
 	public function bar(){
 		
 	}
 	
-	// will not be accessible in the url
+	// private method will not be accessible in the url
 	private function foobar(){
 	    
 	}

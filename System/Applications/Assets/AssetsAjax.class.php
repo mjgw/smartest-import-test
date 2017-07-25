@@ -729,6 +729,7 @@ class AssetsAjax extends SmartestSystemApplication{
         		    $content = SmartestStringHelper::unProtectSmartestTags($content);
         		    $content = SmartestTextFragmentCleaner::convertDoubleLineBreaks($content);
                     $success = (bool) $asset->setContentFromEditor($content);
+                    
                     if($success){
             	        $asset->setModified(time());
                         $asset->save();

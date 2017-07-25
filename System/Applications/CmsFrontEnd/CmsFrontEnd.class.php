@@ -431,7 +431,7 @@ class CmsFrontEnd extends SmartestSystemApplication{
             	            $atom->setTitle($this->_site->getName()." | ".$set->getLabel());
                             $atom->setAuthor($set->getFeedAuthor());
                             $atom->setDescription($set->getFeedDescription());
-                            $rss->setSite($this->_site);
+                            $atom->setSite($this->_site);
             	            $atom->sendAtom();
                         }else{
                             exit;
@@ -441,12 +441,12 @@ class CmsFrontEnd extends SmartestSystemApplication{
                         case "itunes":
                         if($set->getSyndicateAsITunes()){
                             $members = $set->getMembers();
-                            $atom = new SmartestRssOutputHelper($members);
-            	            $atom->setTitle($this->_site->getName()." | ".$set->getLabel());
-                            $atom->setAuthor($set->getFeedAuthor());
-                            $atom->setDescription($set->getFeedDescription());
-                            $rss->setSite($this->_site);
-            	            $atom->sendItunes();
+                            $itunes = new SmartestRssOutputHelper($members);
+            	            $itunes->setTitle($this->_site->getName()." | ".$set->getLabel());
+                            $itunes->setAuthor($set->getFeedAuthor());
+                            $itunes->setDescription($set->getFeedDescription());
+                            $itunes->setSite($this->_site);
+            	            $itunes->sendItunes();
                         }else{
                             exit;
                         }

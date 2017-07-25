@@ -8,6 +8,21 @@
     
     <input type="hidden" name="group_id" value="{$group.id}" />
     
+    {if $from}
+    <input type="hidden" name="from" value="{$from}" />
+    {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
+    <input type="hidden" name="item_id" value="{$workflow_item.id}" />
+    {if $workflow_page}<input type="hidden" name="page_id" value="{$workflow_page.id}" />{/if}
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    <input type="hidden" name="page_id" value="{$workflow_page.id}" />
+    {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" />{/if}
+    {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
+    <input type="hidden" name="page_id" value="{$workflow_page.id}" />
+    <input type="hidden" name="placeholder_id" value="{$workflow_placeholder.id}" />
+    {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" />{/if}
+    {/if}
+    {/if}
+    
     <div>
     
       <div class="edit-form-row">
@@ -71,10 +86,16 @@
 
 <div id="actions-area">
   
-  {if $request_parameters.item_id && $request_parameters.from}
+  {if $request_parameters.from}
   <ul class="actions-list">
     <li><b>Workflow options</b></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>
+    {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
+    <li class="permanent-action"><a href="{$domain}datamanager/editItem?item_id={$workflow_item.id}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}"><i class="fa fa-check"></i> Return to editing {$workflow_item._model.name|lower}</a></li>
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    <li class="permanent-action"><a href="#" onclick="cancelForm();"><i class="fa fa-check"></i> Return to page preview</a></li>
+    {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
+    <li class="permanent-action"><a href="{$domain}websitemanager/definePlaceholder?assetclass_id={$workflow_placeholder.name}&amp;page_id={$workflow_page.webid}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}"><i class="fa fa-check"></i> Return to placeholder</a></li>
+    {/if}
   </ul>
   {/if}
   

@@ -152,8 +152,6 @@ class SmartestItemSpaceDefinition extends SmartestAssetIdentifier{
     
     public function getItemId($draft){
         
-        $id = (int) $id;
-        
         if($draft){
             return $this->getField('draft_asset_id');
         }else{

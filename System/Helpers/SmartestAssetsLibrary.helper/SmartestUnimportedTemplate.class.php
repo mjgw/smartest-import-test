@@ -46,8 +46,6 @@ class SmartestUnimportedTemplate implements ArrayAccess{
             $type = $this->getProbableAssetType();
         }
         
-        var_dump($this->_sites);
-        
         if(!count($this->_sites[$type])){
         
             $base_name = SmartestFileSystemHelper::baseName($this->_file->getPath());

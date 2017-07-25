@@ -93,8 +93,8 @@ var myCodeMirror = CodeMirror.fromTextArea($('tpl_textArea'), {
   <ul class="actions-list" id="non-specific-actions">
     <li><strong>Options</strong></li>
     {if $is_convertable}<li class="permanent-action"><a href="javascript:nothing()" onclick="window.location='{$domain}{$section}/convertTemplateType?template_id={$template.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/wrench_orange.png" border="0" alt="" /> Convert to another type</a></li>{/if}
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/listByType?type={$template.type}'"><img src="{$domain}Resources/Icons/page_white_stack.png" border="0" alt="" /> See {$type_info.label|lower}s</a></li>
-    {if $model.id}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/templates/models?model_id={$model.id}'"><img src="{$domain}Resources/Icons/page_white_stack.png" border="0" alt="" /> See {$model.name|lower} templates</a></li>{/if}
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/listByType?type={$template.type}'"><i class="fa fa-files-o"></i> See {$type_info.label|lower}s</a></li>
+    {if $model.id}<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/templates/models?model_id={$model.id}'"><i class="fa fa-files-o"></i> See {$model.name|lower} templates</a></li>{/if}
   </ul>
   
 
@@ -137,12 +137,12 @@ var myCodeMirror = CodeMirror.fromTextArea($('tpl_textArea'), {
 {/if}
 
 {if !empty($recently_edited)}
-<ul class="actions-list" id="non-specific-actions">
-  <li><b>Recently edited</b></li>
-  {foreach from=$recently_edited item="recent_template"}
-	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_template.action_url}'"><img border="0" src="{$recent_template.small_icon}" /> {$recent_template.label|summary:"30"}</a></li>
-  {/foreach}
-</ul>
+  <ul class="actions-list" id="non-specific-actions">
+    <li><b>Recently edited templates</b></li>
+    {foreach from=$recently_edited item="recent_template"}
+  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_template.action_url}'"><i class="fa fa-file-code-o"></i> {$recent_template.label|summary:"30"}</a></li>
+    {/foreach}
+  </ul>
 {/if}
   
 </div>

@@ -81,7 +81,7 @@ class SmartestCmsItemsCollection extends SmartestArray implements SmartestSubmit
         
         if(count($this->_data)){
         
-            $string = '';
+            $string = $formatted_string = '';
             $overspill_buffer_base_length = 15;
             $last_key = count($this->_data) - 1;
         
@@ -111,24 +111,28 @@ class SmartestCmsItemsCollection extends SmartestArray implements SmartestSubmit
                 if($len <= $remaining_space){
                     if($k > 0 && $k < $last_key){
                         $string .= ', ';
+                        $formatted_string .= ', ';
                     }else if($k == $last_key){
                         if(count($this->_data) > 1){
                             $string .= ' and ';
+                            $formatted_string .= ' and ';
                         }
                     }
-                    $string .= '"'.$name.'"';
+                    $string .= $name;
+                    $formatted_string .= '<span class="selection-summary-item-name"><i class="fa fa-cube"></i>'.$name.'</span>';
                 }else{
                     $num_left = count(array_slice($this->_data, $k));
                     $string .= ' and '.$num_left.' more...';
+                    $formatted_string .= ' and '.$num_left.' more...';
                     break;
                 }
             }
             
-            return $string;
+            return '<span class="selection-summary">'.$formatted_string.'</span>';
         
         }else{
             
-            return "No items selected.";
+            return '<span class="null-notice">No items selected.</span>';
             
         }
         
@@ -146,8 +150,19 @@ class SmartestCmsItemsCollection extends SmartestArray implements SmartestSubmit
         }
         
         switch($offset){
+            
             case "summary":
             return new SmartestString($this->getItemsSummary());
+            
+            case "summary_50":
+            return new SmartestString($this->getItemsSummary(50));
+            
+            case "summary_75":
+            return new SmartestString($this->getItemsSummary(75));
+            
+            case "summary_25":
+            return new SmartestString($this->getItemsSummary(25));
+            
         }
         
         return parent::offsetGet($offset);

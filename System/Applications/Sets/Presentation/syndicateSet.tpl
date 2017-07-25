@@ -1,7 +1,7 @@
 <div id="work-area">
   {load_interface file="edit_set_tabs.tpl"}
   <h3>Syndicate set: <span class="light">&ldquo;{$set.label}&rdquo;</span></h3>
-  <form action="{$domain}sets/updateSetSyndication" method="post">
+  <form action="{$domain}sets/updateSetSyndication" method="post" id="syndication-form">
     <input type="hidden" name="set_id" value="{$set.id}" />
     
     <div class="edit-form-row">
@@ -17,9 +17,9 @@
     </div>
     
     <div class="edit-form-row">
-      <div class="form-section-label">Syndicate as podcast to iTunes</div>
+      <div class="form-section-label">Syndicate to Apple Podcasts</div>
       {boolean name="set_syndicate_as_itunes" id="set-syndicate-as-itunes" value=$set_syndicate_as_itunes}
-      <div class="form-hint">When syndicated, the iTunes RSS feed for this set will be available at: <strong>itpc://{$_site.domain}{$domain}feeds/itunes/{$set.feed_nonce}/{$set.name}.xml</strong></div>
+      <div class="form-hint">When syndicated, the Apple Podcasts XML feed for this set will be available at: <strong>itpc://{$_site.domain}{$domain}feeds/applepodcasts/{$set.feed_nonce}/{$set.name}.xml</strong></div>
     </div>
     
     <div class="edit-form-row">
@@ -42,14 +42,9 @@
     
     <div class="edit-form-row">
       <div class="form-section-label">Decription</div>
-      <div class="breaker"></div>
-      <textarea name="set_feed_description_text" id="description_textarea">{$set_feed_description_contents}</textarea>
-    </div>
-    
-    <div class="v-spacer"></div>
-    
-    <div class="buttons-bar">
-      <input type="submit" value="Save" />
+      <div class="edit-form-sub-row">
+        <textarea name="set_feed_description_text" id="description_textarea">{$set_feed_description_contents}</textarea>
+      </div>
     </div>
     
   </form>
@@ -57,6 +52,8 @@
   <script src="{$domain}Resources/System/Javascript/tinymce4/tinymce.min.js"></script>
   <script type="text/javascript">
   {literal}
+  
+  var restartSavingTimer;
   
   var toggleRssSettingsVisibility = function(state){
     if(state){
@@ -80,11 +77,36 @@
       skin: "smartest"
   });
   
+  var saveForm = function(callbackFunction){
+    $('primary-ajax-loader').show();
+    $('syndication-form').request({
+      onSuccess: function(){
+        $('primary-ajax-loader').hide();
+        if(callbackFunction && typeof callbackFunction == 'function'){
+          callbackFunction();
+        }
+      }
+    });
+  }
+  
+  var respondToUserAction = function(){
+    if(restartSavingTimer){
+      clearTimeout(restartSavingTimer);
+    }
+    restartSavingTimer = setTimeout(function(){
+      saveForm();
+    }, 2000);
+  }
+  
+  $('syndication-form').observe('keyup', respondToUserAction);
+  $('syndication-form').observe('click', respondToUserAction);
+  $('syndication-form').observe('image:chosen', respondToUserAction);
+  $('syndication-form').observe('switch:changed', respondToUserAction);
+  $$('#syndication-form select').each(function(select){
+    select.observe('change', respondToUserAction);
+  });
+  
   {/literal}
   </script>
-  
-</div>
-
-<div id="actions-area">
   
 </div>

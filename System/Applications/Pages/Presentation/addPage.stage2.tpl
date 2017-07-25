@@ -159,7 +159,7 @@
         <div class="form-section-label">Page layout template</div>
         <select name="layout_template_id" id="layout-template-id">
           <option value="">None for now</option>
-          <option value="NEW"{if !$layout_templates_dir_writable} disabled="disabled"{/if}{if $selected_layout_template_id == 'NEW'} selected="selected"{/if}>Create a new layout template</option>
+          <option value="NEW"{if !$layout_templates_dir_writable} disabled="disabled"{/if}{if $selected_layout_template_id == 'NEW'} selected="selected"{/if}>Create a new layout template...</option>
 {foreach from=$layout_templates item="template"}
           <option value="{$template.id}"{if $template.id == $selected_layout_template_id} selected="selected"{/if}>{$template.label} ({$template.url})</option>
 {/foreach}
@@ -183,8 +183,7 @@
     {/literal}
     </script>
     {/if}
-    
-    {if $primary_text_placeholder_known}
+    {if $newPage.type == 'NORMAL' && $primary_text_placeholder_known}
     <div id="page-main-text-selector" style="clear:both;{if !$show_main_text_input}display:none{/if}">
       <div class="form-section-label">Page text</div>
       <div style="{if $show_main_text_input}display:block{else}display:none{/if}" id="page-text-contents-holder" class="edit-form-sub-row">
@@ -254,8 +253,11 @@
             ],
     
             paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,p",
-            toolbar: "styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent"
-
+            toolbar: "styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+            relative_urls : false,
+            convert_urls: false,
+            document_base_url : sm_domain,
+            skin: "smartest"
         });
   
         {/literal}
@@ -264,6 +266,8 @@
       </div>
       <span id="preset-text-asset-info" style="{if $show_main_text_input}display:none{else}display:inline{/if}">Text asset info</span>
     </div>
+    {else}
+    <input type="hidden" name="save_textarea_contents" value="" id="page-text-contents-save" />
     {/if}
   	
     <div class="form-section-label-full">Caching</div>

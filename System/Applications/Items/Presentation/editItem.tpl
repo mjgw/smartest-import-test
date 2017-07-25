@@ -71,13 +71,14 @@
 {/if}
 
 <div id="sets" class="special-box">
-     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em> <a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}" class="button small">Create one</a>{/if}
+     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem{if $current_page}&amp;page_id={$current_page.webid}{/if}" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em> <a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}" class="button small">Create one</a>{/if}
 {if count($possible_sets)}
        <div>
          <form action="{$domain}sets/transferSingleItem" method="post">
            <input type="hidden" name="item_id" value="{$item.id}" />
            <input type="hidden" name="transferAction" value="add" />
            <input type="hidden" name="returnTo" value="editItem" />
+           {if $current_page}<input type="hidden" name="page_id" value="{$current_page.id}" />{/if}
            Add this item to set:
            <select name="set_id">
 {foreach from=$possible_sets item="possible_set"}
@@ -148,7 +149,7 @@
 
 {foreach from=$item._editable_properties key="pid" item="property"}
 <div class="edit-form-row">
-  <div class="form-section-label">{if $property.required == 'TRUE'}<strong>{/if}{$property.name}{* ({$property.varname}) *}{if $property.required == 'TRUE'}</strong> *{/if}{if $can_edit_properties}<a style="float:left" title="Edit this property" href="{$domain}datamanager/editItemClassProperty?from=item_edit&amp;item_id={$item.id}&amp;itemproperty_id={$property.id}" class="clickable-icon"><i class="fa fa-cog"></i></a>{/if}</div>
+  <div class="form-section-label">{if $property.required == 'TRUE'}<strong>{/if}{$property.name}{* ({$property.varname}) *}{if $property.required == 'TRUE'}</strong> *{/if}{if $can_edit_properties}<a style="float:left" title="Edit this property" href="{$domain}datamanager/editItemClassProperty?from=editItem&amp;item_id={$item.id}&amp;itemproperty_id={$property.id}{if $current_page}&amp;page_id={$current_page.webid}{/if}" class="clickable-icon"><i class="fa fa-cog"></i></a>{/if}</div>
   {item_field property=$property value=$item[$pid]}
   {* <a href="{$domain}test:datamanager/ipv?item_id={$item.id}&amp;property_id={$property.id}" class="button small">Test</a> *}
 </div>

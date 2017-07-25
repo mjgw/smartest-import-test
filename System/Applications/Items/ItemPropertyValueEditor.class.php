@@ -130,7 +130,7 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
         
     } */
     
-    public function chooseFiles(){
+    /* public function chooseFiles(){
         
         $item = new SmartestCmsItem;
         
@@ -169,7 +169,7 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
             
         }
         
-    }
+    } 
     
     public function updateFilesSelection(){
         
@@ -230,7 +230,7 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
         
         $this->formForward();
         
-    }
+    } */
     
     /* public function editAssetData($get){
 	    
@@ -339,8 +339,6 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
 	            
 	            $existing_render_data = $value_object->getInfo(true);
 	            
-	            // $asset = new SmartestAsset;
-	            
 	            if(is_object($asset)){
 	                
 	                $type = $asset->getTypeInfo();
@@ -412,8 +410,6 @@ class ItemPropertyValueEditor extends SmartestSystemApplication{
 	        $this->addUserMessageToNextRequest("The item ID wasn't recognized", SmartestUserMessage::ERROR);
 	        
 	    }
-	    
-	    // $this->formForward();
 	    
 	}
 	

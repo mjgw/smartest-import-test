@@ -940,7 +940,7 @@ class SmartestSite extends SmartestBaseSite{
         
         $obj = parent::__toSimpleObject();
         $obj->is_enabled = SmartestStringHelper::toRealBool($obj->is_enabled);
-        $obj->organization = $this->getOrganizationName();
+        $obj->organization = $this->getOrganizationNameOrSiteName();
         return $obj;
         
     }

@@ -16,6 +16,20 @@
 <div class="special-box">
   <form id="mode-form" method="get" action="">
     <input type="hidden" name="group_id" value="{$group.id}" />
+    {if $from}
+    <input type="hidden" name="from" value="{$from}" />
+    {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
+    <input type="hidden" name="item_id" value="{$workflow_item.id}" />
+    {if $workflow_page}<input type="hidden" name="page_id" value="{$workflow_page.id}" />{/if}
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    <input type="hidden" name="page_id" value="{$workflow_page.id}" />
+    {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" />{/if}
+    {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
+    <input type="hidden" name="page_id" value="{$workflow_page.id}" />
+    <input type="hidden" name="placeholder_id" value="{$workflow_placeholder.id}" />
+    {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" />{/if}
+    {/if}
+    {/if}
     Show: <select name="mode" onchange="$('mode-form').submit();">
       <option value="1"{if $mode == 1} selected="selected"{/if}>Files not in archive</option>
       <option value="0"{if $mode == 0} selected="selected"{/if}>All files in this group</option>
@@ -101,47 +115,53 @@ var itemsList = Sortable.create('options_grid', {
 
 <div id="actions-area">
 
+  {if $request_parameters.from}
+  <ul class="actions-list">
+    <li><b>Workflow options</b></li>
+    {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
+    <li class="permanent-action"><a href="{$domain}datamanager/editItem?item_id={$workflow_item.id}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}"><i class="fa fa-check"></i> Return to editing {$workflow_item._model.name|lower}</a></li>
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    <li class="permanent-action"><a href="#" onclick="cancelForm();"><i class="fa fa-check"></i> Return to page preview</a></li>
+    {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
+    <li class="permanent-action"><a href="{$domain}websitemanager/definePlaceholder?assetclass_id={$workflow_placeholder.name}&amp;page_id={$workflow_page.webid}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}"><i class="fa fa-check"></i> Return to placeholder</a></li>
+    {/if}
+  </ul>
+  {/if}
+
 <ul class="actions-list" id="noneditableasset-specific-actions" style="display:none">
   <li><b>Selected File</b></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('assetInfo');" class="right-nav-link"><img src="{$domain}Resources/Icons/information.png" border="0" alt="" /> About This File...</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('addTodoItem');" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt="" /> Add a new to-do</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('previewAsset');"><img src="{$domain}Resources/Icons/page_lightning.png" alt=""/> Preview This File</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('toggleAssetArchived');" class="right-nav-link"><img src="{$domain}Resources/Icons/folder.png" style="width:16px;height:16px" border="0" alt="" /> Archive/unarchive this file</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('removeAssetFromGroup');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_delete.png" border="0" alt="" /> Remove this file from {if $group.is_gallery}gallery{else}group{/if}</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('downloadAsset');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_edit.png" border="0" alt="" /> Download This File</a></li>
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('assetInfo');" class="right-nav-link"><i class="fa fa-info-circle"></i> About this file...</a></li>
+	{* <li class="permanent-action"><a href="#" onclick="assets.workWithItem('addTodoItem');" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt="" /> Add a new to-do</a></li> *}
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('previewAsset');"><i class="fa fa-eye"></i> Preview this file</a></li>
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('toggleAssetArchived');" class="right-nav-link"><i class="fa fa-folder-open"></i> Archive/unarchive this file</a></li>
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('removeAssetFromGroup');" class="right-nav-link"><i class="fa fa-times"></i> Remove this file from {if $group.is_gallery}gallery{else}group{/if}</a></li>
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('downloadAsset');" class="right-nav-link"><i class="fa fa-eye"></i> Download this file</a></li>
 </ul>
 
 <ul class="actions-list" id="editableasset-specific-actions" style="display:none">
   <li><b>Selected File</b></li>
-  <li class="permanent-action"><a href="#" onclick="assets.workWithItem('assetInfo');" class="right-nav-link"><img src="{$domain}Resources/Icons/information.png" border="0" alt="" /> About This File...</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('editAsset');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit This File</a></li>
-	{if $group.is_gallery}<li class="permanent-action"><a href="#" onclick="assets.workWithItem('editAssetGalleryMembership');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_white_edit.png" border="0" alt=""> Edit gallery membership</a></li>{/if}
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('previewAsset');"><img src="{$domain}Resources/Icons/page_lightning.png" alt=""/> Preview This File</a></li>
-	{if $allow_source_edit}<li class="permanent-action"><a href="#" onclick="assets.workWithItem('editTextFragmentSource');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_edit.png" border="0" alt=""> Edit File Source</a></li>{/if}
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('addTodoItem');" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt="" /> Add a new to-do</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('toggleAssetArchived');" class="right-nav-link"><img src="{$domain}Resources/Icons/folder.png" style="width:16px;height:16px" border="0" alt="" /> Archive/unarchive this file</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('removeAssetFromGroup');" class="right-nav-link"><img src="{$domain}Resources/Icons/page_delete.png" border="0" alt="" /> Remove this file from {if $group.is_gallery}gallery{else}group{/if}</a></li>
-	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('downloadAsset');" class="right-nav-link"><img src="{$domain}Resources/Icons/disk.png" border="0" alt="" /> Download This File</a></li>
+  <li class="permanent-action"><a href="#" onclick="assets.workWithItem('assetInfo');" class="right-nav-link"><i class="fa fa-info-circle"></i> About this file...</a></li>
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('editAsset');" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this file</a></li>
+	{if $group.is_gallery}<li class="permanent-action"><a href="#" onclick="assets.workWithItem('editAssetGalleryMembership');" class="right-nav-link"><i class="fa fa-pencil-square-o"></i> Edit gallery membership</a></li>{/if}
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('previewAsset');"><i class="fa fa-eye"></i> Preview this file</a></li>
+	{if $allow_source_edit}<li class="permanent-action"><a href="#" onclick="assets.workWithItem('editTextFragmentSource');" class="right-nav-link"><i class="fa fa-file-code-o"></i> Edit file source</a></li>{/if}
+	{* <li class="permanent-action"><a href="#" onclick="assets.workWithItem('addTodoItem');" class="right-nav-link"><img src="{$domain}Resources/Icons/tick.png" border="0" alt="" /> Add a new to-do</a></li> *}
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('toggleAssetArchived');" class="right-nav-link"><i class="fa fa-folder-open"></i> Archive/unarchive this file</a></li>
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('removeAssetFromGroup');" class="right-nav-link"><i class="fa fa-times"></i> Remove this file from {if $group.is_gallery}gallery{else}group{/if}</a></li>
+	<li class="permanent-action"><a href="#" onclick="assets.workWithItem('downloadAsset');" class="right-nav-link"><i class="fa fa-download"></i> Download this file</a></li>
 </ul>
-
-{if $request_parameters.item_id && $request_parameters.from}
-<ul class="actions-list">
-  <li><b>Workflow options</b></li>
-  <li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>
-</ul>
-{/if}
 
 <ul class="actions-list" id="non-specific-actions">
   <li><b>File group options</b></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/file/new?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/add.png" border="0" alt="" /> Add a file to this group</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editAssetGroupContents?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_edit.png" border="0" alt="" /> Edit this group</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/newAssetGroup'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_add.png" border="0" alt="" /> Create a new file group</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/file/new?group_id={$group.id}'" class="right-nav-link"><i class="fa fa-plus-circle"></i> Add a file to this group</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/editAssetGroupContents?group_id={$group.id}'" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this group</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/newAssetGroup'" class="right-nav-link"><i class="fa fa-plus-square"></i> Create a new file group</a></li>
 </ul>
 
 <ul class="actions-list" id="non-specific-actions">
   <li><b>Other options</b></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/files/groups'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_old.png" border="0" alt="" /> View all file groups</a></li>
-	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/files/types'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_old.png" border="0" alt="" /> View all files by type</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/files/groups'" class="right-nav-link"><i class="fa fa-folder-o"></i> View all file groups</a></li>
+	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/files/types'" class="right-nav-link"><i class="fa fa-folder"></i> View all files by type</a></li>
 </ul>
 
 </div>

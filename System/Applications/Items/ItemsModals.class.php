@@ -22,33 +22,33 @@ class ItemsModals extends SmartestSystemApplication{
                     $item->getPropertyValueByNumericKey($property->getId());
                     $this->send($item->getPropertyValueByNumericKey($property->getId())->getIds(), 'selected_ids');
                     
-                    $ruri = '/smartest/item/edit/'.$item->getId();
-        		    
-        		    if($this->getRequestParameter('from')){
-        		        $ruri .= '&from='.$this->getRequestParameter('from');
-        		    }
-        		    
-        		    if($this->getRequestParameter('item_id')){
-        		        $ruri .= '&item_id='.$this->getRequestParameter('item_id');
-        		    }
-        		    
-        		    if($this->getRequestParameter('page_id')){
-        		        $ruri .= '&page_id='.$this->getRequestParameter('page_id');
-        		    }
-        		    
-        		    if($this->getRequestParameter('author_id')){
-        		        $ruri .= '&author_id='.$this->getRequestParameter('author_id');
-        		    }
-        		    
-        		    if($this->getRequestParameter('search_query')){
-        		        $ruri .= '&search_query='.$this->getRequestParameter('search_query');
-        		    }
-        		    
-        		    if($this->getRequestParameter('tag')){
-        		        $ruri .= '&tag='.$this->getRequestParameter('tag');
-        		    }
-
-        		    $this->setTemporaryFormReturnUri($ruri);
+                    // $ruri = '/smartest/item/edit/'.$item->getId();
+        		    // 
+        		    // if($this->getRequestParameter('from')){
+        		    //     $ruri .= '&from='.$this->getRequestParameter('from');
+        		    // }
+        		    // 
+        		    // if($this->getRequestParameter('item_id')){
+        		    //     $ruri .= '&item_id='.$this->getRequestParameter('item_id');
+        		    // }
+        		    // 
+        		    // if($this->getRequestParameter('page_id')){
+        		    //     $ruri .= '&page_id='.$this->getRequestParameter('page_id');
+        		    // }
+        		    // 
+        		    // if($this->getRequestParameter('author_id')){
+        		    //     $ruri .= '&author_id='.$this->getRequestParameter('author_id');
+        		    // }
+        		    // 
+        		    // if($this->getRequestParameter('search_query')){
+        		    //     $ruri .= '&search_query='.$this->getRequestParameter('search_query');
+        		    // }
+        		    // 
+        		    // if($this->getRequestParameter('tag')){
+        		    //     $ruri .= '&tag='.$this->getRequestParameter('tag');
+        		    // }
+                    // 
+        		    // $this->setTemporaryFormReturnUri($ruri);
                     
                 }else{
                     // $this->addUserMessageToNextRequest("Item and property are from different models", SmartestUserMessage::ERROR);
@@ -66,6 +66,49 @@ class ItemsModals extends SmartestSystemApplication{
             
             // $this->addUserMessageToNextRequest("The item ID was not recognized", SmartestUserMessage::ERROR);
             // $this->formForward();
+            
+        }
+        
+    }
+    
+    public function chooseFiles(){
+        
+        $item = new SmartestCmsItem;
+        
+        if($item->find($this->getRequestParameter('item_id'))){
+            
+            $item->setDraftMode(true);
+            $this->send($item, 'item');
+            $property = new SmartestItemProperty;
+            
+            if($property->find($this->getRequestParameter('property_id'))){
+                
+                $this->send($property, 'property');
+                
+                if($property->getItemClassId() == $item->getItem()->getModelId()){
+                    
+                    $options = $property->getPossibleValues();
+                    $this->send($options, 'options');
+                    $item->getPropertyValueByNumericKey($property->getId());
+                    $ids = $item->getPropertyValueByNumericKey($property->getId())->getIds();
+                    $this->send($ids, 'selected_ids');
+                    
+                }else{
+                    $this->addUserMessageToNextRequest("Item and property are from different models", SmartestUserMessage::ERROR);
+                    $this->formForward();
+                }
+                
+            }else{
+                
+                $this->addUserMessageToNextRequest("The property ID was not recognized", SmartestUserMessage::ERROR);
+                $this->formForward();
+                
+            }
+            
+        }else{
+            
+            $this->addUserMessageToNextRequest("The item ID was not recognized", SmartestUserMessage::ERROR);
+            $this->formForward();
             
         }
         
@@ -237,7 +280,7 @@ class ItemsModals extends SmartestSystemApplication{
         
     }
     
-    public function chooseFiles(){
+    /* public function chooseFiles(){
         
         $item = new SmartestCmsItem;
         
@@ -276,7 +319,7 @@ class ItemsModals extends SmartestSystemApplication{
             
         }
         
-    }
+    } */
     
     public function updateFilesSelection(){
         

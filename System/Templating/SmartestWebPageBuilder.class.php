@@ -53,6 +53,16 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         return $this->page;
     }
     
+    public function isMetaPage(){
+        return ($this->getPage() instanceOf SmartestItemPage);
+    }
+    
+    public function getItem(){
+        if($this->isMetaPage()){
+            return $this->getPage()->getPrincipalItem();
+        }
+    }
+    
     public function assignPage($page){
         $this->page = $page;
         if(!defined('SM_CMS_PAGE_SITE_ID')){
@@ -805,11 +815,19 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         
             if($g->getIsGallery()){
                 
-                $html = '<a class="sm-edit-button" href="'.$this->_request_data->g('domain').'assets/arrangeAssetGallery?group_id='.$g->getId().'&amp;from=pagePreview" target="_top"';
+                $arrange_url = $this->_request_data->g('domain').'assets/arrangeAssetGallery?group_id='.$g->getId().'&amp;from=pagePreview&amp;page_id='.$this->getPage()->getWebId();
+                if($this->isMetaPage()){
+                    $arrange_url .= '&amp;item_id='.$this->getItem()->getId();
+                }
+                $html = '<a class="sm-edit-button" href="'.$arrange_url.'" target="_top"';
                 if($this->_hide_edit_buttons) $html .= ' style="display:none"';
                 $html .= '><img src="'.$this->_request_data->g('domain').'Resources/System/Images/switch-order-yellow.png" alt="" style="width:16px;height:16px" /></a>';
                 
-                $html .= '&nbsp;<a class="sm-edit-button" href="'.$this->_request_data->g('domain').'smartest/file/new?group_id='.$g->getId().'&amp;from=pagePreview" target="_top"';
+                $add_url = $this->_request_data->g('domain').'smartest/file/new?group_id='.$g->getId().'&amp;from=pagePreview&amp;page_id='.$this->getPage()->getWebId();
+                if($this->isMetaPage()){
+                    $add_url .= '&amp;item_id='.$this->getItem()->getId();
+                }
+                $html .= '&nbsp;<a class="sm-edit-button" href="'.$add_url.'" target="_top"';
                 if($this->_hide_edit_buttons) $html .= ' style="display:none"';
                 $html .= '><img src="'.$this->_request_data->g('domain').'Resources/System/Images/file-add.png" alt="" style="width:16px;height:16px" /></a>';
                 

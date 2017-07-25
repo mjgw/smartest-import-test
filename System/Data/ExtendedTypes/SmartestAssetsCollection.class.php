@@ -71,6 +71,7 @@ class SmartestAssetsCollection extends SmartestArray implements SmartestSubmitta
         if(count($this->_data)){
     
             $string = '';
+            $formatted_string = '';
             $overspill_buffer_base_length = 15;
             $last_key = count($this->_data) - 1;
     
@@ -85,7 +86,7 @@ class SmartestAssetsCollection extends SmartestArray implements SmartestSubmitta
                     // 2 is for quotes
                     $remaining_space = $char_length - $digit_len - $overspill_buffer_base_length - strlen($string) - 2;
                 }else{
-                    $remaining_space = $char_length - strlen($string) - 2;
+                    $remaining_space = $char_length - strlen($names_only_string) - 2;
                 }
         
                 if($k > 0 && $k < $last_key){
@@ -99,15 +100,19 @@ class SmartestAssetsCollection extends SmartestArray implements SmartestSubmitta
                 if($len <= $remaining_space){
                     if($k > 0 && $k < $last_key){
                         $string .= ', ';
+                        $formatted_string .= ', ';
                     }else if($k == $last_key){
                         if(count($this->_data) > 1){
                             $string .= ' and ';
+                            $formatted_string .= ' and ';
                         }
                     }
-                    $string .= '"'.$name.'"';
+                    $string .= $name;
+                    $formatted_string .= '<span class="selection-summary-file-name"><i class="fa fa-file-o"></i>'.$name.'</span>';
                 }else{
                     $num_left = count(array_slice($this->_data, $k));
                     $string .= ' and '.$num_left.' more...';
+                    $formatted_string .= ' and '.$num_left.' more...';
                     break;
                 }
         
@@ -115,11 +120,11 @@ class SmartestAssetsCollection extends SmartestArray implements SmartestSubmitta
                     // amount of buffer space depends on how many digits this figure is
             }
         
-            return $string;
+            return '<span class="selection-summary">'.$formatted_string.'</span>';
     
         }else{
         
-            return "No items selected.";
+            return '<span class="null-notice">No items selected.</span>';
         
         }
     
@@ -132,8 +137,19 @@ class SmartestAssetsCollection extends SmartestArray implements SmartestSubmitta
     public function offsetGet($offset){
     
         switch($offset){
+            
             case "summary":
             return new SmartestString($this->getFilesSummary());
+            
+            case "summary_50":
+            return new SmartestString($this->getFilesSummary(50));
+            
+            case "summary_75":
+            return new SmartestString($this->getFilesSummary(75));
+            
+            case "summary_25":
+            return new SmartestString($this->getFilesSummary(25));
+            
         }
     
         return parent::offsetGet($offset);

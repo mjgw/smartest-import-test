@@ -4,6 +4,7 @@ class SmartestItemSpace extends SmartestAssetClass{
     
     protected $_definition;
     protected $_data_set;
+    protected $_model;
     
     protected function __objectConstruct(){
 		
@@ -44,6 +45,22 @@ class SmartestItemSpace extends SmartestAssetClass{
         }
         
         return $this->_data_set;
+	    
+	}
+    
+	public function getModel(){
+	    
+	    if(!$this->_model){
+	        
+	        if(is_object($this->getDataSet())){
+	            if(is_object($this->getDataSet()->getModel())){
+	                $this->_model = $this->getDataSet()->getModel();
+	            }
+	        }
+            
+        }
+        
+        return $this->_model;
 	    
 	}
 	

@@ -34,7 +34,21 @@ function executeTransfer(){
 
     <input type="hidden" id="transferAction" name="transferAction" value="" /> 
     <input type="hidden" name="group_id" value="{$group.id}" />
-    {if $from}<input type="hidden" name="from" value="{$from}" />{/if}
+    {if $from}
+    <input type="hidden" name="from" value="{$from}" />
+    {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
+    <input type="hidden" name="item_id" value="{$workflow_item.id}" />
+    {if $workflow_page}<input type="hidden" name="page_id" value="{$workflow_page.id}" />{/if}
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    <input type="hidden" name="page_id" value="{$workflow_page.id}" />
+    {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" />{/if}
+    {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
+    <input type="hidden" name="page_id" value="{$workflow_page.id}" />
+    <input type="hidden" name="placeholder_id" value="{$workflow_placeholder.id}" />
+    {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" />{/if}
+    {/if}
+    
+    {/if}
 
     <table width="100%" border="0" cellpadding="0" cellspacing="5" style="border:1px solid #ccc">
       <tr>
@@ -81,36 +95,30 @@ function executeTransfer(){
 
 <div id="actions-area">
   
-  {if $request_parameters.item_id && $request_parameters.from}
+  {if $request_parameters.from}
   <ul class="actions-list">
     <li><b>Workflow options</b></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>
+    {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
+    <li class="permanent-action"><a href="{$domain}datamanager/editItem?item_id={$workflow_item.id}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}"><i class="fa fa-check"></i> Return to editing {$workflow_item._model.name|lower}</a></li>
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    <li class="permanent-action"><a href="#" onclick="cancelForm();"><i class="fa fa-check"></i> Return to page preview</a></li>
+    {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
+    <li class="permanent-action"><a href="{$domain}websitemanager/definePlaceholder?assetclass_id={$workflow_placeholder.name}&amp;page_id={$workflow_page.webid}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}"><i class="fa fa-check"></i> Return to placeholder</a></li>
+    {/if}
   </ul>
   {/if}
   
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Group options</b></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/file/new?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/add.png" border="0" alt="" /> Upload a file into this group</a></li>
-  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}assets/browseAssetGroup?group_id={$group.id}'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_magnify.png" border="0" alt="" style="width:16px;height:16px" /> Browse this group</a></li>
+    <li class="permanent-action"><a href="{$domain}smartest/file/new?group_id={$group.id}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}{if $workflow_placeholder}&amp;placeholder_id={$workflow_placeholder.id}{/if}{if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}&amp;from=editItem{elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}&amp;from=pagePreview{elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}&amp;from=definePlaceholder{/if}" class="right-nav-link"><i class="fa fa-plus-circle"></i> Upload a file into this group</a></li>
+  	<li class="permanent-action"><a href="{$domain}assets/browseAssetGroup?group_id={$group.id}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}{if $workflow_placeholder}&amp;placeholder_id={$workflow_placeholder.id}{/if}{if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}&amp;from=editItem{elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}&amp;from=pagePreview{elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}&amp;from=definePlaceholder{/if}" class="right-nav-link"><i class="fa fa-search"></i> Browse this group</a></li>
   </ul>
   
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Repository options</b></li>
-  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}assets/assetGroups'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_old.png" border="0" alt="" style="width:16px;height:16px" /> View all file groups</a></li>
-  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/assets'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_old.png" border="0" alt="" style="width:16px;height:16px" /> View all files by type</a></li>
-  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}assets/newAssetGroup'" class="right-nav-link"><img src="{$domain}Resources/Icons/folder_add.png" border="0" alt="" style="width:16px;height:16px" /> Create a new file group</a></li>
+  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}assets/assetGroups'" class="right-nav-link"><i class="fa fa-folder-o"></i> View all file groups</a></li>
+  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}smartest/assets'" class="right-nav-link"><i class="fa fa-files-o"></i> View all files by type</a></li>
+  	<li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}assets/newAssetGroup'" class="right-nav-link"><i class="fa fa-plus-square"></i> Create a new file group</a></li>
   </ul>
-  
-  {if $request_parameters.from}
-  <ul class="actions-list">
-    <li><b>Workflow options</b></li>
-    {if $request_parameters.item_id}
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>
-    {/if}
-    {if $request_parameters.from == 'pagePreview'}
-    <li class="permanent-action"><a href="#" onclick="cancelForm();"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to page preview</a></li>
-    {/if}
-  </ul>
-  {/if}
   
 </div>

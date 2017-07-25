@@ -39,11 +39,11 @@
 <div id="actions-area">
   <ul class="actions-list" id="item-specific-actions" style="display:none">
     <li><b>{$_l10n_action_strings.sidebar_options.selected_group_heading}</b></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('addAsset');}{/literal}"><img src="{$domain}Resources/Icons/add.png" border="0" alt="" /> Add a new file to this group</a></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editAssetGroup');}{/literal}"><img border="0" src="{$domain}Resources/Icons/information.png"> {$_l10n_action_strings.sidebar_options.selected_group_info}</a></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editAssetGroupContents');}{/literal}"><img border="0" src="{$domain}Resources/Icons/folder_edit.png"> {$_l10n_action_strings.sidebar_options.selected_group_edit_contents}</a></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('browseAssetGroup');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_magnify.png"> {$_l10n_action_strings.sidebar_options.selected_group_contents}</a></li>
-    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('deleteAssetGroupConfirm');}{/literal}" ><img border="0" src="{$domain}Resources/Icons/folder_delete.png"> {$_l10n_action_strings.sidebar_options.selected_group_delete}</a></li>
+    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('addAsset');}{/literal}"><i class="fa fa-upload"></i> Add a new file to this group</a></li>
+    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editAssetGroup');}{/literal}"><i class="fa fa-info-circle"></i> {$_l10n_action_strings.sidebar_options.selected_group_info}</a></li>
+    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('editAssetGroupContents');}{/literal}"><i class="fa fa-folder-open-o"></i> {$_l10n_action_strings.sidebar_options.selected_group_edit_contents}</a></li>
+    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('browseAssetGroup');}{/literal}" ><i class="fa fa-search"></i> {$_l10n_action_strings.sidebar_options.selected_group_contents}</a></li>
+    <li class="permanent-action"><a href="#" onclick="{literal}if(selectedPage){workWithItem('deleteAssetGroupConfirm');}{/literal}" ><i class="fa fa-trash"></i> {$_l10n_action_strings.sidebar_options.selected_group_delete}</a></li>
   </ul>
   
   {load_interface file="assets_front_sidebar.tpl"}
@@ -51,7 +51,7 @@
   <ul class="actions-list" id="non-specific-actions">
     <li><span style="color:#999">{$_l10n_strings.general.recently_edited_label}</span></li>
     {foreach from=$recent_assets item="recent_asset"}
-    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_asset.action_url}'"><img border="0" src="{$recent_asset.small_icon}" /> {$recent_asset.label|summary:"30"}</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$recent_asset.action_url}'"><i class="fa fa-{$recent_asset.type_info.fa_iconname}"></i> {$recent_asset.label|summary:"30"}</a></li>
     {/foreach}
   </ul>
   

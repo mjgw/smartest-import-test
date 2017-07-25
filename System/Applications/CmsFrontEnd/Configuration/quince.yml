@@ -60,7 +60,7 @@ module:
       params:
         format: atom
     set_itunes_feed:
-      url: /feeds/itunes/:nonce/:set_name.xml
+      url: /feeds/applepodcasts/:nonce/:set_name.xml
       action: getDataSetFeed
       params:
         format: itunes

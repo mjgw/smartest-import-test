@@ -92,7 +92,18 @@ function viewLivePage(parameters){
             <option value="{$t.url}"{if $templateMenuField == $t.url} selected{/if}>{$t.url}</option>
     {/foreach}
           </select>
-          {if (($page_template.status == "imported" && $page_template.filename) || strlen($page_template)) && $version == "draft"}<a href="{$domain}templates/editTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={if $page_template.status == "imported"}{$page_template.id}{else}{$page_template.url}{/if}" class="button">Edit</a>{/if}
+          {if (($page_template.status == "imported" && $page_template.filename) || strlen($page_template)) && $version == "draft"}
+          <a href="{$domain}templates/editTemplate?asset_type=SM_ASSETTYPE_MASTER_TEMPLATE&amp;template={if $page_template.status == "imported"}{$page_template.id}{else}{$page_template.url}{/if}&amp;from=pageAssets&amp;page_id={$page.webid}{if $page.type == 'ITEMCLASS' && $item.id}&amp;item_id={$item.id}{/if}" class="button" id="edit-page-template-button">Edit template</a>
+          <script type="text/javascript">
+            templateEditUrl = 'templates/editTemplateModal?template_type=SM_ASSETTYPE_MASTER_TEMPLATE&template={if $page_template.status == "imported"}{$page_template.id}{else}{$page_template.url}{/if}&page_id={$page.webid}{if $page.type == 'ITEMCLASS' && $item.id}&item_id={$item.id}{/if}';
+            {literal}
+            $('edit-page-template-button').observe('click', function(e){
+              e.stop();
+              MODALS.load(templateEditUrl, 'Edit page template', true);
+            });
+            {/literal}
+          </script>
+          {/if}
         </span>
     {else}
         <div class="special-box-key">Page template: </div>{if strlen($templateMenuField)}<strong>{$templateMenuField}</strong>{else}<em style="color:#666">None yet specified</em>{/if}</span>
@@ -214,7 +225,7 @@ function viewLivePage(parameters){
 <ul class="actions-list" id="non-specific-actions">
   <li><span style="color:#999">{$model.name} meta-pages</span></li>
   {foreach from=$metapages item="metapage"}
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/pageAssets?page_id={$metapage.webid}&amp;item_id={$item.id}'"><img border="0" src="{$metapage.small_icon}" /> {$metapage.label}</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/pageAssets?page_id={$metapage.webid}&amp;item_id={$item.id}'"><i class="flaticon solid document-3"></i> {$metapage.label}</a></li>
   {/foreach}
 </ul>
 {/if}
@@ -223,7 +234,7 @@ function viewLivePage(parameters){
 <ul class="actions-list" id="non-specific-actions">
   <li><span style="color:#999">Recently edited {$model.plural_name|strtolower}</span></li>
   {foreach from=$recent_items item="recent_item"}
-  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/pageAssets?page_id={$page.webid}&amp;item_id={$recent_item.id}'"><img border="0" src="{$recent_item.small_icon}" /> {$recent_item.label|summary:"28"}</a></li>
+  <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/pageAssets?page_id={$page.webid}&amp;item_id={$recent_item.id}'"><i class="fa fa-cube"></i> {$recent_item.label|summary:"28"}</a></li>
   {/foreach}
 </ul>
 {/if}

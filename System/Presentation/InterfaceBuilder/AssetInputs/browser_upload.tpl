@@ -1,9 +1,7 @@
 {if $sm_user_agent.is_supported_browser}
 
 <script type="text/javascript">
-  
 var suffixRegex = {if $file_suffix_regex}{$file_suffix_regex}{else}null{/if};
-  
 </script>
 
 {if $post_max_size_warning}
@@ -60,7 +58,7 @@ document.observe('dom:loaded', function(){
     }else{
       
       var uploadComplete = function(evt) {
-        $('buttons-bar').update('<input type="button" value="Done" id="cancel-asset-create" onclick="cancelForm();" />');
+        $('buttons-bar').update('<input type="button" value="Continue" id="cancel-asset-create" onclick="finishTask();" />');
         new Effect.Fade('upload-progress-outer', {duration: 0.4});
       }
       

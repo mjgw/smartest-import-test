@@ -745,6 +745,27 @@ type:
       - {mime: application/pdf, _content: pdf}
     render:
       template: System/Presentation/WebPageBuilder/display.download.tpl
+      
+  SM_ASSETTYPE_EPUB:
+    id: SM_ASSETTYPE_EPUB
+    category: other
+    label: ePUB Electronic Book
+    description: An electronic book in ePUB format
+    class: SmartestAsset
+    parsable: false
+    icon: page_white.png
+    fa_iconname: book
+    html_friendly: false
+    input_options:
+      - SM_ASSETINPUTTYPE_BROWSER_UPLOAD
+      - SM_ASSETINPUTTYPE_FTP_UPLOAD
+    storage: 
+      type: file
+      location: Documents/Downloads/
+    suffix:
+      - {mime: application/epub+zip, _content: epub}
+    render:
+      template: System/Presentation/WebPageBuilder/display.download.tpl
   
   SM_ASSETTYPE_ARCHIVE:
     id: SM_ASSETTYPE_ARCHIVE

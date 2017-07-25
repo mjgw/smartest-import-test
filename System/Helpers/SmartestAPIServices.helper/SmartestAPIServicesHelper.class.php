@@ -175,8 +175,8 @@ class SmartestAPIServicesHelper{
             $cache_filename = SM_ROOT_DIR.'System/Cache/TextFragments/OEmbed/oembed_local_w'.$width.'_h'.$height.'_'.$url_hash.'.html';
         }
         
-        // $last_ok_mtime = time() - 86400;
-        $last_ok_mtime = time() - 1;
+        // TODO: Make this a setting
+        $last_ok_mtime = time() - 86400;
         
         if(is_file($cache_filename) && filemtime($cache_filename) >= $last_ok_mtime){
             return file_get_contents($cache_filename);

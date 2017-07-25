@@ -545,7 +545,7 @@ class Sets extends SmartestSystemApplication{
 		
 	}
 	
-	public function transferSingleItem($get, $post){
+	public function transferSingleItem(){
 	    
 	    $set_id = $this->getRequestParameter('set_id');
 	    
@@ -553,28 +553,41 @@ class Sets extends SmartestSystemApplication{
 	    
 	    if($set->find($set_id)){
 	        
-	        // $item_id = (int) $request['item_id'];
-	        $item_id = $this->getRequestParameter('item_id');
-	        $item = new SmartestItem;
+            if($set->getType() == 'STATIC'){
+                
+                $item_id = $this->getRequestParameter('item_id');
+    	        $item = new SmartestItem;
 	        
-	        if($item->find($item_id)){
-	            // TODO: Check that the asset is the right type for this group
-	            if($this->getRequestParameter('transferAction') == 'add'){
-	                $set->addItems(array($item_id));
-                }else{
-                    $set->removeItems(array($item_id));
-                }
+    	        if($item->find($item_id)){
                 
-                $set->fixOrderIndices();
+    	            // TODO: Check that the asset is the right type for this group
+    	            if($this->getRequestParameter('transferAction') == 'add'){
+    	                $set->addItems(array($item_id));
+                    }else{
+                        $set->removeItems(array($item_id));
+                    }
                 
-	        }
+                    $set->fixOrderIndices();
+    	        }
+                
+            }else{
+                $this->addUserMessageToNextRequest("The set was not the correct type to have items added to it.", SmartestUserMessage::ERROR);
+            }
 	        
 	    }else{
 	        $this->addUserMessageToNextRequest("The set ID was not recognized.", SmartestUserMessage::ERROR);
 	    }
-	    
-	    if($this->hasFormReturnVar('item_id') || $this->getRequestParameter('returnTo') == 'editItem'){
-            $this->redirect('/datamanager/editItem?item_id='.$item_id);
+        
+        if($this->hasFormReturnVar('item_id') || $this->getRequestParameter('returnTo') == 'editItem'){
+            $return_url = '/datamanager/editItem?item_id='.$item_id;
+            // If a page ID is set, then the Item was already in preview mode, and this must be preserved
+            if($this->requestParameterIsSet('page_id')){
+                $page = new SmartestPage;
+                if($page->smartFind($this->getRequestParameter('page_id'))){
+                    $return_url .= '&page_id='.$page->getWebId();
+                }
+            }
+            $this->redirect($return_url);
         }else{
             $this->formForward();
         }

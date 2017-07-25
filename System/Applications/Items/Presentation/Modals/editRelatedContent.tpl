@@ -22,11 +22,13 @@
     
       <input type="hidden" name="item_id" value="{$item.id}" />
       <input type="hidden" name="model_id" value="{$model.id}" />
+      
+      <div class="special-box">Search: <input type="text" id="search-query" name="sq" /></div>
     
-      <ul class="basic-list icons items">
+      <ul class="basic-list icons items" id="available-items-list">
       
         {foreach from=$items item="related_item"}
-          {if $related_item.id == $item.id}<!--Skipped item "{$related_item.name}"-->{else}<li><input type="checkbox" name="items[{$related_item.id}]" id="item_{$related_item.id}"{if in_array($related_item.id, $related_ids)} checked="checked"{/if} /> <label for="item_{$related_item.id}">{$related_item.name.xmlentities}</label></li>{/if}
+          {if $related_item.id == $item.id}<!--Skipped item "{$related_item.name}"-->{else}<li data-searchname="{$related_item.name|escape:"quotes"}"><input type="checkbox" name="items[{$related_item.id}]" id="item_{$related_item.id}"{if in_array($related_item.id, $related_ids)} checked="checked"{/if} /> <label for="item_{$related_item.id}">{$related_item.name.xmlentities}</label></li>{/if}
         {/foreach}
       
       </ul>
@@ -57,6 +59,30 @@
         } 
       }); 
     });
+    
+    $('search-query').observe('keyup', function(kevt){
+        
+        if (kevt.keyCode == Event.KEY_RETURN){
+            kevt.stop();
+        }
+        
+        if($F('search-query').charAt(1)){ // One characters or more
+            var reg = new RegExp($F('search-query'), 'i');
+            $$('#available-items-list li').each(function(li){
+                if(li.readAttribute('data-searchname').match(reg)){
+                    li.show();
+                }else{
+                    li.hide();
+                }
+            });
+        }else{
+            $$('#available-items-list li').each(function(li){
+                li.show();
+            });
+
+        }
+    });
+    
   {/literal}
     </script>
   
@@ -70,11 +96,13 @@
     
     <input type="hidden" name="item_id" value="{$item.id}" />
     
-    <ul class="basic-list icons pages">
+    <div class="special-box">Search: <input type="text" id="search-query" name="sq" /></div>
+    
+    <ul class="basic-list icons pages" id="available-pages-list">
       {foreach from=$pages item="relatable_page"}
       
       {if $relatable_page.type == 'NORMAL' && $relatable_page.id != $page.id}
-      <li><input type="checkbox" name="pages[{$relatable_page.id}]" id="page_{$relatable_page.id}"{if in_array($relatable_page.id, $related_ids)} checked="checked"{/if} /><label for="page_{$relatable_page.id}">{$relatable_page.title|xmlentities}</label></li>
+      <li data-searchname="{$relatable_page.name|escape:"quotes"}"><input type="checkbox" name="pages[{$relatable_page.id}]" id="page_{$relatable_page.id}"{if in_array($relatable_page.id, $related_ids)} checked="checked"{/if} /><label for="page_{$relatable_page.id}">{$relatable_page.title|xmlentities}</label></li>
       {/if}
       {/foreach}
     </ul>
@@ -105,6 +133,30 @@
       } 
     }); 
   });
+  
+  $('search-query').observe('keyup', function(kevt){
+      
+      if (kevt.keyCode == Event.KEY_RETURN){
+          kevt.stop();
+      }
+      
+      if($F('search-query').charAt(1)){ // One characters or more
+          var reg = new RegExp($F('search-query'), 'i');
+          $$('#available-pages-list li').each(function(li){
+              if(li.readAttribute('data-searchname').match(reg)){
+                  li.show();
+              }else{
+                  li.hide();
+              }
+          });
+      }else{
+          $$('#available-pages-list li').each(function(li){
+              li.show();
+          });
+
+      }
+  });
+  
 {/literal}
   </script>
   
