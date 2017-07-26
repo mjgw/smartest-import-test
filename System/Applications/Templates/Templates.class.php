@@ -1709,13 +1709,19 @@ class Templates extends SmartestSystemApplication{
 	    }
         
         if($this->requestParameterIsSet('from')){
-            $this->send($this->getRequestParemeter('from'), 'from');
+            $this->send($this->getRequestParameter('from'), 'from');
         }
         
         if($this->requestParameterIsSet('page_id')){
             $page = new SmartestPage;
             if($page->smartFind($this->getRequestParameter('page_id'))){
                 $this->send($page, 'page');
+            }
+        }
+        
+        if($this->requestParameterIsSet('item_id')){
+            if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                $this->send($item, 'item');
             }
         }
 	    

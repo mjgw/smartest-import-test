@@ -11,8 +11,11 @@
       <!--<input type="button" onclick="window.location='{$domain}assets/editAsset?from=item_edit&amp;asset_id='+$('item_property_').value" value="Edit &gt;&gt;" />-->
       <li><a href="javascript:;" id="edit-asset-button-{$property.id}" title="Edit this file"><i class="fa fa-pencil"></i></a>
       <script type="text/javascript">
-      $('edit-asset-button-{$property.id}').observe('click', function(){literal}{{/literal}window.location='{$domain}templates/editTemplate?from=item_edit&template='+$('{$input_id}').value{literal}}{/literal});
-      $('edit-asset-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit the selected file');{literal}}{/literal});
+      $('edit-asset-button-{$property.id}').observe('click', function(){literal}{{/literal}
+        // window.location='{$domain}templates/editTemplate?from=item_edit&template='+$('{$input_id}').value
+        MODALS.load('templates/editTemplateModal?template='+$F('{$input_id}')+'&type=SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE&from=editItem&item_id={$item.id}', 'Edit template', true);
+      {literal}}{/literal});
+      $('edit-asset-button-{$property.id}').observe('mouseover', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('Edit the selected template');{literal}}{/literal});
       $('edit-asset-button-{$property.id}').observe('mouseout', function(){literal}{{/literal}$('file-property-tooltip-{$property.id}').update('');{literal}}{/literal});
       </script></li>
     {/if}

@@ -1,6 +1,6 @@
 <div id="modal-work-area">
 {if $show_editor}
-<div class="instruction">You are editing <strong><code>{$template.url}</code></strong>. When you're finished, click "Save &amp; close" below. <a href="{$domain}templates/editTemplate?template={if $template.status == "imported"}{$template.id}{else}{$template.url}&amp;asset_type={$template.type}{/if}{if $from}&amp;from=pageAssets{/if}{if $item}&amp;item_id={$item.id}{/if}{if $page}&amp;page_id={$page.webid}{/if}" class="button small" style="float:right">Open in full editor</a></div>
+<div class="instruction">You are editing template <strong><code>{$template.url}</code></strong>. <a href="{$domain}templates/editTemplate?template={if $template.status == "imported"}{$template.id}{else}{$template.url}&amp;asset_type={$template.type}{/if}{if $from}&amp;from={$from}{/if}{if $item}&amp;item_id={$item.id}{/if}{if $page}&amp;page_id={$page.webid}{/if}" class="button small" style="float:right">Open in full editor</a></div>
   <div class="v-spacer"></div>
   <form action="{$domain}ajax:templates/postBackTemplateEditorContentsFromModal" method="post" id="rich-text-updater-form">
     
