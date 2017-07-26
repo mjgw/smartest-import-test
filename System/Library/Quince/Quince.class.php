@@ -690,7 +690,7 @@ class QuinceRouter{
         return array_key_exists($route, Quince::$routes);
     }
     
-    public function fetchRouteUrl($rc, $matches=''){
+    public function fetchRouteUrl($rc, $matches='', $specified_namespace='default'){
         
         if(!is_array($matches)){
             if (!preg_match('/^@(\w+):(\w+)(\?(.*))?$/', $rc, $matches)){
@@ -719,12 +719,16 @@ class QuinceRouter{
                 parse_str($matches[4], $new_params);
                 $params = array_merge($params, $new_params);
             }
-        
-            if(isset($params['namespace'])){
-                $namespace = $params['namespace'];
-                unset($params['namespace']);
+            
+            if($specified_namespace == 'default'){
+                if(isset($params['namespace'])){
+                    $namespace = $params['namespace'];
+                    unset($params['namespace']);
+                }else{
+                    $namespace = 'default';
+                }
             }else{
-                $namespace = 'default';
+                $namespace = $specified_namespace;
             }
         
             if(isset($route['url'])){
@@ -1103,7 +1107,7 @@ class Quince{
 	    return $r;
 	}
 	
-	public function getUrlFor($route_name){
+	public function getUrlFor($route_name, $namespace='default'){
 	    
 	    if(preg_match('/^@(\w+):(\w+)(\?(.*))?$/', $route_name, $matches)){ // Another module from the one doing the requesting
             
@@ -1111,7 +1115,7 @@ class Quince{
             $r->setRequest($this->_current_request);
             
             if($r->routeExists($matches[1].':'.$matches[2])){
-                return $r->fetchRouteUrl('@'.$matches[1].':'.$matches[2].$matches[3], $matches);
+                return $r->fetchRouteUrl('@'.$matches[1].':'.$matches[2].$matches[3], $matches, $namespace);
             }else{
                 throw new QuinceException("Supplied route '".$matches[1].':'.$matches[2]."' does not exist.");
             }
@@ -1122,7 +1126,7 @@ class Quince{
             $r->setRequest($this->_current_request);
             
             if($r->routeExists($this->_current_request->getModule().':'.$matches[1])){
-                return $r->fetchRouteUrl('@'.$this->_current_request->getModule().':'.$matches[1].$matches[2]);
+                return $r->fetchRouteUrl('@'.$this->_current_request->getModule().':'.$matches[1].$matches[2], $namespace);
             }else{
                 throw new QuinceException("Supplied route '".$this->_current_request->getModule().':'.$matches[1]."' does not exist.");
             }

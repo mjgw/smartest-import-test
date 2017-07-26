@@ -16,7 +16,7 @@ class SmartestUploadHelper extends SmartestHelper{
 		    
 		    $this->_upload_name = $upload_name;
 		    
-		    if(!@strlen($new_file_name)){
+		    if(!strlen($new_file_name)){
     			$this->_file_name = SmartestStringHelper::toAscii($_FILES[$this->_upload_name]['name']);
     		}
     		
