@@ -1539,14 +1539,12 @@ class Templates extends SmartestSystemApplication{
     		
     		SmartestFileSystemHelper::save($template->getFullPathOnDisk(), $template_content, true);
     		
-    		SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} made a change to template '{$template->getLabel()}'.", SmartestLog::USER_ACTION);
+    		SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} made a change to template '{$template->getUrl()}'.", SmartestLog::USER_ACTION);
     		
     		if($edit_type == 'imported'){
     		    $template->setModified(time());
     		    $template->save();
     		}
-    		
-    		// $this->addUserMessageToNextRequest("The template was successfully updated.", SmartestUserMessage::SUCCESS);
 	        
 	    }
 	    

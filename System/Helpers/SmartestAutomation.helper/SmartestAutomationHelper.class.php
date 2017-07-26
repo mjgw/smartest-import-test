@@ -9,13 +9,23 @@ class SmartestAutomationHelper{
         $this->database = SmartestPersistentObject::get('db:main');
     }
     
+    public function getConfigurationFile(){
+        if(is_file(SM_ROOT_DIR.'Configuration/automation.yml')){
+            // User-defined configuration is used
+            return SM_ROOT_DIR.'Configuration/automation.yml';
+        }else{
+            // Smartest's built-in configuration is used
+            return SM_ROOT_DIR.'System/Core/Info/automation.yml';
+        }
+    }
+    
     public function internalMaintenanceTrigger(){
         
         // Internal trigger should not be run for every request, and should only trigger essential maintenance such as cache file removal
         // Determine when internal trigger was last run, and if it was long enough ago, run it again. Should run according to interval set in automation.yml
         $maintenance_last_triggered = (int) SmartestSystemSettingHelper::load('maintenance_last_internally_triggered');
         
-        $settings = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'Configuration/automation.yml');
+        $settings = SmartestYamlHelper::fastLoad($this->getConfigurationFile());
         $maintenance_interval = $settings['internal_trigger_maintenance_interval'];
         
         if($maintenance_last_triggered < (time() - $maintenance_interval)){
@@ -39,7 +49,7 @@ class SmartestAutomationHelper{
         
         $publication_last_triggered = (int) SmartestSystemSettingHelper::load('publication_last_internally_triggered');
         
-        $settings = SmartestYamlHelper::fastLoad(SM_ROOT_DIR.'Configuration/automation.yml');
+        $settings = SmartestYamlHelper::fastLoad($this->getConfigurationFile());
         $publication_interval = $settings['internal_trigger_publication_interval'];
         
         if($publication_last_triggered < (time() - $publication_interval)){
@@ -58,7 +68,7 @@ class SmartestAutomationHelper{
     
     public function externalTrigger(){
         
-        // External trigger occurs outside of ordinary pageloads and is only ever initiated by visiting /smartest/automate from an IP address authorised in Configuration/automation.yml
+        // External trigger occurs outside of ordinary pageloads and is only ever initiated by visiting /smartest/automate from an IP address authorised in automation.yml
         
         // Also triggers the same maintenance operations as the internal trigger, so run those:
         

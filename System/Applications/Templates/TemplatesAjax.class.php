@@ -72,13 +72,13 @@ class TemplatesAjax extends SmartestSystemApplication{
 	            
 	            if(is_writable($template->getStorageLocation(true)) && is_writable($template->getFullPathOnDisk())){
 	                $allow_update = true;
-	                $this->addUserMessageToNextRequest("The template has been successfully updated.", SmartestUserMessage::SUCCESS);
+	                // $this->addUserMessageToNextRequest("The template has been successfully updated.", SmartestUserMessage::SUCCESS);
                 }else{
                     $allow_update = false;
-                    $this->addUserMessageToNextRequest("The file cannot be written. Please check permissions.", SmartestUserMessage::WARNING, true);
+                    // $this->addUserMessageToNextRequest("The file cannot be written. Please check permissions.", SmartestUserMessage::WARNING, true);
                 }
 	        }else{
-	            $this->addUserMessageToNextRequest("The template ID was not recognized", SmartestUserMessage::ERROR);
+	            // $this->addUserMessageToNextRequest("The template ID was not recognized", SmartestUserMessage::ERROR);
 	            $allow_update = false;
 	            $title = 'Edit '.$type['label'];
 	        }
@@ -102,7 +102,7 @@ class TemplatesAjax extends SmartestSystemApplication{
          	        
          	        $message = "Template type ".$this->getRequestParameter('asset_type')." does not have any storage locations.";
          	        SmartestLog::getInstance('system')->log($message, SmartestLog::WARNING);
-         	        $this->addUserMessageToNextRequest($message, SmartestUserMessage::ERROR);
+         	        // $this->addUserMessageToNextRequest($message, SmartestUserMessage::ERROR);
          	        $allow_update = false;
          	        
          	    }else{
@@ -113,7 +113,7 @@ class TemplatesAjax extends SmartestSystemApplication{
     	                $allow_update = true;
                     }else{
                         $allow_update = false;
-                        $this->addUserMessageToNextRequest("The file cannot be written. Please check permissions.", SmartestUserMessage::WARNING);
+                        // $this->addUserMessageToNextRequest("The file cannot be written. Please check permissions.", SmartestUserMessage::WARNING);
                     }
          	    }
      	        
@@ -138,10 +138,9 @@ class TemplatesAjax extends SmartestSystemApplication{
     		}
 
     		$template_content = stripslashes($content);
-    		SmartestLog::getInstance('site')->log($template_content);
     		SmartestFileSystemHelper::save($template->getFullPathOnDisk(), $template_content, true);
     		
-    		SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} made a change to template '{$template->getUrl()}'.", SmartestLog::USER_ACTION);
+    		SmartestLog::getInstance('site')->log("{$this->getUser()->getFullname()} made a change to template '{$template->getUrl()}' via the modal template editor.", SmartestLog::USER_ACTION);
     		
     		if($edit_type == 'imported'){
     		    $template->setModified(time());

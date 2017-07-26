@@ -338,7 +338,7 @@ class SmartestDataObjectHelper{
 		$basic_object_cache_hash = sha1($object_type_cache_string);
 		
 		$use_cache = (defined('SM_DEVELOPER_MODE') && constant('SM_DEVELOPER_MODE')) ? false : true;
-		$rebuild_cache = ($use_cache && (SmartestCache::load('smartest_basic_objects_hash', true) != $basic_object_cache_hash) || !is_file(SM_ROOT_DIR.'System'.DIRECTORY_SEPARATOR.'Cache'.DIRECTORY_SEPARATOR.'Includes'.DIRECTORY_SEPARATOR.'SmartestBasicObjects.cache.php'));
+		$rebuild_cache = ($use_cache && (SmartestCache::load('smartest_basic_objects_hash', true) != $basic_object_cache_hash) || ($use_cache && !is_file(SM_ROOT_DIR.'System'.DIRECTORY_SEPARATOR.'Cache'.DIRECTORY_SEPARATOR.'Includes'.DIRECTORY_SEPARATOR.'SmartestBasicObjects.cache.php')));
 	
 	    if($use_cache){
 	        if($rebuild_cache){
@@ -387,7 +387,7 @@ class SmartestDataObjectHelper{
 		    
 		}
 		
-		if($use_cache){
+        if($use_cache){
 	        include SM_ROOT_DIR.'System'.DIRECTORY_SEPARATOR.'Cache'.DIRECTORY_SEPARATOR.'Includes'.DIRECTORY_SEPARATOR.'SmartestBasicObjects.cache.php';
 	    }
 	

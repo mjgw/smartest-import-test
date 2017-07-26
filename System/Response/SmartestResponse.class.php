@@ -62,9 +62,6 @@ class SmartestResponse{
 	public function __construct(){
 	    
 	    $this->_error_stack = new SmartestErrorStack();
-        
-        // define('SM_CACHE_LAST_MTIME', time() - 804600); // A week ago
-        // SmartestInfo::$cache_last_mtime = (time() - 804600); // A week ago
         SmartestInfo::$cache_last_mtime = (time() - 259200); // three days ago
 	    
 	    if(is_file(SM_ROOT_DIR."System/Core/Info/system.yml")){
@@ -150,7 +147,7 @@ class SmartestResponse{
 	        exit;
 	    }
 	    
-	    SmartestFileSystemHelper::include_group(
+	    $filename = SmartestFileSystemHelper::include_group(
 
         	'System/Data/SmartestQuery.class.php',
         	'System/Data/SmartestQueryCondition.class.php',
@@ -279,13 +276,6 @@ class SmartestResponse{
 		    $sh->checkWritablePermissions();
 		}catch(SmartestException $e){
 		    $this->_error_stack->recordError($e, false);
-		}
-		
-		$this->_configuration = new SmartestConfigurationHelper();
-		
-		// make sure they're loaded every time if we're doing dev
-		if(defined('SM_DEVELOPER_MODE') && constant('SM_DEVELOPER_MODE')){
-			$this->_configuration->flushAll();
 		}
 		
 		// instantiate database object
