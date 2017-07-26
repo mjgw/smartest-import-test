@@ -79,9 +79,10 @@ class SmartestLogType extends SmartestParameterHolder{
             $file = SM_ROOT_DIR.$this->getParameter('file');
         }
         
+        $app_name = is_object(SmartestPersistentObject::get('request_data')) ? SmartestPersistentObject::get('request_data')->g('application')->g('name') : 'unknown_app';
         $file = str_replace('%DAY%', date('Ymd'), $file);
         $file = str_replace('%MONTH%', date('Ym'), $file);
-        $file = str_replace('%APP%', SmartestPersistentObject::get('request_data')->g('application')->g('name'), $file);
+        $file = str_replace('%APP%', $app_name, $file);
         $file = str_replace('%SITEID%', $this->getCurrentSiteId(), $file);
         return $file;
         
