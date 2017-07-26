@@ -442,7 +442,7 @@ $$('#edit-item-form select').each(function(select){
 
   <ul class="actions-list" id="non-specific-actions">
     <li><b>This {$item._model.name}</b></li>
-    <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id={$item.id}', '{$item._model.name} info');" class="right-nav-link"><i class="fa fa-info-circle"></i>&nbsp;About this {$item._model.name}</a></li>
+    <li class="permanent-action"><a href="{dud_link}" onclick="MODALS.load('datamanager/itemInfo?item_id={$item.id}', '{$item._model.name} info', true);" class="right-nav-link"><i class="fa fa-info-circle"></i>&nbsp;About this {$item._model.name}</a></li>
     {if $model_type == 'SM_ITEMCLASS_MT1_SUB_MODEL'}<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/editItem?item_id={$parent_item.id}';"><i class="fa fa-cube"></i>&nbsp;Back to {$parent_model.name}</a></li>{/if}
     <li class="permanent-action"><a href="{dud_link}" onclick="{if $item.is_held && $item.held_by == $_user.id} window.location='{$domain}{$section}/releaseItem?item_id={$item.id}{else}{$domain}{$section}/getItemClassMembers?class_id={$item.itemclass_id}{/if}';" class="right-nav-link"><i class="fa fa-check-circle"></i>&nbsp;Finish editing</a></li>
     <li class="permanent-action"><a href="{dud_link}" onclick="window.location='{$domain}{$section}/approveItem?item_id={$item.id}';" class="right-nav-link"><i class="fa fa-check"></i>&nbsp;Approve changes</a></li>
