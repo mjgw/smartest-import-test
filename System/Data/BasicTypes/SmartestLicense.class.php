@@ -37,8 +37,9 @@ class SmartestLicense extends SmartestObject implements SmartestBasicType, Smart
     public function setValue($value){
         
         $all = self::getLicenseData();
+        $this->_data = new SmartestParameterHolder('License info');
+        
         if(isset($all[$value])){
-            $this->_data = new SmartestParameterHolder('License info');
             $this->_data->loadArray($all[$value]);
             $this->_shortname = $value;
             return true;

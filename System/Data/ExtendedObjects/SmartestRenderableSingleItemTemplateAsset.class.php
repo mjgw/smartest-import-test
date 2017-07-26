@@ -165,4 +165,18 @@ class SmartestRenderableSingleItemTemplateAsset extends SmartestAsset implements
 	    
 	}
     
+    public function __toSimpleObject(){
+        $obj = parent::__toSimpleObject();
+        unset($obj->content);
+        $obj->object_type = 'template';
+        return $obj;
+    }
+    
+    public function __toSimpleObjectForParentObjectJson(){
+        $obj = parent::__toSimpleObjectForParentObjectJson();
+        unset($obj->content);
+        $obj->object_type = 'template';
+        return $obj;
+    }
+    
 }

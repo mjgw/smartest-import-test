@@ -85,18 +85,6 @@ class SmartestAsset extends SmartestBaseAsset implements SmartestSystemUiObject,
     
     public function __toSimpleObjectForParentObjectJson(){
         
-        // $obj = parent::__toSimpleObject();
-        // $obj->type_info = $this->getTypeInfo();
-        // $obj->is_binary_image = $this->isBinaryImage();
-        // $obj->is_web_accessible = $this->isWebAccessible();
-        // if($this->isWebAccessible()){
-        //     $obj->absolute_uri = $this->getAbsoluteUri();
-        // }
-        // if($this->getType() == 'SM_ASSETTYPE_OEMBED_URL' && is_object($this->getOembedService())){
-        //     $obj->oembed_service = $this->getOembedService()->getArray();
-        // }
-        // return $obj;
-        
         $obj = new stdClass;
         $obj->id = (int) $this->getId();
         $obj->webid = $this->getWebId();

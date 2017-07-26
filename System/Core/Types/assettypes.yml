@@ -897,7 +897,7 @@ type:
       type: file
       location: Presentation/Masters/
     suffix:
-      - {mime: application/octet-stream, _content: tpl}
+      - {mime: text/html, _content: tpl}
 
   SM_ASSETTYPE_CONTAINER_TEMPLATE:
     id: SM_ASSETTYPE_CONTAINER_TEMPLATE
@@ -915,7 +915,7 @@ type:
       type: file
       location: Presentation/Layouts/
     suffix:
-      - {mime: application/octet-stream, _content: tpl}
+      - {mime: text/html, _content: tpl}
       
   SM_ASSETTYPE_ITEMSPACE_TEMPLATE:
     id: SM_ASSETTYPE_ITEMSPACE_TEMPLATE
@@ -933,7 +933,7 @@ type:
       type: file
       location: Presentation/Layouts/
     suffix:
-      - {mime: application/octet-stream, _content: tpl}
+      - {mime: text/html, _content: tpl}
 
   SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE:
     id: SM_ASSETTYPE_COMPOUND_LIST_TEMPLATE
@@ -951,7 +951,7 @@ type:
       type: file
       location: Presentation/Layouts/
     suffix:
-      - {mime: application/octet-stream, _content: tpl}
+      - {mime: text/html, _content: tpl}
   
 #  SM_ASSETTYPE_ART_LIST_TEMPLATE:
 #    id: SM_ASSETTYPE_ART_LIST_TEMPLATE
@@ -985,7 +985,7 @@ type:
       type: file
       location: Presentation/Layouts/
     suffix:
-      - {mime: application/octet-stream, _content: tpl}
+      - {mime: text/html, _content: tpl}
   
   SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE:
     id: SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE
@@ -1002,4 +1002,4 @@ type:
       type: file
       location: Presentation/SingleItem/
     suffix:
-      - {mime: application/octet-stream, _content: tpl}
+      - {mime: text/html, _content: tpl}

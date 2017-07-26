@@ -162,10 +162,10 @@ class SmartestTemplateAsset extends SmartestAsset{
                 $sql = "SELECT Assets.asset_id FROM Assets, AssetClasses, AssetIdentifiers WHERE AssetClasses.assetclass_type='SM_ASSETCLASS_CONTAINER' AND AssetClasses.assetclass_id=AssetIdentifiers.assetidentifier_assetclass_id AND ((AssetIdentifiers.assetidentifier_draft_asset_id=Assets.asset_id AND AssetIdentifiers.assetidentifier_draft_asset_id='".$this->getId()."') OR (AssetIdentifiers.assetidentifier_live_asset_id=Assets.asset_id AND AssetIdentifiers.assetidentifier_live_asset_id='".$this->getId()."'))";
                 $result = $this->database->queryToArray($sql);
                 break;
-            /* case "SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE":
-                $sql = "SELECT Assets.asset_id FROM Assets, Items, ItemPropertyValues WHERE AssetClasses.assetclass_type='SM_ASSETCLASS_CONTAINER' AND AssetClasses.assetclass_id=AssetIdentifiers.assetidentifier_assetclass_id AND ((AssetIdentifiers.assetidentifier_draft_asset_id=Assets.asset_id AND AssetIdentifiers.assetidentifier_draft_asset_id='".$this->getId()."') OR (AssetIdentifiers.assetidentifier_live_asset_id=Assets.asset_id AND AssetIdentifiers.assetidentifier_live_asset_id='".$this->getId()."'))";
+            case "SM_ASSETTYPE_SINGLE_ITEM_TEMPLATE":
+                $sql = "SELECT Items.item_id, Assets.asset_id, ItemPropertyValues.itempropertyvalue_id FROM Assets, Items, ItemProperties, ItemPropertyValues WHERE ItemProperties.itemproperty_datatype='SM_DATATYPE_TEMPLATE' AND ItemProperties.itemproperty_id=ItemPropertyValues.itempropertyvalue_property_id AND Items.item_id=ItemPropertyValues.itempropertyvalue_item_id AND (Assets.asset_id=ItemPropertyValues.itempropertyvalue_draft_content OR Assets.asset_id=ItemPropertyValues.itempropertyvalue_content) AND Assets.asset_id='".$this->getId()."'";
                 $result = $this->database->queryToArray($sql);
-                break; */
+                break;
         }
         
         return (bool) count($result);
@@ -860,6 +860,20 @@ class SmartestTemplateAsset extends SmartestAsset{
             
         }
         
+    }
+    
+    public function __toSimpleObject(){
+        $obj = parent::__toSimpleObject();
+        unset($obj->content);
+        $obj->object_type = 'template';
+        return $obj;
+    }
+    
+    public function __toSimpleObjectForParentObjectJson(){
+        $obj = parent::__toSimpleObjectForParentObjectJson();
+        unset($obj->content);
+        $obj->object_type = 'template';
+        return $obj;
     }
     
 }

@@ -1088,7 +1088,7 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
 	        foreach($this->getProperties() as $p){
                 $vn = $p->getVarname();
                 $val = $p->getData()->getContent();
-                if($p->getDatatype() == 'SM_DATATYPE_ASSET' || $p->getDatatype() == 'SM_DATATYPE_CMS_ITEM'){
+                if(in_array($p->getDatatype(), array('SM_DATATYPE_TEMPLATE','SM_DATATYPE_ASSET','SM_DATATYPE_CMS_ITEM'))){
                     if($val->getId()){
                         $obj->$vn = $p->getData()->getContent()->__toSimpleObjectForParentObjectJson();
                     }else{
