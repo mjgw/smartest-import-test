@@ -4,7 +4,6 @@ mb_http_output("UTF-8");
 mb_http_input("UTF-8");
 mb_internal_encoding("UTF-8");
 
-require SM_ROOT_DIR.'System/Response/SmartestInfo.class.php';
 require SM_ROOT_DIR.'System/Data/SmartestCache.class.php';
 require SM_ROOT_DIR.'System/Helpers/SmartestHelper.class.php';
 require SM_ROOT_DIR.'System/Base/Exceptions/SmartestException.class.php';

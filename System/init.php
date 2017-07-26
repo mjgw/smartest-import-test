@@ -57,6 +57,15 @@ class SmartestInit{
 	    self::setRootDir();
 		self::setIncludePaths();
         
+        // Yaml is needed for reading system version information so this needs to be here for now.
+        // In future this should be a JSON or ini file so it can be done by built-in code with no dependencies
+        require_once SM_ROOT_DIR.'System/Helpers/SmartestYaml.helper/Spyc/spyc.php';
+        require_once SM_ROOT_DIR.'System/Response/SmartestInfo.class.php';
+
+        // The revision number is an important way that the system resets itself after upgrade, and needs to be known asap.
+        $data = spyc_load_file(SM_ROOT_DIR.'System/Core/Info/system.yml');
+        SmartestInfo::$revision = $data['system']['info']['revision'];
+        
         if(is_file(SM_ROOT_DIR.'Configuration/phpsettings.ini')){
             $user_settings = parse_ini_file(SM_ROOT_DIR.'Configuration/phpsettings.ini');
             $user_settings_exist = true;
@@ -81,14 +90,15 @@ class SmartestInit{
             // If your host does not allow the use of ini_set(), comment out these lines and add these settings manually in Public/.htaccess
             ini_set('error_log', SM_ROOT_DIR.'System/Logs/php_errors_no_date.log');
             ini_set('log_errors', true);
-            ini_set('display_errors', $display_errors);  // Sergiy: Totally breaks displaying of pages on PHP 5.4 when uncommented,
-                                                
+            ini_set('display_errors', $display_errors);
+            
+            // Sergiy: Totally breaks displaying of pages on PHP 5.4 when uncommented,
             // since files so many E_STRICT and E_NOTICE and their details.
             // IMHO, it should be enabled only in optional debug/dev mode up to
             // admin or developer preference and probably better from php.ini only
             // Or to implement option whether set it here or use php.ini defaults
             
-            // This has now been disabled as a hard-coded option. To edit/reveal PHP errors, enable this in Configuration/phpsettings.ini
+            // This has now been disabled as a hard-coded option. To reveal PHP errors, enable this in Configuration/phpsettings.ini
             
 
         }

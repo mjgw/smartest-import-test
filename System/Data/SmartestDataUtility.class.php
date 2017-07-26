@@ -964,7 +964,7 @@ class SmartestDataUtility{
 		}
 	    
 	    $use_cache = (defined('SM_DEVELOPER_MODE') && constant('SM_DEVELOPER_MODE')) ? false : true;
-		$rebuild_cache = ($use_cache && (SmartestCache::load('smartest_type_objects_hash', true) != $system_helper_cache_hash || !is_file(SM_ROOT_DIR.'System/Cache/Includes/SmartestBasicTypeClasses.cache.php')));
+		$rebuild_cache = ($use_cache && (SmartestCache::load('smartest_type_objects_hash', true) != $type_object_cache_hash || !is_file(SM_ROOT_DIR.'System/Cache/Includes/SmartestBasicTypeClasses.cache.php')));
 	    
 	    // if($use_cache){
 	    //     if($rebuild_cache){
