@@ -217,8 +217,8 @@ class SmartestSystemHelper{
 	public function checkRequiredFilesExist(){
 		
 		$needed_files = array(
-			"System Information File" => SYSTEM_INFO_FILE,
-			"Database Configuration File" => SM_ROOT_DIR."Configuration/database.ini"
+			"System Information File" => SmartestInfo::$system_info_file,
+			"Database Configuration File" => SM_ROOT_DIR."Configuration/database.yml"
 		);
 		
 		$errors = array();
