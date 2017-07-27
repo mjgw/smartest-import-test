@@ -178,7 +178,8 @@ class SmartestResponse{
         	'System/Templating/SmartestWebPageBuilder.class.php',
         	'System/Templating/SmartestUserAppBuilder.class.php',
         	'System/Response/SmartestFilterChain.class.php',
-        	'System/Response/SmartestFilter.class.php'
+        	'System/Response/SmartestFilter.class.php',
+            'System/Install/SmartestInstallation.class.php'
 
         );
         

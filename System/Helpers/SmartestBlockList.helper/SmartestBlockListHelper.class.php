@@ -26,7 +26,7 @@ class SmartestBlockListHelper{
         foreach($result as $r){
             $s = new SmartestBlockListStyle;
             $s->hydrate($r);
-            $styles[] = $s;
+            $styles[$s->getName()] = $s;
         }
         
         return $styles;

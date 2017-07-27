@@ -448,17 +448,8 @@ class SmartestDataUtility{
 	
 	public function getSites(){
 	    
-	    $sql = "SELECT * FROM Sites";
-	    $result = $this->database->queryToArray($sql);
-	    $sites = array();
-	    
-	    foreach($result as $s){
-	        $site = new SmartestSite;
-	        $site->hydrate($s);
-	        $sites[] = $site;
-	    }
-	    
-	    return $sites;
+	    $install = new SmartestInstallation;
+        return $install->getSites();
 	    
 	}
 	
