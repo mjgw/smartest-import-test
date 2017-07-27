@@ -207,6 +207,34 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
 	    return $this->hasGlobalToken($permission);
 	    
 	}
+    
+    public function isRoot($site_id=null){
+	    
+        $sql = "SELECT UsersTokensLookup.* FROM UsersTokensLookup WHERE utlookup_user_id='".$this->getId()."' AND UsersTokensLookup.utlookup_token_id='root_permission' AND (utlookup_is_global='1'";
+        if(is_numeric($site_id)) $sql .= "OR utlookup_site_id='".$site_id."'";
+        $sql .= ")";
+        
+	    $result = $this->database->queryToArray($sql);
+	    
+	    if(count($result)){
+	        return true;
+	    }else{
+	        return false;
+	    }
+    }
+    
+    public function isGlobalRoot(){
+	    
+        $sql = "SELECT UsersTokensLookup.* FROM UsersTokensLookup WHERE utlookup_user_id='".$this->getId()."' AND UsersTokensLookup.utlookup_token_id='root_permission' AND (utlookup_is_global='1')";
+        
+	    $result = $this->database->queryToArray($sql);
+	    
+	    if(count($result)){
+	        return true;
+	    }else{
+	        return false;
+	    }
+    }
 	
 	// STRICT parameter excludes globally granted tokens and only returns tokens or ids granted on the side having he ID provided
 	

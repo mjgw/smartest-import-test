@@ -20,8 +20,8 @@ class Desktop extends SmartestSystemApplication{
             
         }else{
             
-            if($this->getUserAgent()->isExplorer() && $this->getUserAgent()->getAppVersionInteger() < 7){
-                $this->addUserMessage("Smartest has noticed that you're using Internet Explorer 6 or below. Your browser <em>is</em> supported, however you may find that the interface works better in Internet Explorer 7, Safari or Firefox.");
+            if($this->getUserAgent()->isExplorer() && $this->getUserAgent()->getAppVersionInteger() < 9){
+                $this->addUserMessage("Smartest has noticed that you're using Internet Explorer 8 or below. Your browser <em>is</em> supported, however you may find that the interface works better in Internet Explorer 10+, Safari or Firefox.");
             }
             
             $this->setTitle('Choose a Site');
@@ -34,11 +34,21 @@ class Desktop extends SmartestSystemApplication{
                 $this->forward('desktop', 'startPage');
                 
             }else{
-            
-        		$this->send($sites, 'sites');
-        		$this->send('sites', 'display');
-        		$this->send(count($sites), 'num_sites');
-        		$this->send(($this->getUser()->hasToken('create_sites') || $this->getUser()->hasToken('create_users')), 'show_create_button');
+                
+                if(count($sites)){
+        		    $this->send($sites, 'sites');
+        		    $this->send('sites', 'display');
+        		    $this->send(count($sites), 'num_sites');
+        		    $this->send(($this->getUser()->hasToken('create_sites') || $this->getUser()->hasToken('create_users')), 'show_create_button');
+                }else{
+                    if($this->getUser()->isGlobalRoot()){
+                        $this->getUser()->addTokenById(21, 'GLOBAL');
+                        $this->getUser()->reloadTokens();
+                        $this->addUserMessage("Smartest has detected that you are locked out from all sites. Because you are a root user, access has been automatically re-granted.", SmartestUserMessage::WARNING, true);
+                    }else{
+                        $this->addUserMessage("Smartest has detected that you are locked out from all sites. Please contact your local admin for the 'site_access' token.", SmartestUserMessage::INFO, true);
+                    }
+                }
     		
 		    }
     		
