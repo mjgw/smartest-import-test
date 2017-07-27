@@ -48,7 +48,7 @@ var checkParentModelPropertyName = function(){
 
 <h3>Build a new model</h3>
 
-{if !$cache_om_dir_is_writable || ($site_om_dir_is_writable && $central_om_dir_is_writable)}
+{if $permissions_issue}
 <div class="warning">
   <p>The following directories need to be writeable before you can save models.</p>
   <ul class="location-list">
