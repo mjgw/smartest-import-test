@@ -183,8 +183,8 @@ class SmartestSystemUser extends SmartestUser implements SmartestSystemUserApi{
             return in_array($token, $this->getTokenCodes());
         }
 	}
-	
-	public function hasGlobalToken($token){
+    
+    public function hasGlobalToken($token){
 	    
 	    $token_code = SmartestStringHelper::toVarName($token);
 	    $h = new SmartestUsersHelper;

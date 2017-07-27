@@ -416,6 +416,7 @@ type:
     suffix:
       - {mime: application/font-woff, _content: otf.woff}
       - {mime: application/font-woff, _content: woff}
+      - {mime: font/woff2, _content: woff2}
 
   SM_ASSETTYPE_EOT_FONT_FORMAT:
     id: SM_ASSETTYPE_EOT_FONT_FORMAT

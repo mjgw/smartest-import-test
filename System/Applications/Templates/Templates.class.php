@@ -1091,10 +1091,25 @@ class Templates extends SmartestSystemApplication{
 		if($this->requestParameterIsSet('type')){
 		
 		    $type_id = $this->getRequestParameter('type');
-    		$type = $types[$type_id];
+            
+            if(isset($types[$type_id])){
+                
+                $type = $types[$type_id];
 		
-    		$title = "Add a new ".strtolower($type['label']);
-    		$path = SM_ROOT_DIR.$type['storage']['location'];
+        		$title = "Add a new ".strtolower($type['label']);
+        		$path = SM_ROOT_DIR.$type['storage']['location'];
+                
+    		    $allow_save = is_writable($path);
+    		    $this->send($path, 'path');
+    		    $default_name = SmartestStringHelper::toVarName('untitled '.$type['label']);
+                $this->send($type, 'template_type');
+                $this->send(true, 'type_specified');
+                
+            }else{
+                $this->addUserMessageToNextRequest("The specified template type does not exist.", SmartestUserMessage::ERROR);
+                $this->formForward();
+            }
+    		
 		    
 		/* switch($type){
 		    case "SM_PAGE_MASTER_TEMPLATE":
@@ -1115,10 +1130,6 @@ class Templates extends SmartestSystemApplication{
 		    $path = SM_ROOT_DIR."Presentation/Layouts/";
 		    break;
 		} */
-		
-		    $allow_save = is_writable($path);
-		    $this->send($path, 'path');
-		    $default_name = SmartestStringHelper::toVarName('untitled '.$type['label']);
 		
 	    }else{
 	        

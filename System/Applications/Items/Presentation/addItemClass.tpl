@@ -171,7 +171,7 @@ var checkParentModelPropertyName = function(){
 {if $permissions_issue}
 <div class="buttons-bar"><input type="button" onclick="cancelForm();" value="Cancel" /></div>
 {else}
-<div class="buttons-bar"><input type="submit" value="Next &gt;&gt;" /></div>
+<div class="buttons-bar"><input type="button" onclick="cancelForm();" value="Cancel" /> <input type="submit" value="Continue &gt;&gt;" /></div>
 {/if}
 
 </form>

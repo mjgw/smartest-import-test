@@ -50,7 +50,7 @@ function hideUploader(){
   <div class="special-box">
     Template type: <select name="template_type">
 {foreach from=$types item="new_template_type"}
-      <option value="{$new_template_type.id}"{if !$new_template_type.storage.writable} disabled="disabled"{/if}>{$new_template_type.label}{if !$new_template_type.storage.writable} (directory not writable){/if}</option>
+      <option value="{$new_template_type.id}"{if !$new_template_type.storage.writable} disabled="disabled"{else}{if $new_template_type.id == $template_type.id} selected="selected"{/if}{/if}>{$new_template_type.label}{if !$new_template_type.storage.writable} (directory not writable){/if}</option>
 {/foreach}
     </select>
   </div>
