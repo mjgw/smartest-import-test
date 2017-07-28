@@ -89,6 +89,7 @@ class SmartestResponse{
         	'System/Data/SmartestSqllite.class.php',
             'System/Data/SmartestGenericListedObject.interface.php',
             'System/Data/SmartestCmsItem.class.php',
+            'System/Install/SmartestInstallation.class.php',
             'System/Base/Exceptions/SmartestWebPageBuilderException.class.php',
         	'System/Base/Exceptions/SmartestInterfaceBuilderException.class.php',
         	'System/Base/Exceptions/SmartestRedirectException.class.php',
@@ -178,8 +179,7 @@ class SmartestResponse{
         	'System/Templating/SmartestWebPageBuilder.class.php',
         	'System/Templating/SmartestUserAppBuilder.class.php',
         	'System/Response/SmartestFilterChain.class.php',
-        	'System/Response/SmartestFilter.class.php',
-            'System/Install/SmartestInstallation.class.php'
+        	'System/Response/SmartestFilter.class.php'
 
         );
         
