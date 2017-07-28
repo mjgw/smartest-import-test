@@ -45,7 +45,10 @@
         onComplete: function(){
           $('progress').hide();
           MODALS.hideViewer();
-          // display user message: saved
+          // refresh the page - this should be replaced by an Ajax.Updater call in newer version
+          setTimeout(function(){
+            location.reload();
+          }, 50);
         }
       });
     });
