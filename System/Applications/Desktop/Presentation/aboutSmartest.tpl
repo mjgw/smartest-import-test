@@ -131,7 +131,7 @@
       <p><strong>Is SVN checkout</strong>: {$is_svn_checkout.english}</p>
       {/if}
       <p style="margin-top:15px"><strong>Credits</strong>: Designed and developed by Marcus Gilroy-Ware. Originally devised by Marcus Gilroy-Ware and Eddie Tejeda. Many thanks to Eddie Tejeda, Dr. Chris Brauer, Dr. Mariann Hardey, Rebecca Lewis Smith, Marcus Hemsley, Martina Seitl &amp; Christer Lundahl, Emma Leach, Sergiy Berezin, Sereen Joseph, Nancy Arnold, Matt Asay for generous advice, Professor Lawrence Lessig for the inspiring books and work, PG, VW, CGW, many dear friends, a few brave journalism students at City, University of London and the University of the West of England, and early adopters everywhere.</p>
-      <p>Some icons are © Zach Roszczewski.</p>
+      <p>Some icons are © Zach Roszczewski. Thanks to Aleksander K of Slovenia for the circle 'loading' animation</p>
       <p style="margin-top:15px">Smartest is {help id="desktop:freesoftware"}Free &amp; Open Source Software{/help} and always will be.</p>
       <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" id="donate-form">
         <input type="hidden" name="cmd" value="_s-xclick" />

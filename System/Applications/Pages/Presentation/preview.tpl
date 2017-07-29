@@ -44,31 +44,31 @@ $('tagged-object-model-selector').observe('change', function(){
         $('preview-loading').fade({duration: 0.4});
         $('preview-slow').fade({duration: 0.4});
         $('preview-failed').fade({duration: 0.4});
+        $('preview-animation').fade({duration: 0.4});
         clearTimeout(t1);
         clearTimeout(t2);
     }
     
     function cancelWait(){
-      $('preview-slow').fade({duration: 0.4});
-      $('preview-failed').fade({duration: 0.4});
-      showPreview();
+        $('preview-slow').fade({duration: 0.4});
+        $('preview-failed').fade({duration: 0.4});
+        showPreview();
     }
     
     function hidePreview(){
-        
-        // $('preview').fade({duration: 0.4, afterFinish: function(){
+        $('preview').fade({duration: 0.4, afterFinish: function(){
             $('preview-iframe').style.height = '0px';
             $('preview-iframe').removeClassName('built');
             $('preview-iframe').addClassName('building');
             $('preview').hide();
             $('preview-loading').appear({duration: 0.4});
-        // }});
-        
+            $('preview-animation').appear({duration: 0.4});
+        }});
     }
     
     function previewSlow(){
         /* $('preview-loading').style.display = 'none';
-        $('preview-slow').style.display = 'block'; */
+        // $('preview-slow').style.display = 'block'; */
         $('preview-loading').fade({duration: 0.4});
         $('preview-slow').appear({duration: 0.4});
     }
@@ -77,11 +77,13 @@ $('tagged-object-model-selector').observe('change', function(){
         /* $('preview-slow').style.display = 'none';
         $('preview-failed').style.display = 'block'; */
         $('preview-slow').fade({duration: 0.4});
+        $('preview-animation').fade({duration: 0.4});
         $('preview-failed').appear({duration: 0.4});
+        $('preview-loading').fade({duration: 0.4});
     }
     
-    t1 = setTimeout(function(){previewSlow();}, 8000);
-    t2 = setTimeout(function(){previewTimedOut();}, 20000);
+    t1 = setTimeout(function(){previewSlow();}, 7500);
+    t2 = setTimeout(function(){previewTimedOut();}, 15000);
 
 {/literal}    
 </script>
@@ -125,17 +127,32 @@ $('tagged-object-model-selector').observe('change', function(){
   </div>
   
   <div id="preview-loading" class="preview-component">
-    <p>Please wait. Rendering preview...</p>
-    <p><img src="{$domain}Resources/System/Images/smartest-working-flat.gif" /></p>
+    <p>Rendering preview. Please wait...</p>
   </div>
   
   <div id="preview-slow" class="preview-component" style="display:none">
-    <p>Sorry for the wait. Just a bit longer... <a href="javascript:cancelWait()">Show now</a></p>
-    <p><img src="{$domain}Resources/System/Images/smartest-working-flat.gif" /></p>
+    <p>Sorry for the wait. Just a bit longer... <a href="javascript:cancelWait()" class="button">Show now</a></p>
   </div>
   
   <div id="preview-failed" style="display:none" class="preview-component">
-    <p>Still no luck. Something stopped the page from building. <br />Try having a look at <a href="javascript:window.open('{$domain}website/renderEditableDraftPage?page_id={$page.webid}{if $item}&amp;item_id={$item.id}{/if}');">the page by itself</a>.</p>
+    <p>Still no luck. Something might have stopped the page from building.</p>
+    <p><a href="javascript:window.open('{$preview_url}&amp;hide_newwin_link=true');" class="button">Try preview in new tab</a></p>
+  </div>
+  
+  <div id="preview-animation" class="preview-component">
+    <div id="sm-loading-wrapper">
+      {if $sm_user_agent.is_supported_browser}
+      <div class="sm-loading-main">
+        <div class="loader">
+          <svg class="sm-circular-loader"viewBox="25 25 50 50" >
+            <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke="#6AA9FC" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+      {else}
+      <p><img src="{$domain}Resources/System/Images/smartest-working-flat.gif" /></p> 
+      {/if}
+    </div>
   </div>
 
 </div>

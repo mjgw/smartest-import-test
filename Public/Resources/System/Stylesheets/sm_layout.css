@@ -254,6 +254,10 @@ div.preview-component{
     position:absolute;
 }
 
+div.preview-component p{
+  text-align:center;
+}
+
 #preview-menu{
     top:0px;
     left:0px;
@@ -285,33 +289,44 @@ div.preview-component{
 	top:30px;
 	left:0px;
 	width:100%;
+  z-index:15;
 }
 
 #preview-iframe{
 	display:block;
 	width:100%;
+  z-index:12;
 }
 
 #preview-loading{
-    top:30px;
+  top:30px;
 	left:0px;
 	width:100%;
 	padding-top:50px;
 	text-align:center;
+  z-index:12;
 }
 
 #preview-slow{
-    padding-top:50px;
-    text-align:center;
-    width:100%;
-    top:30px;
+  padding-top:50px;
+  text-align:center;
+  width:100%;
+  top:30px;
 	left:0px;
+  z-index:12;
+}
+
+#preview-animation{
+  z-index:10;
+  top:120px;
+	left:0px;
+  width:100%;
 }
 
 #preview-failed{
-    padding-top:50px;
-    text-align:center;
-    top:30px;
+  padding-top:50px;
+  text-align:center;
+  top:30px;
 	left:0px;
 	width:100%;
 }
