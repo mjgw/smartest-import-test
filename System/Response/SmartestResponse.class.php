@@ -267,6 +267,7 @@ class SmartestResponse{
         }
         
         try{
+            SmartestDatabase::handleConfigurationMigration();
 		    $sh->checkRequiredFilesExist();
 		}catch(SmartestException $e){
 		    $this->_error_stack->recordError($e, false);

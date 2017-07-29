@@ -264,10 +264,10 @@ div.preview-component p{
 }
 
 #preview-actions-menu{
-    position:absolute;
+  position:absolute;
 	top:24px;
 	left:0px;
-	z-index:10;
+	z-index:25;
 }
 
 #preview-files-menu{
