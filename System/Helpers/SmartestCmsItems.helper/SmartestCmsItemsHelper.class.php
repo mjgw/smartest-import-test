@@ -59,6 +59,7 @@ class SmartestCmsItemsHelper{
                 $item = new $class_name();
                 $item->hydrateFromRawDbRecord($result);
                 $item->setDraftMode($draft_mode);
+                $item->assignModel($model);
                 if($keep_ids){
                     $items[$item->getId()] = $item;
                 }else{
@@ -102,6 +103,7 @@ class SmartestCmsItemsHelper{
                $item = new $class_name();
                $item->hydrateFromRawDbRecord($result);
                $item->setDraftMode($draft_mode);
+               $item->assignModel($model);
                $items[$item->getId()] = $item;
 
            }
@@ -122,10 +124,13 @@ class SmartestCmsItemsHelper{
         
         $items = array();
         $raw_items = $this->_hydrateUniformListFromIdsArray($ids, $model_id, $draft_mode);
+        $model = $this->getModelFromId($model_id);
         
         foreach($ids as $id){
             if(isset($raw_items[$id])){
-                $items[] = $raw_items[$id];
+                $item = $raw_items[$id];
+                $item->assignModel($model);
+                $items[] = $item;
             }
         }
         
@@ -205,8 +210,6 @@ class SmartestCmsItemsHelper{
         }
         
         $sql .= " ORDER BY Items.item_modified DESC";
-        
-        // echo $sql;
         
         $result = $this->database->queryToArray($sql);
         

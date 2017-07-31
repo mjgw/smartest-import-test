@@ -144,8 +144,8 @@ $('tagged-object-model-selector').observe('change', function(){
       {if $sm_user_agent.is_supported_browser}
       <div class="sm-loading-main">
         <div class="loader">
-          <svg class="sm-circular-loader"viewBox="25 25 50 50" >
-            <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke="#6AA9FC" stroke-width="2" />
+          <svg class="sm-circular-loader" viewBox="25 25 50 50" >
+            <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke="#6AA9FC" stroke-width="3" />
           </svg>
         </div>
       </div>

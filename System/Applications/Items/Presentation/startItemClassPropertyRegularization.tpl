@@ -7,9 +7,13 @@ var ajaxUrl = '{$domain}ajax:datamanager/regularizeItemClassProperty';
 
   document.observe('dom:loaded', function(){
     $('regularize-start-button').observe('click', function(){
-      $('updater').update('<img src="../Resources/System/Images/ajax-loader.gif" alt="" /> Please wait...');
+      $('updater').update('Please wait...');
+      $('primary-ajax-loader').show();
       new Ajax.Updater('updater', ajaxUrl, {
-        parameters: {property_id: propertyId}
+        parameters: {property_id: propertyId},
+        onSuccess: function(){
+          $('primary-ajax-loader').hide();
+        }
       });
     });
   });

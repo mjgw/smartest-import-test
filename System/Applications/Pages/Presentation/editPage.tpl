@@ -6,7 +6,7 @@
     
     var savePageUrlChanges = function(){ldelim}
 
-      $('saver-gif').show();
+      $('primary-ajax-loader').show();
 
       $('editUrl').request({ldelim}
         onComplete: function(){ldelim}
@@ -15,6 +15,7 @@
             parameters: {ldelim}page_id: '{$page.webid}'{if $item.id}, item_id: {$item.id}{/if}, responseTableLinks: {$link_urls.truefalse}{rdelim},
             onSuccess: function(response) {ldelim}
               setTimeout(addListeners, 30);
+              $('primary-ajax-loader').hide();
             {rdelim}
           {rdelim});
           MODALS.hideViewer();
@@ -27,7 +28,7 @@
     
     var effectPageUrlTransfer = function(){ldelim}
 
-      $('saver-gif').show();
+      $('primary-ajax-loader').show();
 
       $('transferUrl').request({ldelim}
         onComplete: function(){ldelim}
@@ -36,6 +37,7 @@
             parameters: {ldelim}page_id: '{$page.webid}'{if $item.id}, item_id: {$item.id}{/if}, responseTableLinks: {$link_urls.truefalse}{rdelim},
             onSuccess: function(response) {ldelim}
               setTimeout(addListeners, 30);
+              $('primary-ajax-loader').hide();
             {rdelim}
           {rdelim});
           MODALS.hideViewer();
@@ -48,7 +50,7 @@
     
     var saveNewPageUrl = function(){ldelim}
 
-      $('saver-gif').show();
+      $('primary-ajax-loader').show();
 
       $('addUrl').request({ldelim}
         onComplete: function(){ldelim}
@@ -57,6 +59,7 @@
             parameters: {ldelim}page_id: '{$page.webid}'{if $item.id}, item_id: {$item.id}{/if}, responseTableLinks: {$link_urls.truefalse}{rdelim},
             onSuccess: function(response) {ldelim}
               setTimeout(addListeners, 30);
+              $('primary-ajax-loader').hide();
             {rdelim}
           {rdelim});
           MODALS.hideViewer();

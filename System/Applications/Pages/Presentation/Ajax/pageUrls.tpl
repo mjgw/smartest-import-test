@@ -1,4 +1,4 @@
-<table width="100%" style="border:1px solid #ccc;padding:2px;" cellpadding="0" cellspacing="0">
+<table width="100%" style="border:1px solid #ccc;padding:2px;" cellpadding="0" cellspacing="0" class="page-urls-table">
   
   {if $ishomepage == "true"}
 	<tr style="background-color:#{cycle name="urls" values="ddd,fff"};height:20px">
@@ -14,7 +14,7 @@
   {foreach from=$page.urls item=pageurl}
     {capture name="pageUrl" assign="pageUrl"}http://{$site.domain}{$domain}{$pageurl.url}{/capture}
   <tr style="background-color:#{cycle name="urls" values="ddd,fff"};height:20px">
-    <td>
+    <td class="page-urls-table-cell">
 	    <div style="display:inline" id="siteDomainField_{$pageurl.id}">
 	      {if $pageurl.is_default == 1}<strong>{/if}{if $page.is_published == "TRUE" && ($page.type == 'NORMAL' || ($page.type == 'ITEMCLASS' && $item.public == 'TRUE')) && $site.is_enabled == 1}<a href="{$pageUrl}" target="_blank">{$pageUrl|truncate:100:"..."}</a>{else}{$pageUrl|truncate:100:"..."}{/if}{if $pageurl.is_default == 1}</strong> (default){/if}</div></td>
     <td style="width:32%;text-align:right;padding:3px">
@@ -29,7 +29,7 @@
   {/if}
   
   <tr style="background-color:#{cycle name="urls" values="ddd,fff"};height:20px">
-      <td colspan="2">
+      <td colspan="2" class="page-urls-table-cell">
         <div style="display:inline" id="siteDomainField">
         {if $link_urls && $page.is_published == "TRUE" && $site.is_enabled == 1}<a href="http://{$site.domain}{$domain}{$page.forced_fallback_url}" target="_blank">http://{$site.domain}{$domain}{$page.forced_fallback_url|truncate:50:"..."}</a>{else}http://{$site.domain}{$domain}{$page.forced_fallback_url|truncate:100:"..."}{/if}</div></td></tr>
 

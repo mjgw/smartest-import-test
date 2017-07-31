@@ -25,6 +25,7 @@
     {literal}
     $('comment-submit-button').observe('click', function(e){
       e.stop();
+      $('primary-ajax-loader').show();
       if(($('comment-content').value.length) > 1){
         $('asset-comment-form').request({
           onComplete: function(){
@@ -49,13 +50,15 @@
             // Insert a temporary dummy to help the scroller
             var cli = new Element('li', {style: 'padding:5px', id: 'new-comment'});
             var ca = new Element('b').update(Smartest.AjaxModalViewer.variables.author_name);
-            var date = new Element('img', {src: sm_domain+'Resources/System/Images/ajax-loader.gif'});
+            // var date = new Element('img', {src: sm_domain+'Resources/System/Images/ajax-loader.gif'});
+            var date = $('primary-ajax-loader-element').clone(true);
+            date.addClassName('left');
             var cip = new Element('p');
             var ccp = new Element('p').update(commentContent);
             var clp = new Element('p', {class: 'small', style: 'font-size:10px'}).update(' ');
             var dl = new Element('a', {href: '#'}).update('Delete');
             cip.appendChild(ca);
-            cip.appendChild(date);
+            // cip.appendChild(date);
             cli.appendChild(cip);
             cli.appendChild(ccp);
             clp.appendChild(dl);
@@ -65,6 +68,8 @@
             // Readjust the scroller
             Smartest.AjaxModalScroller = new Control.ScrollBar('modal-updater', 'modal-scrollbar-track');
             Smartest.AjaxModalScroller.scrollTo('bottom');
+            
+            $('primary-ajax-loader').hide();
 
           }
         });

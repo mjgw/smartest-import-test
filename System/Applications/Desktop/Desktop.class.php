@@ -512,8 +512,6 @@ class Desktop extends SmartestSystemApplication{
             
                 // access it via ArrayAccess
                 $d = $p['title'];
-                
-                // $ft = $p1['formatted_title'];
             
             }
             

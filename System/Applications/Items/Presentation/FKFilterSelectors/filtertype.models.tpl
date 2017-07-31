@@ -29,12 +29,13 @@ var waitingHTML = '<img src="{$domain}Resources/System/Images/ajax-loader.gif" a
         new Effect.BlindDown('item-set-selector-outer', {duration: 0.3});
       }
       
-      $('item-set-selector-inner').innerHTML = waitingHTML;
+      // $('item-set-selector-inner').innerHTML = waitingHTML;
+      $('primary-ajax-loader').show();
       
       new Ajax.Updater('item-set-selector-inner', sm_domain+'ajax:datamanager/getItemClassSetSelectorForNewPropertyForm', {
           parameters: {class_id: $('model-selector').value},
           onComplete: function(){
-            // alert('test');
+            $('primary-ajax-loader').hide();
           }
       });
       

@@ -30,7 +30,6 @@
   
       <div class="edit-form-row">
         <div class="buttons-bar">
-          <img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="modal-ajax-loader" style="display:none" />
           <input type="button" onclick="MODALS.hideViewer();" value="Cancel" />
           <input type="submit" id="modal-file-params-editor-saver" value="Save" />
         </div>
@@ -46,10 +45,10 @@
   
   var saveFileParamValues = function(){
     
-    $('modal-ajax-loader').show();
+    $('primary-ajax-loader').show();
     $('modal-file-params-editor-form').request({
       onSuccess: function(){
-        $('modal-ajax-loader').hide();
+        $('primary-ajax-loader').hide();
         MODALS.hideViewer();
       }
     });

@@ -14,9 +14,7 @@
 
 <script type="text/javascript">
   {literal}
-  
   var autosaveMode, saver, restartSavingTimer, listenForUserActions;
-  
   $('item-autosave').observe('click', function(){
     var isChecked = $('item-autosave').checked ? 1 : 0;
     autosaveMode = $('item-autosave').checked;
@@ -29,40 +27,15 @@
       listenForUserActions = false;
     }
   });
-  
   autosaveMode = $('item-autosave').checked;
-  
-  /* var startSaving = function(){
-    if($('item-autosave')){
-      saver = new PeriodicalExecuter(function(){
-        if(autosaveMode){
-          saveItemData();
-        }
-      }, 4.0); 
-    }
-  }*/
-  
-  /* var stopSaving = function(){
-    if(saver !== undefined && saver !== null){
-      // saver.stop();
-      // saver = null;
-    }
-  } */
-  
   var respondToUserAction = function(){
     if(autosaveMode){
       clearTimeout(restartSavingTimer);
       restartSavingTimer = setTimeout(function(){
         saveItemData();
-      }, 2000);
+      }, 1000);
     }
   }
-  
-  // if(autosaveMode){
-  //   listenForUserActions = true;
-  //   startSaving();
-  // }
-  
   {/literal}
 </script>
 

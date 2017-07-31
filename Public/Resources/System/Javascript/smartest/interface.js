@@ -222,7 +222,17 @@ function getCaretPosition(textarea_id){
     
 }
 
-var Smartest = Class.create({});
+var Smartest = {
+    
+    showAjaxLoader: function(){
+        $('primary-ajax-loader').appear({duration: 0.25});
+    },
+    
+    hideAjaxLoader: function(){
+        $('primary-ajax-loader').fade({duration: 0.25});
+    }
+    
+};
 
 Smartest.UI = Class.create({
     
@@ -444,12 +454,12 @@ Smartest.UI.OptionSet = Class.create({
     	    new Effect.ScrollTo(domID);
     	} */
             
-            if(params && params.updateFields){
+        if(params && params.updateFields){
     	    $H(params.updateFields).each(function(f){
     	        new Smartest.UI().updateSpansByClassName(f.key, f.value);
     	    });
     	}
-    	
+        
         // console.log({
         //     linkId: domID,
         //     formValue: id,
@@ -778,7 +788,9 @@ Smartest.AjaxModalViewer = Class.create({
     updateTo: function(url, title){
         
         $('modal-updater').hide();
-        var loading = new Element('img', {src: sm_domain+'Resources/System/Images/ajax-loader.gif', id: 'modal-loader'});
+        // var loading = new Element('img', {src: sm_domain+'Resources/System/Images/ajax-loader.gif', id: 'modal-loader'});
+        var loading = $('primary-ajax-loader-element').clone(true);
+        loading.addClassName('left');
         $('modal-updater').appendChild(loading);
         $('modal-title').update(title);
         

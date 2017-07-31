@@ -38,7 +38,6 @@
       </select>
     </div>
     <div class="buttons-bar">
-      <img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" style="display:none" id="gallery-creation-loader" />
       <input type="button" value="Cancel" id="cancel-new-gallery-button" />
       <input type="button" value="Save" id="save-new-gallery-button" />
     </div>
@@ -55,7 +54,7 @@
   });
   $('save-new-gallery-button').observe('click', function(e){
     e.stop();
-    $('gallery-creation-loader').show();
+    $('primary-ajax-loader').show();
     new Ajax.Request(sm_domain+'ajax:assets/insertGalleryForIpv', {
       method:'post',
       parameters: $('create-gallery-form').serialize(true),
@@ -64,7 +63,7 @@
         $('item_property_'+propertyId).appendChild(opt);
         $(reorderButtonId).show();
         $(reorderButtonId).href = sm_domain+'assets/arrangeAssetGallery?from=item_edit&group_id='+response.responseJSON.id+'&from=editItem&item_id='+itemId
-        $('gallery-creation-loader').hide();
+        $('primary-ajax-loader').hide();
         MODALS.hideViewer();
       }
     });

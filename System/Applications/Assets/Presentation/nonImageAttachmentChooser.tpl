@@ -33,8 +33,6 @@
       <input type="hidden" name="oembed_service" value="" id="oembed-service-id" />
       <input type="hidden" name="asset_type" value="" id="asset-type" />
       
-      <img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="check-url-loader" style="display:none" />
-      
       <div class="breaker"> </div>
       <div class="form-hint">Don't forget the http://</div>
       <div class="edit-form-sub-row">
@@ -49,7 +47,6 @@
     </div>
     
     <div class="buttons-bar">
-      <img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="url-form-submit-loader" style="display:none" />
       <input type="button" value="Cancel" id="create-embeddable-media-from-url-cancel" />
       <input type="button" value="Save" id="create-embeddable-media-from-url-save" disabled="disabled" />
     </div>
@@ -68,7 +65,6 @@
     </div>
     
     <div class="buttons-bar">
-      <img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="textarea-form-submit-loader" style="display:none" />
       <input type="button" value="Cancel" id="create-embeddable-media-from-textarea-cancel" />
       <input type="button" value="Save" id="create-embeddable-media-from-textarea-save" />
     </div>
@@ -143,7 +139,6 @@
   
   $('create-embeddable-media-from-url-save').observe('click', function(evt){
     evt.stop();
-    $('url-form-submit-loader').show();
     new Ajax.Request(sm_domain+'ajax:assets/createEmbeddableAssetFromModal', {
       parameters: {
         asset_url: $F('url-input'),
@@ -162,7 +157,6 @@
         getAssetInfo(response.responseJSON.id);
         getNonImageAssetInfo(response.responseJSON.id);
         
-        $('url-form-submit-loader').hide();
         MODALS.hideViewer();
         
       }
@@ -170,8 +164,9 @@
   });
   
   $('create-embeddable-media-from-textarea-save').observe('click', function(evt){
-    $('textarea-form-submit-loader').show();
-    // console.log(CM.getValue());
+    
+    $('primary-ajax-loader').show();
+    
     new Ajax.Request(sm_domain+'ajax:assets/createEmbeddableAssetFromModalTextArea', {
       
       parameters: {
@@ -192,7 +187,7 @@
         getAssetInfo(response.responseJSON.id);
         getNonImageAssetInfo(response.responseJSON.id);
         
-        $('textarea-form-submit-loader').hide();
+        $('primary-ajax-loader').hide();
         MODALS.hideViewer();
         
       }
@@ -201,7 +196,7 @@
   
   $('url-input').observe('keyup', function(evt){
     
-    $('check-url-loader').show();
+    $('primary-ajax-loader').show();
     $('url-ok').hide();
     $('url-invalid').hide();
     
@@ -220,14 +215,14 @@
         onSuccess: function(response) {
           
           if(response.responseJSON.valid){
-            $('check-url-loader').hide();
+            $('primary-ajax-loader').hide();
             $('url-service-label').update(response.responseJSON.data.label);
             $('oembed-service-id').value = response.responseJSON.data.service_id;
             $('asset-type').value = response.responseJSON.data.type_code;
             $('create-embeddable-media-from-url-save').disabled = false;
             $('url-ok').show();
           }else{
-            $('check-url-loader').hide();
+            $('primary-ajax-loader').hide();
             $('create-embeddable-media-from-url-save').disabled = true;
             $('oembed-service-id').value = '';
             $('asset-type').value = '';

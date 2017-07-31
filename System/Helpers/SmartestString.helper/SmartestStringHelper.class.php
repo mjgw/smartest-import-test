@@ -860,6 +860,14 @@ class SmartestStringHelper extends SmartestHelper{
         }
     }
     
+    public static function onlyAmpersands($string){
+        return str_replace('&', '&amp;', html_entity_decode($string, ENT_QUOTES, 'UTF-8'));
+    }
+    
+    public static function onlyXMLEntities($string){
+        return htmlspecialchars(html_entity_decode($string, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+    }
+    
     public static function convertAttachmentsToVisualEditorFormat($string){
         
         // echo $string;
@@ -869,6 +877,14 @@ class SmartestStringHelper extends SmartestHelper{
                 $string = str_replace($attachment, '<div id="sm-attachment-'.$matches[1][$key].'" class="sm-attachment-proxy" data-attachmentname="'.$matches[1][$key].'" style="border:1px dotted #f00;padding:5px">Smartest Attachment: <strong>'.$matches[1][$key].'</strong></div>', $string);
             }
         }
+        return $string;
+        
+    }
+    
+    public static function encodeSmartestTags($string){
+        
+        $string = str_replace('<?sm:', '&lt;?sm:', $string);
+        $string = str_replace(':?>', ':?&gt;', $string);
         return $string;
         
     }

@@ -45,14 +45,34 @@ $$('div.ui-message.not-sticky').each(function(msgDiv){
 <div id="smartest-frame">
     
   <div id="top-strip">
-    <a href="{$domain}smartest/about" style="" id="top-left-logo"></a>
+    <a href="#about" style="" id="top-left-logo" title="{$_l10n_global_strings.main_nav.about}"></a>
+    <script type="text/javascript">
+      {literal}
+      $('top-left-logo').observe('click', function(e){
+        e.stop();
+        MODALS.load('desktop/aboutSmartest', 'About Smartest');
+      });
+      {/literal}
+    </script>
   </div>
   
   <div id="user-info">
     {if $show_left_nav_options}{$_l10n_global_strings.top_bar.signed_in_before_site_name} <strong>{$_site.internal_label}</strong>{else}{$_l10n_global_strings.top_bar.signed_in_without_site_name}{/if} {$_l10n_global_strings.top_bar.signed_in_after_site_name} <strong>{$_user.firstname} {$_user.lastname}</strong>&nbsp;&nbsp;{if $show_left_nav_options || $show_create_button}<a href="#create" id="sm-button-create" title="Create something new" class="sm-top-bar-button">&nbsp;</a>{/if}<a href="{$domain}smartest/profile" id="sm-button-profile" title="Edit your user account" class="sm-top-bar-button">&nbsp;</a>{if $show_left_nav_options && ($_user.num_allowed_sites > 1 || $_user_allow_site_create)}<a href="{$domain}smartest/close" id="sm-button-close" title="Close this site" class="sm-top-bar-button">&nbsp;</a>{/if}<a href="{$domain}smartest/logout" id="sm-button-exit" title="Sign out" class="sm-top-bar-button">&nbsp;</a>&nbsp;&nbsp;
   </div>
   
-  <img src="{$domain}Resources/System/Images/ajax-loader.gif" style="display:none" id="primary-ajax-loader" alt="" />
+  <div id="primary-ajax-loader" style="display:none">
+    {if $sm_user_agent.is_supported_browser}
+    <div class="sm-loading-main left" id="primary-ajax-loader-element">
+      <div class="loader small">
+        <svg class="sm-circular-loader" viewBox="25 25 50 50" >
+          <circle class="loader-path" cx="50" cy="50" r="22" fill="none" stroke="#777777" stroke-width="6" />
+        </svg>
+      </div>
+    </div>
+    {else}
+    <img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="primary-ajax-loader-element" />
+    {/if}
+  </div>
     
 {include file=$sm_navigation}
 

@@ -74,7 +74,7 @@ function adjustListOptions(currentListValue){
         {foreach from=$sets item="set"}
         <option value="{$set.id}"{if $list.type == "SM_LIST_SIMPLE" && $list.draft_set_id == $set.id && strlen($set.id)} selected="selected"{/if} data-modelid="{$set.itemclass_id}">{$set.name} ({$set.type|lower})</option>
         {/foreach}
-      </select><img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="set-loader-img" style="display:none" />
+      </select>
     </div>
     
     <div class="edit-form-row" id="list-tag-selector-container"{if $list.type != 'SM_LIST_TAG'} style="display:none"{/if}>
@@ -102,7 +102,7 @@ function adjustListOptions(currentListValue){
         <option value="{$ct.url}" {if $main_template == $ct.url} selected="selected"{/if}>{$ct.url}</option>
         {/foreach}
         {if $can_create_template}<option value="NEW">Create new template...</option>{/if}
-      </select><img src="{$domain}Resources/System/Images/ajax-loader.gif" alt="" id="template-loader-img" style="display:none" />
+      </select>
     </div>
     
     <input type="hidden" name="dataset_type" value="SM_LIST_SIMPLE" />
@@ -134,18 +134,17 @@ $('list-source-selector').observe('change', function(){
 });
 
 $('list-model-selector').observe('change', function(){
-  $('set-loader-img').show();
-  $('template-loader-img').show();
+  $('primary-ajax-loader').show();
   new Ajax.Updater('dataset-selector', sm_domain+'ajax:sets/listSetsByModelIdAsDropdownOptions', {
     parameters: {class_id: $F('list-model-selector')},
     onSuccess: function(){
-      $('set-loader-img').hide();
+      $('primary-ajax-loader').hide();
     }
   });
   new Ajax.Updater('template-selector', sm_domain+'ajax:websitemanager/getListTemplatesByModel', {
     parameters: {model_id: $F('list-model-selector')},
     onSuccess: function(){
-      $('template-loader-img').hide();
+      $('primary-ajax-loader').hide();
     }
   });
 });

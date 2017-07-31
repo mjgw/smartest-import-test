@@ -404,6 +404,9 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
                 
                 case 'empty':
                 return !is_numeric($this->_item->getId());
+                
+                case '_item_list_json':
+                return json_encode(array('updateFields'=>array('item_name_field'=>SmartestStringHelper::truncate($this->getName(), 30))), JSON_UNESCAPED_SLASHES|JSON_HEX_APOS);
 	            
 	        }
 	        
@@ -897,6 +900,10 @@ class SmartestCmsItem extends SmartestObject implements SmartestGenericListedObj
     
     public function getSearchQueryMatchableValue(){
         return $this->getEditorName();
+    }
+    
+    public function assignModel(SmartestModel $model){
+        $this->_model = $model;
     }
 	
 	public function getModel(){

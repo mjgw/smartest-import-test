@@ -39,7 +39,9 @@ Smartest.HelpViewer = Class.create({
             $('help-updater').update('');
             $('help-updater').show();
             
-            var loading = new Element('img', {src: sm_domain+'Resources/System/Images/ajax-loader.gif', id: 'help-loader'});
+            // var loading = new Element('img', {src: sm_domain+'Resources/System/Images/ajax-loader.gif', id: 'help-loader'});
+            var loading = $('primary-ajax-loader-element').clone(true);
+            loading.addClassName('left');
             $('help-updater').appendChild(loading);
             
             new Ajax.Updater($('help-updater'), url, {evalScripts: true, onComplete: function(){

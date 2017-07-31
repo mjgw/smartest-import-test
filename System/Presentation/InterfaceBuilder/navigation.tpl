@@ -14,8 +14,8 @@
     <li class="site-top-level{if $section == "desktop" && $method != 'aboutSmartest'} on{else} off{/if}" id="nav-sites"><a href="{$domain}smartest"><span class="option-holder"><i class="flaticon solid earth-1"></i><span class="option-name">{$_l10n_global_strings.main_nav.websites}</span></span></a></li>
     <li class="top-level{if $section == "users"} on{else} off{/if}" id="nav-profile"><a href="{$domain}smartest/profile"><span class="option-holder"><i class="flaticon solid user-3"></i><span class="option-name">{$_l10n_global_strings.main_nav.user_profile}</span></span></a></li>
     {/if}
-    <li class="top-level{if $section == "desktop" && $method == 'aboutSmartest'} on{else} off{/if}" id="nav-about"><a href='{$domain}smartest/about'><span class="option-holder"><i class="flaticon solid info-2"></i><span class="option-name">{$_l10n_global_strings.main_nav.about}</span></span></a></li>
-    {* <li class="top-level off"><a href='{$domain}smartest/logout'>{$_l10n_global_strings.main_nav.sign_out}</a></li> *}
+    {* <li class="top-level{if $section == "desktop" && $method == 'aboutSmartest'} on{else} off{/if}" id="nav-about"><a href='{$domain}smartest/about'><span class="option-holder"><i class="flaticon solid info-2"></i><span class="option-name">{$_l10n_global_strings.main_nav.about}</span></span></a></li>
+    <li class="top-level off"><a href='{$domain}smartest/logout'>{$_l10n_global_strings.main_nav.sign_out}</a></li> *}
   </ul>
 </div>
 

@@ -15,11 +15,14 @@
   var model_id = {$model.id};
 {literal}
   $('update-model-auto-static-sets-button').observe('click', function(){
-    $('saving-gif').show();
+    $('primary-ajax-loader').show();
     $('update-model-auto-static-sets').request({
       onComplete: function(){
         new Ajax.Updater('model-set-auto-add-ajax-field', sm_domain+'ajax:datamanager/modelAutomaticSetsInfo', {
           parameters: {'model_id': model_id},
+          onSuccess: function(){
+            $('primary-ajax-loader').hide();
+          }
         });
         MODALS.hideViewer();
       }

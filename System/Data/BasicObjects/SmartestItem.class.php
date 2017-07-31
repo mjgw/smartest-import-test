@@ -144,6 +144,9 @@ class SmartestItem extends SmartestBaseItem implements SmartestSystemUiObject{
             
             case "metapage_id":
             return $this->getMetapageId();
+            
+            case '_item_list_json':
+            return json_encode(array('updateFields'=>array('item_name_field'=>SmartestStringHelper::truncate($this->getName(), 30))), JSON_UNESCAPED_SLASHES|JSON_HEX_APOS);
 	        
 	    }
 	    
