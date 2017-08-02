@@ -943,6 +943,10 @@ ul.basic-list.icons.items li{
     background-image:url(../Images/edit-item-icon-2x.png);
 }
 
+ul.basic-list.icons.files li{
+    /* background-image:url(../Images/edit-item-icon-2x.png); */
+}
+
 ul.scroll-list{
     overflow-y: scroll;
     margin:0px;

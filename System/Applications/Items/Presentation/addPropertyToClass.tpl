@@ -63,9 +63,71 @@ function setVarName(){
 
     <div class="edit-form-row">
       <div class="form-section-label">Property name</div>
-      <input type="text" value="" name="itemproperty_name" id="itemproperty_name" />
+      <input type="text" value="" name="itemproperty_name" id="itemproperty_name" placeholder="Enter property name..." />
       <div class="form-hint">Property names must be three chars or longer and start with a letter.</div>
+      <div class="edit-form-sub-row">
+        <span id="name-ok" style="display:none" class="feedback-ok"><i class="fa fa-check-circle"> </i> <span id="name-ok-label"></span></span>
+        <span id="name-invalid" style="display:none" class="feedback-bad"><i class="fa fa-times"> </i> <span id="name-error-label"></span></span>
+      </div>
     </div>
+    
+    <script type="text/javascript">
+    {literal}
+    var checkingTimer;
+    
+    var checkPropertyName = function(){
+      console.log('checking property name '+$F('itemproperty_name'));
+      new Ajax.Request(sm_domain+'ajax:datamanager/checkNewItemPropertyName', {
+        parameters: 'name='+$F('itemproperty_name'),
+        onSuccess: function(response){
+          $('primary-ajax-loader').hide();
+          if(response.responseJSON.permitted){
+            $('save-button').disabled = false;
+            $('name-ok').show();
+            $('name-invalid').hide();
+            $('name-ok-label').update(response.responseJSON.reason);
+          }else{
+            $('save-button').disabled = true;
+            $('name-error-label').update(response.responseJSON.reason);
+            $('name-invalid').show();
+            $('name-ok').hide();
+          }
+        }
+      });
+    }
+    
+    var deactivateChecker = function(){
+      $('save-button').disabled = true;
+      $('name-invalid').hide();
+      $('name-ok').hide();
+    }
+    
+    $('itemproperty_name').observe('keyup', function(kevt){
+      
+      if (kevt.keyCode == Event.KEY_RETURN){
+          kevt.stop();
+      }
+      
+      if($F('itemproperty_name').charAt(0)){ // If the user has entered a value
+        clearTimeout(checkingTimer);
+        $('primary-ajax-loader').show();
+        checkingTimer = setTimeout(checkPropertyName, 200);
+      }else{
+        deactivateChecker();
+      }
+      
+    });
+    
+    $('itemproperty_name').observe('blur', function(evt){
+      if($F('itemproperty_name').charAt(0)){ // If the user has entered a value
+        checkPropertyName();
+      }else{
+        deactivateChecker();
+      }
+    });
+    
+    {/literal}
+    </script>
     
 {if $foreign_key_filter_select}
       {include file=$filter_select_template}
@@ -80,7 +142,7 @@ function setVarName(){
       <div class="buttons-bar">
         Continue to: <select name="continue"><option value="PROPERTIES"{if $continue == "PROPERTIES"} selected="selected"{/if}>View other properties of model {$model.name}</option><option value="NEW_PROPERTY"{if $continue == "NEW_PROPERTY"} selected="selected"{/if}>Add another property to model {$model.name}</option></select>
         <input type="button" value="Cancel" onclick="window.location='{$domain}{$section}/getItemClassProperties?class_id={$model.id}';" />
-        <input type="submit" value="Save Property" />
+        <input type="submit" value="Add property" disabled="disabled" id="save-button" />
       </div>
     </div>
 

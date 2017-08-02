@@ -3164,7 +3164,7 @@ class Assets extends SmartestSystemApplication{
             }
             
         }else{
-            // the selection is not for anything specific
+            // the selection is not for anything specific - 'for' parameter is not set
             if($this->requestParameterIsSet('group_id')){
                 $g = new SmartestAssetGroup;
                 if($g->find($this->getRequestParameter('group_id')) && $g->isBinaryImagesOnly()){
@@ -3175,6 +3175,118 @@ class Assets extends SmartestSystemApplication{
             }else{
                 $alh = new SmartestAssetsLibraryHelper;
                 $assets =  $alh->getAssetsByTypeCode(array('SM_ASSETTYPE_JPEG_IMAGE', 'SM_ASSETTYPE_GIF_IMAGE', 'SM_ASSETTYPE_PNG_IMAGE'), $this->getSite()->getId(), 1);
+            }
+            
+        }
+        
+        $this->send($assets, 'assets');
+        
+    }
+    
+    public function miniDownloadBrowser(){
+        
+        if($this->requestParameterIsSet('current_selection_id')){
+            $current_asset = new SmartestAsset;
+            if($current_asset->find($this->getRequestParameter('current_selection_id'))){
+                $this->send($current_asset->getId(), 'current_asset_id');
+            }else{
+                $this->send(null, 'current_asset_id');
+            }
+        }else{
+            $this->send(null, 'current_asset_id');
+        }
+        
+        if(!$this->requestParameterIsSet('input_id')){
+            echo "Input ID missing";
+            return;
+        }else{
+            $this->send($this->getRequestParameter('input_id'), 'input_id');
+        }
+        
+        $alh = new SmartestAssetsLibraryHelper;
+        
+        if($this->requestParameterIsSet('for')){
+            
+            if($this->getRequestParameter('for') == 'ipv'){
+                
+                if($this->getRequestParameter('property_id')){
+                    
+                    $property = new SmartestItemProperty;
+                    
+                    if($property->find($this->getRequestParameter('property_id'))){
+                        $assets = $property->getPossibleValues();
+                        $this->send($this->getRequestParameter('for'), 'for');
+                        $this->send($this->getRequestParameter('property_id'), 'property_id');
+                        
+                        if($this->requestParameterIsSet('item_id')){
+                            $item = new SmartestItem;
+                            if($item->find($this->getRequestParameter('item_id'))){
+                                $this->send($item->getId(), 'item_id');
+                            }
+                        }
+                        
+                    }
+                    
+                }
+                
+            }else if($this->getRequestParameter('for') == 'placeholder'){
+                
+                if($this->getRequestParameter('placeholder_id')){
+                    
+                    $placeholder = new SmartestPlaceholder;
+                    
+                    if($placeholder->find($this->getRequestParameter('placeholder_id'))){
+                        // $assets = $property->getPossibleAssets();
+                        $assets = $placeholder->getPossibleAssets($this->getSite()->getId());
+                        $this->send($this->getRequestParameter('for'), 'for');
+                        $this->send($this->getRequestParameter('placeholder_id'), 'placeholder_id');
+                    }
+                    
+                }
+                
+            }else if($this->getRequestParameter('for') == 'page_downloads'){
+                
+                if($this->getRequestParameter('page_id')){
+                    
+                    $page = new SmartestPage;
+                    
+                    if($page->smartFind($this->getRequestParameter('page_id'))){
+                        
+                        $assets = $alh->getAssetsByTypeCode($alh->getTypeCodesInCategory('other'), $this->getSite()->getId(), 1);
+                        $existing_downloads = $page->getPageDownloadIds();
+                        $ids = array_flip($existing_downloads);
+                        
+                        if(count($existing_downloads)){
+                            foreach($assets as $key=>$dl){
+                                if(isset($ids[$dl->getId()])){
+                                    unset($assets[$key]);
+                                }
+                            }
+                        }
+                    }
+                    
+                    $this->send("Download on page ".$page->getTitle()." - ".date('M d Y'), 'suggested_label');
+                    
+                }
+                
+            }else{
+                
+                // Unknown value for 'for' parameter
+                $assets = $alh->getAssetsByTypeCode($alh->getTypeCodesInCategory('other'), $this->getSite()->getId(), 1);
+                
+            }
+            
+        }else{
+            // the selection is not for anything specific - 'for' parameter is not set
+            if($this->requestParameterIsSet('group_id')){
+                $g = new SmartestAssetGroup;
+                if($g->find($this->getRequestParameter('group_id'))){
+                    $assets =  $g->getMembers(1, $this->getSite()->getId());
+                }else{
+                    $assets =  array();
+                }
+            }else{
+                $assets = $alh->getAssetsByTypeCode($alh->getTypeCodesInCategory('other'), $this->getSite()->getId(), 1);
             }
             
         }

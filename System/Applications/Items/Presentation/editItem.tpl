@@ -27,7 +27,9 @@
       listenForUserActions = false;
     }
   });
+  
   autosaveMode = $('item-autosave').checked;
+  
   var respondToUserAction = function(){
     if(autosaveMode){
       clearTimeout(restartSavingTimer);

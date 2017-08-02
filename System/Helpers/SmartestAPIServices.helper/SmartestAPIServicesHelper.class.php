@@ -129,8 +129,13 @@ class SmartestAPIServicesHelper{
             
             $url_hash = md5($url);
             $cache_filename = SM_ROOT_DIR.'System/Cache/TextFragments/OEmbed/oembed_'.$url_hash.'.html';
-            // $last_ok_mtime = time() - 86400;
-            $last_ok_mtime = time() - 1;
+            
+            if(SM_DEVELOPER_MODE){
+                $last_ok_mtime = time() - 1;
+            }else{
+                // TODO: Make this a setting
+                $last_ok_mtime = time() - 86400;
+            }
             
             if(is_file($cache_filename) && filemtime($cache_filename) >= $last_ok_mtime){
                 // Retrieve from cache
@@ -143,7 +148,7 @@ class SmartestAPIServicesHelper{
                 if($s->getResponseType() == 'json'){
                     $data = json_decode($content);
                 }elseif($s->getResponseType() == 'xml'){
-                
+                    // TODO: Decode XML response
                 }
             
                 if($s->getProvidesHtml()){
@@ -175,8 +180,12 @@ class SmartestAPIServicesHelper{
             $cache_filename = SM_ROOT_DIR.'System/Cache/TextFragments/OEmbed/oembed_local_w'.$width.'_h'.$height.'_'.$url_hash.'.html';
         }
         
-        // TODO: Make this a setting
-        $last_ok_mtime = time() - 86400;
+        if(SM_DEVELOPER_MODE){
+            $last_ok_mtime = time() - 1;
+        }else{
+            // TODO: Make this a setting
+            $last_ok_mtime = time() - 86400;
+        }
         
         if(is_file($cache_filename) && filemtime($cache_filename) >= $last_ok_mtime){
             return file_get_contents($cache_filename);

@@ -844,5 +844,31 @@ class ItemsAjax extends SmartestSystemApplication{
         }
         
     }
+    
+    public function checkNewItemPropertyName(){
+        
+        $name = SmartestStringHelper::toVarName($this->getRequestParameter('name'));
+        
+        $response = new stdClass;
+        
+        if(strlen($name) < 3){
+            $response->permitted = false;
+            $response->reason = 'This property name is too short.';
+        }elseif(is_numeric($name{0})){
+            $response->permitted = false;
+            $response->reason = 'Property names cannot start with a number.';
+        }elseif(in_array($name, $GLOBALS['reserved_keywords'])){
+            $response->permitted = false;
+            $response->reason = 'This property name is a keyword reserved by PHP.';
+        }else{
+            $response->permitted = true;
+            $response->reason = 'Looks good!';
+        }
+        
+        header("Content-Type: application/json");
+        echo json_encode($response);
+        exit;
+        
+    }
 
 }

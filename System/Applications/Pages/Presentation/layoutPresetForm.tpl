@@ -28,18 +28,18 @@ return true;
 
 <div id="work-area">
 
-<h3>Create a Page Preset</h3>
+<h3>Create a layout preset</h3>
 
-<div class="instruction">Click the checkbox corresponding to each asset to add it to preset</div>
+<div class="instruction">Layout presets help you to build fuller pages more quickly. Click the checkbox corresponding to each element of this page to add it to preset.</div>
 
 <form id="createLayoutPreset" action="{$domain}{$section}/createLayoutPreset" method="post" style="margin:0px">
   
 <input type="hidden" name="page_id" value="{$page.id}" />
 {if $item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
 
-<div class="instruction">Enter a name for this preset: <input type="text" name="preset_name" value="Untitled Preset" /></div>
+<div class="special-box">Enter a name for this preset: <input type="text" name="preset_name" value="Untitled layout preset" /></div>
 
-<div style="margin-bottom:10px"><input type="checkbox" name="preset_shared" value="true" id="preset_shared" /><label for="preset_shared">Make this preset available to all sites</label></div>
+<div class="instruction">Page: {$page.title}</div>
 
 <table width="100%" cellpadding="0" cellspacing="2" style="width:100%" border="0">
 
@@ -50,18 +50,20 @@ return true;
 {if $element.info.exists == 'true' && in_array($element.info.type, array("container", "placeholder", "field"))}
   <tr>
     <td style="width:20px">
-      <input type="checkbox" name="{$element.info.type}[]" value="{$element.info.assetclass_name}" id="element_{$key}" {if in_array($element.info.defined, array("PUBLISHED", "DRAFT")) }checked="checked"{else}disabled="disabled"{/if} />
+      <input type="checkbox" name="{$element.info.type}[]" value="{$element.info.assetclass_name}" id="element_{$key}" {if in_array($element.info.defined, array("PUBLISHED", "DRAFT")) }{if in_array($element.info.type, array('container','field'))}checked="checked"{/if}{else}disabled="disabled"{/if} />
     </td>
-    
     <td>
+      
 {if $element.info.defined == "PUBLISHED"}
-		  <img border="0" style="width:16px;height:16px;" src="{$domain}Resources/Icons/published_{$element.info.type|lower}.gif" />
+		  <img border="0" style="width:16px;height:16px;" src="{$domain}Resources/System/Images/published_{$element.info.type|lower}.png" />
 {elseif  $element.info.defined == "DRAFT"}
-      <img border="0" style="width:16px;height:16px;" title="This {$element.info.type} is only defined in the draft version of the page" src="{$domain}Resources/Icons/draftonly_{$element.info.type|lower}.gif" />
+      <img border="0" style="width:16px;height:16px;" title="This {$element.info.type} is only defined in the draft version of the page" src="{$domain}Resources/System/Images/draftonly_{$element.info.type|lower}.png" />
 {else}
-		  <img border="0" style="width:16px;height:16px;" title="This {$element.info.type} is only defined in the draft version of the page" src="{$domain}Resources/Icons/undefined_{$element.info.type|lower}.gif" />
+		  <img border="0" style="width:16px;height:16px;" title="This {$element.info.type} is only defined in the draft version of the page" src="{$domain}Resources/System/Images/undefined_{$element.info.type|lower}.png" />
 {/if}
-		  <label for="element_{$key}"><strong>{$element.info.assetclass_name}</strong></label>
+
+		  <label for="element_{$key}"><strong>{$element.info.assetclass_name}</strong> {if in_array($element.info.defined, array("PUBLISHED", "DRAFT")) && in_array($element.info.type, array('container','placeholder')) }{$element.info.filename}{/if}</label>
+      
 	  </td>
 	</tr>
 {/if}

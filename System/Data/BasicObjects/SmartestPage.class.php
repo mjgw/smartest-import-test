@@ -2552,6 +2552,23 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         
     }
     
+    public function getPageDownloadIds(){
+        
+	    $q = new SmartestManyToManyQuery('SM_MTMLOOKUP_PAGE_DOWNLOADS');
+	    $q->setTargetEntityByIndex(1);
+	    $q->addQualifyingEntityByIndex(2, $this->_properties['id']);
+	    
+	    $q->addSortField('Assets.asset_label');
+	    
+	    $result = $q->retrieve();
+        $ids = array();
+	    foreach($result as $dl){
+	        $ids[] = $dl->getId();
+	    }
+	    return $ids;
+        
+    }
+    
     public function addDownloadById($asset_id, $label=""){
         
 	    $asset_id = (int) $asset_id;

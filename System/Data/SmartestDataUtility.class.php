@@ -359,12 +359,16 @@ class SmartestDataUtility{
 	            
 	            if($t == 'smartest:assettypes'){
 	                
-	                /* $options = self::getAssetTypes();
-	                return $options; */
-	                
 	                $options = array();
-	                
-	                $options['asset_types'] = SmartestDataUtility::getAssetTypes();
+	                $asset_types = SmartestDataUtility::getAssetTypes();
+                    
+                    foreach($asset_types as $key=>$type){
+                        if(isset($type['hidden']) && SmartestStringHelper::toRealBool($type['hidden'])){
+                            unset($asset_types[$key]);
+                        }
+                    }
+                    
+	                $options['asset_types'] = $asset_types;
             	    $options['placeholder_types'] = SmartestDataUtility::getAssetClassTypes(true);
 
             	    return $options;
@@ -519,7 +523,7 @@ class SmartestDataUtility{
 	
 	static function isValidPropertyName($string, $model=''){
 	    
-	    if((strlen($string) < 2) || is_numeric($string{0})){
+	    if(strlen($string) < 3 || is_numeric($string{0} || in_array(SmartestStringHelper::toVarName($string), $GLOBALS['reserved_keywords']))){
 	        return false;
 	    }else{
 	        return true;

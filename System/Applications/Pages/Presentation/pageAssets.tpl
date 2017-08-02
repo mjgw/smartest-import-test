@@ -135,78 +135,78 @@ function viewLivePage(parameters){
 <ul class="invisible-actions-list" id="placeholder-specific-actions" style="display:none">
   <li><b>Placeholder options</b></li>
   <li class="permanent-action" id="placeholder-add" style="display:none"><a href="#" onclick="elementTree.workWithItem('addPlaceholder');">Add this placeholder</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('definePlaceholder');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define this placeholder</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('definePlaceholderWithNewFile');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_add.png" border="0" alt=""> Add a new file here</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('definePlaceholder');" class="right-nav-link"><i class="fa fa-pencil"></i> Choose file for this placeholder</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('definePlaceholderWithNewFile');" class="right-nav-link"><i class="fa fa-plus-circle"></i> Add a new file here</a></li>
   {if $item}
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefinePlaceholder');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefinePlaceholderOnItemPage');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear or this {$item.model.name|strtolower} only</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefinePlaceholder');" class="right-nav-link"><i class="fa fa-times"></i> Clear this placeholder</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefinePlaceholderOnItemPage');" class="right-nav-link"><i class="fa fa-times-circle"></i> Clear or this {$item.model.name|strtolower} only</a></li>
   {else}
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefinePlaceholder');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear this placeholder</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editPlaceholder');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this placeholder</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefinePlaceholder');" class="right-nav-link"><i class="fa fa-times"></i> Clear this placeholder</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editPlaceholder');" class="right-nav-link"><i class="fa fa-cog"></i> Edit this placeholder</a></li>
   {/if}
 </ul>
 
 <ul class="invisible-actions-list" id="container-specific-actions" style="display:none">
   <li><b>Container options</b></li>
   <li class="permanent-action" id="container-add" style="display:none"><a href="#" onclick="elementTree.workWithItem('addContainer');">Add this container</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define this container</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineContainer');" class="right-nav-link"><i class="fa fa-file-code-o"></i> Choose layout template</a></li>
   {if $item}
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefineContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear container definition</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefineContainerOnItemPage');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear for this {$item.model.name|strtolower} only</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefineContainer');" class="right-nav-link"><i class="fa fa-times"></i> Clear container definition</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefineContainerOnItemPage');" class="right-nav-link"><i class="fa fa-times-circle"></i> Clear for this {$item.model.name|strtolower} only</a></li>
   {else}
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefineContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear container definition</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('undefineContainer');" class="right-nav-link"><i class="fa fa-times"></i> Clear container definition</a></li>
   {/if}
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editContainer');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this container</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editContainer');" class="right-nav-link"><i class="fa fa-cog"></i> Edit this container</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="list-specific-actions" style="display:none">
   <li><b>List options</b></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineList');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define List Parameters</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('clearList');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear List Parameters</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineList');" class="right-nav-link"><i class="fa fa-pencil"></i> Define list parameters</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('clearList');" class="right-nav-link"><i class="fa fa-times"></i> Clear list parameters</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="attachment-specific-actions" style="display:none">
   <li><b>Attachment options</b></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editAttachment');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Edit Attachment Settings</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editAttachment');" class="right-nav-link"><i class="fa fa-pencil"></i> Edit attachment settings</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="asset-specific-actions" style="display:none">
   <li><b>File options</b></li>
-  <li class="permanent-action"><a href="#" onclick="return elementTree.workWithItem('editFile');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Edit this file</a></li>
-  <li class="permanent-action"><a href="#" onclick="return MODALS.load('assets/assetCommentStream?asset_id='+elementTree.lastItemId, 'File notes');" class="right-nav-link"><img src="{$domain}Resources/Icons/note.png" border="0" alt=""> View notes on this File</a></li>
+  <li class="permanent-action"><a href="#" onclick="return elementTree.workWithItem('editFile');" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this file</a></li>
+  <li class="permanent-action"><a href="#" onclick="return MODALS.load('assets/assetCommentStream?asset_id='+elementTree.lastItemId, 'File notes');" class="right-nav-link"><i class="fa fa-comments"></i> View notes on this file</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="template-specific-actions" style="display:none">
   <li><b>Template options</b></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editTemplate');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Edit This Template</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editTemplate');" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this template</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="itemspace-specific-actions" style="display:none">
   <li><b>Itemspace options</b></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineItemspace');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define This Itemspace</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editItemspace');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit This Itemspace</a></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('clearItemspaceDefinition');" class="right-nav-link"><img src="{$domain}Resources/Icons/cross.png" border="0" alt=""> Clear This Itemspace</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('defineItemspace');" class="right-nav-link"><i class="fa fa-pencil"></i> Choose item</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editItemspace');" class="right-nav-link"><i class="fa fa-cog"></i> Edit itemspace settings</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('clearItemspaceDefinition');" class="right-nav-link"><i class="fa fa-times"></i> Clear itemspace</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="item-specific-actions" style="display:none">
   <li><b>Item options</b></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('openItem');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit This Item</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('openItem');" class="right-nav-link"><i class="fa fa-cube"></i> Edit this item</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="blocklist-specific-actions" style="display:none">
   <li><b>Blocklist options</b></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editBlocklist');" class="right-nav-link"><img src="{$domain}Resources/Icons/pencil.png" border="0" alt=""> Edit this blocklist</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editBlocklist');" class="right-nav-link"><i class="fa fa-pencil"></i> Edit this blocklist</a></li>
 </ul>
 
 <ul class="invisible-actions-list" id="field-specific-actions" style="display:none">
   <li><b>Field Options</b></li>
-  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editField');" class="right-nav-link"><img src="{$domain}Resources/Icons/layout_edit.png" border="0" alt=""> Define This Field</a></li>
+  <li class="permanent-action"><a href="#" onclick="elementTree.workWithItem('editField');" class="right-nav-link"><i class="fa fa-pencil"></i> Edit field value</a></li>
   <li class="permanent-action">
     <a href="#" onclick="elementTree.workWithItem('setLiveProperty', {ldelim}confirm: 'Are you sure you want to set the draft value as live?'{rdelim})" class="right-nav-link">
-      <img src="{$domain}Resources/Icons/page_lightning.png" border="0" alt=""> Publish this field</a></li>
+      <i class="fa fa-globe"></i> Publish this field</a></li>
   <li class="permanent-action">
-    <a href="#" onclick="elementTree.workWithItem('undefinePageProperty', {ldelim}confirm: 'Are you sure you want to undefine this field?'{rdelim})" class="right-nav-link">
-      <img src="{$domain}Resources/Icons/page_delete.png" border="0" alt=""> Undefine this field</a></li>
+    <a href="#" onclick="elementTree.workWithItem('undefinePageProperty', {ldelim}confirm: 'Are you sure you want to clear the value of this field?'{rdelim})" class="right-nav-link">
+      <i class="fa fa-times"></i> Clear this field</a></li>
 </ul>
 
 <ul class="actions-list" id="non-specific-actions">

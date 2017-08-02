@@ -273,15 +273,43 @@ class SmartestAssetsLibraryHelper{
         
     }
     
-    public function getTypesByCategory($exclude_categories=''){
+    public function getTypesInCategory($requested_cats){
 		
-		/* $types = array(
-		    "user_text" => array(),
-		    "image" => array(),
-		    "browser_instructions" => array(),
-		    "embedded" => array(),
-		    "other" => array()
-		); */
+		$all_cats = $this->getTypesByCategory();
+        if(!is_array($requested_cats)){
+            $requested_cats = array($requested_cats);
+        }
+		
+		$processed_xml_data = SmartestDataUtility::getAssetTypes();
+        $types = array();
+		
+        foreach($requested_cats as $category_name){
+            if(isset($all_cats[$category_name])){
+                // print_r($all_cats[$category_name]);
+                if(is_array($all_cats[$category_name]['types'])){
+                    $types = array_merge($types, $all_cats[$category_name]['types']);
+                }else{
+                    // this category has no types???
+                }
+            }
+        }
+	    
+	    return $types;
+		
+	}
+    
+    public function getTypeCodesInCategory($requested_cats){
+		
+		$types = $this->getTypesInCategory($requested_cats);
+	    $codes = array();
+        foreach($types as $t){
+            $codes[] = $t['id'];
+        }
+	    return $codes;
+		
+	}
+    
+    public function getTypesByCategory($exclude_categories=''){
 		
 		$types = $this->getCategories();
 		
@@ -294,8 +322,6 @@ class SmartestAssetsLibraryHelper{
 		        unset($types[$ec]);
 		    }
 		}
-		
-		//  && !in_array($type_array['category'], $exclude_categories)
 		
 		$processed_xml_data = SmartestDataUtility::getAssetTypes();
 		

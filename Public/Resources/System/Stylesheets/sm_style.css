@@ -591,6 +591,11 @@ div.edit-form-row input[type="text"], div.edit-form-row input[type="password"], 
 	-moz-border-radius: 4px;
 }
 
+div.edit-form-row input[type="text"]::placeholder, div.special-box input[type="text"]::placeholder, table.info-table tr td input[type="text"]::placeholder{
+  color:#ccc;
+  font-style:italic;
+}
+
 div.edit-form-row input[type="text"]:hover, div.edit-form-row input[type="password"]:hover, div.special-box input[type="text"]:hover, table.info-table tr td input[type="text"]:hover{
     border-color:#999;
 }

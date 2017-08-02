@@ -457,8 +457,6 @@ class PagesManager{
 				$this->displayAssetClasses[$this->displayAssetClassesIndex]['level'] = $assetClass['level'];
 			}
 			
-			// print_r($this->displayAssetClasses[$this->displayAssetClassesIndex]);
-			
 			$this->displayAssetClassesIndex++;
 			
 			if(!empty($assetClass['children'])){
@@ -470,7 +468,7 @@ class PagesManager{
 			
 		}
 		
-		return $this->displayAssetClasses;
+        return $this->displayAssetClasses;
 		
 	}
 		

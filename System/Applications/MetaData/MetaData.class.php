@@ -226,16 +226,20 @@ class MetaData extends SmartestSystemApplication{
     		if($field->findBy($lookup_field, $value)){
 		
     		    $def = new SmartestPageFieldDefinition;
-        		$def->loadForUpdate($field, $page);
+        		$hadvalue = $def->loadForUpdate($field, $page);
         		$def->setDraftValue($this->getRequestParameter('field_content'));
+                
+                $verb = $hadvalue ? 'updated' : 'defined';
         		
         		if($field->getIsSitewide()){
         		    $def->setSiteId($page->getSiteId());
+                    SmartestLog::getInstance('site')->log($this->getUser()->getFullName().' '.$verb.' global field \''.$field->getName().'\' from page \''.$page->getTitle()."'");
         		}else{
         		    $def->setPageId($page->getId());
+                    SmartestLog::getInstance('site')->log($this->getUser()->getFullName().' '.$verb.' field \''.$field->getName().'\' on page \''.$page->getTitle()."'");
     		    }
-    		    
-        		$def->setPagepropertyId($field->getId());
+                
+                $def->setPagepropertyId($field->getId());
         		$def->save();
         		
         		$this->addUserMessageToNextRequest('The page field has been updated', SmartestUserMessage::SUCCESS);
@@ -243,14 +247,14 @@ class MetaData extends SmartestSystemApplication{
 		
     	    }else{
     	        
-    	        $this->addUserMessageToNextRequest('The specified field doesn\'t exist', SmartestUserMessage::INFO);
+    	        $this->addUserMessageToNextRequest('The specified field doesn\'t exist', SmartestUserMessage::WARNING);
     	        
     	    }
 	    
         }else{
             
             $this->addUserMessageToNextRequest('The page ID wasn\'t recognized.', SmartestUserMessage::ERROR);
-	        // $this->formForward();
+	        $this->formForward();
             
         }
 		
@@ -335,33 +339,51 @@ class MetaData extends SmartestSystemApplication{
 	
 	public function undefinePageProperty(){
 		
-		$page_webid =$this->getRequestParameter('page_id');
-		$page_id = $this->manager->getPageIdFromPageWebId($page_webid);
+		$page_webid = $this->getRequestParameter('page_id');
+		$page = new SmartestPage;
 		
-		$field = new SmartestPageField;
+		if($page->hydrate($page_webid)){
 		
-		if($this->requestParameterIsSet('assetclass_id')){
-		    $field_name = SmartestStringHelper::toVarName($this->getRequestParameter('assetclass_id'));
-			// $pageproperty_name = $this->getRequestParameter('assetclass_id');
-			// $pageproperty_id = $this->manager->database->specificQuery("pageproperty_id", "pageproperty_name", $this->getRequestParameter('assetclass_id'), "PageProperties");
-			$field->hydrateBy('name', $field_name);
-		}else{
-		    $field_id = $this->getRequestParameter('pageproperty_id');
-		    $field->hydrate($field_id);
-			// $pageproperty_id = $this->getRequestParameter('pageproperty_id');
-			// $pageproperty_name = $this->manager->database->specificQuery("pageproperty_name", "pageproperty_id", $pageproperty_id, "PageProperties");
-		}
+		    $field = new SmartestPageField;
 		
-		// $pageproperty_id = $this->getRequestParameter('pageproperty_id');
-		// $pagepropertyvalue_id = $this->manager->database->specificQuery("pagepropertyvalue_id", "pagepropertyvalue_pageproperty_id", $pageproperty_id, "PagePropertyValues");
+    		if($this->requestParameterIsSet('field_id')){
+    			$lookup_field = 'id';
+    			$value = $this->getRequestParameter('field_id');
+    		}elseif($this->requestParameterIsSet('assetclass_id')){
+    		    $lookup_field = 'name';
+                $value = $this->getRequestParameter('assetclass_id');
+    		}
+    		
+    		if($field->findBy($lookup_field, $value, $this->getSite()->getId())){
 		
-		$pagepropertyvalue_id = $this->manager->getPropertyValueId($page_id, $field->getId());
+    		    $def = new SmartestPageFieldDefinition;
+        		$def->loadForUpdate($field, $page);
+        		
+                if($def->getId()){
+        		    $def->delete();
+        		}
+        		
+                if($field->getIsSitewide()){
+        		    SmartestLog::getInstance('site')->log($this->getUser()->getFullName().' cleared global field \''.$field->getName().'\' from page \''.$page->getTitle()."'");
+        		}else{
+        		    SmartestLog::getInstance('site')->log($this->getUser()->getFullName().' cleared field \''.$field->getName().'\' on page \''.$page->getTitle()."'");
+    		    }
+                
+        		$this->addUserMessageToNextRequest('The page field has been cleared', SmartestUserMessage::SUCCESS);
+    	        $this->formForward();
 		
-		// $pageproperty_id = $this->getRequestParameter('pageproperty_id');
-		// $pagepropertyvalue_id = $this->manager->database->specificQuery("pagepropertyvalue_id", "pagepropertyvalue_pageproperty_id", $pageproperty_id, "PagePropertyValues");
-		
-		$this->manager->undefinePageProperty($pagepropertyvalue_id);
-		$this->formForward();
+    	    }else{
+    	        
+    	        $this->addUserMessageToNextRequest('The specified field doesn\'t exist', SmartestUserMessage::WARNING);
+    	        
+    	    }
+	    
+        }else{
+            
+            $this->addUserMessageToNextRequest('The page ID wasn\'t recognized.', SmartestUserMessage::ERROR);
+	        $this->formForward();
+            
+        }
 		
 	}
 	
