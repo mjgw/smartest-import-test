@@ -305,7 +305,9 @@ class SmartestPlaceholder extends SmartestAssetClass{
             
             case 'label':
             
-            if(!strlen(trim($this->_properties['label']))){
+            if(strlen(trim($this->_properties['label']))){
+                return $this->getLabel();
+            }else{
                 return $this->getName();
             }
             
