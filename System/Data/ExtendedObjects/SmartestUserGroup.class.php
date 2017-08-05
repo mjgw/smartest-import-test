@@ -7,7 +7,7 @@ class SmartestUserGroup extends SmartestSet{
         parent::__objectConstruct();
     }
     
-    public function getMembers($draft_mode /* $sort='' */){
+    public function getMembers($draft_mode=false /* $sort='' */){
         
         /* if(!$sort){
             $sort = SM_MTM_SORT_GROUP_ORDER;

@@ -65,7 +65,7 @@ $$('div.ui-message.not-sticky').each(function(msgDiv){
     <div class="sm-loading-main left" id="primary-ajax-loader-element">
       <div class="loader small">
         <svg class="sm-circular-loader" viewBox="25 25 50 50" >
-          <circle class="loader-path" cx="50" cy="50" r="22" fill="none" stroke="#777777" stroke-width="6" />
+          <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke="#777777" stroke-width="6" />
         </svg>
       </div>
     </div>

@@ -7,6 +7,10 @@ class SmartestSet extends SmartestBaseSet{
     protected $_members;
     protected $_member_ids;
     
+    public function __objectConstruct(){
+        
+    }
+    
     public function __postHydrationAction(){
         
         $s = unserialize($this->getInfo());

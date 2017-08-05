@@ -43,6 +43,7 @@ class SmartestEmailAddress extends SmartestString{
         switch($offset){
             
             case 'is_valid':
+            case 'valid':
             return $this->formatIsValid();
             
             case 'domain':

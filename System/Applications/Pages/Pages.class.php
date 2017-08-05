@@ -573,29 +573,41 @@ class Pages extends SmartestSystemApplication{
 		
 		if(!$this->requestParameterIsSet('placeholder_type')){
 		
-    		if(strpos($placeholder_name, 'img') !== false || strpos($placeholder_name, 'image') !== false || strpos($placeholder_name, 'banner') !== false || strpos($placeholder_name, 'graphic') !== false){
+    		if(strpos($placeholder_name, 'img') !== false || strpos($placeholder_name, 'image') !== false || strpos($placeholder_name, 'banner') !== false || strpos($placeholder_name, 'graphic') !== false || strpos($placeholder_name, 'picture') !== false){
     		    $suggested_type = 'SM_ASSETCLASS_STATIC_IMAGE';
     		    $this->send(true, 'type_suggestion_automatic');
+                $a = new SmartestArray($h->getAssetTypeNamesFromAssetClassType($suggested_type));
+                $this->send($a->getSummary(200), 'types_list');
     		}else if(strpos($placeholder_name, 'css') !== false || strpos($placeholder_name, 'stylesheet') !== false){
     		    $suggested_type = 'SM_ASSETCLASS_STYLESHEET';
     		    $this->send(true, 'type_suggestion_automatic');
+                $a = new SmartestArray($h->getAssetTypeNamesFromAssetClassType($suggested_type));
+                $this->send($a->getSummary(200), 'types_list');
     		}else if(strpos($placeholder_name, '_js') !== false || strpos($placeholder_name, 'javascript') !== false){
         		$suggested_type = 'SM_ASSETCLASS_JAVASCRIPT';
         		$this->send(true, 'type_suggestion_automatic');
+                $a = new SmartestArray($h->getAssetTypeNamesFromAssetClassType($suggested_type));
+                $this->send($a->getSummary(200), 'types_list');
         	}else if(strpos($placeholder_name, '_txt') !== false || strpos($placeholder_name, 'text') !== false || strpos($placeholder_name, 'txt') !== false || strpos($placeholder_name, 'quote') !== false){
             	$suggested_type = 'SM_ASSETCLASS_RICH_TEXT';
             	$this->send(true, 'type_suggestion_automatic');
+                $a = new SmartestArray($h->getAssetTypeNamesFromAssetClassType($suggested_type));
+                $this->send($a->getSummary(200), 'types_list');
         	}else if(strpos($placeholder_name, 'video') !== false || strpos($placeholder_name, 'movie') !== false || strpos($placeholder_name, 'clip') !== false){
             	$suggested_type = 'SM_ASSETCLASS_MOVIE';
             	$this->send(true, 'type_suggestion_automatic');
+                $a = new SmartestArray($h->getAssetTypeNamesFromAssetClassType($suggested_type));
+                $this->send($a->getSummary(200), 'types_list');
             }else{
         	    $suggested_type = null;
         	    $this->send(false, 'type_suggestion_automatic');
+                $this->send('', 'types_list');
         	}
     	
 	    }else{
 	        $suggested_type = null;
 	        $this->send(false, 'type_suggestion_automatic');
+            $this->send('', 'types_list');
 	    }
     	
     	if($selected_type){
@@ -652,9 +664,22 @@ class Pages extends SmartestSystemApplication{
 		    $placeholder->setName($name);
 		    $placeholder->setSiteId($this->getSite()->getId());
 		    $placeholder->setType($this->getRequestParameter('placeholder_type'));
+            $placeholder_label = strlen($this->getRequestParameter('placeholder_label')) ? $this->getRequestParameter('placeholder_label') : $name;
 		    
 		    if($this->getRequestParameter('placeholder_filegroup') == 'NONE'){
 		        $placeholder->setFilterType('SM_ASSETCLASS_FILTERTYPE_NONE');
+            }elseif($this->getRequestParameter('placeholder_filegroup') == 'NEW'){
+                $new_filegroup_name = strlen($this->getRequestParameter('new_group_name')) ? $this->getRequestParameter('new_group_name') : 'Files for '.$placeholder_label;
+                $group = new SmartestAssetGroup;
+                $group->setLabel($new_filegroup_name);
+                $group->setName(SmartestStringHelper::toVarName($new_filegroup_name));
+                $group->setSiteId($this->getSite()->getId());
+                $group->setFilterType('SM_SET_FILTERTYPE_ASSETCLASS');
+                $group->setFilterValue($this->getRequestParameter('placeholder_type'));
+                $group->setWebId(SmartestStringHelper::random(32));
+                $group->save();
+		        $placeholder->setFilterType('SM_ASSETCLASS_FILTERTYPE_ASSETGROUP');
+		        $placeholder->setFilterValue($group->getId());
 		    }else if(is_numeric($this->getRequestParameter('placeholder_filegroup'))){
 		        $placeholder->setFilterType('SM_ASSETCLASS_FILTERTYPE_ASSETGROUP');
 		        $placeholder->setFilterValue($this->getRequestParameter('placeholder_filegroup'));

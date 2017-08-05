@@ -479,5 +479,19 @@ class PagesAjax extends SmartestSystemApplication{
         // }
         
     }
+    
+    public function getAssetTypesListForPlaceholderType(){
+        
+        $h = new SmartestAssetClassesHelper;
+        $type_code = $this->getRequestParameter('placeholder_type');
+        if($h->isValidTypeCode($type_code)){
+            $a = new SmartestArray($h->getAssetTypeNamesFromAssetClassType($type_code));
+            echo $a->getSummary(200);
+        }else{
+            echo 'Invalid placeholder type code';
+        }
+        exit;
+        
+    }
 
 }

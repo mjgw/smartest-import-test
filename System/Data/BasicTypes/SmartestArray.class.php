@@ -94,6 +94,66 @@ class SmartestArray implements ArrayAccess, IteratorAggregate, Countable, Smarte
         return count($this->_data);
     }
     
+    // This method can only be used when the array contains scalar values or objects that have string conversion (including any SmartestObject)
+    public function getSummary($char_length=100){
+    
+        if(count($this->_data)){
+    
+            $string = '';
+            $overspill_buffer_base_length = 15;
+            $last_key = count($this->_data) - 1;
+    
+            foreach($this->_data as $k=>$element){
+                
+                // is there room in the string
+                $len = strlen($element);
+                $next_key = $k+1;
+        
+                if(isset($this->_data[$next_key])){
+                    $digit_len = strlen(count(array_slice($this->_data, $next_key)));
+                    // 2 is for quotes
+                    $remaining_space = $char_length - $digit_len - $overspill_buffer_base_length - strlen($string) - 2;
+                }else{
+                    $remaining_space = $char_length - strlen($string) - 2;
+                }
+        
+                if($k > 0 && $k < $last_key){
+                    // 2 is for comma and space
+                    $remaining_space = $remaining_space - 2;
+                }else if($k == $last_key){
+                    // 5 is for " and "
+                    $remaining_space = $remaining_space - 5;
+                }
+        
+                if($len <= $remaining_space){
+                    if($k > 0 && $k < $last_key){
+                        $string .= ', ';
+                    }else if($k == $last_key){
+                        if(count($this->_data) > 1){
+                            $string .= ' and ';
+                        }
+                    }
+                    $string .= $element;
+                }else{
+                    $num_left = count(array_slice($this->_data, $k));
+                    $string .= ' and '.$num_left.' more...';
+                    break;
+                }
+        
+                  // if there are still more after this one, then buffer space is needed
+                    // amount of buffer space depends on how many digits this figure is
+            }
+        
+            return $string;
+    
+        }else{
+        
+            return '<span class="null-notice">No items selected.</span>';
+        
+        }
+    
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){

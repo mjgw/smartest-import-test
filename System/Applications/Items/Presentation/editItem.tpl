@@ -46,7 +46,7 @@
 {/if}
 
 <div id="sets" class="special-box">
-     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem{if $current_page}&amp;page_id={$current_page.webid}{/if}" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em> <a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}" class="button small">Create one</a>{/if}
+     Sets: {if count($sets)}{foreach from=$sets item="set"}<a href="{$domain}sets/previewSet?set_id={$set.id}&amp;from=editItem&amp;item_id={$item.id}">{$set.label}</a> <a href="{$domain}sets/transferSingleItem?item_id={$item.id}&amp;set_id={$set.id}&amp;transferAction=remove&amp;returnTo=editItem&amp;from=editItem&amp;item_id={$item.id}{if $current_page}&amp;page_id={$current_page.webid}{/if}" class="button">remove</a> {/foreach}{else}<em style="color:#666">None</em> <a href="{$domain}sets/addSet?class_id={$item._model.id}&amp;add_item={$item.id}" class="button small">Create one</a>{/if}
 {if count($possible_sets)}
        <div>
          <form action="{$domain}sets/transferSingleItem" method="post">

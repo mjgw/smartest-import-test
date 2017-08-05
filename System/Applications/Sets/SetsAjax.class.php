@@ -35,8 +35,6 @@ class SetsAjax extends SmartestSystemApplication{
 	        $this->send($du->getTags(), 'tags');
         }
         
-        // var_dump($property->getDataType());
-        
         if($property){
             $this->send(SmartestDataUtility::objectizeFromRawFormData($this->getRequestParameter('v'), $property->getDataType()), 'selectedValue');
         }else{

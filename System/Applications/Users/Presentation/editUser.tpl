@@ -60,7 +60,7 @@
   
   <div class="edit-form-row">
     <div class="form-section-label">Email address </div>
-    <input type="text" name="email" id="email" value="{$user.email}" />
+    {email_input name="email" value=$user.email id="user-email"}
   </div>
   
   <div class="edit-form-row">
@@ -391,8 +391,11 @@ tinymce.init({
     ],
     
     paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,p",
-    toolbar: "styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent"
-
+    toolbar: "styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+    relative_urls : false,
+    convert_urls: false,
+    document_base_url : sm_domain,
+    skin: "smartest"
 });
   
 {/literal}

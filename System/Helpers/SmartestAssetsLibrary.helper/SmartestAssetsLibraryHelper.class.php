@@ -643,14 +643,14 @@ class SmartestAssetsLibraryHelper{
         }else{
         
             foreach($this->getTypes() as $code => $type){
-                
-                foreach($type['suffix'] as $s){
-                    if(strtolower($s['_content']) == $suffix){
-                        $this->typesSuffixesMap[$suffix] = $type;
-                        return $type['id'];
+                if(is_array($type['suffix'])){
+                    foreach($type['suffix'] as $s){
+                        if(strtolower($s['_content']) == $suffix){
+                            $this->typesSuffixesMap[$suffix] = $type;
+                            return $type['id'];
+                        }
                     }
-                }
-                
+                }   
             }
         
         }

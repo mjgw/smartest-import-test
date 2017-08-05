@@ -2,15 +2,30 @@
 
 var customAssetClassName = false;
 var url = '{$domain}ajax:websitemanager/loadAssetGroupDropdownForNewPlaceholderForm';
+var typesListUrl = '{$domain}ajax:websitemanager/getAssetTypesListForPlaceholderType';
 
 {literal}
 
 document.observe('dom:loaded', function(){
 
 $('type-select').observe('change', function(){
+  if($('type-select').value){
+    $('primary-ajax-loader').show();
     new Ajax.Updater('placeholder-group-menu-space', url, {
-        parameters: {placeholder_type: $('type-select').value}
+      parameters: {placeholder_type: $('type-select').value},
+      evalScripts: true
     });
+    new Ajax.Updater('types-list', typesListUrl, {
+      parameters: {placeholder_type: $('type-select').value},
+      onSuccess: function(){
+        $('primary-ajax-loader').hide();
+      }
+    });
+    $('save-button').disabled = false;
+  }else{
+    $('save-button').disabled = true;
+    $('types-list').update('Please choose a content type for this placeholder');
+  }
 });
 
 $('new-placeholder-form').observe('submit', function(e){
@@ -61,8 +76,13 @@ $('new-placeholder-form').observe('submit', function(e){
   
   {if $name}
       <div class="edit-form-row">
+        <div class="form-section-label">Name </div>
+       {$name}<input type="hidden" name="placeholder_name" value="{$name}" />
+      </div>
+      
+      <div class="edit-form-row">
         <div class="form-section-label">Template tag </div>
-        <code>&lt;?sm:placeholder name="{$name}":?&gt;</code><input type="hidden" name="placeholder_name" value="{$name}" />
+        <code>&lt;?sm:placeholder name="{$name}":?&gt;</code>
       </div>
   {else}
       <div class="edit-form-row">
@@ -85,6 +105,7 @@ $('new-placeholder-form').observe('submit', function(e){
         <option value="{$type.id}"{if $type.id == $selected_type || (!$selected_type && $suggested_type == $type.id)} selected="selected"{/if}>{$type.label}{if !$selected_type && $suggested_type == $type.id && $type_suggestion_automatic} (Automatically suggested){/if}</option>
         {/foreach}
       </select>
+      <div class="form-hint"><span id="types-list">{if $type_suggestion_automatic}{$types_list}{else}Please choose a content type for this placeholder{/if}</span></div>
   </div>
   
   <div class="edit-form-row">
@@ -97,7 +118,7 @@ $('new-placeholder-form').observe('submit', function(e){
   <div class="edit-form-row">
     <div class="buttons-bar">
       <input type="button" value="Cancel" onclick="cancelForm();" />
-      <input type="submit" value="Save new placeholder" />
+      <input type="submit" value="Save new placeholder" id="save-button"{if !$type_suggestion_automatic} disabled="disabled"{/if} />
     </div>
   </div>
 </form>

@@ -11,7 +11,15 @@
     </div>
     <div class="edit-form-row">
       <div class="form-section-label">Password</div>
-      <a href="{$domain}smartest/account/password" class="button">Click here to change your password</a>
+      <a href="#password" class="button" id="password-change-modal-button">Click here to change your password</a>
+      <script type="text/javascript">
+      {literal}
+      $('password-change-modal-button').observe('click', function(e){
+        e.stop();
+        MODALS.load('smartest/account/password', 'Change your password');
+      });
+      {/literal}
+      </script>
     </div>
     <div class="edit-form-row">
       <div class="form-section-label">First name</div>
@@ -23,7 +31,7 @@
     </div>
     <div class="edit-form-row">
       <div class="form-section-label">Email address (for notifications)</div>
-      <input type="text" name="user_email" value="{$user.email}" />
+      {email_input name="user_email" value=$user.email id="user-email"}
     </div>
     <div class="edit-form-row">
       <div class="form-section-label">Twitter username</div>
@@ -304,7 +312,11 @@
       ],
     
       paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,p",
-      toolbar: "styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent"
+      toolbar: "styleselect | bold italic | link unlink | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+      relative_urls : false,
+      convert_urls: false,
+      document_base_url : sm_domain,
+      skin: "smartest"
 
   });
   
@@ -316,6 +328,6 @@
 <div id="actions-area">
   <ul class="actions-list">
     <li><b>Options</b></li>
-    <li class="permanent-action"><a href="#" onclick="window.location='{$domain}smartest/account/password'; return false;" class="right-nav-link"><img border="0" src="{$domain}Resources/Icons/lock.png" /> Change your password</a></li>
+    <li class="permanent-action"><a href="#" onclick="MODALS.load('smartest/account/password', 'Change your password'); return false;" class="right-nav-link"><i class="fa fa-lock"> </i> Change your password</a></li>
   </ul>
 </div>

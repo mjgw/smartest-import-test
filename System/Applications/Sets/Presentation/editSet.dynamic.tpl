@@ -79,13 +79,12 @@
 		
 		<ul class="actions-list">
 		  <li><b>Options</b></li>
-			{if $request_parameters.item_id && $request_parameters.from}<li class="permanent-action"><a href="#" onclick="window.location='{$domain}datamanager/editItem?item_id={$request_parameters.item_id}'"><img border="0" src="{$domain}Resources/Icons/tick.png"> Return to editing item</a></li>{/if}
-			<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/previewSet?set_id={$set.id}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}'"><img border="0" src="{$domain}Resources/Icons/folder_magnify.png"> Browse set contents</a></li>
-      <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/deleteSetConfirm?set_id={$set.id}'"><img border="0" src="{$domain}Resources/Icons/package_delete.png"> Delete this set</a></li>
-			<li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/editStaticSetOrder?set_id={$set.id}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}'"><img border="0" src="{$domain}Resources/Icons/package_add.png"> Change the order of this set</a></li>
-			<li class="permanent-action">{if $model.id}<a href="#" onclick="window.location='{$domain}{$section}/getItemClassSets?class_id={$model.id}'"><img border="0" src="{$domain}Resources/Icons/folder_old.png"> Browse sets of {$model.plural_name|strtolower}</a>{else}<a href="#" onclick="window.location='{$domain}smartest/sets'"><img border="0" src="{$domain}Resources/Icons/folder_old.png"> Back to data sets</a></li>{/if}		
-			<li class="permanent-action"><a href="#" onclick="window.location='{$domain}smartest/models'"><img border="0" src="{$domain}Resources/Icons/package_small.png"> Browse all items</a></li>
-			{* <li class="permanent-action"><a href="#" onclick="window.location='{$domain}{$section}/chooseSchemaForExport?set_id={$set.id}'"><img border="0" src="{$domain}Resources/Icons/package_add.png"> Export this Set as XML</a></li> *}
+			{if $request_parameters.item_id && $request_parameters.from}<li class="permanent-action"><a href="{$domain}datamanager/editItem?item_id={$request_parameters.item_id}"><i class="fa fa-check"></i> Return to editing item</a></li>{/if}
+			<li class="permanent-action"><a href="{$domain}{$section}/previewSet?set_id={$set.id}{if $request_parameters.item_id}&amp;item_id={$request_parameters.item_id}{/if}{if $request_parameters.from}&amp;from={$request_parameters.from}{/if}"><i class="fa fa-search"></i> Browse set contents</a></li>
+      <li class="permanent-action"><a href="{$domain}{$section}/deleteSetConfirm?set_id={$set.id}"><i class="fa fa-trash"></i> Delete this set</a></li>
+			<li class="permanent-action">{if $model.id}<a href="{$domain}{$section}/getItemClassSets?class_id={$model.id}"><i class="fa fa-folder-o"></i> Browse sets of {$model.plural_name|strtolower}</a>{else}<a href="#" onclick="window.location='{$domain}smartest/sets'"><i class="fa fa-folder-o"></i> Back to data sets</a></li>{/if}		
+			<li class="permanent-action"><a href="{$domain}smartest/models"><i class="fa fa-cubes"></i> Browse all items</a></li>
+			<li class="permanent-action"><a href="{$domain}{$section}/syndicateSet?set_id={$set.id}"><i class="fa fa-code"></i> Export this set as XML or JSON</a></li>
 		</ul>
 		
 </div>

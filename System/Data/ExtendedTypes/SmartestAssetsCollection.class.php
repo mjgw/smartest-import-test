@@ -86,7 +86,7 @@ class SmartestAssetsCollection extends SmartestArray implements SmartestSubmitta
                     // 2 is for quotes
                     $remaining_space = $char_length - $digit_len - $overspill_buffer_base_length - strlen($string) - 2;
                 }else{
-                    $remaining_space = $char_length - strlen($names_only_string) - 2;
+                    $remaining_space = $char_length - strlen($string) - 2;
                 }
         
                 if($k > 0 && $k < $last_key){

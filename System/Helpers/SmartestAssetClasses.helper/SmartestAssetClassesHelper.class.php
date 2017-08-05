@@ -44,6 +44,10 @@ class SmartestAssetClassesHelper{
         
     }
     
+    public function isValidTypeCode($code){
+        return in_array($code, $this->getTypeCodes());
+    }
+    
     public function getAssetTypesFromAssetClassType($type){
 	    
 	    $ptypes = $this->getTypes();
@@ -75,6 +79,19 @@ class SmartestAssetClassesHelper{
 	    }
 	    
 	}
+    
+    public function getAssetTypeNamesFromAssetClassType($type){
+        
+        $asset_types = $this->getAssetTypesFromAssetClassType($type);
+        $names = array();
+        
+        foreach($asset_types as $a){
+            $names[] = $a['label'];
+        }
+        
+        return $names;
+        
+    }
     
     public function getAssetGroupsForPlaceholderType($type, $site_id=null){
         

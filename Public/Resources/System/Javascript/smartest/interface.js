@@ -393,9 +393,18 @@ Smartest.UI.OptionSet = Class.create({
         if(!params)
             params = {};
         
-        // alert(id);
+        var data;
         
         this.currentCategoryName = category ? category : 'default';
+        var domID = this.currentCategoryName+'_'+id;
+        
+        if($(domID)){
+    		$(domID).addClassName("selected-option");
+            $(domID).removeClassName("option");
+            data = $(domID).readAttribute('data-ui');
+    	}else{
+    	    console.log("Specified DOM ID "+domID+" does not exist.");
+    	}
         
         if(this.currentCategoryName == 'default' || !this.currentCategoryName){
     		this.actionsDivId = 'item-specific-actions';
@@ -421,7 +430,7 @@ Smartest.UI.OptionSet = Class.create({
     	    
     	}
     	
-    	if(this.lastItemId){
+    	if(this.lastItemId && this.lastItemId != id){
     	    var lastDomID = this.lastItemCategoryName+'_'+this.lastItemId;
             
             if(this.lastItemInstanceName){
@@ -429,15 +438,12 @@ Smartest.UI.OptionSet = Class.create({
             }
             
     	    if($(lastDomID)){
-    		    $(lastDomID).className = "option";
+    		    $(lastDomID).removeClassName("selected-option");
+                $(lastDomID).addClassName("option");
 		    }
     	}
     	
-    	var domID = this.currentCategoryName+'_'+id;
-        
-        // alert(domID);
-        
-        if(params.hasOwnProperty('instance')){
+    	if(params.hasOwnProperty('instance')){
             
             domID += '_'+params.instance;
             this.currentInstanceName = params.instance;
@@ -445,10 +451,6 @@ Smartest.UI.OptionSet = Class.create({
         }else{
             this.currentInstanceName = null;
         }
-        
-        if($(domID)){
-    		$(domID).className = "selected-option";
-    	}
     	
     	/* if(params.scroll){
     	    new Effect.ScrollTo(domID);

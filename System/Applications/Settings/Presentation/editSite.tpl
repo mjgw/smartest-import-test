@@ -41,7 +41,7 @@
 
 <div class="edit-form-row">
   <div class="form-section-label">Admin email</div>
-  <input type="text" name="site_admin_email" value="{$site.admin_email}" />
+  {email_input name="site_admin_email" value=$site.admin_email id="site-admin-id"}
 </div>
 
 <div class="edit-form-row">

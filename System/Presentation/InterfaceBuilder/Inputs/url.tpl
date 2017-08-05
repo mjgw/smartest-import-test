@@ -14,7 +14,7 @@
 (function(inputId){ldelim}
 {literal}
 
-var isValid;
+var isValid, checkTimeOut;
 
 $(inputId).observe('keyup', function(evt){
   if($F(inputId).match(/^https?:\/\/\w+\.\w{2,}.*/) || $F(inputId) == ''){
