@@ -2391,6 +2391,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
         foreach($result as $def_array){
             
             if($def_array['assetclass_type'] == 'SM_ASSETCLASS_CONTAINER'){
+                
                 $def = new SmartestContainerDefinition;
                 $def->hydrateFromGiantArray($def_array);
                 $this->_containers[$def_array['assetclass_name'].':'.$def_array['assetidentifier_instance_name']] = $def;

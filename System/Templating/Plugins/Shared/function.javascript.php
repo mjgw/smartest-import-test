@@ -20,7 +20,14 @@ function smarty_function_javascript($params, &$smartest_engine){
                         $file = substr($file, 21);
                     }
                     // Sergiy: +/Javascript
-                    return '<script type="text/javascript" src="'.$smartest_engine->getRequestData()->getParameter('domain').'Resources/Javascript/'.$file.'"></script>';
+                    
+                    if(is_file(SM_ROOT_DIR.'Public/Resources/Javascript/'.$file)){
+                        $query_string_nonce = '?nonce='.substr(md5_file(SM_ROOT_DIR.'Public/Resources/Javascript/'.$file), 0, 8);
+                    }else{
+                        $query_string_nonce = '';
+                    }
+                    
+                    return '<script type="text/javascript" src="'.$smartest_engine->getRequestData()->getParameter('domain').'Resources/Javascript/'.$file.$query_string_nonce.'"></script>';
                 }
             }
         }

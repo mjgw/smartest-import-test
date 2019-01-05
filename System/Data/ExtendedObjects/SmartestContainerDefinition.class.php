@@ -43,7 +43,7 @@ class SmartestContainerDefinition extends SmartestAssetIdentifier{
                     $sql .= " AND assetidentifier_instance_name='".$instance_name."'";
                 }
                 
-                $result = $this->database->queryToArray($sql);
+                $result = $this->database->queryToArray($sql, true);
                 
                 if(count($result)){
                     

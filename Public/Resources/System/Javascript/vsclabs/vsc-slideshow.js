@@ -1,15 +1,19 @@
 // Written by Marcus Gilroy-Ware
-// © VSC Creative Ltd. 2014
+// (c) VSC Creative Ltd. 2014
 
 VSC.Slideshow = Class.create({
     
     initialize: function(holderId, options){
         
+        // console.log($$('#'+holderId+' .slides .slide'));
+        // console.log('#'+holderId);
+        
         this.options = {};
         this.name = 'slideshow';
         this.options.holderId = holderId;
-        this.options.frequency = options.frequency ? options.frequency : 4;
-        this.options.transitionDuration = options.duration ? options.duration : 0.7;
+        this.options.frequency = (options && options.hasOwnProperty('frequency')) ? options.frequency : 4;
+        this.options.transitionDuration = (options && options.hasOwnProperty('duration')) ? options.duration : 0.75;
+        console.log('#'+holderId);
         this.goToSlide($$('#'+holderId+' .slides .slide').first().id);
         this.currentPosition = 0;
         var IDs = [];
@@ -20,7 +24,7 @@ VSC.Slideshow = Class.create({
         
         this.IDs = IDs;
         
-        if(options.hasOwnProperty('autostart')){
+        if(options && options.hasOwnProperty('autostart')){
             this.options.autostart = options.autostart;
         }else{
             this.options.autostart = false;
@@ -33,8 +37,6 @@ VSC.Slideshow = Class.create({
         if(this.hasNav()){
             this.setupNavEvents();
         }
-        
-        alert(this.options.transitionDuration);
         
     },
     

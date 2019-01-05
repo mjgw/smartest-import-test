@@ -55,3 +55,7 @@ figure.sm-attachment figcaption.sm-attachment-caption{
     margin:5px 0 0 0;
     font-size:0.8em;
 }
+
+figure.sm-attachment.nofloat.center img{
+    margin:0 auto 0 auto;
+}

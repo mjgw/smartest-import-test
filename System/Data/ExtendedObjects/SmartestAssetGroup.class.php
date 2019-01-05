@@ -570,6 +570,7 @@ class SmartestAssetGroup extends SmartestSet implements SmartestSetApi, Smartest
             return $this->getFirstFile();
             
             case "num_members":
+            case "num_files":
             case "member_count":
             return count($this->getMemberships());
             

@@ -22,11 +22,9 @@ class SmartestDownloadHelper extends SmartestHelper{
     
     public function __construct($local_file_path){
         
-        // echo $local_file_path;
-        
-        if(file_exists(utf8_decode($local_file_path))){
+        if(file_exists(utf8_encode($local_file_path))){
             // the user is downloading a file
-            $this->_local_file = $local_file_path;
+            $this->_local_file = utf8_decode($local_file_path);
             $this->_ready_to_send = true;
             $this->_download_filename = basename($this->_local_file);
             $this->_type = self::SM_DOWNLOAD_LOCAL_FILE;
@@ -101,4 +99,4 @@ class SmartestDownloadHelper extends SmartestHelper{
         exit;
     }
 
-} // END class 
+}

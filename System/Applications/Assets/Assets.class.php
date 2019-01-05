@@ -2301,7 +2301,7 @@ class Assets extends SmartestSystemApplication{
     		        $success = true;
                 }else{
                     if($asset->usesTextFragment()){
-                        $this->addUserMessageToNextRequest("The file \"".$this->getLabel()."\" could not be updated because of illegal characters in the submitted text that prevented validation parsing.", SmartestUserMessage::WARNING, true);
+                        $this->addUserMessageToNextRequest("The file \"".$asset->getLabel()."\" could not be updated because of illegal characters in the submitted text that prevented validation parsing.", SmartestUserMessage::WARNING, true);
                     }else{
                         $this->addUserMessageToNextRequest("The file could not be updated because of file permissions while writing to disk.", SmartestUserMessage::WARNING);
                     }

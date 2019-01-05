@@ -3031,7 +3031,7 @@ class Pages extends SmartestSystemApplication{
 	    $page_webid = $this->getRequestParameter('page_id');
         $instance_name = ($this->requestParameterIsSet('instance') && strlen($this->getRequestParameter('instance'))) ? $this->getRequestParameter('instance') : 'default';
 	    
-	    $this->setTitle('Define Container');
+	    $this->setTitle('Define container');
 	    
 	    $helper = new SmartestPageManagementHelper;
 		$type_index = $helper->getPageTypesIndex($this->getSite()->getId());
@@ -3052,7 +3052,6 @@ class Pages extends SmartestSystemApplication{
     		        if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
     	                $page->setPrincipalItem($item);
     	                $this->send($item, 'item');
-    	                // rint_r($item['_model']);
     	                $this->send(true, 'show_item_options');
     	                $this->send(false, 'require_choose_item');
     	            }else{
@@ -3099,13 +3098,13 @@ class Pages extends SmartestSystemApplication{
 	        
 	        if($container->hydrateBy('name', $container_name)){
 	            
-	            $this->setTitle('Define Container | '.$container_name);
+	            $this->setTitle('Define container | '.$container_name);
 	            
 	            $page_definition = new SmartestContainerDefinition;
 	            
 	            if($page_definition->load($container_name, $page, true, null, $instance_name)){
 	                
-	                if($type_index[$page_webid] == 'ITEMCLASS'){
+                    if($type_index[$page_webid] == 'ITEMCLASS'){
 	                    
 	                    $item_definition = new SmartestContainerDefinition;
 	                    
