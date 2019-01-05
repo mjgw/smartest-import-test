@@ -676,6 +676,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 
                 // item space is not defined
                 $this->_comment("ItemSpace '".$itemspace_name."' is not defined.");
+                return $this->renderItemSpaceDefineButton($itemspace_name);
                 
             }
         
@@ -1135,6 +1136,8 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
     		$link_params['goCold'] = 'true';
     		
     		$last_breadcrumb_index = (count($breadcrumbs) - 1);
+            
+            $markup_index = 0;
     		
     		foreach($breadcrumbs as $key => $page){
                 
@@ -1177,8 +1180,9 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
 			    $link = SmartestCmsLinkHelper::createLink($to, $ph);
 			    $link->setHostPage($this->getPage());
                 $link->addClass('sm-link-breadcrumb');
-                $link->addClass('sm-link-breadcrumb-level-'.$key);
+                $link->addClass('sm-link-breadcrumb-level-'.$markup_index);
 			    $text = $link->render($this->getDraftMode());
+                $markup_index++;
 
     			if($key > 0){
     				$string .= ' '.$separator.' ';

@@ -202,6 +202,9 @@ class SmartestInternalLink extends SmartestCmsLink implements ArrayAccess, Smart
             case "_empty":
             return !$this->isPresent();
             
+            case "has_value":
+            return $this->isPresent();
+            
         }
         
     }

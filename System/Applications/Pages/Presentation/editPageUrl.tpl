@@ -11,7 +11,7 @@
   
     <div class="edit-form-row">
       <div class="form-section-label">URL string not including leading '/'</div>
-      <input type="text" name="page_url" value="{$url.url}" style="width:250px" />
+      <input type="text" name="page_url" value="{$url.url}" autocomplete="off" />
     </div>
     
     {if !$url.is_default}

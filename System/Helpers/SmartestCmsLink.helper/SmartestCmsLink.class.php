@@ -134,10 +134,14 @@ class SmartestCmsLink extends SmartestHelper{
             $this->_markup_attributes = $this->getSeparatedAttributes($markup_attributes)->getParameter('html');
         }
         
-        if($this->_render_data){
+        if($this->_render_data instanceof SmartestParameterHolder){
             $this->_render_data->absorb($this->getSeparatedAttributes($markup_attributes)->getParameter('other'));
         }else{
             $this->_render_data = $this->getSeparatedAttributes($markup_attributes)->getParameter('other');
+        }
+        
+        if($this->_render_data->hasParameter('hash')){
+            $this->_hash = (string) $this->_render_data->getParameter('hash');
         }
         
         // Give any HTML attributes passed by SmartestCmsLinkHelper a chance to be included

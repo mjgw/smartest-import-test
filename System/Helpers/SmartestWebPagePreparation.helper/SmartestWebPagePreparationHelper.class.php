@@ -84,7 +84,7 @@ class SmartestWebPagePreparationHelper{
         
         $content = $b->renderPage($this->_page, $draft_mode);
         
-        if($this->_page->getCacheAsHtml() == "TRUE" && !$draft_mode){
+        if($this->_page->getCacheAsHtml() == "TRUE" && !$draft_mode && !SmartestInfo::$prevent_cache){
         
             $filename = SM_ROOT_DIR.'System/Cache/Pages/'.$this->_page->getCacheFileName();
 		

@@ -51,7 +51,7 @@ var setEUCookieMode = function(state){
       <select name="site_default_text_placeholder_id" id="site-default-text-placeholder-id">
         <option value="NONE">None</option>
 {foreach from=$text_placeholders item="placeholder"}
-        <option value="{$placeholder.id}"{if $placeholder.id == $primary_text_placeholder_id} selected="selected"{/if}>{$placeholder.label}</option>
+        <option value="{$placeholder.id}"{if $placeholder.id == $primary_text_placeholder_id} selected="selected"{/if}>{if $placeholder.label}{$placeholder.label}{else}{$placeholder.name}{/if}</option>
 {/foreach}
       </select>{if count($text_placeholders) > 0 && $primary_text_placeholder_id} <input type="button" onclick="window.location='{$domain}websitemanager/editPlaceholder?placeholder_id='+$F('site-default-text-placeholder-id')" value="Edit" />{/if}
     </div>

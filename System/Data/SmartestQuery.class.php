@@ -53,8 +53,6 @@ class SmartestQuery{
 		
 		$this->setSiteId($site_id);
 		
-		// $models = SmartestCache::load('model_id_name_lookup', true);
-		
 		$m = new SmartestModel;
 		
 		if($m->find($model_id)){
@@ -97,9 +95,7 @@ class SmartestQuery{
 	
 	public function add($property_id, $value, $operator=0){
 	    
-        // echo $property_id;
-        
-	    if(isset($this->_properties[$property_id])){
+        if(isset($this->_properties[$property_id])){
             
 	        $p = $this->_properties[$property_id];
 	        
@@ -133,7 +129,7 @@ class SmartestQuery{
     	            }
     	        }catch(SmartestException $e){
     	            // value not understood - log and skip?
-    	            // echo "value ".$value." not understood for property ID ".$property_id;
+    	            // log message: "value ".$value." not understood for property ID ".$property_id;
     	        }
             
             }
@@ -327,11 +323,7 @@ class SmartestQuery{
 			    
                 }elseif($condition->getOperator() == self::HAS_VALUE){
             
-                    // echo $property_id;
                     $sql = "SELECT ItemPropertyValues.itempropertyvalue_item_id FROM Items, ItemPropertyValues WHERE itempropertyvalue_property_id='".$condition->getProperty()->getId()."' AND ItemPropertyValues.itempropertyvalue_item_id=Items.item_id AND ItemPropertyValues.".$value_field." !='' AND ItemPropertyValues.".$value_field." !=0 ";
-                    
-                    // var_dump();
-                    echo $condition->getSql();
                 
 				}else{
 			        
@@ -368,10 +360,7 @@ class SmartestQuery{
 			        $sql .= ' LIMIT '.$limit;
 			    }
 			    
-			    // echo $sql;
 			    $result = $this->database->queryToArray($sql);
-			    // echo count($result);
-			    // print_r($this->getSimpleIdsArray($result));
 			    $condition->setIdsArray($this->getSimpleIdsArray($result));
 			
 			}
@@ -408,7 +397,6 @@ class SmartestQuery{
 		        $sql .= ' LIMIT '.$limit;
 		    }
 		    
-		    // echo $sql;
 		    $result = $this->database->queryToArray($sql);
 		    return $this->createResultSet(array(), $draft, $mode);
 		    

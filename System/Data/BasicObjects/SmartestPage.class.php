@@ -1084,6 +1084,26 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	    
 	}
     
+    public function getPreviewSafeUrl(){
+        if($this->getDraftMode()){
+            if(isset($_GET['hide_newwin_link']) && $_GET['hide_newwin_link'] == 'true'){
+                $url = 'website/renderEditableDraftPage?page_id='.$this->getWebId();
+                if($this->getType() == 'ITEMCLASS' && isset($this->_simple_item) && is_object($this->_simple_item)){
+                    $url .= '&amp;item_id='.$this->_simple_item->getWebid();
+                }
+                $url .= '&amp;hide_newwin_link=true';
+            }else{
+                $url = 'websitemanager/preview?page_id='.$this->getWebId();
+                if($this->getType() == 'ITEMCLASS' && isset($this->_simple_item) && is_object($this->_simple_item)){
+                    $url .= '&amp;item_id='.$this->_simple_item->getWebid();
+                }
+            }
+            return $url;
+        }else{
+            return $this->getDefaultUrl();
+        }
+    }
+    
     public function getFullUrl(){
         return $this->getSite()->getTopLevelUrl().$this->getDefaultUrl();
     }
@@ -1768,15 +1788,7 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
 	        return $this->getFallbackUrl(true);
             
             case "preview_safe_url":
-            if($this->getDraftMode()){
-                if(isset($_GET['hide_newwin_link'])){
-                    return "website/renderEditableDraftPage?page_id=".$this->getWebid().'&hide_newwin_link=true';
-                }else{
-                    return "websitemanager/preview?page_id=".$this->getWebid();
-                }
-            }else{
-                return $this->getDefaultUrl();
-            }
+            return $this->getPreviewSafeUrl();
 	        
 	        case 'date':
             case '_date':
@@ -3034,6 +3046,23 @@ class SmartestPage extends SmartestBasePage implements SmartestSystemUiObject, S
                 $platform_filename_insert = '';
                 
             }
+            
+            // if((bool) $this->getGlobalPreference('site_responsive_distinguish_pixel_ratio')){
+                if(isset($_COOKIE['SMARTEST_DPRATIO'])){
+                    $val = (int) $_COOKIE['SMARTEST_DPRATIO'];
+                    if($val > '1'){
+                        $platform_filename_insert .= '_hi_res';
+                    }else{
+                        $platform_filename_insert .= '_lo_res';
+                    }
+                }else{
+                    // This should be a preference
+                    $platform_filename_insert .= '_hi_res';
+                    SmartestInfo::$prevent_cache = true;
+                }
+            // }else{
+                // $platform_filename_insert .= '_hi_res';
+            // }
             
         }else{
             $platform_filename_insert = '';

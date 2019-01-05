@@ -5,8 +5,8 @@
 
 <div id="work-area">
   
-  <h3>Define Container</h3>
-  <div class="instruction">Please choose a template to use in this container.</div>
+  <h3>Choose template</h3>
+  <div class="instruction">Please choose a template to use for this container.</div>
   
   <form id="pageViewForm" method="post" action="">
     <input type="hidden" name="page_id" value="{$page.id}" />

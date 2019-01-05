@@ -4232,7 +4232,7 @@ class Pages extends SmartestSystemApplication{
 		$this->formForward();
 	} */
 	
-	function publishPageConfirm($get){
+	public function publishPageConfirm($get){
 		
 		// display to the user a list of any placeholders or containers that are undefined in the draft page that is about to be published,
 		// so that the user is warned before publishing undefined placeholders or containers that may cause the page to display incorrectly
@@ -4283,7 +4283,9 @@ class Pages extends SmartestSystemApplication{
                 $count = count($undefinedAssetsClasses);
 		        $this->send(true, 'allow_publish');
 		        $this->send($undefinedAssetsClasses, "undefined_asset_classes");
-		        $this->send($page->getWebId(), "page_id");
+		        // $this->send($page->getWebId(), "page_id");
+				$this->send($page, 'page');
+				$this->send($page->isHomePage(), 'is_homepage');
 		        $this->send(count($undefinedAssetsClasses), "count");
 		        
 		        $changed_itemspaces_containing_unpublished_items = $page->getChangedItemspaceDefinitions(true, $item_id);
@@ -4341,6 +4343,10 @@ class Pages extends SmartestSystemApplication{
 		        }else{
     		        $published_unpublished_items = false;
 		        }
+				
+				if($this->getRequestParameter('clear_parent_from_cache') && !$page->isHomePage() && $parent = $page->getParentPage()){
+					$parent->clearCachedCopies();
+				}
 		        
 		        $page->publishItemSpaces($published_unpublished_items, $item_id);
 		        $page->setModified(time());

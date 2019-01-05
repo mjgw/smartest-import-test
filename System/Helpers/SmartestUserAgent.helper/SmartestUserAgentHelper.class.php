@@ -396,6 +396,16 @@ class SmartestUserAgentHelper extends SmartestHelper implements ArrayAccess{
             case "appname":
             return $this->getAppName();
             
+            case "is_retina":
+            case "is_high_dpratio":
+            if(isset($_COOKIE['SMARTEST_DPRATIO'])){
+                $ratio = (int) $_COOKIE['SMARTEST_DPRATIO'];
+                return $ratio > 1;
+            }else{
+                SmartestInfo::$prevent_cache = true;
+                return true;
+            }
+            
             case "version":
             return $this->getAppVersion();
             

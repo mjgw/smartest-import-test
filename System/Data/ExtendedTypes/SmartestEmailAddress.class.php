@@ -38,6 +38,10 @@ class SmartestEmailAddress extends SmartestString{
         return $parts[0];
     }
     
+    public function getMailToLink(){
+        return SmartestCmsLinkHelper::createLink('mailto:'.$this->_string, array('with'=>$this->_string));
+    }
+    
     public function offsetGet($offset){
         
         switch($offset){
@@ -58,13 +62,16 @@ class SmartestEmailAddress extends SmartestString{
             return $this->getExtendedVersion();
             
             case 'mailto':
-            $l = SmartestCmsLinkHelper::createLink('mailto:'.$this->_string, array('with'=>$this->_string));
+            $l = $this->getMailToLink();
             return $l->render();
             
             case 'mailto_link_contents':
             case 'mailto_string':
             case 'link_contents':
             return 'mailto:'.$this->_string;
+            
+            case 'escaped_at':
+            return str_replace('@', '(at)', $this->_string);
             
         }
         

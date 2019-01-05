@@ -10,12 +10,13 @@
 
 <form action="{$domain}{$section}/publishPage" method="post">
 
-<input type="hidden" name="page_id" value="{$page_id}" />
+<input type="hidden" name="page_id" value="{$page.webid}" />
 {if $item}<input type="hidden" name="item_id" value="{$item.id}" />{/if}
 
 {if $allow_publish}
 
-<div class="instruction">Definitely publish this page?</div>
+
+<div class="instruction">Definitely publish the page '{$page.title}'?</div>
 
 {if $count > 0}
 
@@ -54,6 +55,10 @@
   });
   {/literal}
   </script>
+
+{if !$is_homepage}
+<div><input type="checkbox" name="clear_parent_from_cache" value="1" checked="checked" /> Refresh the parent of this page from the cache</div>
+{/if}
 
 </div>
 
