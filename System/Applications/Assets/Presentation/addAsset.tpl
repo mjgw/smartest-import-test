@@ -5,7 +5,7 @@ var input_mode = '{$starting_mode}';
 var show_params_holder = false;
 var itemNameFieldDefaultValue = '{$start_name}';
 var preventDefaultValue = {if $suggested_name}false{else}true{/if};
-var finishTaskUrl = {if $frontend_finish_url}'{$frontend_finish_url}'{else}null{/if};
+var finishTaskUrl = {if $frontend_finish_url_esc}'{$frontend_finish_url_esc}'{else}null{/if};
 
 {literal}
 
@@ -152,7 +152,7 @@ function validateUploadSuffix(){
           <input type="hidden" name="from" value="{$from}" class="purpose_inputs" />
           <input type="hidden" name="item_id" value="{$workflow_item.id}" class="purpose_inputs" />
           {if $workflow_page}<input type="hidden" name="page_id" value="{$workflow_page.id}" class="purpose_inputs" />{/if}
-        {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+        {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW' || $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW_FULL'}
           <input type="hidden" name="from" value="{$from}" class="purpose_inputs" />
           <input type="hidden" name="page_id" value="{$workflow_page.id}" class="purpose_inputs" />
           {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" class="purpose_inputs" />{/if}

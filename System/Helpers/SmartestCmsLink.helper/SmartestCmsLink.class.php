@@ -1306,7 +1306,7 @@ class SmartestCmsLink extends SmartestHelper{
             
             if($draft_mode && !SmartestStringHelper::toRealBool($this->_destination_properties->getParameter('newwin'))){
                 $this->_markup_attributes->setParameter('target', '_top');
-                $this->_markup_attributes->setParameter('onclick', "return confirm('You will be taken to an external page. Continue?')");
+                $this->_markup_attributes->setParameter('onclick', "return confirm('This link will navigate you away from the Smartest page preview. Continue?')");
             }else{
                 if($this->_markup_attributes->getParameter('target') == '_blank' || $this->_markup_attributes->getParameter('target') == '_new'){
                     $this->_destination_properties->setParameter('newwin', true);

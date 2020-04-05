@@ -27,7 +27,7 @@ class SmartestAssetGroupMembership extends SmartestManyToManyLookup{
         
         if(!$this->_asset){
             $asset = new SmartestRenderableAsset;
-            if($asset->find($this->getAssetId())){
+            if($this->getAssetId() && $asset->find($this->getAssetId())){
                 $this->_asset = $asset;
             }
         }
@@ -61,6 +61,10 @@ class SmartestAssetGroupMembership extends SmartestManyToManyLookup{
     
     public function setGroupId($id){
         return $this->setEntityForeignKeyValue(2, (int) $id);
+    }
+    
+    public function setAssetDraftMode($draft_mode=false){
+        $this->getAsset()->setDraftMode($draft_mode);
     }
     
     public function save(){

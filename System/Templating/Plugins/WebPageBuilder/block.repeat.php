@@ -105,11 +105,14 @@ function smarty_block_repeat($params, $content, &$smartest_engine, &$repeat){
 	
 	if($item){
 	    
+        $iterationvarname = isset($params['iterationvar']) ? $params['iterationvar'] : 'iteration';
+        $keyvarname       = isset($params['keyvar'])       ? $params['keyvar']       : 'key';
+        
 	    // these instructions are executed right before the item is displayed.
 	    $smartest_engine->assign($item_name, $item);
 	    $smartest_engine->assign("repeated_item_object", $item); // legacy support
-	    $smartest_engine->assign("key", $index);
-	    $smartest_engine->assign("iteration", $index+1);
+	    $smartest_engine->assign($keyvarname, $index);
+	    $smartest_engine->assign($iterationvarname, $index+1);
         $smartest_engine->assign("key_calc", new SmartestTemplateNumberCalculator($index));
 	    
 	    if($custom_key_name){

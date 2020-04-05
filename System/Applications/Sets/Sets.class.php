@@ -607,7 +607,7 @@ class Sets extends SmartestSystemApplication{
 	        
 	        $this->send($set->getModel(), 'model');
 	        $this->send($set, 'set');
-	        $this->send($set->getMembers(SM_QUERY_ALL_DRAFT, null, $this->getSIte()->getId()), 'items');
+	        $this->send($set->getMembers(SM_QUERY_ALL_DRAFT, null, $this->getSite()->getId()), 'items');
 	        $this->send($this->getApplicationPreference('reorder_static_set_num_cols'), 'num_cols');
             $this->send($set->getModel()->hasMetaPageOnSiteId($this->getSite()->getId()), 'has_metapage');
 	        

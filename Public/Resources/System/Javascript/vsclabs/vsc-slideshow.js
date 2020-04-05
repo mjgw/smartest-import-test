@@ -13,7 +13,7 @@ VSC.Slideshow = Class.create({
         this.options.holderId = holderId;
         this.options.frequency = (options && options.hasOwnProperty('frequency')) ? options.frequency : 4;
         this.options.transitionDuration = (options && options.hasOwnProperty('duration')) ? options.duration : 0.75;
-        console.log('#'+holderId);
+        // console.log('#'+holderId);
         this.goToSlide($$('#'+holderId+' .slides .slide').first().id);
         this.currentPosition = 0;
         var IDs = [];

@@ -128,7 +128,7 @@ var itemsList = Sortable.create('sortable-gallery-members', {
     <li><b>Workflow options</b></li>
     {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
     <li class="permanent-action"><a href="{$domain}datamanager/editItem?item_id={$workflow_item.id}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}"><i class="fa fa-check"></i> Return to editing {$workflow_item._model.name|lower}</a></li>
-    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW' || $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW_FULL'}
     <li class="permanent-action"><a href="#" onclick="cancelForm();"><i class="fa fa-check"></i> Return to page preview</a></li>
     {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
     <li class="permanent-action"><a href="{$domain}websitemanager/definePlaceholder?assetclass_id={$workflow_placeholder.name}&amp;page_id={$workflow_page.webid}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}"><i class="fa fa-check"></i> Return to placeholder</a></li>
@@ -138,7 +138,7 @@ var itemsList = Sortable.create('sortable-gallery-members', {
   
   <ul class="actions-list" id="non-specific-actions">
     <li><b>Group options</b></li>
-    <li class="permanent-action"><a href="{$domain}smartest/file/new?group_id={$group.id}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}{if $workflow_placeholder}&amp;placeholder_id={$workflow_placeholder.id}{/if}{if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}&amp;from=editItem{elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}&amp;from=pagePreview{elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}&amp;from=definePlaceholder{/if}" class="right-nav-link"><i class="fa fa-plus-circle"></i> Upload a file into this group</a></li>
+    <li class="permanent-action"><a href="{$domain}smartest/file/new?group_id={$group.id}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}{if $workflow_placeholder}&amp;placeholder_id={$workflow_placeholder.id}{/if}{if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}&amp;from=editItem{elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}&amp;from=pagePreview{elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW_FULL'}&amp;from=fullPreview{elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}&amp;from=definePlaceholder{/if}" class="right-nav-link"><i class="fa fa-plus-circle"></i> Upload a file into this group</a></li>
   	<li class="permanent-action"><a href="{$domain}assets/browseAssetGroup?group_id={$group.id}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}{if $workflow_placeholder}&amp;placeholder_id={$workflow_placeholder.id}{/if}{if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}&amp;from=editItem{elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}&amp;from=pagePreview{elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}&amp;from=definePlaceholder{/if}" class="right-nav-link"><i class="fa fa-search"></i> Browse this group</a></li>
   </ul>
   

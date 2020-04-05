@@ -21,7 +21,7 @@
     {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
     <input type="hidden" name="item_id" value="{$workflow_item.id}" />
     {if $workflow_page}<input type="hidden" name="page_id" value="{$workflow_page.id}" />{/if}
-    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW' || $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW_FULL'}
     <input type="hidden" name="page_id" value="{$workflow_page.id}" />
     {if $workflow_item}<input type="hidden" name="item_id" value="{$workflow_item.id}" />{/if}
     {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
@@ -120,7 +120,7 @@ var itemsList = Sortable.create('options_grid', {
     <li><b>Workflow options</b></li>
     {if $workflow_type == 'SM_WORKFLOW_ITEM_EDIT'}
     <li class="permanent-action"><a href="{$domain}datamanager/editItem?item_id={$workflow_item.id}{if $workflow_page}&amp;page_id={$workflow_page.webid}{/if}"><i class="fa fa-check"></i> Return to editing {$workflow_item._model.name|lower}</a></li>
-    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW'}
+    {elseif $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW' || $workflow_type == 'SM_WORKFLOW_PAGE_PREVIEW_FULL'}
     <li class="permanent-action"><a href="#" onclick="cancelForm();"><i class="fa fa-check"></i> Return to page preview</a></li>
     {elseif $workflow_type == 'SM_WORKFLOW_DEFINE_PLACEHOLDER'}
     <li class="permanent-action"><a href="{$domain}websitemanager/definePlaceholder?assetclass_id={$workflow_placeholder.name}&amp;page_id={$workflow_page.webid}{if $workflow_item}&amp;item_id={$workflow_item.id}{/if}"><i class="fa fa-check"></i> Return to placeholder</a></li>

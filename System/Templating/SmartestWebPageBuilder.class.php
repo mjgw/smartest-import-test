@@ -735,7 +735,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 if(isset($_GET['hide_newwin_link']) && $_GET['hide_newwin_link'] = 'true'){
                     $url .= '&amp;from=fullPreview&amp;page_id='.$this->page->getWebId();
                 }else{
-                    $url .= '&amp;from=preview&amp;page_id='.$this->page->getWebId();
+                    $url .= '&amp;from=pagePreview&amp;page_id='.$this->page->getWebId();
                 }
             }
             
@@ -816,7 +816,13 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
         
             if($g->getIsGallery()){
                 
-                $arrange_url = $this->_request_data->g('domain').'assets/arrangeAssetGallery?group_id='.$g->getId().'&amp;from=pagePreview&amp;page_id='.$this->getPage()->getWebId();
+                if(isset($_GET['hide_newwin_link']) && $_GET['hide_newwin_link'] = 'true'){
+                    $previewtype = 'fullPreview';
+                }else{
+                    $previewtype = 'pagePreview';
+                }
+                
+                $arrange_url = $this->_request_data->g('domain').'assets/arrangeAssetGallery?group_id='.$g->getId().'&amp;from='.$previewtype.'&amp;page_id='.$this->getPage()->getWebId();
                 if($this->isMetaPage()){
                     $arrange_url .= '&amp;item_id='.$this->getItem()->getId();
                 }
@@ -824,7 +830,7 @@ class SmartestWebPageBuilder extends SmartestBasicRenderer{
                 if($this->_hide_edit_buttons) $html .= ' style="display:none"';
                 $html .= '><img src="'.$this->_request_data->g('domain').'Resources/System/Images/switch-order-yellow.png" alt="" style="width:16px;height:16px" /></a>';
                 
-                $add_url = $this->_request_data->g('domain').'smartest/file/new?group_id='.$g->getId().'&amp;from=pagePreview&amp;page_id='.$this->getPage()->getWebId();
+                $add_url = $this->_request_data->g('domain').'smartest/file/new?group_id='.$g->getId().'&amp;from='.$previewtype.'&amp;page_id='.$this->getPage()->getWebId();
                 if($this->isMetaPage()){
                     $add_url .= '&amp;item_id='.$this->getItem()->getId();
                 }

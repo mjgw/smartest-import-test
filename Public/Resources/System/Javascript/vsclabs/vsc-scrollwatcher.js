@@ -21,9 +21,11 @@
         },
     
         getScrollTop: function() {
-            return (document.documentElement.scrollTop + document.body.scrollTop
+            return (document.documentElement.scrollTop + 
+                document.body.scrollTop
             == document.documentElement.scrollTop) ?
-            document.documentElement.scrollTop : document.body.scrollTop;
+            document.documentElement.scrollTop : 
+                document.body.scrollTop;
         },
         
         getDocumentHeight: function(){

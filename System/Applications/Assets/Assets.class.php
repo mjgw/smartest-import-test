@@ -99,9 +99,28 @@ class Assets extends SmartestSystemApplication{
             }
             break;
             
+            case 'fullPreview':
+            $finishTaskUrl .= 'website/renderEditableDraftPage?hide_newwin_link=true';
+            $page = new SmartestPage;
+            if($page->smartFind($this->getRequestParameter('page_id'))){
+                $finishTaskUrl .= '&amp;page_id='.$page->getWebId();
+                $this->send($page, 'workflow_page');
+                if($this->requestParameterIsSet('item_id')){
+                    if($item = SmartestCmsItem::retrieveByPk($this->getRequestParameter('item_id'))){
+                         $this->send($item, 'workflow_item');
+                         $finishTaskUrl .= '&amp;item_id='.$item->getId();
+                    }
+                }
+                $this->send('SM_WORKFLOW_PAGE_PREVIEW_FULL', 'workflow_type');
+                $this->send($this->getRequestParameter('from'), 'from');
+                $this->setTemporaryFormReturnUri(str_replace('&amp;', '&', $finishTaskUrl));
+            }
+            break;
+            
         }
         
         $this->send($this->getRequest()->getDomain().substr($finishTaskUrl, 1), 'frontend_finish_url');
+        $this->send($this->getRequest()->getDomain().substr(str_replace('&amp;', '&', $finishTaskUrl), 1), 'frontend_finish_url_esc');
         $this->send($finishTaskUrl, 'backend_finish_url');
         $this->send($this->getRequestParameter('from'), 'from');
         
@@ -1815,7 +1834,7 @@ class Assets extends SmartestSystemApplication{
             if($this->getRequestParameter('page_id')){
                 $p = new SmartestPage;
                 if($p->smartFind($this->getRequestParameter('page_id'))){
-                    $url .= '&page_webid='.$p->getWebId();
+                    $url .= '&page_id='.$p->getWebId();
                 }
             }
             
