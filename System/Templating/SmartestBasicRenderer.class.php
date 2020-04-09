@@ -522,20 +522,24 @@ class SmartestBasicRenderer extends SmartestEngine{
     
     public function renderImage($render_data='', $retina=false){
         
-        if(!$render_data['width']){
-            if($retina){
-                $render_data['width'] = ceil($this->_image->getWidth()/2);
-            }else{
-                $render_data['width'] = $this->_image->getWidth();
-            }
+        $render_data['use_width_attribute'] = isset($render_data['width']);
+        
+        if(!isset($render_data['width'])){
+            // if($retina){
+            //     $render_data['width'] = ceil($this->_image->getWidth()/2);
+            // }else{
+            //     $render_data['width'] = $this->_image->getWidth();
+            // }
         }
         
-        if(!$render_data['height']){
-            if($retina){
-                $render_data['height'] = ceil($this->_image->getHeight()/2);
-            }else{
-                $render_data['height'] = $this->_image->getHeight();
-            }
+        $render_data['use_height_attribute'] = isset($render_data['height']);
+        
+        if(!isset($render_data['height'])){
+            // if($retina){
+            //     $render_data['height'] = ceil($this->_image->getHeight()/2);
+            // }else{
+            //     $render_data['height'] = $this->_image->getHeight();
+            // }
         }
             
         $render_template = SM_ROOT_DIR.'System/Presentation/WebPageBuilder/display.image.tpl';

@@ -6,9 +6,12 @@ class SmartestAssetClass extends SmartestBaseAssetClass{
     
     protected $_type_info;
     
-	public function exists($name, $site_id){
+	public function exists($name, $site_id=0){
 	    
-	    $sql = "SELECT * FROM AssetClasses WHERE assetclass_name='".$name."' AND assetclass_site_id='".$site_id."'";
+	    $sql = "SELECT * FROM AssetClasses WHERE assetclass_name='".$name."'";
+        if($site > 0){
+            $sql .= " AND assetclass_site_id='".$site_id."'";
+        }
 	    $query_result = $this->database->queryToArray($sql);
 	    
 	    if(count($result) > 0){

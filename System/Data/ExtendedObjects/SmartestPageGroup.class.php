@@ -185,7 +185,7 @@ class SmartestPageGroup extends SmartestSet{
         
         foreach($ids as $key => $value){
             if(isset($memberships[$value])){
-                echo "Page with ID ".$value.' gets order '.$key;
+                // echo "Page with ID ".$value.' gets order '.$key;
                 $memberships[$value]->setOrderIndex($key);
                 $memberships[$value]->save();
             }

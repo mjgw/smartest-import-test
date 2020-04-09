@@ -255,8 +255,15 @@ class SmartestRssOutputHelper{
 	        $description->appendChild($description_text);
 	    
 	        $pubDate = $this->_domObject->createElement("pubDate");
-            // var_dump( date('r', $object->getDate()) );
-	        $pubDate_text = $this->_domObject->createTextNode(date('r', $object->getDate()->getUnixFormat()));
+            $date = $object->getDate();
+            if(!$date instanceof SmartestDateTime){
+                if(is_numeric($date)){
+                    $date = new SmartestDateTime($date);
+                }else{
+                    $date = new SmartestDateTime(0);
+                }
+            }
+            $pubDate_text = $this->_domObject->createTextNode(date('r', $date->getUnixFormat()));
 	        $pubDate->appendChild($pubDate_text);
 	        
 	        $link = $this->_domObject->createElement("link");

@@ -31,13 +31,39 @@ class SmartestSiteCreationHelper{
         $ph->setGlobalPreference('site_responsive_distinguish_tablet', '1', '0', $site->getId());
         $ph->setGlobalPreference('site_responsive_distinguish_oldpcs', '0', '0', $site->getId());
         
-	    if($p->getParameter('site_master_template') == '_DEFAULT'){
+        if($p->getParameter('site_master_template') == '_DEFAULT'){
 	        $master_template = '';
 	    }else if($p->getParameter('site_master_template') == '_BLANK'){
 	        
+            $ach = new SmartestAssetCreationHelper('SM_ASSETTYPE_STYLESHEET');
+            $intended_file_name = SmartestStringHelper::toVarName($p->getParameter('site_name')).'.css';
+            $intended_file_path = SM_ROOT_DIR.'Public/Resources/Stylesheets/'.$intended_file_name;
+            $css = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Install/Samples/default.css');
+            $css = str_replace('%TIME%', date('DATE_RFC2822'), $css);
+            $actual_file_path = SmartestFileSystemHelper::getUniqueFileName($intended_file_path);
+            $actual_file_name = SmartestFileSystemHelper::baseName($actual_file_path);
+            
+            if(SmartestFileSystemHelper::save($actual_file_path, $css)){
+                $css_success = true;
+                $ach->createNewAssetFromUnImportedFile($actual_file_name, 'Main CSS file for '.$p->getParameter('site_name'));
+                $npg = new SmartestPageGroup;
+    	        $npg->setName('main_nav');
+    	        $npg->setLabel('Main Navigation');
+    	        $npg->setSiteId($site->getId());
+    	        $npg->save();
+            }else{
+                $css_success = false;
+            }
+            
 	        $master_template_name = SmartestFileSystemHelper::getFileName(SmartestFileSystemHelper::getUniqueFileName(SM_ROOT_DIR.'Presentation/Masters/'.SmartestStringHelper::toVarName($site->getName()).'.tpl'));
 	        $master_template_contents = str_replace('%DEFAULTTEMPLATENAME%.tpl', $master_template_name, file_get_contents(SM_ROOT_DIR.'System/Install/Samples/default.tpl'));
 	        
+            if($css_success){
+	            $master_template_contents = str_replace('%CSSLINK%', '<?sm:stylesheet file="'.$actual_file_name.'":?>'."\n", $master_template_contents); 
+	        }else{
+	            $master_template_contents = str_replace('%CSSLINK%', '', $master_template_contents); 
+	        }
+            
 	        if(file_put_contents(SM_ROOT_DIR.'Presentation/Masters/'.$master_template_name, $master_template_contents)){
 	            
 	            $master_template = $master_template_name;
@@ -52,6 +78,12 @@ class SmartestSiteCreationHelper{
 	            $t->setWebId(SmartestStringHelper::random(32));
 	            $t->setType('SM_ASSETTYPE_MASTER_TEMPLATE');
 	            $t->save();
+                
+        		$container = new SmartestContainer;
+		
+        		if($container->exists('page_layout')){
+        	        $site->setPrimaryContainerId($container->getId());
+        	    }
 	            
 	        }else{
 	            $master_template = '';
@@ -78,6 +110,9 @@ class SmartestSiteCreationHelper{
 	    $home_page->save();
 	    $home_page->addAuthorById($u->getId());
 	    $site->setTopPageId($home_page->getId());
+        if(isset($npg) && $npg instanceof SmartestPageGroup){
+            $npg->addPageById($home_page->getId(), false);
+        }
 	    SmartestLog::getInstance('system')->log("Created home page for new site (page ID {$home_page->getId()})", SM_LOG_DEBUG);
     
 	    $error_page = new SmartestPage;
