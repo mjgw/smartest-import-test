@@ -16,7 +16,10 @@ function smarty_function_stylesheet($params, &$smartest_engine){
                 $a->setDraftMode($smartest_engine->getDraftMode());
                 return $a->render();
             }else{
-                return '<link rel="stylesheet" href="'.SmartestPersistentObject::get('request_data')->g('domain').'Resources/Stylesheets/'.$file.'" />'."\n";
+                if(is_file(SM_ROOT_DIR.'Public/Resources/Stylesheets/'.$file)){
+                    $hash = substr(md5_file(SM_ROOT_DIR.'Public/Resources/Stylesheets/'.$file), 0, 8);
+                }
+                return '<link rel="stylesheet" href="'.SmartestPersistentObject::get('request_data')->g('domain').'Resources/Stylesheets/'.$file.'?hash='.$hash.'" />'."\n";
             }
             
         }

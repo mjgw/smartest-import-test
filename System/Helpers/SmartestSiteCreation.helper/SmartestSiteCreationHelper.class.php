@@ -35,11 +35,26 @@ class SmartestSiteCreationHelper{
 	        $master_template = '';
 	    }else if($p->getParameter('site_master_template') == '_BLANK'){
 	        
+            $colours = array(
+                "background: rgb(85,3,131);
+    background: linear-gradient(60deg, rgba(85,3,131,1) 0%, rgba(11,1,57,1) 29%, rgba(22,96,145,1) 62%, rgba(30,246,235,1) 100%);",
+                "background: rgb(131,58,180);
+    background: linear-gradient(45deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);",
+                "background: rgb(5,3,42);
+    background: linear-gradient(45deg, rgba(5,3,42,1) 0%, rgba(107,1,100,1) 26%, rgba(222,0,122,1) 68%, rgba(255,177,0,1) 100%);",
+                "background: rgb(106,169,252);
+    background: linear-gradient(135deg, rgba(106,169,252,1) 0%, rgba(227,68,205,1) 34%, rgba(245,78,78,1) 70%, rgba(247,164,35,1) 98%);"
+            );
+            
+            $index = rand(0, 3);
+            $colour = $colours[$index];
+            
             $ach = new SmartestAssetCreationHelper('SM_ASSETTYPE_STYLESHEET');
             $intended_file_name = SmartestStringHelper::toVarName($p->getParameter('site_name')).'.css';
             $intended_file_path = SM_ROOT_DIR.'Public/Resources/Stylesheets/'.$intended_file_name;
             $css = SmartestFileSystemHelper::load(SM_ROOT_DIR.'System/Install/Samples/default.css');
-            $css = str_replace('%TIME%', date('DATE_RFC2822'), $css);
+            $css = str_replace('%TIME%', date('r'), $css);
+            $css = str_replace('%COLOUR%', $colour, $css);
             $actual_file_path = SmartestFileSystemHelper::getUniqueFileName($intended_file_path);
             $actual_file_name = SmartestFileSystemHelper::baseName($actual_file_path);
             

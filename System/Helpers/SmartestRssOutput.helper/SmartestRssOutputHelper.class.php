@@ -263,7 +263,7 @@ class SmartestRssOutputHelper{
                     $date = new SmartestDateTime(0);
                 }
             }
-            $pubDate_text = $this->_domObject->createTextNode(date('r', $date->getUnixFormat()));
+            $pubDate_text = $this->_domObject->createTextNode(date('DATE_RSS', $date->getUnixFormat()));
 	        $pubDate->appendChild($pubDate_text);
 	        
 	        $link = $this->_domObject->createElement("link");

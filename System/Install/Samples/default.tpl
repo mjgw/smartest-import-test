@@ -9,8 +9,6 @@
   	<meta name="keywords" content="<?sm:$this.page.meta_keywords:?>" />
   	<meta name="description" content="<?sm:$this.page.meta_description:?>" />
     <meta name="og:description" content="<?sm:$this.page.meta_description:?>" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <?sm:site_favicon:?>
   	%CSSLINK%<?sm:placeholder name="page_specific_javascript" editbutton="false":?>
   	<?sm:placeholder name="page_specific_stylesheet":?>
@@ -19,10 +17,13 @@
 
   <body>
     
-    <div id="container">
-      
-      <h1><?sm:$this.site.name:?></h1>
-      
+    <div id="header-outer">
+      <div id="header">
+        <h1><?sm:$this.site.name:?></h1>
+      </div>
+    </div>
+    
+    <div id="navstripe">
       <div id="nav">
         <ul>
 					<?sm:repeat from="pagegroup:main_nav" item="top_level_nav_page" assignhighlight="currentpage":?>
@@ -30,8 +31,9 @@
           <?sm:/repeat:?>
         </ul>
       </div>
-      
-      <p style="text-align:center;margin-top:60px">Edit or Replace Me (Presentation/Masters/%DEFAULTTEMPLATENAME%.tpl), Then Re-Publish Me!</p>
+    </div>
+    
+    <div id="container">
       
       <?sm:if $this.user_agent.is_tablet:?>
       <!--You are viewing this page on a tablet.-->
@@ -41,10 +43,14 @@
       <!--You are viewing this page on a desktop computer.-->
       <?sm:/if:?>
       
-      <?sm:container name="page_layout":?>
+      <div class="breaker"></div>
+        <p class="text">You have successfully created a new website in Smartest. You can update the design of this web page and updating the file:</p>     
+        <p style="text-align:center;font-size:1.2em"><code>Presentation/Masters/%DEFAULTTEMPLATENAME%.tpl</code></p>
+        <?sm:container name="page_layout":?>
+      <div class="breaker"></div>
       
       <div id="footer">
-        <p>All content © <?sm:$this.site.organization_name:?> <?sm:$now.Y:?>, All rights reserved, except where noted. </p>
+        All content © <?sm:$this.site.organization_name:?> <?sm:$now.Y:?>, All rights reserved, except where noted.
       </div>
     
     </div>
