@@ -26,21 +26,53 @@ class SmartestStringHelper extends SmartestHelper{
         }
     }
     
-	public static function random($size){
-	
-		$possValues = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s"
-			    , "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", 
-			    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "$");
-		$stem = "";
+	public static function random($size, $type=SM_RANDOM_ALL){
+	    
+	    $uppercase_letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
+	    $lowercase_letters = array("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
+	    $hex_letters = array("a", "b", "c", "d", "e", "f");
+	    $numbers = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+	    $symbols = array("-", "*", "^", "!", "(", ")", "$", "%");
+        
+	    $all_letters = array_merge($uppercase_letters, $lowercase_letters);
+	    $random_chars = array_merge($all_letters, $numbers);
+        $all_hex = array_merge($hex_letters, $numbers);
+        $all = array_merge($random_chars, $symbols);
+        
+        switch($type){
+            
+            case SM_RANDOM_NUMERIC:
+            $values = $numbers;
+            $max_value = 9;
+            break;
+            
+            case SM_RANDOM_HEX:
+            $values = $all_hex;
+            $max_value = 15;
+            break;
+            
+            case SM_RANDOM_ALPHANUMERIC:
+            $values = $random_chars;
+            $max_value = count($random_chars)-1;
+            break;
+            
+            case SM_RANDOM_ALL:
+            default:
+            $values = $all;
+            $max_value = count($all)-1;
+            break;
+            
+        }
+        
+		// $possValues = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "$");
+		$string = "";
 	
 		for($i=0; $i<$size; $i++){
-			$randNum = rand(0, count($possValues)-1);
-			$shoot = $possValues[$randNum];
-			$plant = $stem.$shoot;
-			$stem = $plant;
+			$randNum = rand(0, $max_value);
+			$string .= $values[$randNum];
 		}	
 	
-		return $plant;
+		return $string;
 	
 	}
 	

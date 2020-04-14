@@ -1,7 +1,7 @@
 system:
   info:
     version: "0.5"
-    revision: 893
+    revision: 894
     minimum_php_version: 5.4
     minimum_database_version: 21
     default_timezone: Europe/London
@@ -44,6 +44,7 @@ system:
     - website/getDataSetFeed
     - website/oEmbedFragment
     - website/oEmbedIFrameContent
+    - website/heartbeatAsJson
   content_interaction_methods:
     - website/renderPageFromUrl
     - website/renderPageFromId
@@ -63,6 +64,7 @@ system:
     - website/getDataSetFeed
     - website/oEmbedFragment
     - website/oEmbedIFrameContent
+    - website/heartbeatAsJson
   smarty_config:
     default_templates_dir: Presentation/
     templates_cache: System/Cache/Smarty/

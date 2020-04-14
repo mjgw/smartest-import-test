@@ -82,13 +82,19 @@ document.observe('dom:loaded', function(){
 <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
 
 <div class="edit-form-row">
-  <div class="form-section-label">Site Title</div>
+  <div class="form-section-label">Site Title *</div>
   <input type="text" name="site_name" class="unfilled" id="new-site-name" value="My Smartest Web Site"/>
 </div>
 
 <div class="edit-form-row">
-  <div class="form-section-label">Host name</div>
+  <div class="form-section-label">Host name *</div>
   <input type="text" name="site_domain" class="unfilled" id="new-site-domain" value="example.com" />
+</div>
+
+<div class="edit-form-row">
+  <div class="form-section-label">Your name</div>
+  <input type="text" name="site_organization_name" id="new-site-org" value="{$user.full_name}" />
+  <div class="form-hint">Optional. The name of the person or organisation behind this website, rather than the name of the site.</div>
 </div>
 
 <div class="edit-form-row">

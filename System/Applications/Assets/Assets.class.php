@@ -414,7 +414,7 @@ class Assets extends SmartestSystemApplication{
     	        if(isset($nf['archive'])){
     	            $a->setIsArchived(1);
     	        }
-    	        $a->setWebid(SmartestStringHelper::random(32));
+    	        $a->setWebid(SmartestStringHelper::random(32, SM_RANDOM_ALPHANUMERIC));
     	        $a->setStringid(SmartestStringHelper::toVarName($nf['name']));
     	        $a->setLabel($nf['name']);
     	        $a->setUrl($filename);

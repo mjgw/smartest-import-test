@@ -51,7 +51,7 @@ class SmartestAssetCreationHelper{
     public function createNewAssetFromFileUpload(SmartestUploadHelper $upload, $asset_label){
         
         $this->_asset = new SmartestAsset;
-        $this->_asset->setWebid(SmartestStringHelper::random(32));
+        $this->_asset->setWebid(SmartestStringHelper::random(32, SM_RANDOM_ALPHANUMERIC));
         $this->_asset->setCreated(time());
         $this->_asset->setStringId(SmartestStringHelper::toVarName($asset_label, true));
         $this->_asset->setLabel($asset_label);

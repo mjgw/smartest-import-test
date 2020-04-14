@@ -966,6 +966,40 @@ class CmsFrontEnd extends SmartestSystemApplication{
         // TODO: Make automatic system status information available here as JSON
         // TODO: SmartestSystemHelper::getSystemStatus()
 	}
+    
+	public function heartbeatAsJson(){
+	    if($this->lookupSiteDomain()){
+	        if($this->requestParameterIsSet('site_code')){
+                if($this->getRequestParameter('site_code') == $this->_site->getUniqueId()){
+                    header('Content-type: application/json');
+                    $data = $this->_site->__toSimpleObject();
+                    unset($data->id);
+                    $data->is_https = false;
+                    $data->revision = SmartestInfo::$revision;
+                    $data->favicon_ico = '';
+                    $data->favicon_png = '';
+                    echo json_encode(array('smartest_heartbeat' => array(
+                        'verify' => 'S'.substr(md5($this->_site->getUniqueId().$this->_site->getDomain()), 0, 31),
+                        'site_data' => $data,
+                        'site_feed' => ''
+                    )), JSON_PRETTY_PRINT);
+                    exit;
+                }else{
+                    $this->renderNotFoundPage();
+                }
+            }else{
+                $this->renderNotFoundPage();
+            }
+        }else{
+            $this->renderNotFoundPage();
+        }
+	}
+    
+    public function requestSyndicationToken(){
+        $token = SmartestStringHelper::random(64, SM_RANDOM_ALPHANUMERIC);
+        echo $token;
+        // TODO
+    }
 	
 	public function getCaptchaImage(){
 	    

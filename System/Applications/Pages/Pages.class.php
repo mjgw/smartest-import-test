@@ -676,7 +676,7 @@ class Pages extends SmartestSystemApplication{
                 $group->setSiteId($this->getSite()->getId());
                 $group->setFilterType('SM_SET_FILTERTYPE_ASSETCLASS');
                 $group->setFilterValue($this->getRequestParameter('placeholder_type'));
-                $group->setWebId(SmartestStringHelper::random(32));
+                $group->setWebId(SmartestStringHelper::random(32, SM_RANDOM_ALPHANUMERIC));
                 $group->save();
 		        $placeholder->setFilterType('SM_ASSETCLASS_FILTERTYPE_ASSETGROUP');
 		        $placeholder->setFilterValue($group->getId());
@@ -1342,7 +1342,7 @@ class Pages extends SmartestSystemApplication{
             $this->send($this->getSite(), 'site');
 		    $pages = $this->getSite()->getPagesList();
             $this->send($pages, 'pages');
-            $this->send(SmartestStringHelper::random(8).'.html', 'unknown_url');
+            $this->send(SmartestStringHelper::random(8, SM_RANDOM_ALPHANUMERIC).'.html', 'unknown_url');
             $this->send($this->getSite(), 'site');
             $this->send($du->getTags(), 'tags');
             $uhelper = new SmartestUsersHelper;
@@ -1919,7 +1919,7 @@ class Pages extends SmartestSystemApplication{
 			default:
 			
             $page = new SmartestPage;
-            $page->setWebId(SmartestStringHelper::random(32));
+            $page->setWebId(SmartestStringHelper::random(32, SM_RANDOM_ALPHANUMERIC));
             $page->setCreatedbyUserid($this->getUser()->getId());
             $page->setSiteId($this->getSite()->getId());
             SmartestSession::set('__newPage_preset_id', null);
@@ -2054,7 +2054,7 @@ class Pages extends SmartestSystemApplication{
                         $t->setSiteId($this->getSite()->getId());
                         $t->setUrl($file_name);
                         $t->setType('SM_ASSETTYPE_CONTAINER_TEMPLATE');
-                        $t->setWebId(SMartestStringHelper::random(36));
+                        $t->setWebId(SmartestStringHelper::random(36, SM_RANDOM_ALPHANUMERIC));
                         $t->setStringId(SmartestStringHelper::toVarName($page->getTitle().'_layout_template'));
                         $t->setLabel($page->getTitle().' layout template');
                         $t->setUserId($this->getUser()->getId());
@@ -2108,7 +2108,7 @@ class Pages extends SmartestSystemApplication{
                         $t->setSiteId($this->getSite()->getId());
                         $t->setUrl($file_name);
                         $t->setType('SM_ASSETTYPE_CONTAINER_TEMPLATE');
-                        $t->setWebId(SMartestStringHelper::random(36));
+                        $t->setWebId(SmartestStringHelper::random(36, SM_RANDOM_ALPHANUMERIC));
                         $t->setStringId(SmartestStringHelper::toVarName($page->getTitle().'_layout_template'));
                         $t->setLabel($page->getTitle().' layout template');
                         $t->setUserId($this->getUser()->getId());
@@ -4667,7 +4667,7 @@ class Pages extends SmartestSystemApplication{
                     $t->setSiteId($this->getSite()->getId());
                     $t->setCreated(time());
                     $t->setUserId($this->getUser()->getId());
-                    $t->setWebId(SmartestStringHelper::random(32));
+                    $t->setWebId(SmartestStringHelper::random(32, SM_RANDOM_ALPHANUMERIC));
                     $t->setLabel('Template for list '.$list->getName());
                     $t->setStringId('list_'.$list->getName());
                     if(is_object($model)) $t->setModelId($model->getId());
@@ -4851,7 +4851,7 @@ class Pages extends SmartestSystemApplication{
                         $t->setSiteId($this->getSite()->getId());
                         $t->setCreated(time());
                         $t->setUserId($this->getUser()->getId());
-                        $t->setWebId(SmartestStringHelper::random(32));
+                        $t->setWebId(SmartestStringHelper::random(32, SM_RANDOM_ALPHANUMERIC));
                         $t->setLabel('Template for itemspace '.$item_space->getLabel());
                         $t->setStringId('itemspace_'.$item_space->getName());
                         $t->setModelId($model->getId());

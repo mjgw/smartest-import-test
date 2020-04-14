@@ -111,7 +111,8 @@
 
 <div class="edit-form-row">
   <div class="form-section-label">Site ID</div>
-  <code>{$site.unique_id}</code> {help id="desktop:install_ids" buttonize="true"}What&rsquo;s this?{/help}
+  <code>{$site.unique_id}</code> <a href="http://{$site.domain}/smartest/heartbeat?site_code={$site.unique_id}" target="_blank" class="button small">Verify</a> {help id="desktop:install_ids" buttonize="true"}What&rsquo;s this?{/help}
+  <div class="form-hint">This code allows Smartest installations to verify each other in a decentralised, user-controlled fashion. Give this code to people to enable them to request to syndicate your content.</div>
 </div>
 
 <div class="edit-form-row">

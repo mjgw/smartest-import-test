@@ -330,7 +330,11 @@ class SmartestBasicRenderer extends SmartestEngine{
                                 
                                 }
                             
-                            }
+                            } // End of draft-mode block
+                            
+                        }else{ // is brower instruction other than CSS
+                            
+                            
                             
                         }
                         

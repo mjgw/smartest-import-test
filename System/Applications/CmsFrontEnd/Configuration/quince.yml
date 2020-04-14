@@ -89,6 +89,9 @@ module:
     oembed:
       url: /embed
       action: oEmbedFragment
+    heartbeat:
+      url: /smartest/heartbeat
+      action: heartbeatAsJson
 #    sitemap:
 #      url: /sitemap.xml
 #      action: buildXmlSitemap

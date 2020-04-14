@@ -161,6 +161,11 @@ define('SM_MTMLOOKUPMODE_ALL',    0);
 define('SM_MTMLOOKUPMODE_DRAFT',  1);
 define('SM_MTMLOOKUPMODE_PUBLIC', 2);
 
+define('SM_RANDOM_ALL', 1);
+define('SM_RANDOM_NUMERIC', 2);
+define('SM_RANDOM_HEX', 4);
+define('SM_RANDOM_ALPHANUMERIC', 8);
+
 // Different platforms
 define('SM_USERAGENT_NORMAL',  1);
 define('SM_USERAGENT_DESKTOP', 1);
